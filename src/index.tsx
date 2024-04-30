@@ -9,6 +9,9 @@ const MainPage = React.lazy(() => import('./pages/main/MainPage.tsx'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage.tsx'));
 const MyPage = React.lazy(() => import('./pages/profile/MyPage.tsx'));
 const ContactPage = React.lazy(() => import('./pages/contact/ContactPage.tsx'));
+const MentoringPage = React.lazy(() => import('./pages/mentoring/MentoringPage.tsx'));
+const CodeReviewPage = React.lazy(() => import('./pages/codeReview/CodeReviewPage.tsx'));
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -34,6 +37,8 @@ root.render(
       <Route path='/code' element={<CodePage />} />
       <Route path='/profile/my' element={<MyPage />} />
       <Route path='/contact' element={<ContactPage />} />
+      <Route path='/mentoring' element={<MentoringPage />} />
+      <Route path='/code-review' element={<CodeReviewPage />} />
     </Routes>
     </Suspense>
     </BrowserRouter>
