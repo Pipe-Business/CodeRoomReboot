@@ -1,18 +1,21 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Badge, IconButton, InputBase, Paper } from '@mui/material';
-import { HeaderIconButton, HeaderSearch, HeaderTitle, HeaderWrapper } from './styles.ts';
+import { Badge, IconButton, InputBase, Paper, Button } from '@mui/material';
+import { HeaderIconButton, HeaderSearch, HeaderTitle, HeaderWrapper, ColorButton } from './styles.ts';
 import { CenterBox, MarginHorizontal } from '../components/styles.ts';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import useDialogState from '../hooks/useDialogState.ts';
 //import { useQueryUserLogin } from '../hooks/fetcher/UserFetcher.ts';
 import useInput from '../hooks/useInput.ts';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import SearchIcon from '@mui/icons-material/Search';
+import LoginModal from '../components/login/modal/LoginModal.tsx';
 
 
 interface Props {
     children?: React.ReactNode;
 }
+
 
 const HeaderLayout: FC<Props> = () => {
     //	const { userLogin } = useQueryUserLogin();
@@ -29,7 +32,7 @@ const HeaderLayout: FC<Props> = () => {
     const navigate = useNavigate();
 
     const [notiCount, setNotiCount] = useState<number>(0);
-
+	const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
 
     return (
 
@@ -40,7 +43,7 @@ const HeaderLayout: FC<Props> = () => {
                 <HeaderTitle>
                     <Link to='/' style={{ textDecoration: "none" }}>
                         <CenterBox>
-                            <h2 style={{ fontSize: '30px', marginTop: '20px', marginBottom: '20px', fontWeight : 'bold' }}>
+                            <h2 style={{ fontSize: '30px', marginTop: '20px', marginBottom: '20px', fontWeight: 'bold' }}>
                                 <span style={{ color: '#000000', fontFamily: 'sans-serif' }}>&lt;</span>
                                 <span style={{ color: '#000000', fontFamily: 'sans-serif' }}>CODE ROOM</span>
                                 <span style={{ color: '#000000', fontFamily: 'sans-serif' }}>/&gt;</span>
@@ -52,7 +55,7 @@ const HeaderLayout: FC<Props> = () => {
                 <MarginHorizontal size={32}>
                     <Link to={'/mentoring'} style={{ textDecoration: "none" }}>
                         <h3>
-                        <span style={{ color: '#000000', }}>멘토링</span>
+                            <span style={{ color: '#000000', }}>멘토링</span>
                         </h3>
                     </Link>
                 </MarginHorizontal>
@@ -60,7 +63,7 @@ const HeaderLayout: FC<Props> = () => {
                 <MarginHorizontal size={32}>
                     <Link to={'/code-review'} style={{ textDecoration: "none" }}>
                         <h3>
-                        <span style={{ color: '#000000', }}>코드리뷰</span>
+                            <span style={{ color: '#000000', }}>코드리뷰</span>
                         </h3>
                     </Link>
                 </MarginHorizontal>
@@ -68,7 +71,7 @@ const HeaderLayout: FC<Props> = () => {
                 <MarginHorizontal size={32}>
                     <Link to={'/contact'} style={{ textDecoration: "none" }}>
                         <h3>
-                        <span style={{ color: '#000000', }}>문의</span>
+                            <span style={{ color: '#000000', }}>문의</span>
                         </h3>
                     </Link>
                 </MarginHorizontal>
@@ -82,15 +85,25 @@ const HeaderLayout: FC<Props> = () => {
 
             <CenterBox>
 
-                <MarginHorizontal size={8}>
-                    <Link to={'/profile/my'} style={{ textDecoration: "none" }}>
-                        <span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>마이페이지</span>
-                    </Link>
-                </MarginHorizontal>
+                {
+                      true && <CenterBox>
+                         <MarginHorizontal size={8}>
+                         {<ColorButton variant="text" disableRipple onClick={onOpenLoginModal}>로그인</ColorButton>}
+                         <LoginModal isOpen={openLoginModal} onClose={onCloseLoginModal}/>
+                          </MarginHorizontal>
+                      </CenterBox>
+                }
 
                 {
                     //userLogin && <CenterBox> //todo 수정예정
-                    true && <CenterBox>
+                    false && <CenterBox>
+
+                        <MarginHorizontal size={8}>
+                            <Link to={'/profile/my'} style={{ textDecoration: "none" }}>
+                                <span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>마이페이지</span>
+                            </Link>
+                        </MarginHorizontal>
+
                         <MarginHorizontal size={8}>
                             <Link to={'/profile/my/notification'}>
                                 <HeaderIconButton>

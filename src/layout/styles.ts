@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import Button, { ButtonProps } from '@mui/material/Button';
 
 export const HeaderWrapper = styled.div`
 	display: flex;
@@ -24,3 +25,11 @@ export const HeaderIconButton = styled.div`
 		font-size: 12px;
 	}
 `
+export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
+    color: '#000000',
+    backgroundColor: '#FFFFFF',
+	'&:hover': {
+		backgroundColor: '#FFFFFF',
+		boxShadow: 'none',
+	  },
+  }));
