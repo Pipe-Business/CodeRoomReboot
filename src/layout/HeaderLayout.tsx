@@ -33,20 +33,43 @@ const onSubmitSearch = useCallback((e: any) => {
 	
 	return (
 
+			
 		<HeaderWrapper>
-			<header style={{ display: 'flex', alignItems: 'center' }}>
+
+            <header style={{ display: 'flex', alignItems: 'center' }}>
+           
 				<HeaderTitle>
-					<Link to='/'>
+					<Link to='/' style={{textDecoration : "none"}}>
 						<CenterBox>
-							<h2 style={{ fontSize: '40px', marginTop: '20px', marginBottom: '20px' }}>
+							<h2 style={{ fontSize: '30px', marginTop: '20px', marginBottom: '20px' }}>
 								<span style={{ color: '#000000', fontFamily: 'sans-serif' }}>&lt;</span>
-								<span style={{ color: '#4b57ff', fontFamily: 'sans-serif' }}>CODE ROOM</span>
+								<span style={{ color: '#000000', fontFamily: 'sans-serif' }}>CODE ROOM</span>
 								<span style={{ color: '#000000', fontFamily: 'sans-serif' }}>/&gt;</span>
 							</h2>
 						</CenterBox>
 					</Link>
 				</HeaderTitle>
-				<HeaderSearch>
+            </header>
+
+             {/* space between을 위해 header태그 밖에 위치시킴*/}
+            
+            <CenterBox>
+                <MarginHorizontal size={8}>
+                <Link to={'/profile/my'} style={{textDecoration : "none"}}>
+							<span style={{ color: '#000000',fontSize: '15px' }}>프로필</span>
+					</Link>
+                    </MarginHorizontal>
+
+                    <MarginHorizontal size={8}>
+                <Link to={'/contact'} style={{textDecoration : "none"}}>
+							<span style={{ color: '#000000',fontSize: '15px' }}>문의</span>
+					</Link>
+                    </MarginHorizontal>
+               
+                
+        
+                   
+				{/*<HeaderSearch>
 					<Paper
 						className='search-textfield'
 						component='form'
@@ -63,8 +86,8 @@ const onSubmitSearch = useCallback((e: any) => {
 							<SearchIcon />
 						</IconButton>
 					</Paper>
-				</HeaderSearch>
-			</header>
+    </HeaderSearch>*/}
+			
 			{
 				//userLogin && <CenterBox> //tood 수정예정
 			        false && <CenterBox>
@@ -80,7 +103,11 @@ const onSubmitSearch = useCallback((e: any) => {
 					</MarginHorizontal>
 				</CenterBox>
 			}
+
+                </CenterBox>
+          
 		</HeaderWrapper>
+       
 	);
 };
 

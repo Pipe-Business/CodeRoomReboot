@@ -8,9 +8,7 @@ export const HeaderWrapper = styled.div`
 	margin-bottom: 0;
 	padding-top: 0;
 	padding-bottom: 0;
-	.search-textfield {
-		flex: 0;
-	}
+	//background-color : #FFB6C1;
 `
 
 export const HeaderTitle = styled.div`
