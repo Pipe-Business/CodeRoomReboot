@@ -28,8 +28,8 @@ export const HeaderIconButton = styled.div`
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: '#000000',
     backgroundColor: '#FFFFFF',
-	'&:hover': {
-		backgroundColor: '#FFFFFF',
-		boxShadow: 'none',
-	  },
+	// '&:hover': {
+	// 	backgroundColor: '#FFFFFF',
+	// 	boxShadow: 'none',
+	//   },
   }));
