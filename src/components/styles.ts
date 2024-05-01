@@ -31,3 +31,12 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   boxShadow: 'none',
   },
 }));
+
+export const TextButton = styled(Button)<ButtonProps>(({ theme }) => ({
+  color: '#000000',
+  backgroundColor: '#FFFFFF',
+// '&:hover': {
+// 	backgroundColor: '#FFFFFF',
+// 	boxShadow: 'none',
+//   },
+}));

@@ -9,7 +9,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import PasswordIcon from '@mui/icons-material/Email';
 import { toast } from 'react-toastify';
 import { apiClient } from '../../../api/ApiClient.ts';
-import { ColorButton } from '../../styles.ts';
+import { ColorButton, TextButton } from '../../styles.ts';
 import { User } from '@supabase/supabase-js';
 
 interface Props {
@@ -68,7 +68,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'xs'}>
 			<DialogTitle  >
 				<div style={{display:'flex', justifyContent:"space-between", alignItems:'center'}}>
-					<h2>로그인/회원가입</h2>
+					<h2>로그인</h2>
 					<IconButton onClick={onClose}>
 						<CloseIcon/>
 					</IconButton>
@@ -104,19 +104,13 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 						</form>
 			
 				<Box height={16} />
-				<div style={{ width: '100%' }}>
-					<Link style={{ width: '100%' }} to={'/register'}>
-						<Button
-							sx={{
-								fontSize: '15px',
-								width: '100%',
-								backgroundColor: 'black',
-								':hover': { backgroundColor: 'grey' },
-							}}
-							variant='contained'>회원가입</Button>
-					</Link>
+
+				<div style={{display:'flex', justifyContent:'end', width: '100%', alignItems:'end' }}>
+					<Link to={'/register'}>
+						<TextButton type={'submit'} sx={{fontSize:'15',}}>회원가입</TextButton>
+						</Link>
 				</div>
-				<Box height={16} />
+				<Box height={64} />
 			</Card>
 			</DialogContent>
 		</Dialog>
