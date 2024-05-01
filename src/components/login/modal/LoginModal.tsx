@@ -1,4 +1,4 @@
-import React, { FC , useCallback, useRef } from 'react';
+import React, { FC , useCallback, useRef, useState, useEffect } from 'react';
 import useInput from '../../../hooks/useInput.ts';
 import { EMAIL_EXP } from '../../../constants/define.ts'
 import { Dialog, DialogContent, DialogTitle, IconButton ,Card, TextField, Box, Button, Divider} from '@mui/material';
@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import { apiClient } from '../../../api/ApiClient.ts';
 import { ColorButton, TextButton } from '../../styles.ts';
 import { User } from '@supabase/supabase-js';
+import localApi from '../../../api/local/LocalApi.ts';
+import { supabase } from '../../../api/ApiClient.ts';
 
 interface Props {
 	children?: React.ReactNode;
@@ -19,15 +21,26 @@ interface Props {
 }
 
 const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
-	//const { userLogin } = useQueryUserLogin();
-	// if(userLogin){
-	// 	onClose();
-	// 	return <></>;
-	// }
+	const [userLogin, setUser] = useState<User | null>(null);
+
+		useEffect(() => {
+			const getSession = async () => {
+				const { data, error } = await supabase.auth.getSession()
+				if (error) {
+					console.error(error)
+				} else {
+					const { data: { user } } = await supabase.auth.getUser()
+					setUser(user);
+				}
+			}
+			getSession()
+		}, [])
+
 	const [inputEmail, onChangeEmail, setInputEmail] = useInput('');
 	const inputEmailRef = useRef<HTMLInputElement | null>(null);
 	const inputPwdRef = useRef<HTMLInputElement | null>(null);
 	const [inputPwd, onChangePwd, setInputPwd] = useInput('');
+	const navigate = useNavigate();
 
 	const onSubmitLoginForm = useCallback(async (e: any) => {
 		e.preventDefault();
@@ -47,16 +60,18 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 			inputPwdRef.current?.focus();
 			return;
 		}
-		// if (!(await apiClient.userExistByEmail(inputEmail))) {
-		// 	alert('등록된 회원이 아닙니다.');
-		// 	navigate('/register');
-		// 	return;
-		// }
+	
+	
+	
 		const result = await apiClient.loginWithEmail(inputEmail, inputPwd);
 			
-		if(typeof result == "object"){
+		if(typeof result == "object"){ // 유저 정보가 있으면
 			const user:User = result as User;
 			console.log("user info:"+user.id);
+			localApi.saveUserToken(user.id);
+			onClose();
+			// eslint-disable-next-line no-restricted-globals
+			location.reload(); // 새로고침
 		}else{
 			toast.error('회원 정보가 없습니다.');
 		}

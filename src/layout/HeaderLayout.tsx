@@ -10,7 +10,8 @@ import useInput from '../hooks/useInput.ts';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import SearchIcon from '@mui/icons-material/Search';
 import LoginModal from '../components/login/modal/LoginModal.tsx';
-
+import { User } from '@supabase/supabase-js';
+import { apiClient, supabase } from '../api/ApiClient.ts';
 
 interface Props {
     children?: React.ReactNode;
@@ -18,7 +19,29 @@ interface Props {
 
 
 const HeaderLayout: FC<Props> = () => {
-    //	const { userLogin } = useQueryUserLogin();
+
+    const [userLogin, setUser] = useState<User | null>(null)
+
+    useEffect(() => {
+        const getSession = async () => {
+            const { data, error } = await supabase.auth.getSession()
+            if (error) {
+                console.error(error)
+            } else {
+                const { data: { user } } = await supabase.auth.getUser()
+                setUser(user);
+            }
+        }
+        getSession()
+    }, [])
+
+    const signOut = async () => {
+        console.log("signout");
+        await apiClient.signOut();
+        // eslint-disable-next-line no-restricted-globals
+        location.reload();
+    }
+
     const [inputSearch, onChangeInput] = useInput('');
     const onSubmitSearch = useCallback((e: any) => {
         e.preventDefault();
@@ -32,7 +55,7 @@ const HeaderLayout: FC<Props> = () => {
     const navigate = useNavigate();
 
     const [notiCount, setNotiCount] = useState<number>(0);
-	const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
+    const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
 
     return (
 
@@ -86,17 +109,17 @@ const HeaderLayout: FC<Props> = () => {
             <CenterBox>
 
                 {
-                      true && <CenterBox>
-                         <MarginHorizontal size={8}>
-                         {<ColorButton variant="text" disableRipple onClick={onOpenLoginModal}>로그인</ColorButton>}
-                         <LoginModal isOpen={openLoginModal} onClose={onCloseLoginModal}/>
-                          </MarginHorizontal>
-                      </CenterBox>
+                    !userLogin && <CenterBox>
+                        <MarginHorizontal size={8}>
+                            {<ColorButton variant="text" disableRipple onClick={onOpenLoginModal}>로그인</ColorButton>}
+                            <LoginModal isOpen={openLoginModal} onClose={onCloseLoginModal} />
+                        </MarginHorizontal>
+                    </CenterBox>
                 }
 
                 {
-                    //userLogin && <CenterBox> //todo 수정예정
-                    false && <CenterBox>
+
+                    userLogin && <CenterBox>
 
                         <MarginHorizontal size={8}>
                             <Link to={'/profile/my'} style={{ textDecoration: "none" }}>
@@ -112,6 +135,14 @@ const HeaderLayout: FC<Props> = () => {
                                     </Badge>
                                 </HeaderIconButton>
                             </Link>
+                        </MarginHorizontal>
+                    </CenterBox>
+                }
+                {
+                    userLogin && <CenterBox>
+                        <MarginHorizontal size={8}>
+                            <ColorButton variant="text" disableRipple onClick={signOut}>로그아웃</ColorButton>
+
                         </MarginHorizontal>
                     </CenterBox>
                 }
