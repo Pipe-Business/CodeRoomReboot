@@ -120,13 +120,26 @@ const HeaderLayout: FC<Props> = () => {
                 {
 
                     userLogin && <CenterBox>
-
-                        <MarginHorizontal size={8}>
-                            <Link to={'/profile/my'} style={{ textDecoration: "none" }}>
-                                <span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>마이페이지</span>
+                          <MarginHorizontal size={8}>
+                            <Link to={'/cash'} style={{ textDecoration: "none" }}>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>0 캐시</span>
                             </Link>
                         </MarginHorizontal>
 
+
+                        <MarginHorizontal size={8}>
+                            <Link to={'/write'} style={{ textDecoration: "none" }}>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>코드 올리기</span>
+                            </Link>
+                        </MarginHorizontal>
+
+                        <MarginHorizontal size={8}>
+                            <Link to={'/profile/my'} style={{ textDecoration: "none" }}>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>프로필</span>
+                            </Link>
+                        </MarginHorizontal>
+
+                      
                         <MarginHorizontal size={8}>
                             <Link to={'/profile/my/notification'}>
                                 <HeaderIconButton>
