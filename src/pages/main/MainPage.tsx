@@ -1,6 +1,7 @@
 
 import MainLayout from '../../layout/MainLayout.tsx';
 import {CenterBox, SearchBar} from './styles.ts';
+import { useQuery } from '@tanstack/react-query';
 import { Badge, IconButton, InputBase, Paper } from '@mui/material';
 import useInput from '../../hooks/useInput.ts';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -8,9 +9,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { MarginHorizontal, MarginVertical } from './styles.ts';
 import Box from '@mui/material';
+import { CodeEntity } from '../../data/CodeEntity.ts';
+import { apiClient } from '../../api/ApiClient.ts';
+import CodeList from '../codeList/components/CodeList.tsx';
+
 
 function MainPage() {
     // xs -> sm -> md -> lg -> xl
+    const { isLoading, data, error } = useQuery({
+		queryKey: ['codeStore'],
+		queryFn: () => apiClient.getAllCode(), 
+			//supabaseGetAllWithQuery<CodeModel>(['codeStore'], orderByChild('createdAt')),
+
+	});
 
     const [inputSearch, onChangeInput] = useInput('');
     const onSubmitSearch = useCallback((e: any) => {
@@ -52,7 +63,7 @@ function MainPage() {
 				</SearchBar>
             
          
-            {/*<CodeList type={'code'} data={data} />*/}
+            <CodeList type={'code'} data={data} />
 			{/*<LoginDialog isOpen={isLoginDialog} onClose={onCloseDialog} />*/}
             
 		</MainLayout>

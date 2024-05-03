@@ -6,6 +6,8 @@ import './index.css';
 import App from './main';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 const MainPage = React.lazy(() => import('./pages/main/MainPage.tsx'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage.tsx'));
@@ -14,12 +16,14 @@ const ContactPage = React.lazy(() => import('./pages/contact/ContactPage.tsx'));
 const MentoringPage = React.lazy(() => import('./pages/mentoring/MentoringPage.tsx'));
 const CodeReviewPage = React.lazy(() => import('./pages/codeReview/CodeReviewPage.tsx'));
 
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
     {/*<App />*/}
     <BrowserRouter>
     <Suspense fallback={
@@ -48,6 +52,7 @@ root.render(
             hideProgressBar
           />
     </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>
 );
 
