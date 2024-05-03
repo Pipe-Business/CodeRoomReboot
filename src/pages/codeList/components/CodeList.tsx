@@ -31,12 +31,12 @@ const CodeList: FC<Props> = ({ type, data }) => {
 		</>;
 	}
 	return (
-		<div style={{border:'1px solid #ddd'}}>
+		//  <div style={{border:'1px solid #ddd'}}>
+        <div style={{paddingTop:'8px', paddingBottom:'8px'}}> 
 			{data.map(item => {
                 		return (
 							<div key={item.id}>
 								<CodeItem key={item.id} item={item} />
-                                {/* {item.title} */}
                                 
 							</div>
 						);

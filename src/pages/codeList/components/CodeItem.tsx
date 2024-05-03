@@ -2,6 +2,7 @@ import React, { FC, useCallback } from 'react';
 import { Divider, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { CodeEntity } from '../../../data/CodeEntity';
 import styles from '../../../global.module.css';
+import { calcTimeDiff } from '../../../utils/DayJsHelper';
 
 interface Props {
 	children?: React.ReactNode;
@@ -9,31 +10,39 @@ interface Props {
 }
 const CodeItem: FC<Props> = ({ item }) => {
     return (
-        <ListItem>
+        <ListItem style={{paddingLeft:'0px',paddingRight:'0px', paddingTop:'4px',paddingBottom:'4px'}}>
 					<ListItemText>
-						<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+						<div style={{ display: 'flex', alignItems: 'start', flexDirection : 'column' , 
+                                paddingTop:'24px',
+                                paddingBottom:'24px',
+                                backgroundColor:'#F3F6FD',
+                                }}>
+
 							<div style={{
 								display: 'flex',
 								alignItems: 'center',
 								// width: item.formType === 'code' ? '65%' : '75%',
+                               
 							}}>
-							{/* {	<PictogramImage size={40} formType={item.formType} category={item.category} />} */}
-								<div style={{marginLeft:'8px'}} className={styles.textOverflow}>
+								<div style={{marginLeft:'8px', fontSize:'24px',}} className={styles.textOverflow}>
 									{item.title}
 								</div>
 							</div>
-							{/* {item.formType === 'code' && */}
-								<div className={styles.textOverflow} style={{ width: '10%', textAlign: 'center' }}>
+
+                            {/* 내용 */}
+							<div style={{ display: 'flex', alignItems: '', flexDirection : 'row', marginLeft:'8px' , marginTop:'8px'}}>
+								<div className={styles.textOverflow} style={{textAlign: 'center',color:'grey'}}>
 									{parseInt(item.price.toString()).toLocaleString()}p
 								</div>
-							{/* } */}
-							<div className={styles.textOverflow} style={{ width: '15%', textAlign: 'center' }}>
+					
+							<div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
 								{/* {userById.nickname} */}
                                 닉네임
 							</div>
-							<div className={styles.textOverflow} style={{ width: '10%', textAlign: 'center' }}>
-								{item.createdAt}
+							<div className={styles.textOverflow} style={{textAlign: 'center', marginLeft:'16px', color:'grey'  }}>
+								{calcTimeDiff(item.createdAt)}
 							</div>
+                            </div>
 						</div>
 					</ListItemText>
 				</ListItem>
