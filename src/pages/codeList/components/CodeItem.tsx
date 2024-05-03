@@ -29,19 +29,35 @@ const CodeItem: FC<Props> = ({ item }) => {
 								</div>
 							</div>
 
-                            {/* 내용 */}
+                            {/* 포인트, 닉네임, 시간*/}
 							<div style={{ display: 'flex', alignItems: '', flexDirection : 'row', marginLeft:'8px' , marginTop:'8px'}}>
+								<div className={styles.textOverflow} style={{textAlign: 'center',color:'grey', fontWeight :'bold'}}>
+									{parseInt(item.price.toString()).toLocaleString()} c
+								</div>
+                            </div>
+
+
+                            {/*  태그, 좋아요 수, popularity*/}
+                            <div style={{ display: 'flex', alignItems: '', flexDirection : 'row', marginLeft:'8px' , marginTop:'8px'}}>
 								<div className={styles.textOverflow} style={{textAlign: 'center',color:'grey'}}>
-									{parseInt(item.price.toString()).toLocaleString()}p
+									{item.hashTag.map((e)=>`#${e} `)}
 								</div>
 					
-							<div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
+							{/* <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
+								{0}
+							</div> */}
+							<div className={styles.textOverflow} style={{textAlign: 'center', marginLeft:'16px', color:'grey'  }}>
+                                popularity : 120
+							</div>
+
+                            <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
 								{/* {userById.nickname} */}
                                 닉네임
 							</div>
 							<div className={styles.textOverflow} style={{textAlign: 'center', marginLeft:'16px', color:'grey'  }}>
 								{calcTimeDiff(item.createdAt)}
 							</div>
+
                             </div>
 						</div>
 					</ListItemText>

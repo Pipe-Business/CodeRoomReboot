@@ -4,6 +4,8 @@ import { CodeEntity } from '../../../data/CodeEntity.ts';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@mui/material';
 import CodeItem from './CodeItem.tsx';
+import { useState } from 'react';
+import Paging from '../../../components/paging/Paging.tsx';
 
 interface Props {
 	children?: React.ReactNode,
@@ -12,7 +14,9 @@ interface Props {
 }
 
 const CodeList: FC<Props> = ({ type, data }) => {
+
 	const [searchParams] = useSearchParams();
+
 	if (!data) {
 		return null;
 	}
@@ -30,14 +34,13 @@ const CodeList: FC<Props> = ({ type, data }) => {
 			}
 		</>;
 	}
+   
 	return (
-		//  <div style={{border:'1px solid #ddd'}}>
         <div style={{paddingTop:'8px', paddingBottom:'8px'}}> 
 			{data.map(item => {
                 		return (
 							<div key={item.id}>
 								<CodeItem key={item.id} item={item} />
-                                
 							</div>
 						);
 				// if (type) {

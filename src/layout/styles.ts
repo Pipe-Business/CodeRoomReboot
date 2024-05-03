@@ -39,8 +39,8 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   justify-content: center;
   align-items: center;
   margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
+  margin-bottom: 16px;
+  padding-top: 16px;
   padding-bottom: 0;
   //background-color : #FFB6C1;
 `
