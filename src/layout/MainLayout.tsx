@@ -5,6 +5,7 @@ import HeaderLayout from './HeaderLayout.tsx';
 import { Divider, Hidden } from '@mui/material';
 import { CenterBox } from '../components/styles.ts';
 import styled from "@emotion/styled"
+import FooterLayout from './FooterLayout.tsx';
 
 interface Props {
 	children?: React.ReactNode;
@@ -39,6 +40,9 @@ const MainLayout: FC<Props> = ({ children }) => {
 							</MainLayoutWrapper>
 					{/* </Grid>
 				</Grid> */}
+			</BaseLayout>
+			<BaseLayout>
+			<FooterLayout />
 			</BaseLayout>
 		</div>
 	);

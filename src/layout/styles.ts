@@ -33,3 +33,14 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
 	// 	boxShadow: 'none',
 	//   },
   }));
+
+  export const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  //background-color : #FFB6C1;
+`

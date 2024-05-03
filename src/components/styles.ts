@@ -7,6 +7,12 @@ export const CenterBox = styled.div`
   align-items: center;
 `
 
+export const FooterBox = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+`
+
 interface MarginStyle {
     size:number
 }
