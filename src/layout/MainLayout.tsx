@@ -3,10 +3,18 @@ import BaseLayout from './BaseLayout.tsx';
 import Grid from '@mui/material/Unstable_Grid2';
 import HeaderLayout from './HeaderLayout.tsx';
 import { Divider, Hidden } from '@mui/material';
+import { CenterBox } from '../components/styles.ts';
+import styled from "@emotion/styled"
 
 interface Props {
 	children?: React.ReactNode;
 }
+
+const MainLayoutWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
 
 const MainLayout: FC<Props> = ({ children }) => {
 	//const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
@@ -19,26 +27,18 @@ const MainLayout: FC<Props> = ({ children }) => {
 				<BaseLayout>
 					<HeaderLayout />
 				</BaseLayout>
-				<Divider />
+				{/* <Divider /> */}
 			</div>
 			<BaseLayout>
-				<Grid container columns={24} spacing={4}>
-					<Hidden only={['xs', 'sm']}>
-						<Grid xs={false} sm={false} md={6} lg={6} xl={6}>
-							<div style={{ marginTop: 16 }}>
-								{/*isLoadingUserLogin ? <ProfileCardSkeleton /> : userLogin ? <UserProfile /> : <Login />*/}
-							</div>
-						</Grid>
-
-					</Hidden>
-					<Grid xs={24} sm={24} md={18} lg={18} xl={18}>
-						<div>
-
+				{/* <Grid container columns={24} spacing={4}>
+				<Grid xs={24} sm={24} md={18} lg={18} xl={18}> */}
+				 <MainLayoutWrapper>
+							<div style={{marginTop : 16}}>
 							{children}
-						</div>
-					</Grid>
-				</Grid>
-
+							</div>
+							</MainLayoutWrapper>
+					{/* </Grid>
+				</Grid> */}
 			</BaseLayout>
 		</div>
 	);
