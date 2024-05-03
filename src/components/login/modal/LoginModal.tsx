@@ -120,7 +120,10 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 			
 				<Box height={16} />
 
-				<div style={{display:'flex', justifyContent:'end', width: '100%', alignItems:'end' }}>
+				<div style={{display:'flex', justifyContent:'space-between', width: '100%', alignItems:'end' }}>
+				<Link to={'/change-password'}>
+						<TextButton type={'submit'} sx={{fontSize:'15',}}>비밀번호 찾기</TextButton>
+						</Link>
 					<Link to={'/register'}>
 						<TextButton type={'submit'} sx={{fontSize:'15',}}>회원가입</TextButton>
 						</Link>

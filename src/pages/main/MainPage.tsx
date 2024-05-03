@@ -113,9 +113,7 @@ function MainPage() {
 
 
                 <CodeList type={'code'} data={currentPosts} />
-                {/* <CodeList type={'code'} data={data} /> */}
                 <Paging page={currentPage} count={count} setPage={setPage} />
-                {/*<LoginDialog isOpen={isLoginDialog} onClose={onCloseDialog} />*/}
 
             </MainLayout>
 
