@@ -39,11 +39,6 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    //async getAllCode() : Promise<CodeModel[]>{
-    //         const { data, error } = await supabase
-    //   .from('cities')
-    //   .select('name, countries!inner(name)')
-    //   .eq('countries.name', 'Indonesia')
     async getAllCode(): Promise<CodeEntity[]> {
         try {
             const { data, error } = await supabase.from('post')
@@ -87,6 +82,22 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('비밀번호 재설정에 실패했습니다.');
         }
     }
+
+    async signUpByEmail(email: string, password: string){
+        try{
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+              });
+              console.log(data);
+        }
+        catch(e: any){
+            console.log(e);
+            throw new Error('이메일 회원가입에 실패하였습니다.');
+        }
+    }
+
+
 
 }
 

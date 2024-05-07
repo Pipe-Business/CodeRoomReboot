@@ -9,7 +9,8 @@ import { toast } from 'react-toastify';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout.tsx';
 import { ColorButton, FormWrapper, TextFieldWrapper } from './styles.ts';
-
+import { apiClient } from '../../api/ApiClient.ts';
+import { createTodayDate } from '../../utils/DayJsHelper.ts';
 interface Props {
 	children?: React.ReactNode;
 }
@@ -114,19 +115,19 @@ const RegisterPage: FC<Props> = () => {
 				inputPwdCheckRef.current?.focus();
 				return;
 			}
-			// if (!inputNickName) {
-			// 	inputNicknameRef.current?.focus();
-			// 	setErrNicknameMsg('빈칸을 입력해주세요');
-			// 	setErrNickname(true);
-			// 	toast.error('빈칸을 입력해주세요');
-			// 	return;
-			// }
-			// if (errorNickName) {
-			// 	inputNicknameRef.current?.focus();
-			// 	toast.error(errNickNameMsg);
-			// 	return;
-			// }
-			// const date = createTodayDate();
+			if (!inputNickName) {
+				inputNicknameRef.current?.focus();
+				setErrNicknameMsg('빈칸을 입력해주세요');
+				setErrNickname(true);
+				toast.error('빈칸을 입력해주세요');
+				return;
+			}
+			if (errorNickName) {
+				inputNicknameRef.current?.focus();
+				toast.error(errNickNameMsg);
+				return;
+			}
+			const date = createTodayDate();
 			// await mutate({
 			// 	id: '',
 			// 	birth: '',
@@ -160,7 +161,8 @@ const RegisterPage: FC<Props> = () => {
 			// 	sender: 'admin',
 			// };
 			// await apiClient.sendNotificationByUser(userUid, notiEntity);
-			navigate('/');
+			apiClient.signUpByEmail(inputEmail,inputPwd);
+			navigate('/signup-complete');
 		} catch (e) {
 			console.log('firebase error', e);
 			console.log(e);
