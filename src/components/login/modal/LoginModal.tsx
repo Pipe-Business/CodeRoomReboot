@@ -121,7 +121,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 				<Box height={16} />
 
 				<div style={{display:'flex', justifyContent:'space-between', width: '100%', alignItems:'end' }}>
-				<Link to={'/change-password'}>
+				<Link to={'/reset-password'}>
 						<TextButton type={'submit'} sx={{fontSize:'15',}}>비밀번호 찾기</TextButton>
 						</Link>
 					<Link to={'/register'}>
