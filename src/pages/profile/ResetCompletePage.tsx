@@ -30,7 +30,7 @@ const ResetCompletePage: FC<Props> = () => {
 
 
             <MarginHorizontal size={8} style={{ marginTop: 16, marginBottom: 16, }}>
-                <span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>초기화가 완료되었습니다. 입력하신 이메일을 확인해주세요</span>
+                <span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>초기화 하시려면 이메일로 전송된 링크를 클릭해주세요.</span>
             </MarginHorizontal>
             
             <Box height={64}/>

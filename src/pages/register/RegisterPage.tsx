@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useRef, useState } from 'react';
+import React, { FC, useCallback, useRef, useState, } from 'react';
 import FullLayout from '../../layout/FullLayout.tsx';
 import InfoLayout from '../../layout/InfoLayout';
 import styled from '@emotion/styled';
@@ -11,6 +11,9 @@ import MainLayout from '../../layout/MainLayout.tsx';
 import { ColorButton, FormWrapper, TextFieldWrapper } from './styles.ts';
 import { apiClient } from '../../api/ApiClient.ts';
 import { createTodayDate } from '../../utils/DayJsHelper.ts';
+import { UserEntity } from '../../data/UserEntity.ts';
+import { useMutation } from '@tanstack/react-query';
+import { User } from '@supabase/supabase-js';
 interface Props {
 	children?: React.ReactNode;
 }
@@ -18,25 +21,44 @@ interface Props {
 
 const RegisterPage: FC<Props> = () => {
 
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
-    const inputEmailRef = useRef<HTMLInputElement | null>(null);
+	const inputEmailRef = useRef<HTMLInputElement | null>(null);
 	const inputPwdRef = useRef<HTMLInputElement | null>(null);
 	const inputPwdCheckRef = useRef<HTMLInputElement | null>(null);
 	const inputNicknameRef = useRef<HTMLInputElement | null>(null);
 
-    const [inputPwd, onChangeInputPwd, errorPwd, errPwdMessage,
+	const { mutateAsync: mutate } = useMutation({
+		mutationFn: async (userEntity: UserEntity) => {
+			const user:User = await apiClient.signUpByEmail(inputEmail, inputPwd);
+			userEntity.userToken = user.id;
+			await apiClient.insertUserData(userEntity);
+		},
+		onSuccess: () => {
+			toast.success('회원가입에 성공하였습니다. 로그인 해주세요');
+		},
+		onError: (error) => {
+			if (error.message.includes('auth/email-already-in-use')) { // todo
+				toast.error('이미 사용중인 이메일입니다');
+				setErrEmail(true);
+				setErrEmailMsg('이미 사용중인 이메일입니다.');
+
+			}
+		},
+	});
+
+	const [inputPwd, onChangeInputPwd, errorPwd, errPwdMessage,
 		, successPwd, successPwdMsg,
 		setErrPwd, setErrPwdMsg,
-    ] = useInputValidate({ minLen: 6 });
+	] = useInputValidate({ minLen: 6 });
 
-    const [inputNickName, onChangeInputNickName, errorNickName, errNickNameMsg,
+	const [inputNickName, onChangeInputNickName, errorNickName, errNickNameMsg,
 		___, successNickName, successNickNameMsg,
 		setErrNickname, setErrNicknameMsg, , ,
 	] = useInputValidate({ minLen: 2 });
 
 
-    const [inputPwdCheck, setInputPwdCheck] = useState('');
+	const [inputPwdCheck, setInputPwdCheck] = useState('');
 	const [errorPwdCheck, setErrPwdCheck] = useState(false);
 	const [errorPwdCheckMsg, setErrPwdCheckMsg] = useState('');
 	const [successPwdCheck, setSuccessPwdCheck] = useState(false);
@@ -68,7 +90,7 @@ const RegisterPage: FC<Props> = () => {
 		setInputPwdCheck(value);
 	}, [inputPwd, inputPwdCheck]);
 
-    const [inputEmail, onChangeInputEmail, errorEmail, errorEmailMessage,
+	const [inputEmail, onChangeInputEmail, errorEmail, errorEmailMessage,
 		, successEmail, successEmailMsg,
 		setErrEmail, setErrEmailMsg,
 		, ,
@@ -77,7 +99,7 @@ const RegisterPage: FC<Props> = () => {
 		validRegexMessage: '이메일 형식이 올바르지 않아요',
 	});
 
-    const onSubmitRegisterForm = useCallback(async (e: any) => {
+	const onSubmitRegisterForm = useCallback(async (e: any) => {
 		try {
 			e.preventDefault();
 			if (!inputEmail) {
@@ -161,101 +183,111 @@ const RegisterPage: FC<Props> = () => {
 			// 	sender: 'admin',
 			// };
 			// await apiClient.sendNotificationByUser(userUid, notiEntity);
-			apiClient.signUpByEmail(inputEmail,inputPwd);
+		  const user : UserEntity = {
+				authType : 'CODEROOM',
+				email : inputEmail,
+				nickname : inputNickName,
+				name:null,
+				profileUrl:null,
+				contacts : null,
+				aboutMe:null,
+				userToken : null,
+			}	
+			await mutate(user);
 			navigate('/signup-complete');
 		} catch (e) {
-			console.log('firebase error', e);
+			console.log('supabase error', e);
 			console.log(e);
 		}
 
 
 	}, [inputPwdCheck, inputPwd, inputEmail, inputNickName]);
 
-    return (
-        <MainLayout>
+	return (
+		<MainLayout>
 			<Card>
-			<InfoLayout header={'일반회원 회원가입'}>
-				<FormWrapper onSubmit={onSubmitRegisterForm}>
-					<TextFieldWrapper>
-						<div>이메일</div>
-						<TextField
-							sx={{
-								width: { sm: 300, md: 400 },
-							}}
-							fullWidth
-							type='email'
-							inputRef={inputEmailRef}
-							value={inputEmail}
-							onChange={onChangeInputEmail}
-							error={errorEmail}
-							autoFocus
-							color={errorEmail ? 'error' : successEmail ? 'success' : 'info'}
-							placeholder={'ex) coderoom@coding.com'}
-							helperText={errorEmail ? errorEmailMessage : successEmail ? successEmailMsg : ''}
-						/>
-					</TextFieldWrapper>
-					<TextFieldWrapper>
-						<div>비밀번호</div>
-						<TextField
-							sx={{
-								width: { sm: 300, md: 400 },
-							}}
-							fullWidth
-							value={inputPwd}
-							inputRef={inputPwdRef}
-							onChange={onChangeInputPwd}
-							error={errorPwd}
-							color={errorPwd ? 'error' : successPwd ? 'success' : 'info'}
-							helperText={errorPwd ? errPwdMessage : successPwd ? successPwdMsg : ''}
-							placeholder={'비밀번호 6자리 이상'}
-							type='password'
-						/>
-					</TextFieldWrapper>
-					<TextFieldWrapper>
-						<div>비밀번호 재확인</div>
-						<TextField
-							sx={{
-								width: { sm: 300, md: 400 },
-							}}
-							fullWidth
-							value={inputPwdCheck}
-							inputRef={inputPwdCheckRef}
-							onChange={onChangeInputPwdCheck}
-							error={errorPwdCheck}
-							helperText={errorPwdCheck ? errorPwdCheckMsg : successPwdCheck ? successPwdMsg : ''}
-							placeholder={'비밀번호를 다시 입력해주세요'}
-							type='password'
-						/>
-					</TextFieldWrapper>
-					<TextFieldWrapper>
-						<div>닉네임</div>
-						<TextField
-							sx={{
-								width: { sm: 300, md: 400 },
-							}}
-							fullWidth
-							value={inputNickName}
-							ref={inputNicknameRef}
-							onChange={onChangeInputNickName}
-							error={errorNickName}
+				<InfoLayout header={'일반회원 회원가입'}>
+					<FormWrapper onSubmit={onSubmitRegisterForm}>
+						<TextFieldWrapper>
+							<div>이메일</div>
+							<TextField
+								sx={{
+									width: { sm: 300, md: 400 },
+								}}
+								fullWidth
+								type='email'
+								inputRef={inputEmailRef}
+								value={inputEmail}
+								onChange={onChangeInputEmail}
+								error={errorEmail}
+								autoFocus
+								color={errorEmail ? 'error' : successEmail ? 'success' : 'info'}
+								placeholder={'ex) coderoom@coding.com'}
+								helperText={errorEmail ? errorEmailMessage : successEmail ? successEmailMsg : ''}
+							/>
+						</TextFieldWrapper>
+						<TextFieldWrapper>
+							<div>비밀번호</div>
+							<TextField
+								sx={{
+									width: { sm: 300, md: 400 },
+								}}
+								fullWidth
+								value={inputPwd}
+								inputRef={inputPwdRef}
+								onChange={onChangeInputPwd}
+								error={errorPwd}
+								color={errorPwd ? 'error' : successPwd ? 'success' : 'info'}
+								helperText={errorPwd ? errPwdMessage : successPwd ? successPwdMsg : ''}
+								placeholder={'비밀번호 6자리 이상'}
+								type='password'
+							/>
+						</TextFieldWrapper>
+						<TextFieldWrapper>
+							<div>비밀번호 재확인</div>
+							<TextField
+								sx={{
+									width: { sm: 300, md: 400 },
+								}}
+								fullWidth
+								value={inputPwdCheck}
+								inputRef={inputPwdCheckRef}
+								onChange={onChangeInputPwdCheck}
+								error={errorPwdCheck}
+								helperText={errorPwdCheck ? errorPwdCheckMsg : successPwdCheck ? successPwdMsg : ''}
+								placeholder={'비밀번호를 다시 입력해주세요'}
+								type='password'
+							/>
+						</TextFieldWrapper>
+						<TextFieldWrapper>
+							<div>닉네임</div>
+							<TextField
+								sx={{
+									width: { sm: 300, md: 400 },
+								}}
+								fullWidth
+								value={inputNickName}
+								ref={inputNicknameRef}
+								onChange={onChangeInputNickName}
+								error={errorNickName}
 
-							color={errorNickName ? 'error' : successNickName ? 'success' : 'info'}
-							helperText={errorNickName ? errNickNameMsg : successNickName ? successNickNameMsg : ''}
-							placeholder={'닉네임을 입력해주세요 2글자 이상'}
-							type='text'
-						/>
-					</TextFieldWrapper>
-					<div>
-					<ColorButton type={'submit'} sx={{fontSize:'18px', width: '100%', fontWeight:'bold' }}>회원가입</ColorButton>
-					</div>
-				</FormWrapper>
+								color={errorNickName ? 'error' : successNickName ? 'success' : 'info'}
+								helperText={errorNickName ? errNickNameMsg : successNickName ? successNickNameMsg : ''}
+								placeholder={'닉네임을 입력해주세요 2글자 이상'}
+								type='text'
+							/>
+						</TextFieldWrapper>
+						<div>
+							<ColorButton type={'submit'} sx={{ fontSize: '18px', width: '100%', fontWeight: 'bold' }}>회원가입</ColorButton>
+						</div>
+					</FormWrapper>
 
-			</InfoLayout>
+				</InfoLayout>
 			</Card>
-			<Box height={64}/>
+			<Box height={64} />
 		</MainLayout>
 
-    );
+	);
 };
 
 export default RegisterPage;
