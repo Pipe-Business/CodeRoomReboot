@@ -8,25 +8,11 @@ import { EMAIL_EXP } from '../../constants/define';
 import { toast } from 'react-toastify';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout.tsx';
-import { ColorButton } from './styles.ts';
-import { Style } from '@mui/icons-material';
+import { ColorButton, FormWrapper, TextFieldWrapper } from './styles.ts';
 
 interface Props {
 	children?: React.ReactNode;
 }
-
-const FormWrapper = styled.form`
-  & > div {
-    margin-bottom: 16px;
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-`;
-const TextFieldWrapper = styled.div`
-  div {
-    margin-bottom: 8px;
-  }
-`;
 
 
 const RegisterPage: FC<Props> = () => {
