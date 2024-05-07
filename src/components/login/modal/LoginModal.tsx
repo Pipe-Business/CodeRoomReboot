@@ -2,7 +2,7 @@ import React, { FC , useCallback, useRef, useState, useEffect } from 'react';
 import useInput from '../../../hooks/useInput.ts';
 import { EMAIL_EXP } from '../../../constants/define.ts'
 import { Dialog, DialogContent, DialogTitle, IconButton ,Card, TextField, Box, Button, Divider} from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation} from 'react-router-dom';
 //import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher.ts';
 import CloseIcon from '@mui/icons-material/Close';
 import EmailIcon from '@mui/icons-material/Email';
@@ -41,6 +41,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 	const inputPwdRef = useRef<HTMLInputElement | null>(null);
 	const [inputPwd, onChangePwd, setInputPwd] = useInput('');
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const onSubmitLoginForm = useCallback(async (e: any) => {
 		e.preventDefault();
@@ -64,20 +65,26 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 	
 	
 		const result = await apiClient.loginWithEmail(inputEmail, inputPwd);
-			
+		const currentPath = location.pathname;
+
 		if(typeof result == "object"){ // 유저 정보가 있으면
 			const user:User = result as User;
 			console.log("user info:"+user.id);
 			localApi.saveUserToken(user.id);
 			onClose();
-			// eslint-disable-next-line no-restricted-globals
-			location.reload(); // 새로고침
+			
+			if(currentPath == '/'){
+				navigate(0);
+			}
+			navigate('/');
+
 		}else{
 			toast.error('회원 정보가 없습니다.');
 		}
 
 		setInputEmail('');
 		setInputPwd('');
+		
 	}, [inputEmail, inputPwd]);
 	return (
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'xs'}>

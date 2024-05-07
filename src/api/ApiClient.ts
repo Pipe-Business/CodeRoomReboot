@@ -2,6 +2,7 @@ import { SupabaseAuthAPI } from "./supabase/SupabaseAuthAPI";
 import { createClient, User } from '@supabase/supabase-js'
 import { supabaseConfig } from "../config/supabaseConfig";
 import { CodeEntity } from "../data/CodeEntity";
+import { UserEntity } from "../data/UserEntity";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -75,7 +76,7 @@ class ApiClient implements SupabaseAuthAPI {
     async resetPasswordByEmail(email: string) {
         try {
             const { data, error } = await supabase.auth
-                .resetPasswordForEmail(email,{redirectTo : 'http://localhost:3000/change-password'});
+                .resetPasswordForEmail(email, { redirectTo: 'http://localhost:3000/change-password' });
         }
         catch (e: any) {
             console.log(e);
@@ -83,18 +84,64 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async signUpByEmail(email: string, password: string){
-        try{
+    async signUpByEmail(email: string, password: string): Promise<User> {
+        try {
             const { data, error } = await supabase.auth.signUp({
                 email: email,
                 password: password,
-              });
-              console.log(data);
+            });
+            console.log(data);
+            return data.user!;
         }
-        catch(e: any){
+        catch (e: any) {
             console.log(e);
             throw new Error('이메일 회원가입에 실패하였습니다.');
         }
+    }
+
+    async insertUserData(user: UserEntity) {
+        try {
+
+            const userData = {
+                "auth_type": user.authType,
+                "email": user.email,
+                "name": user.name,
+                "nickname": user.nickname,
+                "profile_url": user.profileUrl,
+                "about_me": user.aboutMe,
+                "contacts": user.contacts,
+                "user_token": user.userToken,
+            }
+
+            const { data, error } = await supabase.from('users')
+                .insert(userData).select();
+            if(error){
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('회원정보 저장에 실패하였습니다.');
+            }
+           
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('회원정보 저장에 실패하였습니다.');
+        }
+    }
+
+    async updateUserPassword(newPassword: string) {
+        try {
+            const { data, error } = await supabase.auth
+                .updateUser({ password: newPassword });
+            console.log(data);
+        }
+        catch (e: any) {
+            console.log(e);
+            throw new Error('비밀번호 업데이트에 실패했습니다.');
+        }
+
     }
 
 
