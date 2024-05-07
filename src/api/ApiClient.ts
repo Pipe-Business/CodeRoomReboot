@@ -1,8 +1,9 @@
 import { SupabaseAuthAPI } from "./supabase/SupabaseAuthAPI";
-import { createClient, User } from '@supabase/supabase-js'
+import { AuthError, createClient, User } from '@supabase/supabase-js'
 import { supabaseConfig } from "../config/supabaseConfig";
 import { CodeEntity } from "../data/CodeEntity";
 import { UserEntity } from "../data/UserEntity";
+import { API_ERROR } from "../constants/define";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -91,10 +92,17 @@ class ApiClient implements SupabaseAuthAPI {
                 password: password,
             });
             console.log(data);
+            if(error){
+                throw new Error(API_ERROR.USER_ALREADY_REGISTERED);
+            }
             return data.user!;
         }
         catch (e: any) {
             console.log(e);
+            if(e){
+                throw new Error(API_ERROR.USER_ALREADY_REGISTERED);
+                
+            }
             throw new Error('이메일 회원가입에 실패하였습니다.');
         }
     }

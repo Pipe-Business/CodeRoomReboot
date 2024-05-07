@@ -14,6 +14,7 @@ import { createTodayDate } from '../../utils/DayJsHelper.ts';
 import { UserEntity } from '../../data/UserEntity.ts';
 import { useMutation } from '@tanstack/react-query';
 import { User } from '@supabase/supabase-js';
+import { API_ERROR } from '../../constants/define';
 interface Props {
 	children?: React.ReactNode;
 }
@@ -31,18 +32,18 @@ const RegisterPage: FC<Props> = () => {
 	const { mutateAsync: mutate } = useMutation({
 		mutationFn: async (userEntity: UserEntity) => {
 			const user:User = await apiClient.signUpByEmail(inputEmail, inputPwd);
-			userEntity.userToken = user.id;
-			await apiClient.insertUserData(userEntity);
+				userEntity.userToken = user.id;
+				await apiClient.insertUserData(userEntity);
+
 		},
 		onSuccess: () => {
 			toast.success('회원가입에 성공하였습니다. 로그인 해주세요');
 		},
 		onError: (error) => {
-			if (error.message.includes('auth/email-already-in-use')) { // todo
+			if (error.message == API_ERROR.USER_ALREADY_REGISTERED) {
 				toast.error('이미 사용중인 이메일입니다');
 				setErrEmail(true);
 				setErrEmailMsg('이미 사용중인 이메일입니다.');
-
 			}
 		},
 	});
