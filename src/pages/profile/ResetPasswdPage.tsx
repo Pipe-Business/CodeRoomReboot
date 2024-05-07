@@ -51,6 +51,7 @@ if (!EMAIL_EXP.test(inputEmail)) {
 
 setInputEmail('');
     apiClient.resetPasswordByEmail(inputEmail);
+    navigate('/reset-complete');
 }, [inputEmail]);
 
     return (

@@ -15,7 +15,10 @@ const MyPage = React.lazy(() => import('./pages/profile/MyPage.tsx'));
 const ContactPage = React.lazy(() => import('./pages/contact/ContactPage.tsx'));
 const MentoringPage = React.lazy(() => import('./pages/mentoring/MentoringPage.tsx'));
 const CodeReviewPage = React.lazy(() => import('./pages/codeReview/CodeReviewPage.tsx'));
+const ResetPasswdPage = React.lazy(() => import('./pages/profile/ResetPasswdPage.tsx'));
+const RegisterPage = React.lazy(() => import('./pages/register/RegisterPage.tsx'));
 const ChangePasswdPage = React.lazy(() => import('./pages/profile/ChangePasswdPage.tsx'));
+const ResetCompletePage = React.lazy(() => import('./pages/profile/ResetCompletePage.tsx'))
 
 const queryClient = new QueryClient();
 
@@ -46,7 +49,11 @@ root.render(
       <Route path='/contact' element={<ContactPage />} />
       <Route path='/mentoring' element={<MentoringPage />} />
       <Route path='/code-review' element={<CodeReviewPage />} />
-      <Route path='/change-password' element={<ChangePasswdPage />}/>
+      <Route path='/reset-password' element={<ResetPasswdPage />}/>
+      <Route path='/register' element={<RegisterPage/>}/>
+      <Route path='/change-password' element={<ChangePasswdPage/>}/>
+      <Route path='/reset-complete' element={<ResetCompletePage/>}/>
+    
     </Routes>
     </Suspense>
       <ToastContainer
