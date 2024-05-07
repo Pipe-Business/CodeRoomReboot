@@ -77,7 +77,8 @@ class ApiClient implements SupabaseAuthAPI {
     async resetPasswordByEmail(email: string) {
         try {
             const { data, error } = await supabase.auth
-                .resetPasswordForEmail(email, { redirectTo: 'http://localhost:3000/change-password' });
+                //.resetPasswordForEmail(email, { redirectTo: 'http://localhost:3000/change-password' });
+                .resetPasswordForEmail(email, { redirectTo: 'https://main--coderoom-io.netlify.app/reset-password' });
         }
         catch (e: any) {
             console.log(e);
