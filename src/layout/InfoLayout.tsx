@@ -23,7 +23,7 @@ const InfoLayout: FC<Props> = ({ header,children,navigateUrl }) => {
 			<CardHeader
 				avatar={<IconButton onClick={onClickBackButton}><ArrowBackIcon /></IconButton>}
 				title={header}
-				titleTypographyProps={{fontSize:'18px'}}
+				titleTypographyProps={{fontSize:'24px', fontWeight:'bold'}}
 			/>
 			<CardContent>
 				{children}
