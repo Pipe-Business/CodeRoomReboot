@@ -9,7 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { MarginHorizontal, MarginVertical } from './styles.ts';
 import Box from '@mui/material';
-import { CodeEntity } from '../../data/CodeEntity.ts';
+import { CodeModel } from '../../data/model/CodeModel.ts';
 import { apiClient } from '../../api/ApiClient.ts';
 import CodeList from '../codeList/components/CodeList.tsx';
 import Paging from '../../components/paging/Paging.tsx';
@@ -36,13 +36,13 @@ function MainPage() {
     }, [inputSearch]);
     const navigate = useNavigate();
 
-    const [list, setList] = useState<CodeEntity[]>([]);
+    const [list, setList] = useState<CodeModel[]>([]);
     const [count, setCount] = useState(0); // 아이템 총 개수
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지. default 값으로 1
     const [postPerPage] = useState(20); // 한 페이지에 보여질 아이템 수 
     const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
     const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
-    const [currentPosts, setCurrentPosts] = useState<CodeEntity[]>([]); // 현재 페이지에서 보여지는 아이템들
+    const [currentPosts, setCurrentPosts] = useState<CodeModel[]>([]); // 현재 페이지에서 보여지는 아이템들
 
     const setPage = useCallback(
         (page:any) => {

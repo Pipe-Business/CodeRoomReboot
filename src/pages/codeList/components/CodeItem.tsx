@@ -1,12 +1,12 @@
 import React, { FC, useCallback } from 'react';
 import { Divider, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { CodeEntity } from '../../../data/CodeEntity';
+import { CodeModel } from '../../../data/model/CodeModel';
 import styles from '../../../global.module.css';
 import { calcTimeDiff } from '../../../utils/DayJsHelper';
 
 interface Props {
 	children?: React.ReactNode;
-	item: CodeEntity;
+	item: CodeModel;
 }
 const CodeItem: FC<Props> = ({ item }) => {
     return (

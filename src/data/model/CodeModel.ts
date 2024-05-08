@@ -1,4 +1,4 @@
-export type CodeEntity = {
+export type CodeModel = {
     id: number,
     title: string,
     description: string,  /** 코드 설명 */

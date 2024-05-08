@@ -1,7 +1,7 @@
 import { SupabaseAuthAPI } from "./supabase/SupabaseAuthAPI";
 import { AuthError, createClient, User } from '@supabase/supabase-js'
 import { supabaseConfig } from "../config/supabaseConfig";
-import { CodeEntity } from "../data/CodeEntity";
+import { CodeModel } from "../data/model/CodeModel";
 import { UserEntity } from "../data/UserEntity";
 import { API_ERROR } from "../constants/define";
 
@@ -41,15 +41,15 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getAllCode(): Promise<CodeEntity[]> {
+    async getAllCode(): Promise<CodeModel[]> {
         try {
             const { data, error } = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .order('created_at', { ascending: false });
 
-            let lstCodeModel: CodeEntity[] = [];
+            let lstCodeModel: CodeModel[] = [];
             data?.forEach((e) => {
-                let codeModel: CodeEntity = {
+                let codeModel: CodeModel = {
                     id: e.id,
                     title: e.title,
                     description: e.description,

@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { CodeEntity } from '../../../data/CodeEntity.ts';
+import { CodeModel } from '../../../data/model/CodeModel.ts';
 //import CodeItem from './CodeItem.tsx';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@mui/material';
@@ -9,7 +9,7 @@ import Paging from '../../../components/paging/Paging.tsx';
 
 interface Props {
 	children?: React.ReactNode,
-	data?: CodeEntity[],
+	data?: CodeModel[],
 	type?: 'code' | 'article'
 }
 
