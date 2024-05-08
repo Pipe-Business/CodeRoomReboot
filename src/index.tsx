@@ -21,6 +21,7 @@ const ChangePasswdPage = React.lazy(() => import('./pages/profile/ChangePasswdPa
 const ResetCompletePage = React.lazy(() => import('./pages/profile/ResetCompletePage.tsx'));
 const SignUpCompletePage = React.lazy(() => import('./pages/register/SignUpCompletePage.tsx'));
 const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage.tsx'));
+const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage.tsx'));
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ root.render(
       <Route path='/change-password' element={<ChangePasswdPage/>}/>
       <Route path='/reset-complete' element={<ResetCompletePage/>}/>
       <Route path='/signup-complete' element={<SignUpCompletePage/>}/>
+      <Route path='/create/code' element={<CreateCodePage/>}/>
       <Route path='/*' element={<NotFoundPage/>}/>
     
     </Routes>

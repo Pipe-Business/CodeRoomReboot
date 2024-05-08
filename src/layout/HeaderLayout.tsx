@@ -128,7 +128,7 @@ const HeaderLayout: FC<Props> = () => {
 
 
                         <MarginHorizontal size={8}>
-                            <Link to={'/write'} style={{ textDecoration: "none" }}>
+                            <Link to={'/create/code'} style={{ textDecoration: "none" }}>
                                 <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>코드 올리기</span>
                             </Link>
                         </MarginHorizontal>

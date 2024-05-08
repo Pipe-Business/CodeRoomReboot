@@ -7,3 +7,21 @@ export const REACT_QUERY_KEY = {
 export const API_ERROR = {
     USER_ALREADY_REGISTERED : 'USER_ALREADY_REGISTERED',
 }
+
+export const LANGUAGE_FILTER = [
+	'JavaScript',
+	'TypeScript',
+	'JAVA',
+	'Python',
+	'C++',
+	'C#',
+	'Ruby',
+	'Swift',
+	'Kotlin',
+	'Go',
+	'PHP',
+	'Rust',
+	'C#',
+	'Dart',
+	'기타',
+];

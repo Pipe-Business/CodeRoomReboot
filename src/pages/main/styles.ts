@@ -19,8 +19,8 @@ export const MarginHorizontal = styled.div<MarginStyle>`
   margin-right: ${(props) => props.size}px;
 `
 export const MarginVertical = styled.div<MarginStyle>`
-  margin-left: ${(props) => props.size};
-  margin-right: ${(props) => props.size};
+  margin-top: ${(props) => props.size};
+  margin-bottom: ${(props) => props.size};
 `
 export const Margin = styled.div<MarginStyle>`
     margin: ${(props)=>props.size};
