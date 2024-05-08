@@ -2,7 +2,7 @@ import { SupabaseAuthAPI } from "./supabase/SupabaseAuthAPI";
 import { AuthError, createClient, User } from '@supabase/supabase-js'
 import { supabaseConfig } from "../config/supabaseConfig";
 import { CodeModel } from "../data/model/CodeModel";
-import { UserEntity } from "../data/UserEntity";
+import { UserEntity } from "../data/entity/UserEntity";
 import { API_ERROR } from "../constants/define";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
@@ -78,7 +78,7 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const { data, error } = await supabase.auth
                 //.resetPasswordForEmail(email, { redirectTo: 'http://localhost:3000/change-password' });
-                .resetPasswordForEmail(email, { redirectTo: 'https://main--coderoom-io.netlify.app/reset-password' });
+            .resetPasswordForEmail(email, { redirectTo: 'https://main--coderoom-io.netlify.app/reset-password' });
         }
         catch (e: any) {
             console.log(e);
@@ -93,16 +93,16 @@ class ApiClient implements SupabaseAuthAPI {
                 password: password,
             });
             console.log(data);
-            if(error){
+            if (error) {
                 throw new Error(API_ERROR.USER_ALREADY_REGISTERED);
             }
             return data.user!;
         }
         catch (e: any) {
             console.log(e);
-            if(e){
+            if (e) {
                 throw new Error(API_ERROR.USER_ALREADY_REGISTERED);
-                
+
             }
             throw new Error('이메일 회원가입에 실패하였습니다.');
         }
@@ -124,7 +124,7 @@ class ApiClient implements SupabaseAuthAPI {
 
             const { data, error } = await supabase.from('users')
                 .insert(userData).select();
-            if(error){
+            if (error) {
                 console.log("error" + error.code);
                 console.log("error" + error.details);
                 console.log("error" + error.hint);
@@ -132,7 +132,7 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('회원정보 저장에 실패하였습니다.');
             }
-           
+
 
         } catch (e: any) {
             console.log(e);
@@ -152,6 +152,128 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
     }
+
+    async insertImgUrl(postId:number, imageUrls: string[]){
+        try {
+            const { error } = await supabase.from('post')
+                .update({img_urls : imageUrls}).eq('id',postId);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('이미지 링크 저장에 실패하였습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('이미지 링크 저장에 실패하였습니다.');
+        }
+    }
+
+    async getImgPublicUrl(path: string): Promise<string> {
+        try {
+            const { data } = supabase
+                .storage
+                .from('coderoom')
+                .getPublicUrl(path);
+                console.log("publicurl: "+data.publicUrl);
+            return data.publicUrl;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('이미지 주소 다운에 실패했습니다.');
+        }
+    }
+
+    async uploadImages(userToken: string, postId: number, files: File[]): Promise<string[]> {
+        try {
+
+            const lstPublicUrl: string[] = [];
+
+            for (const file of files) {
+
+                const path: string = `boards/code/${userToken}_${postId}_${file.name}.png`;
+
+                const { data, error } = await supabase
+                    .storage
+                    .from('coderoom')
+                    .upload(path, file);
+                const publicUrl = await this.getImgPublicUrl(path);
+                lstPublicUrl.push(publicUrl);
+
+                if(error){
+                    console.log("error" + error.message);
+                    console.log("error" + error.name);
+                    console.log("error" + error.stack);
+    
+                    throw new Error('이미지 저장에 실패했습니다.');
+                }
+            }
+           
+            return lstPublicUrl;
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('이미지 저장에 실패했습니다.');
+        }
+    }
+
+    async insertPostData(post: PostRequestEntity): Promise<number> {
+        try {
+            const { data, error } = await supabase.from('post')
+                .insert(post).select();
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('게시글 업로드에 실패하였습니다.');
+            }
+            //const postString:string = JSON.stringify(data);
+
+            let postId: number =-1;
+
+            data.map((e) => {
+                postId = e.id;
+            });
+
+            console.log("this is post: " + postId.toString());
+            return postId;
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('게시글 업로드에 실패하였습니다.');
+        }
+    }
+
+    async insertCodeData(post: CodeRequestEntity) {
+        try {
+            const { data, error } = await supabase.from('code')
+                .insert(post).select();
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('게시글(코드) 업로드에 실패하였습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('게시글(코드) 업로드에 실패하였습니다.');
+        }
+    }
+
+
 
 
 
