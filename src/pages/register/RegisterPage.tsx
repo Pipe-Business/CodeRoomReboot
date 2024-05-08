@@ -11,7 +11,7 @@ import MainLayout from '../../layout/MainLayout.tsx';
 import { ColorButton, FormWrapper, TextFieldWrapper } from './styles.ts';
 import { apiClient } from '../../api/ApiClient.ts';
 import { createTodayDate } from '../../utils/DayJsHelper.ts';
-import { UserEntity } from '../../data/UserEntity.ts';
+import { UserEntity } from '../../data/entity/UserEntity.ts';
 import { useMutation } from '@tanstack/react-query';
 import { User } from '@supabase/supabase-js';
 import { API_ERROR } from '../../constants/define';

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useRef, useState, } from 'react';
+import React, { ChangeEvent, FC, useCallback, useRef, useState, useEffect} from 'react';
 import MainLayout from '../../layout/MainLayout.tsx';
 import { Box, Button, Card, TextField, Tooltip, IconButton } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -15,27 +15,48 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ImageCard from '../../components/ImageCard.tsx';
 import { toast } from 'react-toastify';
 import { ColorButton } from './styles.ts';
+import { User } from '@supabase/supabase-js';
+import { apiClient, supabase } from '../../api/ApiClient.ts';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
 
 interface Props {
     children?: React.ReactNode;
 }
 
 const CreateCodePage: FC<Props> = () => {
+
+    const navigate = useNavigate();
+    const [loadingUpload, setUpload] = useState(false);
+
     const inputTitleRef = useRef<HTMLInputElement | null>(null);
     const inputPointRef = useRef<HTMLInputElement | null>(null);
     const inputContentRef = useRef<HTMLInputElement | null>(null);
     const inputUrlRef = useRef<HTMLInputElement | null>(null);
     const inputGuideRef = useRef<HTMLInputElement | null>(null);
 
-    // const { isLoading, data: codeReq } = useQuery({
-	// 	queryKey: ['codeRequest', id],
-	// 	queryFn: firebaseGetOneFetcher<CodeRequestEntity>,
-	// });
+    const [userLogin, setUser] = useState<User | null>(null);
+
+
+
+    useEffect(() => {
+        const getSession = async () => {
+            const { data, error } = await supabase.auth.getSession()
+            if (error) {
+                console.error(error)
+            } else {
+                const { data: { user } } = await supabase.auth.getUser()
+                setUser(user);
+            }
+        }
+        getSession()
+    }, [])
 
     const [inputCategory, setCategory] = useState('');
     const [inputLanguage, setLanguage] = useState('');
     const [inputPoint, , setPoint] = useInput<number | ''>('');
     const [inputGithubUrl, setGithubUrl] = useState('');
+    let postId:number;
 
 
     const [src, setSrc] = useState<string[] | null>(null);
@@ -82,6 +103,7 @@ const CreateCodePage: FC<Props> = () => {
         setSrc([...urlList]);
 
     }, []);
+
 
     const onSubmitCodeRequest = useCallback(async () => {
 		if(!inputCategory ||inputCategory.trim()===""){
@@ -130,22 +152,17 @@ const CreateCodePage: FC<Props> = () => {
 			inputGuideRef.current?.focus()
 			return;
 		}
-
-		// const reqEntity: CodeRequestEntity = {
-		// 	formType: 'code',
-		// 	url: inputGithubUrl,
-		// 	description: inputDescription,
-		// 	price: inputPoint,
-		// 	title: inputTitle,
-		// 	codeCategory:inputCategory,
-		// 	userId: userLogin?.id!,
-		// 	guide:inputGuide,
-		// 	category: inputLanguage,
-		// 	sellerGithubName: userLogin?.githubNickname ? userLogin.githubNickname : urlParser[urlParser.length - 2],
-		// 	createdAt: createTodayDate(),
-		// 	type: 'pending',
-
-		// };
+        const postReqEntity: PostRequestEntity = {
+            title:inputTitle,
+            description:inputDescription,
+            user_token : userLogin?.id!,
+            category : inputLanguage,
+            state : 'pending',
+            post_type : 'code',
+            hash_tag : [""],
+        }
+ 
+  
 		// if (codeReq && userLogin && codeReq && codeReq.id) {
 		// 	reqEntity.id = codeReq.id;
 		// 	reqEntity.type = 'pending';
@@ -158,16 +175,75 @@ const CreateCodePage: FC<Props> = () => {
 		// 	return;
 		// }
 		if (!pointError) {
-		//	mutate(reqEntity);
-			setTitle('');
-			setDescription('');
-			setLanguage('');
-			setPoint('');
-			setGithubUrl('');
+			mutate(postReqEntity);
 		}
 	// }, [inputCategory,inputTitle, inputDescription, inputLanguage, inputPoint, inputGithubUrl,inputGuide, files, codeReq, userLogin]);
 	}, [inputCategory,inputTitle, inputDescription, inputLanguage, inputPoint, inputGithubUrl,inputGuide, files,]);
 
+
+    const { mutate } = useMutation({
+		mutationFn: async (postRequest: PostRequestEntity) => {
+			setUpload(true);
+             // 1 Post모델 업로드
+             postId = await apiClient.insertPostData(postRequest);
+             console.log("postid in codepage1: "+postId);
+
+             if (files) { //2 이미지 업로드
+                console.log("postid in codepage2: "+postId);
+				const urls = await apiClient.uploadImages(userLogin?.id!, postId, files);
+				console.log(urls);
+                await apiClient.insertImgUrl(postId,urls);   // post에 이미지 저장
+            }
+
+            const urlParser = inputGithubUrl.split('/');
+            console.log("urlParser "+urlParser);
+            // 3 Code모델 업로드
+            const codeRequest: CodeRequestEntity = {
+                post_id : postId,
+                github_repo_url : inputGithubUrl,
+                cost : Number(inputPoint),
+                seller_github_name : urlParser[urlParser.length - 2],
+            }
+
+            await apiClient.insertCodeData(codeRequest);
+
+             
+		},
+		onSuccess: async (key) => {
+
+			// if (userLogin?.id) {
+			// 	const date = createTodayDate();
+			// 	const codeReq = await getOneFirebaseData<CodeRequestEntity>(['codeRequest', key]);
+			// 	const codeReqByUser: CodeRequestByUserEntity = {
+			// 		createdAt: codeReq.createdAt,
+			// 		userId: userLogin.id,
+			// 		type: 'pending',
+			// 		codeRequestId: codeReq.id!,
+			// 	};
+			// 	await apiClient.setCodeRequestByUserId(userLogin.id, codeReqByUser);
+			// 	setUpload(false);
+			// 	await apiClient.sendNotificationByUser(userLogin.id, {
+			// 		id: date,
+			// 		createdAt: date,
+			// 		content: `${codeReq.title} (${codeReq.formType === 'article' ? '게시글' : '코드'}) 의 요청이 성공적으로 전송되었습니다. 관리자 심사후 결과를 알려드리겠습니다.`,
+			// 		sender: 'admin',
+			// 	});
+			// 	send('CodeRoom', `${userLogin.nickname} 님 코드를 요청했습니다.`);
+			// }
+			setFiles(null);
+			setSrc(null);
+            setGithubUrl('');
+            setTitle('');
+			setDescription('');
+			setLanguage('');
+			setPoint('');
+			toast.success('회원님의 코드가 관리자에게 전달되었습니다!');
+			navigate('/');
+		},
+		onError: (error) => {
+			console.log(error);
+		},
+	});
 
     return (<MainLayout>
 
