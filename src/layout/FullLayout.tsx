@@ -3,6 +3,7 @@ import styled from "@emotion/styled"
 import HeaderLayout from "./HeaderLayout.tsx";
 import BaseLayout from "./BaseLayout.tsx";
 import { Divider } from '@mui/material';
+import FooterLayout from "./FooterLayout.tsx";
 
 interface Props {
     children?: React.ReactNode
@@ -26,6 +27,9 @@ const MainLayout: FC<Props> = ({children}) => {
                     <div style={{width:"100%"}}>{children}</div>
                 </MainLayoutWrapper>
             </BaseLayout>
+            <BaseLayout>
+                    <FooterLayout />
+                </BaseLayout>
         </>
     );
 };
