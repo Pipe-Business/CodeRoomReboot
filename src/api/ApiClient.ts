@@ -45,6 +45,7 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const { data, error } = await supabase.from('post')
                 .select('*, code!inner(*)')
+                .eq('state',"confirmed")
                 .order('created_at', { ascending: false });
 
             let lstCodeModel: CodeModel[] = [];
@@ -58,6 +59,7 @@ class ApiClient implements SupabaseAuthAPI {
                     userToken: e.user_token,
                     category: e.category,
                     createdAt: e.created_at,
+                    popularity: e.code.popularity,
                     hashTag: e.hash_tag,
                     state: e.state,
                     adminGitRepoURL: e.code.github_repo_url,

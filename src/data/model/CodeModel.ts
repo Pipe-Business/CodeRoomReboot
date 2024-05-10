@@ -5,6 +5,7 @@ export type CodeModel = {
     images: string[],  /** 코드 결과물 이미지 url */
     price: number /** 코드 가격 */
     userToken: string, // 게시자 usertoken
+    popularity:number, // 코드 평점
     category: string, /** 카테고리(사용언어) */
     createdAt: string,  /** 코드 생성일 */
     hashTag: string[],

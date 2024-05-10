@@ -47,13 +47,13 @@ const CodeItem: FC<Props> = ({ item }) => {
 								{0}
 							</div> */}
 							<div className={styles.textOverflow} style={{textAlign: 'center', marginLeft:'16px', color:'grey'  }}>
-                                popularity : 120
+                                popularity : {item.popularity}
 							</div>
 
-                            <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
-								{/* {userById.nickname} */}
+                            {/* <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
+								 {userById.nickname} 
                                 닉네임
-							</div>
+							</div> */}
 							<div className={styles.textOverflow} style={{textAlign: 'center', marginLeft:'16px', color:'grey'  }}>
 								{calcTimeDiff(item.createdAt)}
 							</div>
