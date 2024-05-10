@@ -234,7 +234,7 @@ const CodeInfo: FC<Props> = () => {
 							</div>
 
 							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
-								<span style={{ color: '#000000', fontSize: '16px', }}>n명 조회 </span>
+								<span style={{ color: '#000000', fontSize: '16px', }}>{postData.viewCount}명 조회 </span>
 							</MarginHorizontal>
 
 							<Box height={64} />
