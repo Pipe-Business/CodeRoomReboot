@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Badge, IconButton, InputBase, Paper, Button } from '@mui/material';
 import { HeaderIconButton, HeaderSearch, HeaderTitle, HeaderWrapper, ColorButton } from './styles.ts';
 import { CenterBox, MarginHorizontal } from '../components/styles.ts';
@@ -35,11 +35,15 @@ const HeaderLayout: FC<Props> = () => {
         getSession()
     }, [])
 
+	const location = useLocation();
+    const currentPath = location.pathname;
     const signOut = async () => {
         console.log("signout");
         await apiClient.signOut();
-        // eslint-disable-next-line no-restricted-globals
-        location.reload();
+        if(currentPath == '/'){
+            navigate(0);
+        }
+        navigate('/');
     }
 
     const [inputSearch, onChangeInput] = useInput('');
