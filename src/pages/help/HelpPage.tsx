@@ -41,7 +41,7 @@ const HelpPage: FC<Props> = () => {
 						<li style={{margin:'8px'}}>좌측에 있는 <strong>Collaborators</strong>를 클릭한 후 <strong>Add People</strong>를 클릭합니다.</li>
 						<img src='/githubInvite2.png' alt='githubInvite2.png' />
 						<Box height={'16px'}/>
-						<li style={{margin:'8px'}}>관리자 닉네임을 입력하여 초대합니다. (관리자 닉네임 : <strong>uqlipt</strong>)</li>
+						<li style={{margin:'8px'}}>관리자 닉네임을 입력하여 초대합니다. (관리자 닉네임 : <strong>team-code-room</strong>)</li>
 						<img src='/githubInvite3.png' alt='githubInvite3.png' />
 					</ol>
 				</div>
@@ -79,7 +79,7 @@ const HelpPage: FC<Props> = () => {
 			{/*<h3>1. 코드를 깃허브에 정리하기 </h3>*/}
 			{/*<div>여러분의 코드를 깃허브 레포지토리에 정리해보세요. readme 문서에는 코드에 대한 전반적인 흐름이나 주요기능에 대한 설명을 자세하게 작성하면 좋습니다.</div>*/}
 			{/*<h3>2.관리자 초대하기</h3>*/}
-			{/*<div>여러분의 코드가 깃허브에 정리가 됐다면 관리자를 꼭 초대해야됩니다. 관리자 닉네임: uqlipt</div>*/}
+			{/*<div>여러분의 코드가 깃허브에 정리가 됐다면 관리자를 꼭 초대해야됩니다. 관리자 닉네임: team-code-room</div>*/}
 			{/*<h4>Q: 왜 관리자를 초대해야되죠?</h4>*/}
 			{/*<div>A: 코드룸은 관리자가 코드를 내부적인 심사를 통해 게시를 하기때문에 </div>*/}
 

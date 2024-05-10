@@ -360,7 +360,7 @@ const CreateCodePage: FC<Props> = () => {
                     onChange={onChangeGithubUrl}
                     placeholder={'예) https://github.com/your_nickname/your_repository'}
                     fullWidth
-                    helperText={'본인이 공유할 private 레포지토리 에 관리자를 추가해주세요 관리자 닉네임: uqlipt 자세한 사항은 상단 가이드를 참고해주세요'}
+                    helperText={'본인이 공유할 private 레포지토리 에 관리자를 추가해주세요 관리자 닉네임: team-code-room 자세한 사항은 상단 가이드를 참고해주세요'}
                     type={'url'} />
             </div>
 
