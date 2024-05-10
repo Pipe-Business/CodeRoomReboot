@@ -23,6 +23,7 @@ const SignUpCompletePage = React.lazy(() => import('./pages/register/SignUpCompl
 const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage.tsx'));
 const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage.tsx'));
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage.tsx'));
+const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage.tsx'));
 const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
@@ -59,6 +60,8 @@ root.render(
       <Route path='/signup-complete' element={<SignUpCompletePage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
       <Route path='/help' element={<HelpPage />} />
+      <Route path='/code/:id' element={<CodeInfo />} />
+
 
       <Route path='/*' element={<NotFoundPage/>}/>
     

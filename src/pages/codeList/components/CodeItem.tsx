@@ -1,15 +1,53 @@
-import React, { FC, useCallback } from 'react';
-import { Divider, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import React, { FC, useCallback, useState, useEffect } from 'react';
+import { Divider, ListItem, ListItemButton, ListItemText, CircularProgress } from '@mui/material';
 import { CodeModel } from '../../../data/model/CodeModel';
 import styles from '../../../global.module.css';
 import { calcTimeDiff } from '../../../utils/DayJsHelper';
+import { apiClient, supabase } from '../../../api/ApiClient';
+import { User } from '@supabase/supabase-js';
+import { useNavigate, useParams } from 'react-router-dom';
+
+
 
 interface Props {
 	children?: React.ReactNode;
 	item: CodeModel;
 }
 const CodeItem: FC<Props> = ({ item }) => {
+
+	const navigate = useNavigate();
+	const [userLogin, setUser] = useState<User | null>(null);
+
+	const onClickCode = useCallback(() => {
+		if (!userLogin) { // 로그인 확인 필요
+			alert('로그인이 필요한 서비스입니다.');
+			//onOpenDialog()
+		} else {
+			navigate(`/code/${item.id}`);
+		}
+	}, [userLogin]);
+
+	
+
+    useEffect(() => {
+        const getSession = async () => {
+            const { data, error } = await supabase.auth.getSession()
+            if (error) {
+                console.error(error)
+            } else {
+                const { data: { user } } = await supabase.auth.getUser()
+                setUser(user);
+            }
+        }
+        getSession()
+    }, []);
+
     return (
+		<ListItemButton sx={{
+			'&:hover': {
+				backgroundColor: '#999',
+			},
+		}} onClick={onClickCode}>
         <ListItem style={{paddingLeft:'0px',paddingRight:'0px', paddingTop:'4px',paddingBottom:'4px'}}>
 					<ListItemText>
 						<div style={{ display: 'flex', alignItems: 'start', flexDirection : 'column' , 
@@ -62,6 +100,8 @@ const CodeItem: FC<Props> = ({ item }) => {
 						</div>
 					</ListItemText>
 				</ListItem>
+
+				</ListItemButton>
     );
 }
 export default CodeItem; 
