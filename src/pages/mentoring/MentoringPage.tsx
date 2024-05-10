@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import styled from '@emotion/styled';
-
+import MainLayout from '../../layout/MainLayout';
+import { Box } from '@mui/material';
 interface Props {
 	children?: React.ReactNode;
 }
@@ -19,8 +20,13 @@ const CenterWrapper = styled.div`
 
 const MentoringPage: FC<Props> = () => {
     return (
+      <MainLayout>
+        <Box height={128}/>
     <h2>
         멘토링 페이지 준비중입니다.
-    </h2>);
+    </h2>
+    <Box height={128}/>
+    </MainLayout>
+    );
 }
 export default MentoringPage;
