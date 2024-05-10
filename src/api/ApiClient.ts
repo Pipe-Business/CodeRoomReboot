@@ -4,6 +4,7 @@ import { supabaseConfig } from "../config/supabaseConfig";
 import { CodeModel } from "../data/model/CodeModel";
 import { UserEntity } from "../data/entity/UserEntity";
 import { API_ERROR } from "../constants/define";
+import { UserModel } from "../data/model/UserModel";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -58,7 +59,9 @@ class ApiClient implements SupabaseAuthAPI {
                     price: e.code.cost,
                     userToken: e.user_token,
                     category: e.category,
+                    postType : e.post_type,
                     createdAt: e.created_at,
+                    buyerGuide : e.code.buyer_guide,
                     popularity: e.code.popularity,
                     hashTag: e.hash_tag,
                     state: e.state,
@@ -273,6 +276,94 @@ class ApiClient implements SupabaseAuthAPI {
             console.log(e);
             throw new Error('게시글(코드) 업로드에 실패하였습니다.');
         }
+    }
+
+    async getTargetCode(postId : number): Promise<CodeModel> {
+        try {
+            const { data, error } = await supabase.from('post')
+                .select('*, code!inner(*)')
+                .eq('id',postId);
+
+            let lstCodeModel: CodeModel[] = [];
+            data?.forEach((e) => {
+                let codeModel: CodeModel = {
+                    id: e.id,
+                    title: e.title,
+                    description: e.description,
+                    images: e.images,
+                    price: e.code.cost,
+                    userToken: e.user_token,
+                    buyerGuide : e.code.buyer_guide,
+                    category: e.category,
+                    createdAt: e.created_at,
+                    postType : e.post_type,
+                    popularity: e.code.popularity,
+                    hashTag: e.hash_tag,
+                    state: e.state,
+                    adminGitRepoURL: e.code.github_repo_url,
+                }
+                lstCodeModel.push(codeModel);
+            });
+            console.log("target"+data);
+
+            if(error){
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('해당 게시글을 가져오는 데 실패했습니다.');
+            }
+
+            return lstCodeModel[0];
+        }
+        catch (e: any) {
+            console.log(e);
+            throw new Error('해당 게시글을 가져오는 데 실패했습니다.');
+        }
+
+    }
+
+    async getTargetUser(targetUserToken : string): Promise<UserModel> { // userModel만들기
+        try {
+            const { data, error } = await supabase.from('users')
+                .select('*')
+                .eq('user_token',targetUserToken);
+
+            let lstUserModel: UserModel[] = [];
+            data?.forEach((e) => {
+                let userModel: UserModel = {
+                    id: e.id,
+                    authType : e.auth_type,
+                    email : e.email,
+                    name : e.name,
+                    nickname : e.nickname,
+                    profileUrl : e.profile_url,
+                    aboutMe : e.about_me,
+                    contacts : e.contacts,
+                    userToken : e.user_token,
+                    createdAt: e.created_at,
+                }
+                lstUserModel.push(userModel);
+            });
+            console.log(data);
+
+            if(error){
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('해당 게시글을 가져오는 데 실패했습니다.');
+            }
+
+            return lstUserModel[0];
+        }
+        catch (e: any) {
+            console.log(e);
+            throw new Error('해당 게시글을 가져오는 데 실패했습니다.');
+        }
+
     }
 
 
