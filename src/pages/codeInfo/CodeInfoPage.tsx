@@ -168,7 +168,7 @@ const CodeInfo: FC<Props> = () => {
 								<Box width={16} />
 
 								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>n명 구매 💰</span>
+									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.buyerCount}명 구매 💰</span>
 								</MarginHorizontal>
 							</div>
 

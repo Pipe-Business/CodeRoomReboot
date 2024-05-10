@@ -160,6 +160,7 @@ const CreateCodePage: FC<Props> = () => {
             state : 'pending',
             post_type : 'code',
             hash_tag : [""],
+            view_count : 0,
         }
  
   
@@ -203,6 +204,9 @@ const CreateCodePage: FC<Props> = () => {
                 github_repo_url : inputGithubUrl,
                 cost : Number(inputPoint),
                 seller_github_name : urlParser[urlParser.length - 2],
+                popularity : 0,
+                buyer_guide : inputGuide,
+                buyer_count : 0,
             }
 
             await apiClient.insertCodeData(codeRequest);

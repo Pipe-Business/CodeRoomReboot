@@ -62,10 +62,12 @@ class ApiClient implements SupabaseAuthAPI {
                     postType : e.post_type,
                     createdAt: e.created_at,
                     buyerGuide : e.code.buyer_guide,
+                    buyerCount : e.code.buyer_count,
                     popularity: e.code.popularity,
                     hashTag: e.hash_tag,
                     state: e.state,
                     adminGitRepoURL: e.code.github_repo_url,
+                    viewCount : e.view_count,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -298,8 +300,10 @@ class ApiClient implements SupabaseAuthAPI {
                     createdAt: e.created_at,
                     postType : e.post_type,
                     popularity: e.code.popularity,
+                    buyerCount : e.code.buyer_count,
                     hashTag: e.hash_tag,
                     state: e.state,
+                    viewCount : e.view_count,
                     adminGitRepoURL: e.code.github_repo_url,
                 }
                 lstCodeModel.push(codeModel);
