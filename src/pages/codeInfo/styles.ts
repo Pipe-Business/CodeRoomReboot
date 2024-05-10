@@ -10,3 +10,12 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     boxShadow: 'none',
     },
   }));
+
+  interface BlurContainerStyle{
+    isBlur:boolean
+  }
+
+  export const BlurContainer = styled.div<BlurContainerStyle>`
+    filter:  ${(props) => props.isBlur == true ? ' blur(5px)' : 'none'};
+  `;
+

@@ -60,7 +60,7 @@ root.render(
       <Route path='/signup-complete' element={<SignUpCompletePage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
       <Route path='/help' element={<HelpPage />} />
-      <Route path='/code/:id' element={<CodeInfo />} />
+      <Route path='/code/:id' element={<CodeInfo/>} />
 
 
       <Route path='/*' element={<NotFoundPage/>}/>

@@ -1,5 +1,5 @@
 import React, { CSSProperties, FC, useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Box, Button, Card, CardContent, CardHeader, CircularProgress, IconButton, Tooltip } from '@mui/material';
 import useDialogState from '../../hooks/useDialogState.ts';
@@ -23,6 +23,8 @@ import { apiClient } from '../../api/ApiClient.ts';
 import { MarginHorizontal } from '../main/styles.ts';
 import { MarginVertical } from '../main/styles.ts';
 import { ColorButton } from './styles.ts';
+import { BlurContainer } from './styles.ts';
+import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal.tsx';
 
 dayjs.locale('ko');
 
@@ -55,30 +57,46 @@ function SamplePrevArrow(props: { className?: string, style?: CSSProperties, onC
 
 const CodeInfo: FC<Props> = () => {
 	const navigate = useNavigate();
-	const [userLogin, setUser] = useState<User | null>(null);
-
-	const onClickPurchase = () => {
-		console.log("구매로직 실행");
-	}
-
-
-
+	//const [userLogin, setUser] = useState<User | null>(null);
+	const {state:{
+		userLogin,
+	}} = useLocation();
+	const [isBlur, setBlur] = useState<boolean>(false);
+	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 
 
-
-
-	useEffect(() => {
-		const getSession = async () => {
-			const { data, error } = await supabase.auth.getSession()
-			if (error) {
-				console.error(error)
-			} else {
-				const { data: { user } } = await supabase.auth.getUser()
-				setUser(user);
-			}
+	const onClickPurchase =
+		() => {
+			console.log("구매로직 실행");
 		}
-		getSession()
-	}, []);
+
+
+		useEffect(()=>{
+		if (!userLogin) { // 로그인 확인 필요
+			setBlur(true);
+			onOpenRequireLoginModal();
+			// alert('로그인이 필요한 서비스입니다.');
+		}else{
+			setBlur(false);
+		}
+	}, [userLogin]);
+
+
+
+
+	// useEffect(() => {
+	// 	const getSession = async () => {
+	// 		const { data, error } = await supabase.auth.getSession()
+	// 		if (error) {
+	// 			console.error(error)
+	// 		} else {
+	// 			const { data: { user } } = await supabase.auth.getUser()
+	// 			setUser(user);
+	// 		}
+	// 	}
+	// 	getSession();
+	// 	// onClickCode();
+	// }, []);
 
 	const onClickBackButton = useCallback(() => {
 		navigate(-1);
@@ -105,7 +123,10 @@ const CodeInfo: FC<Props> = () => {
 	});
 
 	if (isLoading || !postData || isUserDataLoading) {
-		return <CenterBox><CircularProgress /></CenterBox>;
+		return
+		<MainLayout>
+			<CenterBox><CircularProgress /></CenterBox>
+		</MainLayout>;
 	}
 
 	if (!postUserData) {
@@ -125,9 +146,9 @@ const CodeInfo: FC<Props> = () => {
 							<div style={{ display: 'flex', alignItems: 'center' }}>
 								<IconButton onClick={onClickBackButton}>
 									<ArrowBack sx={{ fontSize: '32px' }} />
-								</IconButton> 
-								<div style={{fontWeight:'bold'}}>
-								코드 목록으로 돌아가기
+								</IconButton>
+								<div style={{ fontWeight: 'bold' }}>
+									코드 목록으로 돌아가기
 								</div>
 								<span style={{ marginLeft: 4 }}>
 
@@ -136,129 +157,136 @@ const CodeInfo: FC<Props> = () => {
 						}
 					/>
 
-
-					<CardContent>
-					<div style={{ display: 'flex', flexDirection: 'row' }}>
-
-						<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-							<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.popularity} popularity 🔥</span>
-						</MarginHorizontal>
-
-						<Box width={16} />
-
-						<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-							<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>n명 구매 💰</span>
-						</MarginHorizontal>
-						</div>
-
-						<Box height={8} />
-
-						<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-							<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{calcTimeDiff(postData.createdAt)} </span>
-						</MarginHorizontal>
-
-						<Box height={8} />
-
-						<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-							<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>{postData.title} </span>
-						</MarginHorizontal>
-
-						<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-							<span style={{ color: 'blue', fontSize: '24px', fontWeight: 'lighter' }}>{postData.hashTag.map((e) => `#${e} `)} </span>
-						</MarginHorizontal>
-
-						{/* 카테고리, 가격  */}
-						<div style={{ display: 'flex', flexDirection: 'row' }}>
-
-							{/* 카테고리 */}
+					<BlurContainer isBlur={isBlur}>
+						<CardContent>
 							<div style={{ display: 'flex', flexDirection: 'row' }}>
 
-								<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>카테고리 : </span>
+								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
+									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.popularity} popularity 🔥</span>
 								</MarginHorizontal>
 
-								<div style={{ marginTop: 8, marginBottom: 8, }}>
-									<span style={{ color: '#000000', fontSize: '16px', }}>{postData.postType} / {postData.category} </span>
+								<Box width={16} />
+
+								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
+									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>n명 구매 💰</span>
+								</MarginHorizontal>
+							</div>
+
+							<Box height={8} />
+
+							<MarginHorizontal size={8} style={{ marginTop: 24, }}>
+								<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{calcTimeDiff(postData.createdAt)} </span>
+							</MarginHorizontal>
+
+							<Box height={8} />
+
+							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>{postData.title} </span>
+							</MarginHorizontal>
+
+							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+								<span style={{ color: 'blue', fontSize: '24px', fontWeight: 'lighter' }}>{postData.hashTag.map((e) => `#${e} `)} </span>
+							</MarginHorizontal>
+
+							{/* 카테고리, 가격  */}
+							<div style={{ display: 'flex', flexDirection: 'row' }}>
+
+								{/* 카테고리 */}
+								<div style={{ display: 'flex', flexDirection: 'row' }}>
+
+									<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>카테고리 : </span>
+									</MarginHorizontal>
+
+									<div style={{ marginTop: 8, marginBottom: 8, }}>
+										<span style={{ color: '#000000', fontSize: '16px', }}>{postData.postType} / {postData.category} </span>
+									</div>
+
+								</div>
+								<Box width={16} />
+
+								{/* 가격 */}
+
+								<div style={{ display: 'flex', flexDirection: 'row', }}>
+
+									<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>가격 : </span>
+									</MarginHorizontal>
+
+									<div style={{ marginTop: 8, marginBottom: 8, }}>
+										<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price}c `} </span>
+									</div>
+
+								</div>
+
+								<div style={{ display: 'flex', flexDirection: 'row', }}>
+
+									<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>판매자 : </span>
+									</MarginHorizontal>
+
+									<div style={{ marginTop: 8, marginBottom: 8, }}>
+										<span style={{ color: '#000000', fontSize: '16px', }}>{postUserData.nickname} </span>
+									</div>
+
 								</div>
 
 							</div>
-							<Box width={16} />
 
-							{/* 가격 */}
+							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
+								<span style={{ color: '#000000', fontSize: '16px', }}>n명 조회 </span>
+							</MarginHorizontal>
 
-							<div style={{ display: 'flex', flexDirection: 'row', }}>
+							<Box height={64} />
 
-								<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>가격 : </span>
+							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>코드 설명 </span>
+							</MarginHorizontal>
+
+							<MarginHorizontal size={8} style={{ marginTop: 16, }}>
+								<span style={{ color: '#000000', fontSize: '16px', }}>{postData.description} </span>
+							</MarginHorizontal>
+
+							<Box height={32} />
+
+							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>구매자 가이드 </span>
+							</MarginHorizontal>
+
+							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+								<span style={{ color: 'grey', fontSize: '16px', }}>판매자가 코드를 작성했을때 당시 환경(버전,에디터 등)정보입니다. </span>
+							</MarginHorizontal>
+
+							<MarginHorizontal size={8} style={{ marginTop: 16, }}>
+								<span style={{ color: '#000000', fontSize: '16px', }}>{postData.buyerGuide} </span>
+							</MarginHorizontal>
+
+							<Box height={32} />
+
+							<ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton>
+
+							{!userLogin && <CenterBox>
+								<MarginHorizontal size={8}>
+									<RequiredLoginModal isOpen={openRequireLoginModal} onClose={onCloseLoginModal} />
 								</MarginHorizontal>
+							</CenterBox>}
 
-								<div style={{ marginTop: 8, marginBottom: 8, }}>
-									<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price}c `} </span>
-								</div>
+						</CardContent>
 
-							</div>
-
-							<div style={{ display: 'flex', flexDirection: 'row', }}>
-
-								<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>판매자 : </span>
-								</MarginHorizontal>
-
-								<div style={{ marginTop: 8, marginBottom: 8, }}>
-									<span style={{ color: '#000000', fontSize: '16px', }}>{postUserData.nickname} </span>
-								</div>
-
-							</div>
-
-						</div>
-
-						<MarginHorizontal size={8} style={{ marginTop: 4, }}>
-							<span style={{ color: '#000000', fontSize: '16px', }}>n명 조회 </span>
-						</MarginHorizontal>
-
-						<Box height={64} />
-
-						<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-							<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>코드 설명 </span>
-						</MarginHorizontal>
-
-						<MarginHorizontal size={8} style={{ marginTop: 16, }}>
-							<span style={{ color: '#000000', fontSize: '16px', }}>{postData.description} </span>
-						</MarginHorizontal>
-
-						<Box height={32} />
-
-						<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-							<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>구매자 가이드 </span>
-						</MarginHorizontal>
-
-						<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-							<span style={{ color: 'grey', fontSize: '16px', }}>판매자가 코드를 작성했을때 당시 환경(버전,에디터 등)정보입니다. </span>
-						</MarginHorizontal>
-
-						<MarginHorizontal size={8} style={{ marginTop: 16, }}>
-							<span style={{ color: '#000000', fontSize: '16px', }}>{postData.buyerGuide} </span>
-						</MarginHorizontal>
-
-						<Box height={32} />
-
-						<ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()}>구매하기</ColorButton>
-
-
-
-					</CardContent>
+					</BlurContainer>
 				</Card>
 
 				<Box width={24} />
+				<BlurContainer isBlur={isBlur}>
+					<Card sx={{
+						width: { sm: 150, md: 250 }, height: { sm: 150, md: 250, }
+					}}
+						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={0}
+					>
+						<ColorButton type={'submit'} sx={{ fontSize: '15', width: '80%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton>
 
-				<Card sx={{
-					width: { sm: 150, md: 250 }, height: { sm: 150, md: 250, }
-				}}
-					style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={0}
-				>
-					<ColorButton type={'submit'} sx={{ fontSize: '15', width: '80%' }} onClick={() => onClickPurchase()}>구매하기</ColorButton>
-
-				</Card>
+					</Card>
+				</BlurContainer>
 			</div>
 		</MainLayout>
 	);

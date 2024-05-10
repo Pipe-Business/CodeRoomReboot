@@ -19,12 +19,7 @@ const CodeItem: FC<Props> = ({ item }) => {
 	const [userLogin, setUser] = useState<User | null>(null);
 
 	const onClickCode = useCallback(() => {
-		if (!userLogin) { // 로그인 확인 필요
-			alert('로그인이 필요한 서비스입니다.');
-			//onOpenDialog()
-		} else {
-			navigate(`/code/${item.id}`);
-		}
+		navigate(`/code/${item.id}`,{state: {userLogin:userLogin}});
 	}, [userLogin]);
 
 	
