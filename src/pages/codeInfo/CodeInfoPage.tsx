@@ -6,7 +6,8 @@ import useDialogState from '../../hooks/useDialogState.ts';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import { calcTimeDiff, reformatTime } from '../../utils/DayJsHelper.ts';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Favorite, ThumbUp } from '@mui/icons-material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 // import 'prismjs/themes/prism.css';
 // import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
 // import '@toast-ui/editor/dist/toastui-editor.css';
@@ -81,6 +82,9 @@ const CodeInfo: FC<Props> = () => {
 		}
 	}, [userLogin]);
 
+	const onClickFavorate = () => {
+		console.log("좋아요 로직 실행");
+	}
 
 
 
@@ -123,10 +127,7 @@ const CodeInfo: FC<Props> = () => {
 	});
 
 	if (isLoading || !postData || isUserDataLoading) {
-		return
-		<MainLayout>
-			<CenterBox><CircularProgress /></CenterBox>
-		</MainLayout>;
+		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
 	if (!postUserData) {
@@ -263,7 +264,15 @@ const CodeInfo: FC<Props> = () => {
 
 							<Box height={32} />
 
+							<div style={{ display: 'flex', flexDirection: 'row', }}>
 							<ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton>
+
+							<Box width={32} />
+						
+							<IconButton onClick={onClickFavorate}>
+								<ThumbUpIcon/>
+							</IconButton>
+							</div>
 
 							{!userLogin && <CenterBox>
 								<MarginHorizontal size={8}>
