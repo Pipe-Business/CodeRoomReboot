@@ -35,6 +35,15 @@ const RegisterPage: FC<Props> = () => {
 				userEntity.userToken = user.id;
 				await apiClient.insertUserData(userEntity);
 
+				// 초기 캐시기록 내역 생성
+				const cashHistory : CashHistoryRequestEntity = {
+					user_token : user.id,
+					cash : 0,
+					amount : 0,
+					description : "초기 캐시기록 내역 생성",
+				}
+	
+				await apiClient.insertUserCashHistory(cashHistory);
 		},
 		onSuccess: () => {
 			toast.success('회원가입에 성공하였습니다. 로그인 되었습니다.');
