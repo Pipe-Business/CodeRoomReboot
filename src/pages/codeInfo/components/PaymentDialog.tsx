@@ -1,6 +1,6 @@
 import  { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
@@ -8,22 +8,15 @@ import { supabase } from '../../../api/ApiClient';
 import { REACT_QUERY_KEY } from '../../../constants/define';
 import { apiClient } from '../../../api/ApiClient';
 import { createTodayDate } from '../../../utils/DayJsHelper';
-
-
-type requestPurchaseData = {
-	codeId: string,
-	userId: string,
-	createdAt:string
-}
+import { toast } from 'react-toastify';
 
 const PaymentDialog = () => {
 	const { id } = useParams();
 	const queryClient = useQueryClient();
 	const [userLogin, setUser] = useState<User | null>(null);
+	const navigate = useNavigate();
 
-	   /*
-	* useQuery에서 넘어온 data를 cashData로 선언
-	*/
+
 	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
 		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
@@ -48,11 +41,10 @@ const PaymentDialog = () => {
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
 	
-	// const { userById } = useQueryUserById(codeData?.userId!);
-
 	
 	const { mutate } = useMutation({
 		mutationFn: async () => {
+
 			 // 유저 캐시 차감 -> 캐시 사용기록 insert
 			const cashHistory : CashHistoryRequestEntity = {
 				user_token : userLogin!.id,
@@ -64,7 +56,6 @@ const PaymentDialog = () => {
 
 			await apiClient.insertUserCashHistory(cashHistory);
 
-		}, onSuccess: async (result) => {
 			// purchase sale history insert(코드 거래내역 insert) 로직
 			if(postData){
 				const purchaseSaleHistory : PurchaseSaleRequestEntity = {
@@ -78,62 +69,24 @@ const PaymentDialog = () => {
 
 				await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 			}
-			
-			
-			
-			// queryClient.setQueryData([REACT_QUERY_KEY.login], () => {
-			// 	return result.user;
-			// });
+
+		}, onSuccess: async (result) => {
+
+			navigate('/');
+			toast.success('구매가 완료되었습니다.');
+
+			// todo 구매자에게 구매 알림
+
 		},
 	});
 
-
-		 // todo 구매자에게 구매 알림
-
-		
-
-
-	// const { paymentPendingMutate } = useMutatePaymentPending();
-
-		
-
-	// const { mutateAsync: updatePurchaseData } = useMutation({
-	// 	mutationFn: async (reqData: requestPurchaseData) => {
-	// 		await setPurchaseItemForUser(reqData.codeId, reqData.userId,reqData.createdAt);
-	// 		await setPurchaseItemForCodeInUser(reqData.codeId, reqData.userId,reqData.createdAt);
-	// 		return await getOneCode(reqData.codeId);
-	// 	},
-	// 	onSuccess: async (result) => {
-	// 		const codeEntity = await getOneCode(id!);
-	// 		console.log(codeEntity, 'codentity', id);
-	// 		queryClient.setQueryData([REACT_QUERY_KEY.code, id], () => {
-	// 			return result;
-	// 		});
-	// 		// queryClient.setQueryData(['test'],async (prev)=>{
-	// 		//     console.log(prev,"prev")
-	// 		//     return codeEntity
-	// 		// })
-	// 	},
-	// });
 	const onClickConfirm = useCallback(async () => {
 		try {
-			//  if (codeData && userById?.id && userLogin?.id) {
-				if (userLogin?.id) {
+				if (postData && userLogin?.id) {
 			 	mutate();
-			
 			 	const todayDate = createTodayDate();
 			
 
-	// todo 구매 정산내역 업데이트
-
-			// 	const entity: PaymentSettlementEntity = {
-			// 		codeId: codeData.id,
-			// 		point: codeData.price,
-			// 		paymentDate: todayDate,
-			// 		sellerId: codeData.userId,
-			// 		purchaseUserId: userLogin?.id!,
-			// 		isSettlement: false,
-			// 	};
 			// 	const notiEntity: UserNotificationEntity = {
 			// 		createdAt: todayDate,
 			// 		content: `🎉축하합니다! ${userLogin?.nickname} 님이 ${codeData.title} 코드를 ${codeData.price}point 에 구매하였습니다.`,
@@ -164,13 +117,11 @@ const PaymentDialog = () => {
 			// 		};
 			// 		await set(salesPushRef, salesEntity);
 			// 	}
-			// 	paymentPendingMutate({ sellerId: codeData.userId, codeId: codeData?.id, entity: entity });
 			 }
 		} catch (e) {
 			console.log(e);
 		}
-	//}, [userLogin, codeData, userById]);
-	}, [userLogin]);
+	}, [userLogin , postData]);
 
 	return [onClickConfirm];
 };
