@@ -72,14 +72,14 @@ const CodeItem: FC<Props> = ({ item }) => {
 
                             {/*  태그, 좋아요 수, popularity*/}
                             <div style={{ display: 'flex', alignItems: '', flexDirection : 'row', marginLeft:'8px' , marginTop:'8px'}}>
-								<div className={styles.textOverflow} style={{textAlign: 'center',color:'grey'}}>
+								{/* <div className={styles.textOverflow} style={{textAlign: 'center',color:'grey'}}>
 									{item.hashTag.map((e)=>`#${e} `)}
-								</div>
+								</div> */}
 					
 							{/* <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
 								{0}
 							</div> */}
-							<div className={styles.textOverflow} style={{textAlign: 'center', marginLeft:'16px', color:'grey'  }}>
+							<div className={styles.textOverflow} style={{textAlign: 'center',  color:'grey'  }}>
                                 popularity : {item.popularity}
 							</div>
 
