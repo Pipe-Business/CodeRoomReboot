@@ -26,6 +26,8 @@ import { MarginVertical } from '../main/styles.ts';
 import { ColorButton } from './styles.ts';
 import { BlurContainer } from './styles.ts';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal.tsx';
+import CodeInfoBuyItButton from './components/CodeInfoBuyItButton.tsx';
+import PaymentDialog from './components/PaymentDialog.tsx';
 
 dayjs.locale('ko');
 
@@ -59,18 +61,14 @@ function SamplePrevArrow(props: { className?: string, style?: CSSProperties, onC
 const CodeInfo: FC<Props> = () => {
 	const navigate = useNavigate();
 	//const [userLogin, setUser] = useState<User | null>(null);
+	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
+	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
+	const [onClickConfirm] = PaymentDialog();
 	const {state:{
 		userLogin,
 	}} = useLocation();
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
-
-
-	const onClickPurchase =
-		() => {
-			console.log("구매로직 실행");
-		}
-
 
 		useEffect(()=>{
 		if (!userLogin) { // 로그인 확인 필요
@@ -86,7 +84,13 @@ const CodeInfo: FC<Props> = () => {
 		console.log("좋아요 로직 실행");
 	}
 
+	const onClickBuyItButton = useCallback(() => {
+		if (!userLogin?.id) {
+			onOpenLoginDialog();
+			return;
+		}
 
+	}, [userLogin?.id]);
 
 	// useEffect(() => {
 	// 	const getSession = async () => {
@@ -265,7 +269,20 @@ const CodeInfo: FC<Props> = () => {
 							<Box height={32} />
 
 							<div style={{ display: 'flex', flexDirection: 'row', }}>
-							<ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton>
+							<CodeInfoBuyItButton
+										isBlur={isBlur}
+										point={postData.price}
+										codeHostId={postData.userToken}
+										userId={userLogin?.id}
+										userHavePoint={userLogin?.point!}
+										adminRepoURL={postData.adminGitRepoURL}
+										//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
+										onClickBuyItButton={onClickBuyItButton}
+										onPaymentConfirm={onClickConfirm}
+										onClickLoginRegister={onOpenLoginDialog}
+										onOpenPointDialog={onOpenPointDailog}
+									/>
+							{/* <ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton> */}
 
 							<Box width={32} />
 						
@@ -292,7 +309,20 @@ const CodeInfo: FC<Props> = () => {
 					}}
 						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={0}
 					>
-						<ColorButton type={'submit'} sx={{ fontSize: '15', width: '80%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton>
+						<CodeInfoBuyItButton
+										isBlur={isBlur}
+										point={postData.price}
+										codeHostId={postData.userToken}
+										userId={userLogin?.id}
+										userHavePoint={userLogin?.point!}
+										adminRepoURL={postData.adminGitRepoURL}
+										//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
+										onClickBuyItButton={onClickBuyItButton}
+										onPaymentConfirm={onClickConfirm}
+										onClickLoginRegister={onOpenLoginDialog}
+										onOpenPointDialog={onOpenPointDailog}
+									/>
+						{/* <ColorButton type={'submit'} sx={{ fontSize: '15', width: '80%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton> */}
 
 					</Card>
 				</BlurContainer>
