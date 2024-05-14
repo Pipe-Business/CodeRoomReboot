@@ -429,13 +429,31 @@ class ApiClient implements SupabaseAuthAPI {
 
             throw new Error('게시글 업로드에 실패하였습니다.');
         }
-        console.log(...data);
+
 
         }catch (e: any) {
             console.log(e);
             throw new Error('유저의 캐시 히스토리를 insert 하는데 실패했습니다.');
         }
 
+    }
+
+    async insertPurchaseSaleHistory(purchaseSaleRequestEntity : PurchaseSaleRequestEntity){
+        try{
+            const { data, error } = await supabase.from('purchase_sale_history')
+            .insert(purchaseSaleRequestEntity).select();
+
+        if (error) {
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('코드 거래 기록을 insert 하는데 실패했습니다.');
+        }
+        console.log(...data);
+        }catch (e: any) {
+            console.log(e);
+            throw new Error('코드 거래 기록을 insert 하는데 실패했습니다.');
+        }
     }
 
 

@@ -53,7 +53,7 @@ const PaymentDialog = () => {
 	
 	const { mutate } = useMutation({
 		mutationFn: async () => {
-			 // 유저 캐시 차감 -> 캐시 사용기록 업데이트
+			 // 유저 캐시 차감 -> 캐시 사용기록 insert
 			const cashHistory : CashHistoryRequestEntity = {
 				user_token : userLogin!.id,
 				cash : postData?.price!,
@@ -63,10 +63,23 @@ const PaymentDialog = () => {
 			}
 
 			await apiClient.insertUserCashHistory(cashHistory);
-		}, onSuccess: (result) => {
 
-			// todo purchase sale history insert 로직
+		}, onSuccess: async (result) => {
+			// purchase sale history insert(코드 거래내역 insert) 로직
+			if(postData){
+				const purchaseSaleHistory : PurchaseSaleRequestEntity = {
+					post_id: postData!.id,
+					price: postData!.price,
+					is_confirmed: false,
+					purchase_user_token: userLogin!.id,
+					sales_user_token: postData!.userToken,
+					pay_type: "cash"
+				}
 
+				await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
+			}
+			
+			
 			
 			// queryClient.setQueryData([REACT_QUERY_KEY.login], () => {
 			// 	return result.user;
