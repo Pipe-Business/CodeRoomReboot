@@ -115,7 +115,7 @@ const CodeInfo: FC<Props> = () => {
 
 
 	/*
-	* useQery에서 넘어온 data를 postData로 선언
+	* useQuery에서 넘어온 data를 postData로 선언
 	*/
 	const { isLoading, data: postData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.code, id],

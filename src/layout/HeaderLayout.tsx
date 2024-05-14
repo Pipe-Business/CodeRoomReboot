@@ -12,7 +12,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import LoginModal from '../components/login/modal/LoginModal.tsx';
 import { User } from '@supabase/supabase-js';
 import { apiClient, supabase } from '../api/ApiClient.ts';
-
+import { useQuery } from '@tanstack/react-query';
+import { REACT_QUERY_KEY } from '../constants/define.ts';
 interface Props {
     children?: React.ReactNode;
 }
@@ -21,6 +22,15 @@ interface Props {
 const HeaderLayout: FC<Props> = () => {
 
     const [userLogin, setUser] = useState<User | null>(null)
+    //todo cash 가져오기
+
+   /*
+	* useQuery에서 넘어온 cashData  선언
+	*/
+	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.cash],
+		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
+	});
 
     useEffect(() => {
         const getSession = async () => {
@@ -126,7 +136,7 @@ const HeaderLayout: FC<Props> = () => {
                     userLogin && <CenterBox>
                           <MarginHorizontal size={8}>
                             <Link to={'/coin'} style={{ textDecoration: "none" }}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>0 커밋</span>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' 커밋'}</span>
                             </Link>
                         </MarginHorizontal>
 
