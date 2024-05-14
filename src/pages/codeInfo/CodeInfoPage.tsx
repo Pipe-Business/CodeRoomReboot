@@ -80,6 +80,14 @@ const CodeInfo: FC<Props> = () => {
 		}
 	}, [userLogin]);
 
+	 /*
+	* useQuery에서 넘어온 data를 cashData로 선언
+	*/
+	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.cash],
+		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
+	});
+
 	const onClickFavorate = () => {
 		console.log("좋아요 로직 실행");
 	}
@@ -274,7 +282,7 @@ const CodeInfo: FC<Props> = () => {
 										point={postData.price}
 										codeHostId={postData.userToken}
 										userId={userLogin?.id}
-										userHavePoint={userLogin?.point!}
+										userHavePoint={cashData ?? 0}
 										adminRepoURL={postData.adminGitRepoURL}
 										//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
 										onClickBuyItButton={onClickBuyItButton}
@@ -314,7 +322,7 @@ const CodeInfo: FC<Props> = () => {
 										point={postData.price}
 										codeHostId={postData.userToken}
 										userId={userLogin?.id}
-										userHavePoint={userLogin?.point!}
+										userHavePoint={cashData ?? 0}
 										adminRepoURL={postData.adminGitRepoURL}
 										//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
 										onClickBuyItButton={onClickBuyItButton}

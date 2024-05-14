@@ -4,7 +4,7 @@ import { supabaseConfig } from "../config/supabaseConfig";
 import { CodeModel } from "../data/model/CodeModel";
 import { UserEntity } from "../data/entity/UserEntity";
 import { API_ERROR } from "../constants/define";
-import { UserModel } from "../data/model/UserModel";
+import { UserModel } from "../data/model/UserModel"; 
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -375,22 +375,19 @@ class ApiClient implements SupabaseAuthAPI {
             const { data, error } = await supabase.from('users_cash_history')
             .select('*')
             .eq('user_token',myUserToken)
-            .order('charged_at', { ascending: false });
+            .order('created_at', { ascending: false });
 
-            // 아맞다 sum 안됨 다 더해야됨
-            
-            // print(data)
-
-         let lstCashEntity: CashResponseEntity[] = [];
+         let lstCashEntity: CashHistoryResponseEntity[] = [];
     
          data?.forEach((e) => {
             
-            let cashEntity: CashResponseEntity = {
+            let cashEntity: CashHistoryResponseEntity = {
                 id : e.id,
                 user_token : e.user_token,
                 cash : e.cash,
                 amount : e.amount,
-                charged_at : e.charged_at,
+                cash_history_type : e.cash_history_type,
+                created_at : e.created_at,
             }
             console.log("sdfsdf"+cashEntity.amount);
 
@@ -416,6 +413,29 @@ class ApiClient implements SupabaseAuthAPI {
             console.log(e);
             throw new Error('유저의 합산 캐시(커밋)을 가져오는 데 실패했습니다.');
         }
+    }
+
+    async insertUserCashHistory(cashHistoryRequestEntity : CashHistoryRequestEntity){
+        try{
+            const { data, error } = await supabase.from('users_cash_history')
+            .insert(cashHistoryRequestEntity).select();
+
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('게시글 업로드에 실패하였습니다.');
+        }
+        console.log(...data);
+
+        }catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 캐시 히스토리를 insert 하는데 실패했습니다.');
+        }
+
     }
 
 

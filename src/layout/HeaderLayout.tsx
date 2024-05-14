@@ -25,7 +25,7 @@ const HeaderLayout: FC<Props> = () => {
     //todo cash 가져오기
 
    /*
-	* useQuery에서 넘어온 cashData  선언
+	* useQuery에서 넘어온 data를 cashData로 선언
 	*/
 	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],

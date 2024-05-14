@@ -5,7 +5,9 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '../../../api/ApiClient';
-
+import { REACT_QUERY_KEY } from '../../../constants/define';
+import { apiClient } from '../../../api/ApiClient';
+import { createTodayDate } from '../../../utils/DayJsHelper';
 
 
 type requestPurchaseData = {
@@ -17,8 +19,15 @@ type requestPurchaseData = {
 const PaymentDialog = () => {
 	const { id } = useParams();
 	const queryClient = useQueryClient();
-	//const { setDialogState } = paymentStore();
-	const [userLogin, setUser] = useState<User | null>(null)
+	const [userLogin, setUser] = useState<User | null>(null);
+
+	   /*
+	* useQuery에서 넘어온 data를 cashData로 선언
+	*/
+	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.cash],
+		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
+	});
 
     useEffect(() => {
         const getSession = async () => {
@@ -32,30 +41,49 @@ const PaymentDialog = () => {
         }
         getSession()
     }, []);
+	
 
-
-	// const { data: codeData } = useQuery({
-	// 	queryKey: [REACT_QUERY_KEY.code, id],
-	// 	queryFn: () => loadCodeByIdFetcher(id!),
-	// });
+	const { data: postData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.code, id],
+		queryFn: () => apiClient.getTargetCode(Number(id!)),
+	});
 	
 	// const { userById } = useQueryUserById(codeData?.userId!);
-	// const { mutate } = useMutation({
-	// 	mutationFn: async (point: number) => {
-	// 		await setUserPointById(userLogin?.id!, point);
-	// 		const code = await getOneFirebaseData<CodeEntity>(['codeStore', id]);
 
-	// 		const user = await getUserById(userLogin?.id!);
-	// 		console.log('success,', code, user);
-	// 		return { code, user };
+	
+	const { mutate } = useMutation({
+		mutationFn: async () => {
+			 // 유저 캐시 차감 -> 캐시 사용기록 업데이트
+			const cashHistory : CashHistoryRequestEntity = {
+				user_token : userLogin!.id,
+				cash : postData?.price!,
+				amount : cashData==undefined ? 0 : cashData - postData?.price!,
+				description : "코드 구매",
+				cash_history_type : "use_cash"
+			}
 
-	// 	}, onSuccess: (result) => {
-	// 		queryClient.setQueryData([REACT_QUERY_KEY.login], () => {
-	// 			return result.user;
-	// 		});
-	// 	},
-	// });
+			await apiClient.insertUserCashHistory(cashHistory);
+		}, onSuccess: (result) => {
+
+			// todo purchase sale history insert 로직
+
+			
+			// queryClient.setQueryData([REACT_QUERY_KEY.login], () => {
+			// 	return result.user;
+			// });
+		},
+	});
+
+
+		 // todo 구매자에게 구매 알림
+
+		
+
+
 	// const { paymentPendingMutate } = useMutatePaymentPending();
+
+		
+
 	// const { mutateAsync: updatePurchaseData } = useMutation({
 	// 	mutationFn: async (reqData: requestPurchaseData) => {
 	// 		await setPurchaseItemForUser(reqData.codeId, reqData.userId,reqData.createdAt);
@@ -76,12 +104,15 @@ const PaymentDialog = () => {
 	// });
 	const onClickConfirm = useCallback(async () => {
 		try {
-			// if (codeData && userById?.id && userLogin?.id) {
-			// 	mutate(userLogin?.point! - codeData?.price!);
-			// 	setDialogState(false, false);
-			// 	const todayDate = createTodayDate();
-			// 	const result = await updatePurchaseData({ codeId: codeData?.id!, userId: userLogin?.id!,createdAt:todayDate });
-			// 	console.log(',,,,,,,,,,,,,,,,,,,,,,,,,', result);
+			//  if (codeData && userById?.id && userLogin?.id) {
+				if (userLogin?.id) {
+			 	mutate();
+			
+			 	const todayDate = createTodayDate();
+			
+
+	// todo 구매 정산내역 업데이트
+
 			// 	const entity: PaymentSettlementEntity = {
 			// 		codeId: codeData.id,
 			// 		point: codeData.price,
@@ -121,7 +152,7 @@ const PaymentDialog = () => {
 			// 		await set(salesPushRef, salesEntity);
 			// 	}
 			// 	paymentPendingMutate({ sellerId: codeData.userId, codeId: codeData?.id, entity: entity });
-			// }
+			 }
 		} catch (e) {
 			console.log(e);
 		}
