@@ -4,6 +4,7 @@ export const REACT_QUERY_KEY = {
     login : '/login',
 	code : '/codeStore',
 	user : '/users',
+	cash : '/cash',
 	
 }
 

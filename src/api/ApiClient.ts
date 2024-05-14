@@ -308,7 +308,7 @@ class ApiClient implements SupabaseAuthAPI {
                 }
                 lstCodeModel.push(codeModel);
             });
-            console.log("target"+data);
+            //console.log("target"+data);
 
             if(error){
                 console.log("error" + error.message);
@@ -368,6 +368,54 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('해당 게시글을 가져오는 데 실패했습니다.');
         }
 
+    }
+
+    async getUserTotalCash(myUserToken : string) : Promise<number>{
+        try{
+            const { data, error } = await supabase.from('users_cash_history')
+            .select('*')
+            .eq('user_token',myUserToken)
+            .order('charged_at', { ascending: false });
+
+            // 아맞다 sum 안됨 다 더해야됨
+            
+            // print(data)
+
+         let lstCashEntity: CashResponseEntity[] = [];
+    
+         data?.forEach((e) => {
+            
+            let cashEntity: CashResponseEntity = {
+                id : e.id,
+                user_token : e.user_token,
+                cash : e.cash,
+                amount : e.amount,
+                charged_at : e.charged_at,
+            }
+            console.log("sdfsdf"+cashEntity.amount);
+
+            lstCashEntity.push(cashEntity);
+         });
+
+        const totalCash : number = Number(lstCashEntity[0].amount);
+
+
+
+         console.log(data);
+
+        if(error){
+            console.log("error" + error.message);
+            console.log("error" + error.code);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+
+            throw new Error('유저의 합산 캐시(커밋)을 가져오는 데 실패했습니다.');
+        }
+        return totalCash;
+        }  catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 합산 캐시(커밋)을 가져오는 데 실패했습니다.');
+        }
     }
 
 
