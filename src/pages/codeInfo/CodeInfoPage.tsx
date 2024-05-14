@@ -197,9 +197,9 @@ const CodeInfo: FC<Props> = () => {
 								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>{postData.title} </span>
 							</MarginHorizontal>
 
-							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+							{/* <MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
 								<span style={{ color: 'blue', fontSize: '24px', fontWeight: 'lighter' }}>{postData.hashTag.map((e) => `#${e} `)} </span>
-							</MarginHorizontal>
+							</MarginHorizontal> */}
 
 							{/* 카테고리, 가격  */}
 							<div style={{ display: 'flex', flexDirection: 'row' }}>
