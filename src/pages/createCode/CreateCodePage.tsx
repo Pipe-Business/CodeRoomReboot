@@ -368,8 +368,8 @@ const CreateCodePage: FC<Props> = () => {
 
 
             <div>
-            <SectionTitle title='구매자 가이드' 
-            helpText={`구매자가 코드를 구매 후 실행 시 원할한 작동을 위해 개발환경을 알려주세요\n
+            <SectionTitle title='구매자 가이드'
+            helpText={`구매자가 코드를 구매 후 실행 시 원활한 작동을 위해 개발환경을 알려주세요\n
             e.g.)
             사용언어:Node.js
             버전:20.1.0LTS
