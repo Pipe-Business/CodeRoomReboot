@@ -4,7 +4,10 @@ import { supabaseConfig } from "../config/supabaseConfig";
 import { CodeModel } from "../data/model/CodeModel";
 import { UserEntity } from "../data/entity/UserEntity";
 import { API_ERROR } from "../constants/define";
-import { UserModel } from "../data/model/UserModel"; 
+import { UserModel } from "../data/model/UserModel";
+import { GithubForkURLEntity } from "../data/entity/GithubForkURLEntity";
+import axios from 'axios';
+import { serverURL } from '../hooks/fetcher/HttpFetcher.ts';
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -389,7 +392,7 @@ class ApiClient implements SupabaseAuthAPI {
                 cash_history_type : e.cash_history_type,
                 created_at : e.created_at,
             }
-            console.log("sdfsdf"+cashEntity.amount);
+          //  console.log("sdfsdf"+cashEntity.amount);
 
             lstCashEntity.push(cashEntity);
          });
@@ -398,7 +401,7 @@ class ApiClient implements SupabaseAuthAPI {
 
 
 
-         console.log(data);
+         //console.log(data);
 
         if(error){
             console.log("error" + error.message);
@@ -500,6 +503,50 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async getMyPurchaseSaleHistory(myUserToken : string, postId : number) : Promise<PurchaseSaleRequestEntity|null>{
+        try {
+            const { data, error } = await supabase.from('purchase_sale_history')
+                .select('*')
+                .eq('purchase_user_token',myUserToken)
+                .eq('post_id',postId);
+
+            let lstPurchaseSale: PurchaseSaleResponseEntity[] = [];
+            data?.forEach((e) => {
+                let purchaseSale: PurchaseSaleResponseEntity = {
+                    id: e.id,
+                    post_id : e.post_id,
+                    price : e.price,
+                    is_confirmed : e.is_confirmed,
+                    purchase_user_token : e.purchase_user_token,
+                    sales_user_token : e.sales_user_token,
+                    pay_type : e.pay_type,
+                    created_at : e.created_at,
+                }
+                lstPurchaseSale.push(purchaseSale);
+            });
+            console.log("구매내역"+{...data});
+
+            if(error){
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('구매기록을 가져오는 데 실패했습니다.');
+            }
+
+            return lstPurchaseSale.length != 0 ? lstPurchaseSale[0] : null;
+        }
+        catch (e: any) {
+            console.log(e);
+            throw new Error('구매기록을 가져오는 데 실패했습니다.');
+        }
+    }
+
+    async getCodeDownloadURL(userName: string, repoName: string, branchName: string): Promise<GithubForkURLEntity> {
+		const result = await axios.get<GithubForkURLEntity>(`${serverURL}/download/${userName}/${repoName}/${branchName}`);
+		return result.data;
+	}
 
 
 
