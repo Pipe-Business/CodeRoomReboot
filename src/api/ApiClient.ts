@@ -477,6 +477,29 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async updateViewCount(postId : number){
+        try {
+
+           const codeData : CodeModel  = await apiClient.getTargetCode(Number(postId!));
+
+           const { error } = await supabase.from('post')
+                            .update({view_count : codeData.viewCount+1}).eq('id',postId);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('조회수 증가에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('조회수 증가에 실패했습니다.');
+        }
+    }
+
 
 
 

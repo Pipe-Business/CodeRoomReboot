@@ -76,6 +76,15 @@ const CodeInfo: FC<Props> = () => {
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 
 
+	/*
+   * 	조회수 증가
+   */
+
+	useEffect(() => {
+		if(id){
+			apiClient.updateViewCount(Number(id));
+		}
+	}, []);
 
 	useEffect(() => {
 		if (!userLogin) { // 로그인 확인 필요
