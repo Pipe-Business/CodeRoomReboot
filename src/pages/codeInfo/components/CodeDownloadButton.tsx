@@ -3,6 +3,7 @@ import { Button,  } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '../../../api/ApiClient';
+import { ColorButton } from '../styles';
 
 interface Props {
 	children?: React.ReactNode;
@@ -48,8 +49,9 @@ const CodeDownloadButton: FC<Props> = ({ repoURL }) => {
 		}
 	}, [handleURL]);
 	return (
-		<Button onClick={onClickDownload} startIcon={<DownloadIcon />} sx={{ width: '100%', fontSize: '22px' }}
-				variant='contained'>코드다운</Button>
+		
+		<ColorButton onClick={onClickDownload} startIcon={<DownloadIcon />}  sx={{ fontSize: '15', width: '210px' }}
+				variant='contained'>코드다운</ColorButton>
 
 	);
 };

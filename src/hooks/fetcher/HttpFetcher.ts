@@ -8,20 +8,20 @@ console.log(serverURL);
 export type ResponseType = {
     downloadURL:string
 }
-const fetch = async(userName:string,codeName:string,branch:string)=>{
-    try{
-        console.log(userName,codeName,branch)
-        const result = await axios.get(`${serverURL}/download/${userName}/${codeName}/${branch}`)
-        return result.data as ResponseType
-    }catch (e) {
-        console.log(e)
-    }
+// const fetch = async(userName:string,codeName:string,branch:string)=>{
+//     try{
+//         console.log(userName,codeName,branch)
+//         const result = await axios.get(`${serverURL}/download/${userName}/${codeName}/${branch}`)
+//         return result.data as ResponseType
+//     }catch (e) {
+//         console.log(e)
+//     }
 
-}
+// }
 
-export const codeDownloadQuery = (queryKey:QueryKey,userName:string,codeName:string,branch:string="main")=>{
-    return useQuery({
-        queryKey:queryKey,
-        queryFn:async ()=>await fetch(userName,codeName,branch)
-    })
-}
+// export const codeDownloadQuery = (queryKey:QueryKey,userName:string,codeName:string,branch:string="main")=>{
+//     return useQuery({
+//         queryKey:queryKey,
+//         queryFn:async ()=>await fetch(userName,codeName,branch)
+//     })
+// }
