@@ -76,10 +76,6 @@ const CodeInfo: FC<Props> = () => {
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 
 
-	// const { isLoading: isLoginLoading, data: cashData } = useQuery({
-	// 	queryKey: [REACT_QUERY_KEY.cash],
-	// 	queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
-	// });
 
 	useEffect(() => {
 		if (!userLogin) { // 로그인 확인 필요
