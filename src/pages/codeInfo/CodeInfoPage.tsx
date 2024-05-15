@@ -154,7 +154,16 @@ const CodeInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getTargetUser(postData!.userToken),
 	});
 
-	if (isLoading || !postData || isUserDataLoading) {
+	/*
+	* 위에서 넘어온 postData의 usertoken을 통해 구매기록을 조회 (purchase_sale_history 기록을 조회)
+	*/
+
+	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
+		queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin.id , postData!.id),
+	});
+
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -323,7 +332,7 @@ const CodeInfo: FC<Props> = () => {
 									userId={userLogin?.id}
 									userHavePoint={cashData ?? 0}
 									adminRepoURL={postData.adminGitRepoURL}
-									//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
+									purchasedSaleData={purchaseSaleData}
 									onClickBuyItButton={onClickBuyItButton}
 									onPaymentConfirm={onClickConfirm}
 									onClickLoginRegister={onOpenLoginDialog}
@@ -363,7 +372,7 @@ const CodeInfo: FC<Props> = () => {
 							userId={userLogin?.id}
 							userHavePoint={cashData ?? 0}
 							adminRepoURL={postData.adminGitRepoURL}
-							//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
+							purchasedSaleData={purchaseSaleData}
 							onClickBuyItButton={onClickBuyItButton}
 							onPaymentConfirm={onClickConfirm}
 							onClickLoginRegister={onOpenLoginDialog}
