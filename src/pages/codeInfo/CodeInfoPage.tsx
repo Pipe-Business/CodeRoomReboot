@@ -271,11 +271,18 @@ const CodeInfo: FC<Props> = () => {
 
 							</div>
 
+
 							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
 								<span style={{ color: '#000000', fontSize: '16px', }}>{postData.viewCount}명 조회 </span>
 							</MarginHorizontal>
 
+							<Box height={64} />
 
+							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>결과물 이미지</span>
+							</MarginHorizontal>
+
+							<MarginHorizontal size={8} style={{ marginTop: 32, }}>
 							{postData.images &&
 								<Slider
 									nextArrow={<SampleNextArrow />}
@@ -297,8 +304,9 @@ const CodeInfo: FC<Props> = () => {
 
 								</Slider>
 							}
+							</MarginHorizontal>
 
-							<Box height={64} />
+							<Box height={128} />
 
 							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
 								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>코드 설명 </span>
