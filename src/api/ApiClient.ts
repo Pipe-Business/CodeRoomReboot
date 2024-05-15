@@ -292,7 +292,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     title: e.title,
                     description: e.description,
-                    images: e.images,
+                    images: e.img_urls,
                     price: e.code.cost,
                     userToken: e.user_token,
                     buyerGuide : e.code.buyer_guide,

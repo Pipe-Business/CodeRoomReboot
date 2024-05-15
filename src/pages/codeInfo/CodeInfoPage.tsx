@@ -6,7 +6,7 @@ import useDialogState from '../../hooks/useDialogState.ts';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
 import { calcTimeDiff, reformatTime } from '../../utils/DayJsHelper.ts';
-import { ArrowBack, Favorite, ThumbUp } from '@mui/icons-material';
+import { ArrowBack, Favorite, ThumbUp, } from '@mui/icons-material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 // import 'prismjs/themes/prism.css';
 // import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
@@ -28,6 +28,11 @@ import { BlurContainer } from './styles.ts';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal.tsx';
 import CodeInfoBuyItButton from './components/CodeInfoBuyItButton.tsx';
 import PaymentDialog from './components/PaymentDialog.tsx';
+
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 
 dayjs.locale('ko');
 
@@ -64,26 +69,32 @@ const CodeInfo: FC<Props> = () => {
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
 	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
 	const [onClickConfirm] = PaymentDialog();
-	const {state:{
+	const { state: {
 		userLogin,
-	}} = useLocation();
+	} } = useLocation();
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 
-		useEffect(()=>{
+
+	// const { isLoading: isLoginLoading, data: cashData } = useQuery({
+	// 	queryKey: [REACT_QUERY_KEY.cash],
+	// 	queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
+	// });
+
+	useEffect(() => {
 		if (!userLogin) { // 로그인 확인 필요
 			setBlur(true);
 			onOpenRequireLoginModal();
 			// alert('로그인이 필요한 서비스입니다.');
-		}else{
+		} else {
 			setBlur(false);
 		}
 	}, [userLogin]);
 
-	 /*
-	* useQuery에서 넘어온 data를 cashData로 선언
-	*/
-	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
+	/*
+   * useQuery에서 넘어온 data를 cashData로 선언
+   */
+	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
 		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
 	});
@@ -250,6 +261,29 @@ const CodeInfo: FC<Props> = () => {
 								<span style={{ color: '#000000', fontSize: '16px', }}>{postData.viewCount}명 조회 </span>
 							</MarginHorizontal>
 
+
+							{postData.images &&
+								<Slider
+									nextArrow={<SampleNextArrow />}
+									prevArrow={<SamplePrevArrow />}
+									dots={true}
+									arrows={false}
+									slidesToShow={1}
+									slidesToScroll={1}
+									speed={500}
+									infinite={false}
+								>
+
+									{postData.images.map((url, key) => {
+										return <img alt={'image'} key={key} style={{
+											objectFit: 'contain',
+										}} src={url} />;
+									})
+									}
+
+								</Slider>
+							}
+
 							<Box height={64} />
 
 							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
@@ -277,26 +311,26 @@ const CodeInfo: FC<Props> = () => {
 							<Box height={32} />
 
 							<div style={{ display: 'flex', flexDirection: 'row', }}>
-							<CodeInfoBuyItButton
-										isBlur={isBlur}
-										point={postData.price}
-										codeHostId={postData.userToken}
-										userId={userLogin?.id}
-										userHavePoint={cashData ?? 0}
-										adminRepoURL={postData.adminGitRepoURL}
-										//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
-										onClickBuyItButton={onClickBuyItButton}
-										onPaymentConfirm={onClickConfirm}
-										onClickLoginRegister={onOpenLoginDialog}
-										onOpenPointDialog={onOpenPointDailog}
-									/>
-							{/* <ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton> */}
+								<CodeInfoBuyItButton
+									isBlur={isBlur}
+									point={postData.price}
+									codeHostId={postData.userToken}
+									userId={userLogin?.id}
+									userHavePoint={cashData ?? 0}
+									adminRepoURL={postData.adminGitRepoURL}
+									//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
+									onClickBuyItButton={onClickBuyItButton}
+									onPaymentConfirm={onClickConfirm}
+									onClickLoginRegister={onOpenLoginDialog}
+									onOpenPointDialog={onOpenPointDailog}
+								/>
+								{/* <ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton> */}
 
-							<Box width={32} />
-						
-							<IconButton onClick={onClickFavorate}>
-								<ThumbUpIcon/>
-							</IconButton>
+								<Box width={32} />
+
+								<IconButton onClick={onClickFavorate}>
+									<ThumbUpIcon />
+								</IconButton>
 							</div>
 
 							{!userLogin && <CenterBox>
@@ -318,18 +352,18 @@ const CodeInfo: FC<Props> = () => {
 						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={0}
 					>
 						<CodeInfoBuyItButton
-										isBlur={isBlur}
-										point={postData.price}
-										codeHostId={postData.userToken}
-										userId={userLogin?.id}
-										userHavePoint={cashData ?? 0}
-										adminRepoURL={postData.adminGitRepoURL}
-										//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
-										onClickBuyItButton={onClickBuyItButton}
-										onPaymentConfirm={onClickConfirm}
-										onClickLoginRegister={onOpenLoginDialog}
-										onOpenPointDialog={onOpenPointDailog}
-									/>
+							isBlur={isBlur}
+							point={postData.price}
+							codeHostId={postData.userToken}
+							userId={userLogin?.id}
+							userHavePoint={cashData ?? 0}
+							adminRepoURL={postData.adminGitRepoURL}
+							//purchasedByUser={postData.purchasedByUser} // 구매내역 쿼리 필요
+							onClickBuyItButton={onClickBuyItButton}
+							onPaymentConfirm={onClickConfirm}
+							onClickLoginRegister={onOpenLoginDialog}
+							onOpenPointDialog={onOpenPointDailog}
+						/>
 						{/* <ColorButton type={'submit'} sx={{ fontSize: '15', width: '80%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton> */}
 
 					</Card>
