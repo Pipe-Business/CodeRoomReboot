@@ -5,7 +5,8 @@ export const REACT_QUERY_KEY = {
 	code : '/codeStore',
 	user : '/users',
 	cash : '/cash',
-	purchaseSaleHistory : '/purchaseSaleHistory'
+	purchaseSaleHistory : '/purchaseSaleHistory',
+	like : '/like',
 	
 }
 

@@ -68,6 +68,7 @@ const CodeInfo: FC<Props> = () => {
 	//const [userLogin, setUser] = useState<User | null>(null);
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
 	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
+	const [isLike, setLike] = useState<boolean>(false);
 	const [onClickConfirm] = PaymentDialog();
 	const { state: {
 		userLogin,
@@ -81,7 +82,7 @@ const CodeInfo: FC<Props> = () => {
    */
 
 	useEffect(() => {
-		if(id){
+		if (id) {
 			apiClient.updateViewCount(Number(id));
 		}
 	}, []);
@@ -104,8 +105,19 @@ const CodeInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
 	});
 
-	const onClickFavorate = () => {
-		console.log("좋아요 로직 실행");
+	const onClickLike = async() => {
+		if(isLike){
+			setLike(false);
+			await apiClient.deleteLikeData(userLogin!.id, postData!.id);
+	
+		}else{
+			setLike(true);
+			const likedData : LikeRequestEntity = {
+				user_token : userLogin!.id,
+				post_id : postData!.id,
+			}
+			 await apiClient.insertLikedData(likedData);
+		}
 	}
 
 	const onClickBuyItButton = useCallback(() => {
@@ -160,10 +172,27 @@ const CodeInfo: FC<Props> = () => {
 
 	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
-		queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin.id , postData!.id),
+		queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin.id, postData!.id),
 	});
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading) {
+	/*
+	*   postId와 userToken으로 좋아요 상태 조회
+	*/
+
+	const { isLoading: isLikeLoading, data: likeData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.like],
+		queryFn: () => apiClient.getLikeData(userLogin.id, postData!.id),
+	});
+
+	useEffect(()=>{
+		if(likeData != null){
+			console.log("likedata" +{likeData});
+			setLike(true);
+		}
+	},[likeData]);
+
+
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -276,37 +305,45 @@ const CodeInfo: FC<Props> = () => {
 								<span style={{ color: '#000000', fontSize: '16px', }}>{postData.viewCount}명 조회 </span>
 							</MarginHorizontal>
 
-							<Box height={64} />
 
-							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>결과물 이미지</span>
-							</MarginHorizontal>
 
 							<MarginHorizontal size={8} style={{ marginTop: 32, }}>
-							{postData.images &&
-								<Slider
-									nextArrow={<SampleNextArrow />}
-									prevArrow={<SamplePrevArrow />}
-									dots={true}
-									arrows={false}
-									slidesToShow={1}
-									slidesToScroll={1}
-									speed={500}
-									infinite={false}
-								>
+								{postData.images &&
 
-									{postData.images.map((url, key) => {
-										return <img alt={'image'} key={key} style={{
-											objectFit: 'contain',
-										}} src={url} />;
-									})
-									}
+									<div>
+										<Box height={64} />
 
-								</Slider>
-							}
+										<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+											<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>결과물 이미지</span>
+										</MarginHorizontal>
+
+										<Slider
+											nextArrow={<SampleNextArrow />}
+											prevArrow={<SamplePrevArrow />}
+											dots={true}
+											arrows={false}
+											slidesToShow={1}
+											slidesToScroll={1}
+											speed={500}
+											infinite={false}
+										>
+
+											{postData.images.map((url, key) => {
+												return <img alt={'image'} key={key} style={{
+													objectFit: 'contain',
+												}} src={url} />;
+											})
+											}
+
+										</Slider>
+
+										<Box height={128} />
+									</div>
+
+								}
 							</MarginHorizontal>
 
-							<Box height={128} />
+
 
 							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
 								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>코드 설명 </span>
@@ -350,8 +387,8 @@ const CodeInfo: FC<Props> = () => {
 
 								<Box width={32} />
 
-								<IconButton onClick={onClickFavorate}>
-									<ThumbUpIcon />
+								<IconButton onClick={onClickLike}>
+									{isLike ? <ThumbUpIcon sx={{color:'red'}} /> : <ThumbUpIcon />}
 								</IconButton>
 							</div>
 
