@@ -65,11 +65,13 @@ class ApiClient implements SupabaseAuthAPI {
                     postType: e.post_type,
                     createdAt: e.created_at,
                     buyerGuide: e.code.buyer_guide,
+                    githubRepoUrl: e.code.github_repo_url,
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
                     hashTag: e.hash_tag,
+                    sellerGithubName : e.code.seller_github_name,
                     state: e.state,
-                    adminGitRepoURL: e.code.github_repo_url,
+                    adminGitRepoURL: e.code.admin_git_repo_url,
                     viewCount: e.view_count,
                 }
                 lstCodeModel.push(codeModel);
@@ -306,8 +308,10 @@ class ApiClient implements SupabaseAuthAPI {
                     buyerCount: e.code.buyer_count,
                     hashTag: e.hash_tag,
                     state: e.state,
+                    sellerGithubName : e.code.seller_github_name,
+                    githubRepoUrl : e.code.github_repo_url,
                     viewCount: e.view_count,
-                    adminGitRepoURL: e.code.github_repo_url,
+                    adminGitRepoURL: e.code.admin_git_repo_url,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -640,11 +644,13 @@ class ApiClient implements SupabaseAuthAPI {
                     postType: e.post_type,
                     createdAt: e.created_at,
                     buyerGuide: e.code.buyer_guide,
+                    sellerGithubName : e.code.seller_github_name,
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
                     hashTag: e.hash_tag,
                     state: e.state,
-                    adminGitRepoURL: e.code.github_repo_url,
+                    githubRepoUrl : e.code.github_repo_url,
+                    adminGitRepoURL: e.code.admin_git_repo_url,
                     viewCount: e.view_count,
                 }
                 lstCodeModel.push(codeModel);
@@ -658,6 +664,30 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
     }
+
+    async forkForSellerGitRepo(owner: string, repo: string): Promise<string> {
+		try {
+			const urlConvertArr = repo.split('/');
+			const repoName = urlConvertArr[urlConvertArr.length - 1];
+			console.log(repoName);
+
+			const result = await useOctokit.request('POST /repos/{owner}/{repo}/forks', {
+				owner: owner,
+				repo: repoName,
+				name: repoName,
+				default_branch_only: true,
+				headers: {
+					'X-GitHub-Api-Version': '2022-11-28',
+				},
+			});
+			console.log(result.data);
+			return result.data.html_url;
+		} catch (e) {
+			console.dir(e);
+			throw new Error('github repo 포크 오류');
+		}
+	}
+
 
 
 

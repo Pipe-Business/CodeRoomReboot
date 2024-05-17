@@ -8,6 +8,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { QueryClient } from '@tanstack/react-query';
+import { Octokit } from '@octokit/core';
+
 
 const MainPage = React.lazy(() => import('./pages/main/MainPage.tsx'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage.tsx'));
@@ -27,7 +29,12 @@ const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage.tsx'));
 const CoinPage = React.lazy(() => import('./pages/coin/CoinPage.tsx'));
 const AdminPage = React.lazy(() => import ('./pages/admin/AdminPage.tsx'));
 const AdminLoginPage = React.lazy(() => import('./pages/adminLogin/AdminLoginPage.tsx'));
+const AdminCodeRequestInfo = React.lazy(() => import('./pages/admin/AdminCodeRequestInfoPage.tsx'));
 const queryClient = new QueryClient();
+
+export const useOctokit = new Octokit({
+	auth: `bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -62,6 +69,7 @@ root.render(
       <Route path='/reset-complete' element={<ResetCompletePage/>}/>
       <Route path='/signup-complete' element={<SignUpCompletePage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
+      <Route path='/admin/coderequest/:userId/:codeId' element={<AdminCodeRequestInfo />} />
       <Route path='/help' element={<HelpPage />} />
       <Route path='/code/:id' element={<CodeInfo/>} />
       <Route path='/coin' element={<CoinPage/>}/>

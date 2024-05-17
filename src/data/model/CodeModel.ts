@@ -14,5 +14,7 @@ export type CodeModel = {
     buyerCount: number, // 구매자수
     state: string, // 상태
     adminGitRepoURL: string,  /** 관리자의 포크뜬 깃헙 url */
+    githubRepoUrl: string, // 깃허브 url
+    sellerGithubName: string, // 판매자의 GitHub 사용자명
     viewCount : number, // 조회수
 }
