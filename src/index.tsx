@@ -25,6 +25,7 @@ const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePag
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage.tsx'));
 const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage.tsx'));
 const CoinPage = React.lazy(() => import('./pages/coin/CoinPage.tsx'));
+const AdminPage = React.lazy(() => import ('./pages/admin/AdminPage.tsx'));
 const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
@@ -63,6 +64,7 @@ root.render(
       <Route path='/help' element={<HelpPage />} />
       <Route path='/code/:id' element={<CodeInfo/>} />
       <Route path='/coin' element={<CoinPage/>}/>
+      <Route path='/admin' element={<AdminPage/>}/>
 
 
       <Route path='/*' element={<NotFoundPage/>}/>

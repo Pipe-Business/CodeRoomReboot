@@ -44,3 +44,9 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   padding-bottom: 0;
   //background-color : #FFB6C1;
 `
+
+export const CenterBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
