@@ -16,8 +16,8 @@ const CodeRequestHeader: FC<{ type: 'pending' | 'reject' | 'approve' }> = ({ typ
 				<div style={{ width: '15%' }}>{type === 'pending' ? '요청' : type === 'reject' ? '반려' : '승인'}시간</div>
 				<div style={{ width: '5%' }}>코드&글</div>
 				<div style={{ width: '30%' }}>게시자</div>
-				<div style={{ width: '35%' }}>코드제목</div>
-				<div style={{ width: '10%' }}>캐시</div>
+				<div style={{ width: '30%' }}>코드제목</div>
+				<div style={{ width: '15%' }}>캐시</div>
 				<div style={{ width: '5%' }}>요청상태</div>
 			</div>
 		</ListItemText>
