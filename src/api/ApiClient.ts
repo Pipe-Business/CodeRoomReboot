@@ -49,7 +49,7 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const { data, error } = await supabase.from('post')
                 .select('*, code!inner(*)')
-                .eq('state', "confirmed")
+                .eq('state', "approve")
                 .order('created_at', { ascending: false });
 
             let lstCodeModel: CodeModel[] = [];

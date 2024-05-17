@@ -1,4 +1,5 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect,useState } from 'react';
+import { User } from '@supabase/supabase-js';
 import AdminLayout from '../../layout/AdminLayout.tsx';
 import { Box } from '@mui/material';
 import Tab from '@mui/material/Tab';
@@ -8,22 +9,48 @@ import TabPanel from '@mui/lab/TabPanel';
 //import AdminPaymentPendingPage from './AdminPaymentPendingPage.tsx';
 // import UserManageList from './components/userList/UserManageList.tsx';
 // import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList.tsx';
-import { useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 //import AdminBootpayPaymentPage from './AdminBootpayPaymentPage.tsx';
 import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList.tsx';
+import { supabase } from '../../api/ApiClient.ts';
 
 interface Props {
 	children?: React.ReactNode;
 }
 
 const AdminPage: FC<Props> = () => {
+	const [userLogin, setUser] = useState<User | null>(null);
+
 	const [value, setValue] = React.useState('1');
 	const location = useLocation();
+	const navigate = useNavigate();
 	const tab = location.state?.tab;
 	const [searchParams, setSearchParams] = useSearchParams();
 	useEffect(() => {
+
+		const getSession = async () => {
+			const { data, error } = await supabase.auth.getSession()
+			if (error) {
+				console.error(error)
+			} else {
+				const { data: { user } } = await supabase.auth.getUser();
+				
+				if(!user || user.id != "cb8378c7-5531-43e0-882d-0f84e19f03ad"){ // 관리자의 유저토큰인지 확인
+					console.log('here!!')
+					navigate('/admin/login');
+				}else{
+					console.log('not here!!')
+				}
+
+				
+			}
+		}
+		getSession()
+
+
 		setValue(searchParams.get('tab') ?? '1');
 	}, []);
+
 
 	const handleChange = (_: React.SyntheticEvent, newValue: string) => {
 		searchParams.set('tab', newValue);
