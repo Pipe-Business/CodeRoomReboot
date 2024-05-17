@@ -51,7 +51,7 @@ const AdminCodeRequestItem: FC<Props> = ({ item }) => {
 						</div> 
 						<div style={{ width: '15%' }}>{item.price.toLocaleString()}p</div>
 						<div
-							style={{ width: '5%' }}>{item.state === 'pending' ? '요청' : item.state === 'reject' ? '반려' : '승인'}</div>
+							style={{ width: '5%' }}>{item.state === 'pending' ? '요청' : item.state === 'rejected' ? '반려' : '승인'}</div>
 					</div>
 				</ListItemText>
 			</ListItem>

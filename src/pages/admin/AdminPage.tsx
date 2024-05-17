@@ -77,7 +77,7 @@ const AdminPage: FC<Props> = () => {
 					<AdminCodeRequestList type={'pending'} />
 				</TabPanel>
 				<TabPanel value='2'>
-					<AdminCodeRequestList type={'reject'} />
+					<AdminCodeRequestList type={'rejected'} />
 				</TabPanel>
 				<TabPanel value='3'>
 					<AdminCodeRequestList type={'approve'} />

@@ -9,24 +9,28 @@ interface Props {
 	children?: React.ReactNode,
 	open: boolean,
 	onClose: () => void,
-	userId: string,
+	userToken: string,
 	title: string,
-	reqId: string,
+	postId: string,
 	refetch: () => void
 }
 
-const RejectModal: FC<Props> = ({ reqId, title, open, onClose, userId, refetch }) => {
+const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken, refetch }) => {
 	const [inputText, onChangeInputText] = useInput('');
 	const onClickConfirm = useCallback(async () => {
 		if(!inputText || inputText.trim()===''){
 			toast.error("반려사유를 입력해주세요")
 			return
 		}
-		// const todayDate = createTodayDate();
-		// // firebaseSetFetcher(['codeRequest'])
-		// await apiClient.updateCodeRequestType(userId, reqId, 'reject');
-		// await apiClient.updateTypeForCodeRequestByUser(userId, reqId, 'reject');
-		// await firebaseSetFetcher(['codeRequest',reqId,'createdAt'],createTodayDate())
+		const todayDate = createTodayDate();
+	
+		await apiClient.updateCodeRequestState(userToken, postId, 'rejected');
+		await apiClient.updateCodeRequestRejectMessage(userToken, postId, inputText);
+
+		toast.info('반려처리가 완료되었습니다.');
+
+		//await apiClient.updateTypeForCodeRequestByUser(userId, reqId, 'reject');
+		//await firebaseSetFetcher(['codeRequest',reqId,'createdAt'],createTodayDate())
 		// await firebaseSetFetcher(['codeRequest',reqId,'rejectMessage'],inputText)
 		// await apiClient.sendNotificationByUser(userId, {
 		// 	id: todayDate,

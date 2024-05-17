@@ -19,6 +19,7 @@ import { apiClient } from '../../api/ApiClient.ts';
 import ImageCard from './components/codeRequest/ImageCard.tsx';
 import MainLayout from '../../layout/MainLayout.tsx';
 import { Skeleton } from '@mui/material';
+import { toast } from 'react-toastify';
 
 interface Props {
 	children?: React.ReactNode;
@@ -87,7 +88,16 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					</IconButton>
 					<h1>{userById.nickname} 님의 {data.title}</h1>
 				</div>
-				<h2 style={{ marginBottom: 64 }}>{data.state === 'pending' ? '요청 대기' : data.state === 'reject' ? '요청 반려' : '승인'}</h2>
+				<h2 style={{ marginBottom: 64 }}>{data.state === 'pending' ? '요청 대기' : data.state === 'rejected' ? '요청 반려' : '승인'}</h2>
+				{data.state === 'rejected' &&
+				
+					<ContentWrapper>
+						<div>반려사유</div>
+						<span>{data.rejectMessage}</span>
+					</ContentWrapper>
+	
+
+				}
 				<ContentWrapper>
 					<div>제목</div>
 					<span>{data.title}</span>
@@ -135,7 +145,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					</>
 				
 				<ContentWrapper>
-					<div>{data.state === 'pending' ? '요청' : data.state === 'reject' ? '반려' : '승인'}시간</div>
+					<div>{data.state === 'pending' ? '요청' : data.state === 'rejected' ? '반려' : '승인'}시간</div>
 					<span>
 					{reformatTime(data.createdAt)}
 				</span>
@@ -180,9 +190,11 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 							</Button>
 						</div>
 						<AcceptModal open={openAcceptModal} onClose={onCloseAcceptModal} />
-						<RejectModal reqId={data.id!.toString()} title={data.title} userId={data.userToken}
+						<RejectModal postId={data.id!.toString()} title={data.title} userToken={data.userToken}
 									 open={openRejectModal}
-									 onClose={onCloseRejectModal} refetch={() => {navigate(0); }} /> {/*refetch */}
+									 onClose={onCloseRejectModal} refetch={() => {
+										navigate('/admin');
+									 }} /> {/*refetch */}
 					</div>
 				}
 

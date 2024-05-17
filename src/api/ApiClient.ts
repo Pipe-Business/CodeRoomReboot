@@ -8,6 +8,7 @@ import { UserModel } from "../data/model/UserModel";
 import { GithubForkURLEntity } from "../data/entity/GithubForkURLEntity";
 import axios from 'axios';
 import { serverURL } from '../hooks/fetcher/HttpFetcher.ts';
+import { useOctokit } from "../index.tsx";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -72,6 +73,7 @@ class ApiClient implements SupabaseAuthAPI {
                     sellerGithubName : e.code.seller_github_name,
                     state: e.state,
                     adminGitRepoURL: e.code.admin_git_repo_url,
+                    rejectMessage : e.reject_message,
                     viewCount: e.view_count,
                 }
                 lstCodeModel.push(codeModel);
@@ -310,6 +312,7 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     sellerGithubName : e.code.seller_github_name,
                     githubRepoUrl : e.code.github_repo_url,
+                    rejectMessage : e.reject_message,
                     viewCount: e.view_count,
                     adminGitRepoURL: e.code.admin_git_repo_url,
                 }
@@ -651,6 +654,7 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     githubRepoUrl : e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
+                    rejectMessage : e.reject_message,
                     viewCount: e.view_count,
                 }
                 lstCodeModel.push(codeModel);
@@ -687,6 +691,53 @@ class ApiClient implements SupabaseAuthAPI {
 			throw new Error('github repo 포크 오류');
 		}
 	}
+
+    async updateCodeRequestState(userToken:string, postId:string, state:string){
+        try {
+            const { error } = await supabase.from('post')
+                .update({ state : state })
+                .eq('id', postId)
+                .eq('user_token',userToken);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('게시글 상태 변경에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('게시글 상태 변경에 실패했습니다.');
+        }
+    }
+
+    async updateCodeRequestRejectMessage(userToken:string, postId:string, rejectMessage:string){
+        try {
+            const { error } = await supabase.from('post')
+                .update({ reject_message : rejectMessage })
+                .eq('id', postId)
+                .eq('user_token',userToken);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('반려사유 저장에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('반려사유 저장에 실패했습니다.');
+        }
+    }
+
 
 
 

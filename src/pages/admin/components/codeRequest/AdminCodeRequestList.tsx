@@ -6,14 +6,14 @@ import { apiClient } from '../../../../api/ApiClient.ts';
 
 interface Props {
 	children?: React.ReactNode;
-	type: 'pending' | 'reject' | 'approve';
+	type: 'pending' | 'rejected' | 'approve';
 }
 
-const CodeRequestHeader: FC<{ type: 'pending' | 'reject' | 'approve' }> = ({ type }) => {
+const CodeRequestHeader: FC<{ type: 'pending' | 'rejected' | 'approve' }> = ({ type }) => {
 	return <ListItem>
 		<ListItemText>
 			<div style={{ display: 'flex' }}>
-				<div style={{ width: '15%' }}>{type === 'pending' ? '요청' : type === 'reject' ? '반려' : '승인'}시간</div>
+				<div style={{ width: '15%' }}>{type === 'pending' ? '요청' : type === 'rejected' ? '반려' : '승인'}시간</div>
 				<div style={{ width: '5%' }}>코드&글</div>
 				<div style={{ width: '30%' }}>게시자</div>
 				<div style={{ width: '30%' }}>코드제목</div>

@@ -17,4 +17,5 @@ export type CodeModel = {
     githubRepoUrl: string, // 깃허브 url
     sellerGithubName: string, // 판매자의 GitHub 사용자명
     viewCount : number, // 조회수
+    rejectMessage : string, // 반려사유
 }
