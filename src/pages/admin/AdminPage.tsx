@@ -23,7 +23,6 @@ const AdminPage: FC<Props> = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	useEffect(() => {
 		setValue(searchParams.get('tab') ?? '1');
-
 	}, []);
 
 	const handleChange = (_: React.SyntheticEvent, newValue: string) => {
