@@ -31,3 +31,16 @@ export const LANGUAGE_FILTER = [
 	'Dart',
 	'기타',
 ];
+
+export const CATEGORY_TO_KOR = {
+	frontend: '프론트엔드',
+	webPublishing: '웹 퍼블리싱',
+	app: '앱개발',
+	desktop: '데스크탑개발',
+	backendServer: '서버(백엔드)',
+	gameDevelop: '게임개발',
+	blockChain: '블록체인',
+	AI: 'AI',
+	dataAnalysis: '데이터분석',
+	other: '기타',
+};
