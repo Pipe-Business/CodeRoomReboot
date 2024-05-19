@@ -12,8 +12,8 @@ import { useQueryUserById } from '../../hooks/fetcher/UserFetcher.ts';
 import { ArrowBack } from '@mui/icons-material';
 //import 'prismjs/themes/prism.css';
 //import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Viewer } from '@toast-ui/react-editor';
+// import '@toast-ui/editor/dist/toastui-editor.css';
+// import { Viewer } from '@toast-ui/react-editor';
 import { CATEGORY_TO_KOR } from '../../constants/define.ts';
 import { apiClient } from '../../api/ApiClient.ts';
 import ImageCard from './components/codeRequest/ImageCard.tsx';
@@ -115,9 +115,9 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 						whiteSpace: 'pre-line',
 						wordWrap: 'break-word',
 					}}>
-						<Viewer
+						{/* <Viewer
 							initialValue={data.description}
-						/>
+						/> */}
 					</div>
 				</div>
 				<Divider />
