@@ -10,7 +10,7 @@ interface Props {
 	purchasedSaleData?: PurchaseSaleResponseEntity | null,
 	point: number,
 	userHavePoint: number,
-	adminRepoURL: string
+	githubRepoUrl: string
 	isBlur: boolean,
 	onPaymentConfirm: () => void
 	onClickBuyItButton: () => void,
@@ -28,7 +28,7 @@ const CodeInfoBuyItButton: FC<Props> = (
 		userHavePoint,
 		onPaymentConfirm,
 		isBlur,
-		adminRepoURL,
+		githubRepoUrl,
 		onClickLoginRegister,
 		onOpenPointDialog,
 	}) => {
@@ -53,13 +53,13 @@ const CodeInfoBuyItButton: FC<Props> = (
 		}} disabled={isBlur}>구매하기</ColorButton>;
 	}
 	// 게사자일경우
-	if (userId === codeHostId) {
-		return null;
-	}
+	// if (userId === codeHostId) {
+	// 	return null;
+	// }
 
 	// 구매한 내역이 있으면
 	if (purchasedSaleData != null) {
-		return <CodeDownloadButton repoURL={adminRepoURL}></CodeDownloadButton>;
+		return <CodeDownloadButton repoURL={githubRepoUrl}></CodeDownloadButton>;
 
 	} else { // 구매 내역이 없으면
 		

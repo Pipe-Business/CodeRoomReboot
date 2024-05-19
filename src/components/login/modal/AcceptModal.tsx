@@ -23,49 +23,35 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 		queryKey: ['codeRequest', codeId],
 		queryFn: () => apiClient.getTargetCode(Number(codeId)),
 	});
-	// const { mutate } = useMutation({
-	// 	mutationFn: async (data: CodeModel) => {
-	// 		const copyData: CodeModel = { ...data };
-	// 		//if(data.formType==='code'){
-	// 			const forkUrl = await apiClient.forkForSellerGitRepo(data.sellerGithubName, data.githubRepoUrl);
-	// 			copyData.adminGitRepoURL = forkUrl;
-	// 		//}
-	// 		// await setOneCode(copyData);
-	// 		// console.log(copyData);
-	// 		// const todayDate = createTodayDate();
-	// 		// const salesData = await getAllFirebaseData<{createdAt:string,codeId:string}[]>(['users', userId!, 'salesData']);
-
-	// 		// if (salesData) {
-	// 		// 	await firebaseSetFetcher(['users', userId!, 'salesData'], [...salesData, {createAt:todayDate,codeId:data.id!}]);
-	// 		// } else {
-	// 		// 	await firebaseSetFetcher(['users', userId!, 'salesData'], [{createdAt:todayDate,codeId:data.id!}]);
-	// 		// }
-	// 		// await firebaseSetFetcher(['codeRequestByUser',userId,data.id],null)
-	// 		// await apiClient.sendNotificationByUser(data.userId, {
-	// 		// 	sender: 'admin',
-	// 		// 	createdAt: todayDate,
-	// 		// 	id: todayDate,
-	// 		// 	content: `관리자가 ${todayDate} 에 회원님의 ${copyData.title} 을 승인했습니다.`,
-	// 		// });
-	// 		// await firebaseSetFetcher(['codeRequest',data.id,'createdAt'],todayDate)
-	// 		// await firebaseSetFetcher(['codeStore',data.id,'createdAt'],todayDate)
-	// 		// navigate('/admin');
-	// 		//return true;
-	// 	},
-	// 	onSuccess: async (result) => {
-	// 		//if (result) {
-	// 			//await apiClient.updateCodeRequestType(data?.userId!, data?.id!, 'approve');
-	// 			//await firebaseDeleteFetcher(['codeRequest',data?.userId,data?.id])
-	// 		//}
-	// 	},
-	// 	onError: (e) => {
-	// 		toast.error('포크도중 오류가 발생했습니다. 관리자가 초대를 안받았거나 url 이 잘못된경우에요');
-	// 		console.log(e);
-	// 	},
-	// });
+	 const { mutate } = useMutation({
+		mutationFn: async (data: CodeModel) => {
+			
+	 		//if(data.formType==='code'){
+				const forkUrl = await apiClient.forkForSellerGitRepo(data.sellerGithubName, data.githubRepoUrl);
+				console.log(""+ forkUrl);
+	 		//}
+		
+			// fork한 데이터 update
+			await apiClient.updateAdminGithubRepoUrl(data.id.toString(),forkUrl);
+			// todo 알림보내기
+				return true;
+			},
+		onSuccess: async (result) => {
+			if (result) {
+				await apiClient.updateCodeRequestState(data?.userToken!, data!.id!.toString(), 'approve');
+			}
+		},
+		onError: (e) => {
+			toast.error('포크도중 오류가 발생했습니다. 관리자가 초대를 안받았거나 url 이 잘못된경우에요');
+			console.log(e);
+	 	},
+	 });
 
 
-	if (!userId || !codeId) {
+
+
+	const onClickConfirm = useCallback(() => {
+			if (!userId || !codeId) {
 		return <>404 NotFound Error</>;
 	}
 	if (isLoading) {
@@ -74,13 +60,10 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 	if (!data) {
 		return <>no data</>;
 	}
+		mutate(data);
+		onClose();
+	}, []);
 
-	// const onClickConfirm = useCallback(() => {
-	// 	mutate(data);
-	// 	onClose();
-	// }, []);
-
-	const onClickConfirm = () => {}
 
 	return (
 		<Dialog open={open} onClose={onClose}>

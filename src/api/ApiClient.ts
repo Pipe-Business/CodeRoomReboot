@@ -602,7 +602,7 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('좋아요 데이터를 가져오는데 실패했습니다.');
             }
-            console.log("sdfsdfsdfsdfsdfsdfsdfsdf" + lstLikeResponseEntity.length.toString());
+            //console.log("sdfsdfsdfsdfsdfsdfsdfsdf" + lstLikeResponseEntity.length.toString());
 
             return lstLikeResponseEntity.length != 0 ? lstLikeResponseEntity[0] : null;
         }
@@ -737,6 +737,29 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('반려사유 저장에 실패했습니다.');
         }
     }
+
+    async updateAdminGithubRepoUrl(postId:string, adminGithubRepoUrl:string){
+        try {
+            const { error } = await supabase.from('code')
+                .update({ admin_github_repo_url : adminGithubRepoUrl })
+                .eq('post_id', postId);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('포크된 레포지토리 링크 저장에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('포크된 레포지토리 링크 저장에 실패했습니다.');
+        }
+    }
+
 
 
 
