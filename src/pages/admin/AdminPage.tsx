@@ -71,6 +71,8 @@ const AdminPage: FC<Props> = () => {
 						<Tab label='정산내역' value='5' />
 						<Tab label='결제관리' value='6' />
 						<Tab label='유저관리' value='7' />
+						<Tab label='코드리뷰' value='8' />
+						<Tab label='멘토링' value='9' />
 					</TabList>
 				</Box>
 				<TabPanel value='1'>
@@ -83,21 +85,27 @@ const AdminPage: FC<Props> = () => {
 					<AdminCodeRequestList type={'approve'} />
 				</TabPanel>
 				<TabPanel value='4'>
-					<AdminCodeRequestList type={'approve'} />
+					<AdminCodeRequestList type={'rejected'} />
 				</TabPanel>
 				<TabPanel value='5'>
 					<AdminCodeRequestList type={'approve'} />
 				</TabPanel>
 				{/* <TabPanel value='4'>
 					<AdminPaymentPendingPage isSettlement={false} />
-				</TabPanel> */}
-				{/* <TabPanel value='5'>
+				</TabPanel> 
+				 <TabPanel value='5'>
 					<AdminPaymentPendingPage isSettlement={true} />
 				</TabPanel> */}
 				<TabPanel value='6'>
 					<AdminCodeRequestList type={'approve'} />
 				</TabPanel>
 				<TabPanel value='7'>
+					<AdminCodeRequestList type={'approve'} />
+				</TabPanel>
+				<TabPanel value='8'>
+					<AdminCodeRequestList type={'approve'} />
+				</TabPanel>
+				<TabPanel value='9'>
 					<AdminCodeRequestList type={'approve'} />
 				</TabPanel>
 				{/* <TabPanel value='6'>

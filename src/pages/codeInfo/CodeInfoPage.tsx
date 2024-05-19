@@ -229,7 +229,7 @@ const CodeInfo: FC<Props> = () => {
 							<div style={{ display: 'flex', flexDirection: 'row' }}>
 
 								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.popularity} popularity 🔥</span>
+									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.popularity} 코드룸 포인틈 🔥</span>
 								</MarginHorizontal>
 
 								<Box width={16} />
@@ -376,7 +376,7 @@ const CodeInfo: FC<Props> = () => {
 									codeHostId={postData.userToken}
 									userId={userLogin?.id}
 									userHavePoint={cashData ?? 0}
-									adminRepoURL={postData.adminGitRepoURL}
+									githubRepoUrl={postData.githubRepoUrl}
 									purchasedSaleData={purchaseSaleData}
 									onClickBuyItButton={onClickBuyItButton}
 									onPaymentConfirm={onClickConfirm}
@@ -416,7 +416,7 @@ const CodeInfo: FC<Props> = () => {
 							codeHostId={postData.userToken}
 							userId={userLogin?.id}
 							userHavePoint={cashData ?? 0}
-							adminRepoURL={postData.adminGitRepoURL}
+							githubRepoUrl={postData.githubRepoUrl}
 							purchasedSaleData={purchaseSaleData}
 							onClickBuyItButton={onClickBuyItButton}
 							onPaymentConfirm={onClickConfirm}

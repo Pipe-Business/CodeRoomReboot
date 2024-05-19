@@ -105,13 +105,13 @@ const HeaderLayout: FC<Props> = () => {
                     </Link>
                 </MarginHorizontal>
 
-                <MarginHorizontal size={32}>
+                {/* <MarginHorizontal size={32}>
                     <Link to={'/contact'} style={{ textDecoration: "none" }}>
                         <h3>
                             <span style={{ color: '#000000', }}>문의</span>
                         </h3>
                     </Link>
-                </MarginHorizontal>
+                </MarginHorizontal> */}
 
 
 
