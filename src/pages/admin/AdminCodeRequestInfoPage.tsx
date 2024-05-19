@@ -110,15 +110,20 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 						marginTop: '10px',
 					}}>내용
 					</div>
-					<div style={{
+
+					<div style={{ marginTop: 16, }}>
+								<span style={{ color: '#000000', fontSize: '16px', }}>{data.description} </span>
+					</div>
+
+					{/* <div style={{
 						fontSize: '24px',
 						whiteSpace: 'pre-line',
 						wordWrap: 'break-word',
 					}}>
-						{/* <Viewer
+						<Viewer
 							initialValue={data.description}
-						/> */}
-					</div>
+						/>
+					</div> */}
 				</div>
 				<Divider />
 				<ContentWrapper>

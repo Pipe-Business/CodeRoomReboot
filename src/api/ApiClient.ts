@@ -551,6 +551,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async getCodeDownloadURL(userName: string, repoName: string, branchName: string): Promise<GithubForkURLEntity> {
+        console.log("getCodeDownloadURL : " + userName + repoName + branchName);
         const result = await axios.get<GithubForkURLEntity>(`${serverURL}/download/${userName}/${repoName}/${branchName}`);
         return result.data;
     }
