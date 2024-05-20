@@ -155,7 +155,7 @@ const HeaderLayout: FC<Props> = () => {
 
                       
                         <MarginHorizontal size={8}>
-                            <Link to={'/profile/my/notification'}>
+                            <Link to={'/notification'}>
                                 <HeaderIconButton>
                                     <Badge color={'error'} badgeContent={notiCount} max={9}>
                                         <NotificationsIcon sx={{ fontSize: '24px' }} />
