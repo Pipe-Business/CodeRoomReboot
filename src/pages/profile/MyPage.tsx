@@ -14,6 +14,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CodePendingOrPendingList from './components/code/MyCodeList';
 import { REACT_QUERY_KEY } from '../../constants/define';
 import PurchaseList from './components/purchaseData/PurchaseList';
+import MentoringList from './components/mentoringData/MentoringList';
 
 interface Props {
 	children?: React.ReactNode;
@@ -43,6 +44,13 @@ const MyPage: FC<Props> = () => {
     queryKey : [REACT_QUERY_KEY.user, userLogin?.id],
     queryFn : () => apiClient.getMyPurchaseSaleHistory(userLogin!.id),
   });
+
+  const {data : mentoringData} = useQuery({
+    queryKey : [REACT_QUERY_KEY.mentoring, userLogin?.id],
+    queryFn : () => apiClient.getMyMentorings(userLogin!.id),
+  });
+
+
 
   useEffect(() => {
     const getSession = async () => {
@@ -95,7 +103,26 @@ if (!userLogin) {
           </Card>
           <Box height={32}/>
           <h2>나의 활동 내역</h2>
+
 		  <Box height={16}/>
+          <h4>내가 신청한 멘토링</h4>
+		  <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
+							  elevation={1}>
+							<CardHeader
+								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>멘토링 목록</div>}
+								action={
+								<Button variant={'text'} endIcon={<AddIcon /> } onClick={ () => {
+									navigate(`/profile/my/mentoring`,{state: {mentoringData : mentoringData ,userLogin : userLogin}});
+								}}>
+									더보기</Button>
+							}
+							/>
+							<CardContent>
+								<MentoringList mentoringData={mentoringData} userLogin={userLogin}/>
+							</CardContent>
+						</Card>
+		  <Box height={32}/>
+
           <h4>내가 구매한 코드</h4>
           <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>

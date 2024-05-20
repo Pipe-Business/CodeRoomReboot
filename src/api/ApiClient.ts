@@ -911,6 +911,46 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async getMyMentorings(myUserToken: string): Promise<MentoringResponseEntity[] | null>{
+        
+        try{
+            const { data, error } = await supabase.from('mentoring_request_history')
+            .select('*')
+            .eq('from_user_token', myUserToken);
+
+        let lstMentoring: MentoringResponseEntity[] = [];
+        data?.forEach((e) => {
+            let mentoring: MentoringResponseEntity = {
+                id: e.id,
+                title : e.title,
+                content : e.content,
+                to_user_token : e.to_user_token,
+                from_user_token : e.from_user_token,
+                request_date : e.request_data,
+                created_at: e.created_at,
+            }
+            lstMentoring.push(mentoring);
+        });
+        //console.log("구매내역" + { ...data });
+
+        if (error) {
+            console.log("error" + error.message);
+            console.log("error" + error.code);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+
+            throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
+        }
+
+        return lstMentoring;
+
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
+        }
+    }
+
 
 
 

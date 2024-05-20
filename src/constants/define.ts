@@ -10,6 +10,7 @@ export const REACT_QUERY_KEY = {
 	cash : '/cash',
 	purchaseSaleHistory : '/purchaseSaleHistory',
 	like : '/like',
+	mentoring : '/mentoring',
 	
 }
 
