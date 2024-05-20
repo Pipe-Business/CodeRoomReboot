@@ -139,7 +139,7 @@ const MentoringPage: FC<Props> = () => {
     <MainLayout>
       <ContainerSection elevation={3} sx={{ width: { sm: 300, md: 800 } }}>
         <Typography variant="h4" component="div" color="primary" gutterBottom sx={{ textAlign: 'center' }}>
-          CODE ROOM 만의 차별화 된 개발자 멘토링 서비스
+          CODE ROOM 만의 차별화 된<br />개발자 멘토링 서비스
         </Typography>
         <Typography variant="body1" component="div" sx={{ textAlign: 'center' }}>
           개인 맞춤형 멘토링 세션을 통해 코딩 실력을 향상시키세요.<br />

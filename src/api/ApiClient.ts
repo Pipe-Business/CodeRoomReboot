@@ -204,6 +204,26 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async insertCodeReviewHistory(codeReview: CodeReviewRequestEntity) {
+        console.log("codeReview: "+ {...codeReview});
+
+        try {
+            const { error } = await supabase.from('codereview_request_history').insert(codeReview);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('코드리뷰 신청내역 저장에 실패하였습니다.');
+            }
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('코드리뷰 신청내역 저장에 실패하였습니다.');
+        }
+    }
+
     async insertImgUrl(postId: number, imageUrls: string[]) {
         try {
             const { error } = await supabase.from('post')
