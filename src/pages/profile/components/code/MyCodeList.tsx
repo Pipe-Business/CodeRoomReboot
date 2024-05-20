@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Divider, List, ListItem, ListItemText } from '@mui/material';
 import CodePendingItem from './CodePendingItem.tsx';
-import { CodeModel } from '../../../data/model/CodeModel.ts';
+import { CodeModel } from '../../../../data/model/CodeModel.ts';
 
 interface Props {
 	children?: React.ReactNode;

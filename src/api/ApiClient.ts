@@ -547,7 +547,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMyPurchaseSaleHistory(myUserToken: string, postId: number): Promise<PurchaseSaleRequestEntity | null> {
+    async getMyPurchaseSaleHistoryByPostID(myUserToken: string, postId: number): Promise<PurchaseSaleRequestEntity | null> {
         try {
             const { data, error } = await supabase.from('purchase_sale_history')
                 .select('*')
@@ -850,6 +850,45 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('내 게시글을 타입에 따라 가져오는 데 실패했습니다.');
         }
 
+    }
+
+    async getMyPurchaseSaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[] | null> {
+        try {
+            const { data, error } = await supabase.from('purchase_sale_history')
+                .select('*')
+                .eq('purchase_user_token', myUserToken);
+
+            let lstPurchaseSale: PurchaseSaleResponseEntity[] = [];
+            data?.forEach((e) => {
+                let purchaseSale: PurchaseSaleResponseEntity = {
+                    id: e.id,
+                    post_id: e.post_id,
+                    price: e.price,
+                    is_confirmed: e.is_confirmed,
+                    purchase_user_token: e.purchase_user_token,
+                    sales_user_token: e.sales_user_token,
+                    pay_type: e.pay_type,
+                    created_at: e.created_at,
+                }
+                lstPurchaseSale.push(purchaseSale);
+            });
+            //console.log("구매내역" + { ...data });
+
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('구매기록을 가져오는 데 실패했습니다.');
+            }
+
+            return lstPurchaseSale;
+        }
+        catch (e: any) {
+            console.log(e);
+            throw new Error('구매기록을 가져오는 데 실패했습니다.');
+        }
     }
 
 

@@ -172,7 +172,7 @@ const CodeInfo: FC<Props> = () => {
 
 	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
-		queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin.id, postData!.id),
+		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin.id, postData!.id),
 	});
 
 	/*
