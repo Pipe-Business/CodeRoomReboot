@@ -75,7 +75,7 @@ if (!userLogin) {
     <FullLayout>
       <Box height={64}/>
       <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
-      <h2>프로필</h2> <Box width={16}/> <TextButton onClick={() => {}} style={{color:'#448FCE'}}>수정하기</TextButton>
+      <h2>기본 정보</h2> <Box width={16}/> <TextButton onClick={() => {}} style={{color:'#448FCE'}}>수정하기</TextButton>
       </div>
   {userLogin ?
   <div>
@@ -94,6 +94,7 @@ if (!userLogin) {
           </Card>
           <Box height={32}/>
           <h2>나의 활동 내역</h2>
+		  <Box height={16}/>
           <h4>내가 구매한 코드</h4>
           <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>
@@ -106,6 +107,7 @@ if (!userLogin) {
 								<PurchaseList purchaseData={purchaseData} userLogin={userLogin}/>
 							</CardContent>
 						</Card>
+						<Box height={32}/>
           <h4>나의 코드</h4>
           <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>

@@ -21,9 +21,9 @@ const RequestHeaderPending: FC = () => {
 	return <ListItem>
 		<ListItemText>
 			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-				<div style={{ width: '25%' }}>요청시간</div>
-				<div style={{ width: '50%' }}>코드제목</div>
-				<div style={{ width: '25%' }}>상태</div>
+				<div style={{ width: '25%' ,fontWeight:'bold'}}>요청시간</div>
+				<div style={{ width: '50%' ,fontWeight:'bold'}}>코드제목</div>
+				<div style={{ width: '25%' ,fontWeight:'bold'}}>상태</div>
 			</div>
 		</ListItemText>
 
@@ -33,10 +33,10 @@ const RequestHeaderReject: FC = () => {
 	return <ListItem>
 		<ListItemText>
 			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-				<div style={{ width: '25%' }}>반려시간</div>
-				<div style={{ width: '25%' }}>코드제목</div>
-				<div style={{ width: '20%' }}>상태</div>
-				<div style={{ width: '30%' }}></div>
+				<div style={{ width: '25%' ,fontWeight:'bold'}}>반려시간</div>
+				<div style={{ width: '25%' ,fontWeight:'bold'}}>코드제목</div>
+				<div style={{ width: '20%' ,fontWeight:'bold'}}>상태</div>
+				<div style={{ width: '30%' ,fontWeight:'bold'}}></div>
 			</div>
 		</ListItemText>
 
@@ -47,10 +47,10 @@ const RequestHeaderApprove: FC = () => {
 	return <ListItem>
 		<ListItemText>
 			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
-				<div style={{ width: '25%' }}>승인시간</div>
-				<div style={{ width: '25%' }}>코드제목</div>
-				<div style={{ width: '20%' }}>상태</div>
-				<div style={{ width: '30%' }}></div>
+				<div style={{ width: '25%' ,fontWeight:'bold'}}>승인시간</div>
+				<div style={{ width: '25%' ,fontWeight:'bold'}}>코드제목</div>
+				<div style={{ width: '20%' ,fontWeight:'bold'}}>상태</div>
+				<div style={{ width: '30%' ,fontWeight:'bold'}}></div>
 			</div>
 		</ListItemText>
 
