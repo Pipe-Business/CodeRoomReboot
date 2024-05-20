@@ -9,11 +9,11 @@ interface Props {
     children?: React.ReactNode
 }
 
-const MainLayoutWrapper = styled.div`
+const FullLayoutWrapper = styled.div`
   display: flex;
 `
 
-const MainLayout: FC<Props> = ({children}) => {
+const FullLayout: FC<Props> = ({children}) => {
     return (
         <>
             <div style={{ position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 2 }}>
@@ -23,9 +23,9 @@ const MainLayout: FC<Props> = ({children}) => {
                 <Divider />
             </div>
             <BaseLayout>
-                <MainLayoutWrapper>
+                <FullLayoutWrapper>
                     <div style={{width:"100%"}}>{children}</div>
-                </MainLayoutWrapper>
+                </FullLayoutWrapper>
             </BaseLayout>
             <BaseLayout>
                     <FooterLayout />
@@ -34,4 +34,4 @@ const MainLayout: FC<Props> = ({children}) => {
     );
 };
 
-export default MainLayout;
+export default FullLayout;
