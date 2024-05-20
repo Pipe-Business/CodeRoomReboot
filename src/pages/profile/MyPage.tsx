@@ -11,8 +11,9 @@ import { apiClient } from '../../api/ApiClient';
 import FullLayout from '../../layout/FullLayout';
 import { TextButton } from '../main/styles';
 import AddIcon from '@mui/icons-material/Add';
-import CodePendingOrPendingList from './components/MyCodeList';
+import CodePendingOrPendingList from './components/code/MyCodeList';
 import { REACT_QUERY_KEY } from '../../constants/define';
+import PurchaseList from './components/purchaseData/PurchaseList';
 
 interface Props {
 	children?: React.ReactNode;
@@ -35,6 +36,11 @@ const MyPage: FC<Props> = () => {
   const {data : rejectedCodeData} = useQuery({
     queryKey : [REACT_QUERY_KEY.rejectedCode, userLogin?.id],
     queryFn: () => apiClient.getMyCodeByStatus(userLogin!.id, 'rejected')
+  });
+
+  const {data : purchaseData} = useQuery({
+    queryKey : [REACT_QUERY_KEY.user, userLogin?.id],
+    queryFn : () => apiClient.getMyPurchaseSaleHistory(userLogin!.id),
   });
 
   useEffect(() => {
@@ -88,6 +94,18 @@ if (!userLogin) {
           </Card>
           <Box height={32}/>
           <h2>나의 활동 내역</h2>
+          <h4>내가 구매한 코드</h4>
+          <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
+							  elevation={1}>
+							<CardHeader
+								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>구매 목록</div>}
+								action={<Link to={'/profile/my/purchase'}><Button variant={'text'} endIcon={
+									<AddIcon />}>더보기</Button></Link>}
+							/>
+							<CardContent>
+								<PurchaseList purchaseData={purchaseData} userLogin={userLogin}/>
+							</CardContent>
+						</Card>
           <h4>나의 코드</h4>
           <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>
