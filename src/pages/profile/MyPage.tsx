@@ -4,7 +4,7 @@ import MainLayout from '../../layout/MainLayout';
 import { Button, Card, CardContent, CardHeader, Divider, Typography, Box } from '@mui/material';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '../../api/ApiClient';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserProfileImage from '../../components/UserProfileImage';
 import {useQuery} from "@tanstack/react-query"
 import { apiClient } from '../../api/ApiClient';
@@ -22,7 +22,8 @@ interface Props {
 
 const MyPage: FC<Props> = () => {
 
-  const [userLogin, setUser] = useState<User | null>(null)
+  const [userLogin, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();
   const inputNickNameRef = useRef<HTMLInputElement | null>(null);
   const {data:userData, isLoading} = useQuery({queryKey:['users',userLogin?.id],queryFn:() => apiClient.getTargetUser(userLogin!.id)})
   const {data : approvedCodeData} = useQuery({
@@ -100,8 +101,14 @@ if (!userLogin) {
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>구매 목록</div>}
-								action={<Link to={'/profile/my/purchase'}><Button variant={'text'} endIcon={
-									<AddIcon />}>더보기</Button></Link>}
+								// action={<Link to={'/profile/my/purchase'}><Button variant={'text'} endIcon={
+								// 	<AddIcon />}>더보기</Button></Link>}
+								action={
+								<Button variant={'text'} endIcon={<AddIcon /> } onClick={ () => {
+									navigate(`/profile/my/purchase`,{state: {purchaseData : purchaseData ,userLogin : userLogin}});
+								}}>
+									더보기</Button>
+							}
 							/>
 							<CardContent>
 								<PurchaseList purchaseData={purchaseData} userLogin={userLogin}/>

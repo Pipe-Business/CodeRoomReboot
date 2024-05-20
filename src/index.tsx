@@ -24,6 +24,7 @@ const ResetCompletePage = React.lazy(() => import('./pages/profile/ResetComplete
 const SignUpCompletePage = React.lazy(() => import('./pages/register/SignUpCompletePage.tsx'));
 const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage.tsx'));
 const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage.tsx'));
+const MyPurchaseDataPage = React.lazy(() => import('./pages/profile/MyPurchaseDataPage.tsx'));
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage.tsx'));
 const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage.tsx'));
 const CoinPage = React.lazy(() => import('./pages/coin/CoinPage.tsx'));
@@ -68,6 +69,7 @@ root.render(
       <Route path='/change-password' element={<ChangePasswdPage/>}/>
       <Route path='/reset-complete' element={<ResetCompletePage/>}/>
       <Route path='/signup-complete' element={<SignUpCompletePage/>}/>
+      <Route path='/profile/my/purchase' element={<MyPurchaseDataPage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
       <Route path='/admin/coderequest/:userId/:codeId' element={<AdminCodeRequestInfo />} />
       <Route path='/help' element={<HelpPage />} />
