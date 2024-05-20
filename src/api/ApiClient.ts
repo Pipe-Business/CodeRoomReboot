@@ -1,5 +1,5 @@
 import { SupabaseAuthAPI } from "./supabase/SupabaseAuthAPI";
-import { AuthError, createClient, User } from '@supabase/supabase-js'
+import { AuthError, createClient, User, UserResponse } from '@supabase/supabase-js'
 import { supabaseConfig } from "../config/supabaseConfig";
 import { CodeModel } from "../data/model/CodeModel";
 import { UserEntity } from "../data/entity/UserEntity";
@@ -9,6 +9,7 @@ import { GithubForkURLEntity } from "../data/entity/GithubForkURLEntity";
 import axios from 'axios';
 import { serverURL } from '../hooks/fetcher/HttpFetcher.ts';
 import { useOctokit } from "../index.tsx";
+import { isConditionalExpression } from "typescript";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -165,6 +166,42 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('비밀번호 업데이트에 실패했습니다.');
         }
 
+    }
+
+    async getCurrentLoginUser(): Promise<UserResponse> {
+        try {
+            const { data, error } = await supabase.auth.getUser();
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+
+                throw new Error('유저 정보를 가져오는데 실패하였습니다.');
+            }
+            return data;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저 정보를 가져오는데 실패하였습니다.');
+        }
+    }
+
+    async insertMentoringHistory(mentoring: MentoringRequestEntity) {
+        console.log("mentoring: "+ {...mentoring});
+
+        try {
+            const { error } = await supabase.from('mentoring_request_history').insert(mentoring);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('멘토링 신청내역 저장에 실패하였습니다.');
+            }
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('멘토링 신청내역 저장에 실패하였습니다.');
+        }
     }
 
     async insertImgUrl(postId: number, imageUrls: string[]) {
