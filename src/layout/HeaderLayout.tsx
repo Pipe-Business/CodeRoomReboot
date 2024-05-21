@@ -135,9 +135,9 @@ const HeaderLayout: FC<Props> = () => {
 
                     userLogin && <CenterBox>
                           <MarginHorizontal size={8}>
-                            <Link to={'/coin'} style={{ textDecoration: "none" }}>
+                            {/* <Link to={'/coin'} style={{ textDecoration: "none" }}> */}
                                 <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' 커밋'}</span>
-                            </Link>
+                            {/* </Link> */}
                         </MarginHorizontal>
 
 
