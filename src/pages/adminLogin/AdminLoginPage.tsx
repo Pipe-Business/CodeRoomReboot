@@ -87,9 +87,9 @@ const location = useLocation();
 	}, [inputEmail, inputPwd]);
 
     return (
-        <div style={{display:'flex', justifyContent : 'center', alignItems:'center'}}>
+        <div style={{display:'grid', placeItems : 'center', minHeight:'70vh',}}>
         <Box height={32} />
-        <Card style={{ margin: '8px',}} elevation={0} sx={{width: { sm: 300, md: 400 }}}>
+        <Card style={{ margin: '8px',}} elevation={0} sx={{width: { sm: 300, md: 400 }} }>
         <form onSubmit={onSubmitLoginForm}>
         <h3 style={{ color: '#000000', fontFamily: 'sans-serif' }}>CodeRoom 관리자 로그인</h3>
             <div>
