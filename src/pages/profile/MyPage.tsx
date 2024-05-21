@@ -106,7 +106,7 @@ if (!userLogin) {
 
 		  <Box height={16}/>
           <h4>내가 신청한 멘토링</h4>
-		  <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
+		  <Card sx={{marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>멘토링 목록</div>}
@@ -118,13 +118,13 @@ if (!userLogin) {
 							}
 							/>
 							<CardContent>
-								<MentoringList mentoringData={mentoringData} userLogin={userLogin}/>
+								<MentoringList mentoringData={mentoringData?.slice(0,3)} userLogin={userLogin}/>
 							</CardContent>
 						</Card>
 		  <Box height={32}/>
 
           <h4>내가 구매한 코드</h4>
-          <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
+          <Card sx={{marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>구매 목록</div>}
@@ -138,12 +138,12 @@ if (!userLogin) {
 							}
 							/>
 							<CardContent>
-								<PurchaseList purchaseData={purchaseData} userLogin={userLogin}/>
+								<PurchaseList purchaseData={purchaseData?.slice(0,3)} userLogin={userLogin}/>
 							</CardContent>
 						</Card>
 						<Box height={32}/>
           <h4>나의 코드</h4>
-          <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
+          <Card sx={{marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>승인 대기 내역</div>}
@@ -151,10 +151,10 @@ if (!userLogin) {
 									<AddIcon />}>더보기</Button></Link>}
 							/>
 							<CardContent>
-								<CodePendingOrPendingList maxCount={true} data={pendingCodeData} type={'pending'} />
+								<CodePendingOrPendingList maxCount={true} data={pendingCodeData?.slice(0,3)} type={'pending'} />
 							</CardContent>
 						</Card>
-            <Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
+            <Card sx={{marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>반려 내역</div>}
@@ -162,10 +162,10 @@ if (!userLogin) {
 									<AddIcon />}>더보기</Button></Link>}
 							/>
 							<CardContent>
-								<CodePendingOrPendingList maxCount={true} data={rejectedCodeData} type={'rejected'} />
+								<CodePendingOrPendingList maxCount={true} data={rejectedCodeData?.slice(0,3)} type={'rejected'} />
 							</CardContent>
 						</Card>
-						<Card sx={{ height: '35vh', marginTop: '16px', marginLeft: '8px', }} raised
+						<Card sx={{marginTop: '16px', marginLeft: '8px', }} raised
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>승인 내역</div>}
@@ -173,7 +173,7 @@ if (!userLogin) {
 									<AddIcon />}>더보기</Button></Link>}
 							/>
 							<CardContent>
-								<CodePendingOrPendingList maxCount={true} data={approvedCodeData} type={'approve'} />
+								<CodePendingOrPendingList maxCount={true} data={approvedCodeData?.slice(0,3)} type={'approve'} />
 							</CardContent>
 						</Card>
   
