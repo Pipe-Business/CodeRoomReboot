@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useRef, useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
-import { Button, Card, CardContent, CardHeader, Divider, Typography, Box } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Divider, Typography, Box, Skeleton} from '@mui/material';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '../../api/ApiClient';
 import { Link, useNavigate } from 'react-router-dom';
@@ -26,26 +26,26 @@ const MyPage: FC<Props> = () => {
   const [userLogin, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
   const inputNickNameRef = useRef<HTMLInputElement | null>(null);
-  const {data:userData, isLoading} = useQuery({queryKey:['users',userLogin?.id],queryFn:() => apiClient.getTargetUser(userLogin!.id)})
+  const {data:userData, isLoading : userDataLoading} = useQuery({queryKey:['users',userLogin?.id],queryFn:() => apiClient.getTargetUser(userLogin!.id)})
   const {data : approvedCodeData} = useQuery({
     queryKey : [REACT_QUERY_KEY.approvedCode, userLogin?.id, 'state'],
     queryFn: () => apiClient.getMyCodeByStatus(userLogin!.id, 'approve')
   });
-  const {data : pendingCodeData} = useQuery({
+  const {data : pendingCodeData, isLoading : pendingCodeDataLoading} = useQuery({
     queryKey : [REACT_QUERY_KEY.pendingCode, userLogin?.id],
     queryFn: () => apiClient.getMyCodeByStatus(userLogin!.id, 'pending')
   });
-  const {data : rejectedCodeData} = useQuery({
+  const {data : rejectedCodeData, isLoading : rejectedCodeDataLoading} = useQuery({
     queryKey : [REACT_QUERY_KEY.rejectedCode, userLogin?.id],
     queryFn: () => apiClient.getMyCodeByStatus(userLogin!.id, 'rejected')
   });
 
-  const {data : purchaseData} = useQuery({
+  const {data : purchaseData, isLoading : purchaseCodeDataLoading} = useQuery({
     queryKey : [REACT_QUERY_KEY.user, userLogin?.id],
     queryFn : () => apiClient.getMyPurchaseSaleHistory(userLogin!.id),
   });
 
-  const {data : mentoringData} = useQuery({
+  const {data : mentoringData, isLoading : mentoringDataLoading} = useQuery({
     queryKey : [REACT_QUERY_KEY.mentoring, userLogin?.id],
     queryFn : () => apiClient.getMyMentorings(userLogin!.id),
   });
@@ -65,8 +65,15 @@ const MyPage: FC<Props> = () => {
     getSession()
 }, []);
 
-if(isLoading){
-  <></>
+if(userDataLoading||pendingCodeDataLoading||rejectedCodeDataLoading||purchaseCodeDataLoading||mentoringDataLoading){
+	return (
+		<FullLayout>
+			<Skeleton style={{height: '200px'}}/>
+			<Skeleton style={{height: '500px'}}/>
+			<Skeleton style={{height: '30px'}}/>
+			<Skeleton style={{height: '200px'}}/>
+		</FullLayout>
+	);
 }
 
 if (!userLogin) {
