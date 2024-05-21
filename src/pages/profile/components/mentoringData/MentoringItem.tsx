@@ -25,8 +25,11 @@ const MentoringItem: FC<Props> = ({ mentoringData, userLogin }) => {
 	const onClickListItem = useCallback((e: any) => {
 		e.stopPropagation();
 		if (mentoringData) {
-			//todo mentoring page만들기
-			navigate(`/mentoring/${mentoringData?.id}`,{state: {userLogin : userLogin}});
+			navigate(`/profile/my/mentoring/${mentoringData?.id}`,
+			{state: {
+				mentoringItemData : mentoringData,
+				mentorInfo : mentorUserData
+			}});
 		}
 	}, [mentoringData]);
 	

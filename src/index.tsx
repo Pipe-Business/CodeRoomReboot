@@ -25,6 +25,8 @@ const SignUpCompletePage = React.lazy(() => import('./pages/register/SignUpCompl
 const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage.tsx'));
 const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage.tsx'));
 const MyPurchaseDataPage = React.lazy(() => import('./pages/profile/MyPurchaseDataPage.tsx'));
+const MyMentoringDataPage = React.lazy(() => import('./pages/profile/MyMentoringDataPage.tsx'));
+const MyMentoringDetailPage = React.lazy(() => import('./pages/profile/MyMentoringDetailPage.tsx'));
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage.tsx'));
 const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage.tsx'));
 const CoinPage = React.lazy(() => import('./pages/coin/CoinPage.tsx'));
@@ -72,6 +74,8 @@ root.render(
       <Route path='/reset-complete' element={<ResetCompletePage/>}/>
       <Route path='/signup-complete' element={<SignUpCompletePage/>}/>
       <Route path='/profile/my/purchase' element={<MyPurchaseDataPage/>}/>
+      <Route path='/profile/my/mentoring' element={<MyMentoringDataPage/>}/>
+      <Route path='/profile/my/mentoring/:id' element={<MyMentoringDetailPage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
       <Route path='/admin/coderequest/:userId/:codeId' element={<AdminCodeRequestInfo />} />
       <Route path='/help' element={<HelpPage />} />
