@@ -45,10 +45,10 @@ const MentoringItem: FC<Props> = ({ mentoringData, userLogin }) => {
 					<div style={{ width: '20%',textOverflow:'ellipsis', overflow:'hidden', whiteSpace:'nowrap'}}>
 					{mentoringData?.title}
 					</div>
-					<div style={{ width: '20%', textOverflow:'ellipsis', overflow:'hidden', whiteSpace:'nowrap'}}>
+					{/* <div style={{ width: '20%', textOverflow:'ellipsis', overflow:'hidden', whiteSpace:'nowrap'}}>
 					{mentorUserData?.nickname}
-						</div>
-						<div style={{ width: '50%', textOverflow:'ellipsis', overflow:'hidden', whiteSpace:'nowrap'}}>
+						</div> */}
+						<div style={{ width: '70%', textOverflow:'ellipsis', overflow:'hidden', whiteSpace:'nowrap'}}>
 					{mentoringData?.content}	
 					</div>
 					<div style={{ width: '10%',}}>

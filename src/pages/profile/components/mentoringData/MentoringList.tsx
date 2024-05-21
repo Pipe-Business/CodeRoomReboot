@@ -17,8 +17,8 @@ const MentoringList: FC<Props> = ({ mentoringData, userLogin }) => {
 			<ListItemText>
 				<div style={{ display: 'flex', justifyContent: 'space-between', marginLeft:'10px' }}>
 					<div style={{ width: '20%' ,fontWeight:'bold'}}>제목</div>
-					<div style={{ width: '20%' ,fontWeight:'bold'}}>멘토</div>
-					<div style={{ width: '50%' ,fontWeight:'bold'}}>내용</div>
+					{/* <div style={{ width: '20%' ,fontWeight:'bold'}}>멘토</div> */}
+					<div style={{ width: '70%' ,fontWeight:'bold'}}>내용</div>
 					<div style={{ width: '10%' ,fontWeight:'bold'}}>신청날짜</div>
 				</div>
 			</ListItemText>
