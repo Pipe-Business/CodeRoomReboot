@@ -120,7 +120,7 @@ const MyPage: FC<Props> = () => {
 					<SectionWrapper>
 					<h2>나의 활동 내역</h2>
 
-					<Box height={16} />
+					{/* <Box height={16} />
 					<h4>내가 신청한 멘토링</h4>
 					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
 						elevation={1}>
@@ -136,7 +136,7 @@ const MyPage: FC<Props> = () => {
 						<CardContent>
 							<MentoringList mentoringData={mentoringData?.slice(0, 3)} userLogin={userLogin} />
 						</CardContent>
-					</Card>
+					</Card> */}
 					
 					<Box height={32} />
 

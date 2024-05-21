@@ -89,7 +89,7 @@ const HeaderLayout: FC<Props> = () => {
                     </Link>
                 </HeaderTitle>
 
-                <MarginHorizontal size={32}>
+                {/* <MarginHorizontal size={32}>
                     <Link to={'/mentoring'} style={{ textDecoration: "none" }}>
                         <h3>
                             <span style={{ color: '#000000', }}>멘토링</span>
@@ -103,7 +103,7 @@ const HeaderLayout: FC<Props> = () => {
                             <span style={{ color: '#000000', }}>코드리뷰</span>
                         </h3>
                     </Link>
-                </MarginHorizontal>
+                </MarginHorizontal> */}
 
                 {/* <MarginHorizontal size={32}>
                     <Link to={'/contact'} style={{ textDecoration: "none" }}>
