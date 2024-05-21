@@ -135,8 +135,6 @@ if (!userLogin) {
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>구매 목록</div>}
-								// action={<Link to={'/profile/my/purchase'}><Button variant={'text'} endIcon={
-								// 	<AddIcon />}>더보기</Button></Link>}
 								action={
 								<Button variant={'text'} endIcon={<AddIcon /> } onClick={ () => {
 									navigate(`/profile/my/purchase`,{state: {purchaseData : purchaseData ,userLogin : userLogin}});
@@ -154,8 +152,14 @@ if (!userLogin) {
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>승인 대기 내역</div>}
-								action={<Link to={'/profile/my/requestPending'}><Button variant={'text'} endIcon={
-									<AddIcon />}>더보기</Button></Link>}
+								action={
+									 // todo maxCount변수 제거 필요 : 맨 처음 코드는 maxcount가 false면 3개만 보이도록 지정하고 있다.
+									 // 지금은 여기서 data 넘길 때 3개만 넘김
+									<Button variant={'text'} endIcon={<AddIcon /> } onClick={ () => {
+										navigate(`/profile/my/code-page`,{state: {codeData : pendingCodeData ,type : 'pending', maxCount : false}});
+									}}>
+										더보기</Button>
+								}
 							/>
 							<CardContent>
 								<CodePendingOrPendingList maxCount={true} data={pendingCodeData?.slice(0,3)} type={'pending'} />
@@ -165,8 +169,12 @@ if (!userLogin) {
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>반려 내역</div>}
-								action={<Link to={'/profile/my/requestReject'}><Button variant={'text'} endIcon={
-									<AddIcon />}>더보기</Button></Link>}
+								action={
+									<Button variant={'text'} endIcon={<AddIcon /> } onClick={ () => {
+										navigate(`/profile/my/code-page`,{state: {codeData : rejectedCodeData , type : 'rejected', maxCount : false}});
+									}}>
+										더보기</Button>
+								}
 							/>
 							<CardContent>
 								<CodePendingOrPendingList maxCount={true} data={rejectedCodeData?.slice(0,3)} type={'rejected'} />
@@ -176,8 +184,12 @@ if (!userLogin) {
 							  elevation={1}>
 							<CardHeader
 								title={<div style ={{fontSize: 18,fontWeight:'bold'}}>승인 내역</div>}
-								action={<Link to={'/profile/my/requestApproved'}><Button variant={'text'} endIcon={
-									<AddIcon />}>더보기</Button></Link>}
+								action={
+									<Button variant={'text'} endIcon={<AddIcon /> } onClick={ () => {
+										navigate(`/profile/my/code-page`,{state: {codeData : approvedCodeData, type: 'approve', maxCount : false}});
+									}}>
+										더보기</Button>
+								}
 							/>
 							<CardContent>
 								<CodePendingOrPendingList maxCount={true} data={approvedCodeData?.slice(0,3)} type={'approve'} />
