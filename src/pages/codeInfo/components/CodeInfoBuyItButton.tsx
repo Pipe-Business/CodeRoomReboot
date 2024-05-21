@@ -64,13 +64,13 @@ const CodeInfoBuyItButton: FC<Props> = (
 	} else { // 구매 내역이 없으면
 		
 		if (userHavePoint >= point) { // 캐시가 충분하면
-			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => onClickPurchase()} disabled={isBlur}>구매하기</ColorButton>
+			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => onClickPurchase()} disabled={isBlur} variant='contained'>구매하기</ColorButton>
 
 		} else {						// 캐시가 충분하지 않으면
 			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => {
 				alert('캐시가 부족합니다. 캐시를 충전해주세요');
 				onOpenPointDialog();
-			}} disabled={isBlur}>구매하기</ColorButton>;
+			}} disabled={isBlur} variant='contained'>구매하기</ColorButton>;
 		}
 
 	}
