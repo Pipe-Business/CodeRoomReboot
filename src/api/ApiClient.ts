@@ -245,6 +245,14 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async subscribeInsertNotification(handleInserts: Function) {
+        // Listen to inserts
+        supabase
+        .channel('notification')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notification' }, handleInserts)
+        .subscribe()
+    }
+
     async getImgPublicUrl(path: string): Promise<string> {
         try {
             const { data } = supabase

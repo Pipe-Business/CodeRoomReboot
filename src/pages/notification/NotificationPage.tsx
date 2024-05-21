@@ -1,10 +1,12 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
 import { Box, Typography, Paper } from '@mui/material';
 import { NotificationEntity } from '../../data/entity/NotificationEntity';
 import { NotificationType } from '../../enums/NotificationType';
 import { format } from 'date-fns';
+import { apiClient, supabase } from '../../api/ApiClient.ts';
+
 
 const notifications: NotificationEntity[] = [
   { id: 1, title: '심사승인 알림', content: '귀하의 코드가 심사에 승인되었습니다.', to_user_token: "abcde", from_user_token: "abcde", notification_type: NotificationType.granted, created_at: new Date() },
@@ -69,7 +71,26 @@ const NotificationTimestamp = styled(Typography)`
   color: #999999;
 `;
 
+const handleInserts = (payload) => {
+  console.log('Change received!', payload)
+}
+
 const NotificationPage: FC = () => {
+  useEffect(() => {
+    // 초기화 로직을 여기에 추가합니다.
+    console.log('NotificationPage가 마운트되었습니다.');
+
+    // 만약 초기화 로직이 비동기 함수라면, async/await을 사용할 수 있습니다.
+    const initialize = async () => {
+      // 초기화 로직 예시
+      console.log('초기화 로직 실행');
+      // 예를 들어, API 호출 등을 여기서 수행할 수 있습니다.
+      await apiClient.subscribeInsertNotification(handleInserts);   // 코드리뷰 히스토리 저장
+    };
+
+    initialize();
+  }, []); // 빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때만 실행되도록 합니다.
+
   return (
     <MainLayout>
       <h1>알림함</h1>    
