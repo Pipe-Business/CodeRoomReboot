@@ -33,3 +33,17 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   padding-bottom : 32px;
   margin-right : 32px;
   `
+
+export const FormWrapper = styled.form`
+    & > div {
+      margin-bottom: 16px;
+      margin-left: 16px;
+      margin-right: 16px;
+    }
+  `;
+
+export  const TextFieldWrapper = styled.div`
+    div {
+      margin-bottom: 8px;
+    }
+  `;

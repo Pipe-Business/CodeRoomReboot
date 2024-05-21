@@ -98,7 +98,7 @@ const MyPage: FC<Props> = () => {
 					<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent:'space-between'}}>
 					<SectionWrapper>
 						<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-							<h2>기본 정보</h2> <Box width={16} /> <TextButton onClick={() => { }} style={{ color: '#448FCE', backgroundColor:'#F4F5F8'}}>수정하기</TextButton>
+							<h2>기본 정보</h2> <Box width={16} /> <TextButton onClick={() => {navigate('/profile/my/edit')}} style={{ color: '#448FCE', backgroundColor:'#F4F5F8'}}>수정하기</TextButton>
 						</div>
 						<Card raised elevation={0} style={{ width: 'fit-content', maxWidth: '100%' }}>
 							<CardHeader
