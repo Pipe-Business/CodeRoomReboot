@@ -2,8 +2,8 @@ import React, {FC} from "react";
 import {Avatar, Skeleton} from "@mui/material";
 //import gravatar from "gravatar";
 import {useQuery} from "@tanstack/react-query"
-import { UserModel } from "../data/model/UserModel";
-import { apiClient } from "../api/ApiClient";
+import { UserModel } from "../../data/model/UserModel";
+import { apiClient } from "../../api/ApiClient";
 import gravatar from "gravatar";
 
 interface Props {

@@ -5,7 +5,7 @@ import { Button, Card, CardContent, CardHeader, Divider, Typography, Box, Skelet
 import { User } from '@supabase/supabase-js';
 import { supabase } from '../../api/ApiClient';
 import { Link, useNavigate } from 'react-router-dom';
-import UserProfileImage from '../../components/UserProfileImage';
+import UserProfileImage from '../../components/profile/UserProfileImage';
 import { useQuery } from "@tanstack/react-query"
 import { apiClient } from '../../api/ApiClient';
 import FullLayout from '../../layout/FullLayout';
