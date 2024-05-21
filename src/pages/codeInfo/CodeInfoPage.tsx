@@ -205,7 +205,9 @@ const CodeInfo: FC<Props> = () => {
 
 		<MainLayout>
 			<div style={{ flexDirection: 'row', display: 'flex', marginTop: '16px' }}>
-				<Card sx={{
+				<Card
+				elevation={0}
+				 sx={{
 					width: { sm: 700, md: 800 },
 				}}>
 					<CardHeader
