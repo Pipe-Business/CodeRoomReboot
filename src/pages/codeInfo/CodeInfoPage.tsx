@@ -27,8 +27,9 @@ import { ColorButton } from './styles.ts';
 import { BlurContainer } from './styles.ts';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal.tsx';
 import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton.tsx';
-import PaymentDialog from './components/PaymentDialog.tsx';
+import CashPaymentDialog from './components/CoinPaymentDialog.tsx';
 import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton.tsx';
+import PointPaymentDialog from './components/PointPaymentDialog.tsx';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -70,7 +71,9 @@ const CodeInfo: FC<Props> = () => {
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
 	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
 	const [isLike, setLike] = useState<boolean>(false);
-	const [onClickConfirm] = PaymentDialog();
+	const [onCashClickConfirm] = CashPaymentDialog();
+	const [onPointClickConfirm] = PointPaymentDialog();
+
 	const { state: {
 		userLogin,
 	} } = useLocation();
@@ -136,20 +139,6 @@ const CodeInfo: FC<Props> = () => {
 		}
 
 	}, [userLogin?.id]);
-
-	// useEffect(() => {
-	// 	const getSession = async () => {
-	// 		const { data, error } = await supabase.auth.getSession()
-	// 		if (error) {
-	// 			console.error(error)
-	// 		} else {
-	// 			const { data: { user } } = await supabase.auth.getUser()
-	// 			setUser(user);
-	// 		}
-	// 	}
-	// 	getSession();
-	// 	// onClickCode();
-	// }, []);
 
 	const onClickBackButton = useCallback(() => {
 		navigate(-1);
@@ -390,7 +379,7 @@ const CodeInfo: FC<Props> = () => {
 									githubRepoUrl={postData.githubRepoUrl}
 									purchasedSaleData={purchaseSaleData}
 									onClickBuyItButton={onClickBuyItButton}
-									onPaymentConfirm={onClickConfirm}
+									onPaymentConfirm={onCashClickConfirm}
 									onClickLoginRegister={onOpenLoginDialog}
 									onOpenPointDialog={onOpenPointDailog}
 								/>
@@ -406,7 +395,7 @@ const CodeInfo: FC<Props> = () => {
 									githubRepoUrl={postData.githubRepoUrl}
 									purchasedSaleData={purchaseSaleData}
 									onClickBuyItButton={onClickBuyItButton}
-									onPaymentConfirm={onClickConfirm}
+									onPaymentConfirm={onPointClickConfirm}
 									onClickLoginRegister={onOpenLoginDialog}
 									onOpenPointDialog={onOpenPointDailog}
 								/>
@@ -443,7 +432,7 @@ const CodeInfo: FC<Props> = () => {
 							githubRepoUrl={postData.githubRepoUrl}
 							purchasedSaleData={purchaseSaleData}
 							onClickBuyItButton={onClickBuyItButton}
-							onPaymentConfirm={onClickConfirm}
+							onPaymentConfirm={onCashClickConfirm}
 							onClickLoginRegister={onOpenLoginDialog}
 							onOpenPointDialog={onOpenPointDailog}
 						/>
@@ -460,7 +449,7 @@ const CodeInfo: FC<Props> = () => {
 							githubRepoUrl={postData.githubRepoUrl}
 							purchasedSaleData={purchaseSaleData}
 							onClickBuyItButton={onClickBuyItButton}
-							onPaymentConfirm={onClickConfirm}
+							onPaymentConfirm={onPointClickConfirm}
 							onClickLoginRegister={onOpenLoginDialog}
 							onOpenPointDialog={onOpenPointDailog}
 						/>

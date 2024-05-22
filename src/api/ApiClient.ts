@@ -1000,6 +1000,28 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async insertUserPointHistory(pointHistoryRequestEntity: PointHistoryRequestEntity) {
+        try {
+            const { data, error } = await supabase.from('users_point_history')
+                .insert(pointHistoryRequestEntity).select();
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
+            }
+
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
+        }
+
+    }
 
 
 
