@@ -14,7 +14,9 @@ import { apiClient } from '../../api/ApiClient.ts';
 import CodeList from '../codeList/components/CodeList.tsx';
 import Paging from '../../components/paging/Paging.tsx';
 import { Skeleton } from '@mui/material';
-
+import { supabase } from '../../api/ApiClient.ts';
+import { User } from '@supabase/supabase-js';
+import FullLayout from '../../layout/FullLayout.tsx';
 
 function MainPage() {
     // xs -> sm -> md -> lg -> xl
@@ -23,7 +25,7 @@ function MainPage() {
         queryFn: () => apiClient.getAllCode(),
 
     });
-   
+
     const [inputSearch, onChangeInput] = useInput('');
     const onSubmitSearch = useCallback((e: any) => {
         e.preventDefault();
@@ -36,6 +38,21 @@ function MainPage() {
     }, [inputSearch]);
     const navigate = useNavigate();
 
+    const [userLogin, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const getSession = async () => {
+            const { data, error } = await supabase.auth.getSession()
+            if (error) {
+                console.error(error)
+            } else {
+                const { data: { user } } = await supabase.auth.getUser()
+                setUser(user);
+            }
+        }
+        getSession()
+    }, []);
+
     const [list, setList] = useState<CodeModel[]>([]);
     const [count, setCount] = useState(0); // 아이템 총 개수
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지. default 값으로 1
@@ -45,39 +62,41 @@ function MainPage() {
     const [currentPosts, setCurrentPosts] = useState<CodeModel[]>([]); // 현재 페이지에서 보여지는 아이템들
 
     const setPage = useCallback(
-        (page:any) => {
-            console.log("page"+page);
+        (page: any) => {
+            console.log("page" + page);
             setCurrentPage(page);
-          },[currentPage, indexOfLastPost, indexOfFirstPost, list, postPerPage]
+        }, [currentPage, indexOfLastPost, indexOfFirstPost, list, postPerPage]
     );
 
     useEffect(() => { // data set
-        if(data){
+        if (data) {
             setList(data);
         }
-    },[data]);
+    }, [data]);
 
 
     useEffect(() => {
-        if(data){
+        if (data) {
             setCount(list.length); // item 개수 set
             setIndexOfLastPost(currentPage * postPerPage);
             setIndexOfFirstPost(indexOfLastPost - postPerPage);
             setCurrentPosts(list.slice(indexOfFirstPost, indexOfLastPost));
         }
-    },[currentPage, indexOfLastPost, indexOfFirstPost, list, postPerPage]);
+    }, [currentPage, indexOfLastPost, indexOfFirstPost, list, postPerPage]);
 
-    if (isLoading) {
-		return (
-			<MainLayout>
-				<Skeleton />
-				<Skeleton />
-				<Skeleton />
-				<Skeleton />
-				<Skeleton />
-			</MainLayout>
-		);
-	}
+    if (isLoading || !userLogin) {
+        return (
+            <MainLayout>
+                <div style={{ display: 'flex', width: '850px', flexDirection: 'column', marginTop: '32px' }}>
+                    <Skeleton style={{ height: '100px' }} />
+                    <Skeleton style={{ height: '100px' }} />
+                    <Skeleton />
+                    <Skeleton style={{ height: '100px' }} />
+                    <Skeleton />
+                </div>
+            </MainLayout>
+        );
+    }
 
 
     return (
@@ -86,9 +105,9 @@ function MainPage() {
             <MainLayout>
                 {/* xs={24} sm={24} md={16} lg={16} xl={18}  */}
                 <CenterBox>
-                <MarginHorizontal size={8} style={{marginTop:24,marginBottom:24,}}>
-                    <span style={{ color: '#000000', fontSize: '18px', fontWeight: 'bold' }}>코드룸은 개발자들을 위한 코드거래 플랫폼입니다. </span>
-                </MarginHorizontal>
+                    <MarginHorizontal size={8} style={{ marginTop: 24, marginBottom: 24, }}>
+                        <span style={{ color: '#000000', fontSize: '18px', fontWeight: 'bold' }}>코드룸은 개발자들을 위한 코드거래 플랫폼입니다. </span>
+                    </MarginHorizontal>
                 </CenterBox>
 
                 <SearchBar>
@@ -112,7 +131,7 @@ function MainPage() {
                 </SearchBar>
 
 
-                <CodeList type={'code'} data={currentPosts} />
+                <CodeList type={'code'} data={currentPosts} userLogin={userLogin} />
                 <Paging page={currentPage} count={count} setPage={setPage} />
 
             </MainLayout>

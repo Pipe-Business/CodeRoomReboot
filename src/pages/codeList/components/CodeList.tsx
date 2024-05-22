@@ -6,14 +6,16 @@ import { Button } from '@mui/material';
 import CodeItem from './CodeItem.tsx';
 import { useState } from 'react';
 import Paging from '../../../components/paging/Paging.tsx';
+import { User } from '@supabase/supabase-js';
 
 interface Props {
 	children?: React.ReactNode,
 	data?: CodeModel[],
 	type?: 'code' | 'article'
+	userLogin: User;
 }
 
-const CodeList: FC<Props> = ({ type, data }) => {
+const CodeList: FC<Props> = ({ type, data, userLogin }) => {
 
 	const [searchParams] = useSearchParams();
 
@@ -34,15 +36,15 @@ const CodeList: FC<Props> = ({ type, data }) => {
 			}
 		</>;
 	}
-   
+
 	return (
-        <div style={{paddingTop:'8px', paddingBottom:'8px'}}> 
+		<div style={{ paddingTop: '8px', paddingBottom: '8px' }}>
 			{data.map(item => {
-                		return (
-							<div key={item.id}>
-								<CodeItem key={item.id} item={item} />
-							</div>
-						);
+				return (
+					<div key={item.id}>
+						<CodeItem key={item.id} item={item} userLogin={userLogin} />
+					</div>
+				);
 				// if (type) {
 				// 	if (type === item.formType) {
 				// 		return (
