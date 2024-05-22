@@ -38,21 +38,6 @@ function MainPage() {
     }, [inputSearch]);
     const navigate = useNavigate();
 
-    const [userLogin, setUser] = useState<User | null>(null);
-
-    useEffect(() => {
-        const getSession = async () => {
-            const { data, error } = await supabase.auth.getSession()
-            if (error) {
-                console.error(error)
-            } else {
-                const { data: { user } } = await supabase.auth.getUser()
-                setUser(user);
-            }
-        }
-        getSession()
-    }, []);
-
     const [list, setList] = useState<CodeModel[]>([]);
     const [count, setCount] = useState(0); // 아이템 총 개수
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지. default 값으로 1
@@ -84,7 +69,7 @@ function MainPage() {
         }
     }, [currentPage, indexOfLastPost, indexOfFirstPost, list, postPerPage]);
 
-    if (isLoading || !userLogin) {
+    if (isLoading) {
         return (
             <MainLayout>
                 <div style={{ display: 'flex', width: '850px', flexDirection: 'column', marginTop: '32px' }}>
@@ -131,7 +116,7 @@ function MainPage() {
                 </SearchBar>
 
 
-                <CodeList type={'code'} data={currentPosts} userLogin={userLogin} />
+                <CodeList type={'code'} data={currentPosts} />
                 <Paging page={currentPage} count={count} setPage={setPage} />
 
             </MainLayout>

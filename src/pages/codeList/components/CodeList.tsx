@@ -12,10 +12,9 @@ interface Props {
 	children?: React.ReactNode,
 	data?: CodeModel[],
 	type?: 'code' | 'article'
-	userLogin: User;
 }
 
-const CodeList: FC<Props> = ({ type, data, userLogin }) => {
+const CodeList: FC<Props> = ({ type, data }) => {
 
 	const [searchParams] = useSearchParams();
 
@@ -42,7 +41,7 @@ const CodeList: FC<Props> = ({ type, data, userLogin }) => {
 			{data.map(item => {
 				return (
 					<div key={item.id}>
-						<CodeItem key={item.id} item={item} userLogin={userLogin} />
+						<CodeItem key={item.id} item={item} />
 					</div>
 				);
 				// if (type) {

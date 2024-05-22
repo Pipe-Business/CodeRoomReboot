@@ -14,17 +14,27 @@ import FullLayout from '../../../layout/FullLayout';
 interface Props {
 	children?: React.ReactNode;
 	item: CodeModel;
-	userLogin: User;
 }
-const CodeItem: FC<Props> = ({ item, userLogin }) => {
+const CodeItem: FC<Props> = ({item}) => {
 
 	const navigate = useNavigate();
-
+	const [userLogin, setUser] = useState<User | null>(null);
 	const onClickCode = useCallback(() => {
 		navigate(`/code/${item.id}`, { state: { userLogin: userLogin } });
 	}, [userLogin]);
 
-
+	useEffect(() => {
+        const getSession = async () => {
+            const { data, error } = await supabase.auth.getSession()
+            if (error) {
+                console.error(error)
+            } else {
+                const { data: { user } } = await supabase.auth.getUser()
+                setUser(user);
+            }
+        }
+        getSession()
+    }, []);
 	return (
 		<ListItemButton sx={{
 			'&:hover': {
