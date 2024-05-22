@@ -277,11 +277,11 @@ const CodeInfo: FC<Props> = () => {
 								<div style={{ display: 'flex', flexDirection: 'row', }}>
 
 									<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>가격 : </span>
+										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>판매가격 : </span>
 									</MarginHorizontal>
 
 									<div style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price}c `} </span>
+										<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price} 캐시 / ${postData.price*5} 커밋 포인트`} </span>
 									</div>
 
 								</div>
@@ -302,7 +302,7 @@ const CodeInfo: FC<Props> = () => {
 
 
 							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
-								<span style={{ color: '#000000', fontSize: '16px', }}>{postData.viewCount}명 조회 </span>
+								<span style={{ color: '#000000', fontSize: '16px', }}>조회수 : {postData.viewCount} </span>
 							</MarginHorizontal>
 
 

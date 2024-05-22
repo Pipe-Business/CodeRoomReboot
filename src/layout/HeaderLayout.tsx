@@ -32,6 +32,14 @@ const HeaderLayout: FC<Props> = () => {
 		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
 	});
 
+     /*
+	* useQuery에서 넘어온 data를 pointData 선언
+	*/
+	const { isLoading : isPointDataLoading, data: pointData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.point],
+		queryFn: () => apiClient.getUserTotalPoint(userLogin!.id),
+	});
+
     useEffect(() => {
         const getSession = async () => {
             const { data, error } = await supabase.auth.getSession()
@@ -140,9 +148,10 @@ const HeaderLayout: FC<Props> = () => {
                             </Link>
                         </MarginHorizontal>
                           <MarginHorizontal size={8}>
-                            {/* <Link to={'/coin'} style={{ textDecoration: "none" }}> */}
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' 커밋'}</span>
-                            {/* </Link> */}
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' 캐시'}</span>
+                        </MarginHorizontal>
+                        <MarginHorizontal size={8}>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isPointDataLoading ? '' : pointData+' 커밋 포인트'}</span>
                         </MarginHorizontal>
 
 

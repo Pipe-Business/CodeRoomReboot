@@ -70,7 +70,7 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 
 		} else {						// 캐시가 충분하지 않으면
 			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => {
-				alert(`보유 포인트 : ${userHavePoint} 커밋 포인트가 부족합니다. 포인트를 모으거나 캐시로 구매해주세요.`);
+				alert(`${point - userHavePoint} 커밋 포인트가 부족합니다. 포인트를 모으거나 캐시로 구매해주세요.`);
 				//navigate('/charge');
 			}} disabled={isBlur} variant='contained'>커밋 포인트로 구매하기</ColorButton>;
 		}
