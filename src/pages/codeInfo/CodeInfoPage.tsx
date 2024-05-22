@@ -26,8 +26,9 @@ import { MarginVertical } from '../main/styles.ts';
 import { ColorButton } from './styles.ts';
 import { BlurContainer } from './styles.ts';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal.tsx';
-import CodeInfoBuyItButton from './components/CodeInfoBuyItButton.tsx';
+import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton.tsx';
 import PaymentDialog from './components/PaymentDialog.tsx';
+import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton.tsx';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -105,18 +106,26 @@ const CodeInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
 	});
 
-	const onClickLike = async() => {
-		if(isLike){
+	/*
+   * useQuery에서 넘어온 data를 pointData로 선언
+   */
+	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.point],
+		queryFn: () => apiClient.getUserTotalPoint(userLogin!.id),
+	});
+
+	const onClickLike = async () => {
+		if (isLike) {
 			setLike(false);
 			await apiClient.deleteLikeData(userLogin!.id, postData!.id);
-	
-		}else{
+
+		} else {
 			setLike(true);
-			const likedData : LikeRequestEntity = {
-				user_token : userLogin!.id,
-				post_id : postData!.id,
+			const likedData: LikeRequestEntity = {
+				user_token: userLogin!.id,
+				post_id: postData!.id,
 			}
-			 await apiClient.insertLikedData(likedData);
+			await apiClient.insertLikedData(likedData);
 		}
 	}
 
@@ -184,15 +193,15 @@ const CodeInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getLikeData(userLogin.id, postData!.id),
 	});
 
-	useEffect(()=>{
-		if(likeData != null){
-			console.log("likedata" +{likeData});
+	useEffect(() => {
+		if (likeData != null) {
+			console.log("likedata" + { likeData });
 			setLike(true);
 		}
-	},[likeData]);
+	}, [likeData]);
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading) {
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -206,10 +215,10 @@ const CodeInfo: FC<Props> = () => {
 		<MainLayout>
 			<div style={{ flexDirection: 'row', display: 'flex', marginTop: '16px' }}>
 				<Card
-				elevation={0}
-				 sx={{
-					width: { sm: 700, md: 800 },
-				}}>
+					elevation={0}
+					sx={{
+						width: { sm: 700, md: 800 },
+					}}>
 					<CardHeader
 						avatar={
 							<div style={{ display: 'flex', alignItems: 'center' }}>
@@ -372,7 +381,7 @@ const CodeInfo: FC<Props> = () => {
 							<Box height={32} />
 
 							<div style={{ display: 'flex', flexDirection: 'row', }}>
-								<CodeInfoBuyItButton
+								<CodeInfoBuyItByCashButton
 									isBlur={isBlur}
 									point={postData.price}
 									codeHostId={postData.userToken}
@@ -385,12 +394,25 @@ const CodeInfo: FC<Props> = () => {
 									onClickLoginRegister={onOpenLoginDialog}
 									onOpenPointDialog={onOpenPointDailog}
 								/>
-								{/* <ColorButton type={'submit'} sx={{ fontSize: '15', width: '26%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton> */}
 
 								<Box width={32} />
 
+								<CodeInfoBuyItByPointButton
+									isBlur={isBlur}
+									point={postData.price * 5}
+									codeHostId={postData.userToken}
+									userId={userLogin?.id}
+									userHavePoint={pointData ?? 0}
+									githubRepoUrl={postData.githubRepoUrl}
+									purchasedSaleData={purchaseSaleData}
+									onClickBuyItButton={onClickBuyItButton}
+									onPaymentConfirm={onClickConfirm}
+									onClickLoginRegister={onOpenLoginDialog}
+									onOpenPointDialog={onOpenPointDailog}
+								/>
+								<Box width={32} />
 								<IconButton onClick={onClickLike}>
-									{isLike ? <ThumbUpIcon sx={{color:'red'}} /> : <ThumbUpIcon />}
+									{isLike ? <ThumbUpIcon sx={{ color: 'red' }} /> : <ThumbUpIcon />}
 								</IconButton>
 							</div>
 
@@ -410,9 +432,9 @@ const CodeInfo: FC<Props> = () => {
 					<Card sx={{
 						width: { sm: 150, md: 250 }, height: { sm: 150, md: 250, }
 					}}
-						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} elevation={0}
+						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} elevation={0}
 					>
-						<CodeInfoBuyItButton
+						<CodeInfoBuyItByCashButton
 							isBlur={isBlur}
 							point={postData.price}
 							codeHostId={postData.userToken}
@@ -425,7 +447,24 @@ const CodeInfo: FC<Props> = () => {
 							onClickLoginRegister={onOpenLoginDialog}
 							onOpenPointDialog={onOpenPointDailog}
 						/>
-						{/* <ColorButton type={'submit'} sx={{ fontSize: '15', width: '80%' }} onClick={() => onClickPurchase()} disabled = {isBlur}>구매하기</ColorButton> */}
+
+						<Box height={24} />
+
+
+						<CodeInfoBuyItByPointButton
+							isBlur={isBlur}
+							point={postData.price * 5}
+							codeHostId={postData.userToken}
+							userId={userLogin?.id}
+							userHavePoint={pointData ?? 0}
+							githubRepoUrl={postData.githubRepoUrl}
+							purchasedSaleData={purchaseSaleData}
+							onClickBuyItButton={onClickBuyItButton}
+							onPaymentConfirm={onClickConfirm}
+							onClickLoginRegister={onOpenLoginDialog}
+							onOpenPointDialog={onOpenPointDailog}
+						/>
+						{/* CodeInfoBuyItByPointButton */}
 
 					</Card>
 				</BlurContainer>

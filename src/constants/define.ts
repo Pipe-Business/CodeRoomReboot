@@ -8,6 +8,7 @@ export const REACT_QUERY_KEY = {
 	rejectedCode : '/rejectedCode',
 	user : '/users',
 	cash : '/cash',
+	point : '/point',
 	purchaseSaleHistory : '/purchaseSaleHistory',
 	like : '/like',
 	mentoring : '/mentoring',

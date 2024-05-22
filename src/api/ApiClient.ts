@@ -481,12 +481,12 @@ class ApiClient implements SupabaseAuthAPI {
                 console.log("error" + error.details);
                 console.log("error" + error.hint);
 
-                throw new Error('유저의 합산 캐시(커밋)을 가져오는 데 실패했습니다.');
+                throw new Error('유저의 합산 캐시를 가져오는 데 실패했습니다.');
             }
             return totalCash;
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 합산 캐시(커밋)을 가져오는 데 실패했습니다.');
+            throw new Error('유저의 합산 캐시를 가져오는 데 실패했습니다.');
         }
     }
 
@@ -958,6 +958,48 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
         }
     }
+
+    async getUserTotalPoint(myUserToken: string): Promise<number> {
+        try {
+            const { data, error } = await supabase.from('users_point_history')
+                .select('*')
+                .eq('user_token', myUserToken)
+                .order('created_at', { ascending: false });
+
+            let lstPointEntity: PointHistoryResponseEntity[] = [];
+
+            data?.forEach((e) => {
+
+                let pointEntity: PointHistoryResponseEntity = {
+                    id: e.id,
+                    user_token: e.user_token,
+                    point: e.point,
+                    amount: e.amount,
+                    point_history_type: e.point_history_type,
+                    description: e.description,
+                    created_at: e.created_at,
+                }
+
+                lstPointEntity.push(pointEntity);
+            });
+
+            const totalPoint: number = Number(lstPointEntity[0].amount);
+
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('유저의 합산 커밋 포인트를 가져오는 데 실패했습니다.');
+            }
+            return totalPoint;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 합산 커밋 포인트를 가져오는 데 실패했습니다.');
+        }
+    }
+
 
 
 
