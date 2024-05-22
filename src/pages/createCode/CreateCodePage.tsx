@@ -115,12 +115,12 @@ const CreateCodePage: FC<Props> = () => {
 			return;
 		}
 		if (!inputPoint) {
-			toast.error('커밋(캐시)를 입력해주세요');
+			toast.error('캐시를 입력해주세요');
 			inputPointRef.current?.focus();
 			return;
 		}
 		if (inputPoint < 0) {
-			toast.error('커밋(캐시)는 음수가 될수 없습니다.');
+			toast.error('캐시는 음수가 될수 없습니다.');
 			inputPointRef.current?.focus();
 			return;
 		}
@@ -301,7 +301,7 @@ const CreateCodePage: FC<Props> = () => {
             <Box height={16} />
 
             <div>
-                <SectionTitle title='커밋(캐시)' />
+                <SectionTitle title='캐시' />
                 <TextField
                     sx={{
                         width: { lg: 294 },
@@ -310,7 +310,7 @@ const CreateCodePage: FC<Props> = () => {
                     placeholder={'예) 300'}
                     inputRef={inputPointRef}
                     error={pointError}
-                    helperText={pointError && '커밋(캐시)는 음수가 될수 없습니다.'}
+                    helperText={pointError && '캐시는 음수가 될수 없습니다.'}
                     type='number' />
             </div>
 

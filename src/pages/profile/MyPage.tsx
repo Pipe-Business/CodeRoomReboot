@@ -66,6 +66,10 @@ const MyPage: FC<Props> = () => {
 		getSession()
 	}, []);
 
+	const onClickCashPointManage = () => {
+		navigate('/my/profile/cashpoint/management')
+	}
+
 	if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading) {
 		return (
 			<FullLayout>
@@ -114,7 +118,7 @@ const MyPage: FC<Props> = () => {
 							/>
 						</Card>
 					</SectionWrapper>
-					<CashColorButton style={{width:150, height:70}}>캐시 관리</CashColorButton>
+					<CashColorButton style={{width:300, height:70}} onClick={onClickCashPointManage}>캐사, 커밋 포인트 관리 / 수익 통계</CashColorButton>
 					</div>
 					<Box height={32} />
 					<SectionWrapper>
