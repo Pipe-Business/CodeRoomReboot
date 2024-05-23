@@ -184,6 +184,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+
     async insertMentoringHistory(mentoring: MentoringRequestEntity) {
         console.log("mentoring: "+ {...mentoring});
 
@@ -245,8 +246,26 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async getLastMyNotifications(userToken: string) {
+        try {
+            const {data, error} = await supabase.from('notification').select().eq('from_user_token', userToken);
+
+            if (error) {
+                console.log("error" + error.message);
+                // console.log("error" + error.name);
+                // console.log("error" + error.stack);
+
+                throw new Error('알림목록을 가져오는 도중 실패하였습니다.');
+            }
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('알림목록을 가져오는 도중 실패하였습니다.');
+        }
+        
+    }
+
     async subscribeInsertNotification(handleInserts: Function) {
-        // Listen to inserts
+        // Listen to inserts for notification table
         supabase
         .channel('notification')
         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notification' }, handleInserts)

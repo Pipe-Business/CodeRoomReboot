@@ -1,20 +1,11 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
 import { Box, Typography, Paper } from '@mui/material';
 import { NotificationEntity } from '../../data/entity/NotificationEntity';
 import { NotificationType } from '../../enums/NotificationType';
 import { format } from 'date-fns';
-import { apiClient, supabase } from '../../api/ApiClient.ts';
-
-
-const notifications: NotificationEntity[] = [
-  { id: 1, title: '심사승인 알림', content: '귀하의 코드가 심사에 승인되었습니다.', to_user_token: "abcde", from_user_token: "abcde", notification_type: NotificationType.granted, created_at: new Date() },
-  { id: 2, title: '코드판매 알림', content: '귀하의 코드가 판매되었습니다.', to_user_token: "abcde", from_user_token: "abcde", notification_type: NotificationType.sale, created_at: new Date() },
-  { id: 3, title: '1:1 쪽지 알림', content: '새로운 1:1 쪽지가 도착했습니다.', to_user_token: "abcde", from_user_token: "abcde", notification_type: NotificationType.message_from_user, created_at: new Date() },
-  { id: 4, title: '관리자 쪽지 알림', content: '관리자로부터 새로운 쪽지가 도착했습니다.', to_user_token: "abcde", from_user_token: "abcde", notification_type: NotificationType.message_from_admin, created_at: new Date() },
-  { id: 5, title: '포인트 지급 알림', content: '포인트가 지급되었습니다.', to_user_token: "abcde", from_user_token: "abcde", notification_type: NotificationType.get_point, created_at: new Date() },
-];
+import { apiClient } from '../../api/ApiClient.ts'; // supabase가 필요 없는 것으로 보임
 
 const NotificationContainer = styled(Paper)`
   width: 100%;  
@@ -71,32 +62,56 @@ const NotificationTimestamp = styled(Typography)`
   color: #999999;
 `;
 
-const handleInserts = (payload) => {
-  console.log('Change received!', payload)
-}
+const NotificationPage: FC = () => {  
+  const [notifications, setNotifications] = useState<NotificationEntity[]>([]);
+  // get last notification db
+  
 
-const NotificationPage: FC = () => {
+
+  // subscribe insert listener for notification table
+  const handleInserts = async (payload) => {
+    console.log('Change received!', payload);
+    const notificationData: NotificationEntity = {
+      id: payload.new.id,
+      title: payload.new.title,
+      content: payload.new.content,
+      to_user_token: payload.new.to_user_token,
+      from_user_token: payload.new.from_user_token,
+      notification_type: payload.new.notification_type,
+      created_at: payload.new.created_at,
+    };
+    const userResponse = await apiClient.getCurrentLoginUser();
+    if (notificationData.from_user_token === userResponse.user.id) {
+      setNotifications((prevNotifications) => [...prevNotifications, notificationData]);
+    }
+    console.log('current_notifications', notifications);
+  };
+
   useEffect(() => {
-    // 초기화 로직을 여기에 추가합니다.
     console.log('NotificationPage가 마운트되었습니다.');
 
-    // 만약 초기화 로직이 비동기 함수라면, async/await을 사용할 수 있습니다.
     const initialize = async () => {
-      // 초기화 로직 예시
       console.log('초기화 로직 실행');
-      // 예를 들어, API 호출 등을 여기서 수행할 수 있습니다.
-      await apiClient.subscribeInsertNotification(handleInserts);   // 코드리뷰 히스토리 저장
+      await apiClient.subscribeInsertNotification(handleInserts);
     };
 
     initialize();
   }, []); // 빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때만 실행되도록 합니다.
 
+  const handleRemoveNotification = () => {
+    setNotifications((prevNotifications) => {
+      const updatedNotifications = [...prevNotifications];
+      updatedNotifications.pop();
+      return updatedNotifications;
+    });
+  };
+
   return (
     <MainLayout>
       <h1>알림함</h1>    
-      <NotificationContainer elevation={3} sx={{ width: {xs:400, sm: 500, md: 1000 } }}>
-        {notifications.map(notification => (
-          <NotificationItem key={notification.id} notificationType={notification.notification_type} elevation={3} sx={{ width: {xs:300, sm: 400, md: 800 } }}>
+      <NotificationContainer elevation={3} sx={{ width: { xs: 400, sm: 500, md: 1000 } }}>
+        {notifications.map((notification) => (
+          <NotificationItem key={notification.id} notificationType={notification.notification_type} elevation={3} sx={{ width: { xs: 300, sm: 400, md: 800 } }}>
             <NotificationTitle variant="h6">{notification.title}</NotificationTitle>
             <NotificationContent variant="body1">{notification.content}</NotificationContent>
             <NotificationItemType variant="body2">{notification.notification_type}</NotificationItemType>
@@ -105,6 +120,7 @@ const NotificationPage: FC = () => {
         ))}
       </NotificationContainer>
       <Box height={128} />
+      <button onClick={handleRemoveNotification}>Remove Last Notification</button>
     </MainLayout>
   );
 };
