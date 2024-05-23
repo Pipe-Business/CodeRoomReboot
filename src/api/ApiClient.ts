@@ -10,6 +10,8 @@ import axios from 'axios';
 import { serverURL } from '../hooks/fetcher/HttpFetcher.ts';
 import { useOctokit } from "../index.tsx";
 import { isConditionalExpression } from "typescript";
+import { NotificationEntity } from "../data/entity/NotificationEntity.ts";
+import { NotificationType } from '../enums/NotificationType';
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -71,10 +73,10 @@ class ApiClient implements SupabaseAuthAPI {
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
                     hashTag: e.hash_tag,
-                    sellerGithubName : e.code.seller_github_name,
+                    sellerGithubName: e.code.seller_github_name,
                     state: e.state,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage : e.reject_message,
+                    rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                 }
                 lstCodeModel.push(codeModel);
@@ -186,7 +188,7 @@ class ApiClient implements SupabaseAuthAPI {
 
 
     async insertMentoringHistory(mentoring: MentoringRequestEntity) {
-        console.log("mentoring: "+ {...mentoring});
+        console.log("mentoring: " + { ...mentoring });
 
         try {
             const { error } = await supabase.from('mentoring_request_history').insert(mentoring);
@@ -206,7 +208,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async insertCodeReviewHistory(codeReview: CodeReviewRequestEntity) {
-        console.log("codeReview: "+ {...codeReview});
+        console.log("codeReview: " + { ...codeReview });
 
         try {
             const { error } = await supabase.from('codereview_request_history').insert(codeReview);
@@ -246,9 +248,24 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getLastMyNotifications(userToken: string) {
+    async getLastMyNotifications(userToken: string): Promise<NotificationEntity[]> {
+        // 현재 로그인한 계정의 마지막까지 저장되어있었던 알림 목록 가져오기
         try {
-            const {data, error} = await supabase.from('notification').select().eq('from_user_token', userToken);
+            const { data, error } = await supabase.from('notification').select().eq('from_user_token', userToken);
+
+            let lstNotifications: NotificationEntity[] = [];
+            data?.forEach((e) => {
+                let notificationData: NotificationEntity = {
+                    id: e.id,
+                    title: e.title,
+                    content: e.content,
+                    to_user_token: e.to_user_token,                
+                    from_user_token: e.from_user_token,
+                    notification_type: e.notification_type,
+                    created_at: e.created_at,
+                }
+                lstNotifications.push(notificationData);
+            });
 
             if (error) {
                 console.log("error" + error.message);
@@ -257,19 +274,20 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('알림목록을 가져오는 도중 실패하였습니다.');
             }
+            return lstNotifications;
         } catch (e: any) {
             console.log(e);
             throw new Error('알림목록을 가져오는 도중 실패하였습니다.');
         }
-        
+
     }
 
     async subscribeInsertNotification(handleInserts: Function) {
         // Listen to inserts for notification table
         supabase
-        .channel('notification')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notification' }, handleInserts)
-        .subscribe()
+            .channel('notification')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notification' }, handleInserts)
+            .subscribe()
     }
 
     async getImgPublicUrl(path: string): Promise<string> {
@@ -394,9 +412,9 @@ class ApiClient implements SupabaseAuthAPI {
                     buyerCount: e.code.buyer_count,
                     hashTag: e.hash_tag,
                     state: e.state,
-                    sellerGithubName : e.code.seller_github_name,
-                    githubRepoUrl : e.code.github_repo_url,
-                    rejectMessage : e.reject_message,
+                    sellerGithubName: e.code.seller_github_name,
+                    githubRepoUrl: e.code.github_repo_url,
+                    rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                     adminGitRepoURL: e.code.admin_git_repo_url,
                 }
@@ -637,7 +655,7 @@ class ApiClient implements SupabaseAuthAPI {
     async getCodeDownloadURL(userName: string, repoName: string, branchName: string): Promise<GithubForkURLEntity> {
 
         try {
-            console.log("getCodeDownloadURL : " + userName + repoName + branchName);    
+            console.log("getCodeDownloadURL : " + userName + repoName + branchName);
             const result = await axios.get<GithubForkURLEntity>(`${serverURL}/download/${userName}/${repoName}/${branchName}`);
             console.log(`status honghcul : ${result.status}`);
             return result.data;
@@ -647,7 +665,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
 
-       
+
     }
 
     async insertLikedData(likedData: LikeRequestEntity) { // 좋아요 insert
@@ -708,21 +726,21 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async deleteLikeData(userToken: string, postId: number) {
-        try{
+        try {
             const { error } = await supabase
-            .from('liked')
-            .delete()
-            .eq('post_id', postId)
-            .eq('user_token',userToken);
+                .from('liked')
+                .delete()
+                .eq('post_id', postId)
+                .eq('user_token', userToken);
         } catch (e: any) {
             console.log(e);
             throw new Error('좋아요 데이터를 삭제하는데 실패했습니다.');
         }
-       
+
     }
 
 
-    async getAllPendingCode(type:string): Promise<CodeModel[]> {
+    async getAllPendingCode(type: string): Promise<CodeModel[]> {
         try {
             const { data, error } = await supabase.from('post')
                 .select('*, code!inner(*)')
@@ -742,14 +760,14 @@ class ApiClient implements SupabaseAuthAPI {
                     postType: e.post_type,
                     createdAt: e.created_at,
                     buyerGuide: e.code.buyer_guide,
-                    sellerGithubName : e.code.seller_github_name,
+                    sellerGithubName: e.code.seller_github_name,
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
                     hashTag: e.hash_tag,
                     state: e.state,
-                    githubRepoUrl : e.code.github_repo_url,
+                    githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage : e.reject_message,
+                    rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                 }
                 lstCodeModel.push(codeModel);
@@ -765,34 +783,34 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async forkForSellerGitRepo(owner: string, repo: string): Promise<string> {
-		try {
-			const urlConvertArr = repo.split('/');
-			const repoName = urlConvertArr[urlConvertArr.length - 1];
-			console.log(repoName);
+        try {
+            const urlConvertArr = repo.split('/');
+            const repoName = urlConvertArr[urlConvertArr.length - 1];
+            console.log(repoName);
 
-			const result = await useOctokit.request('POST /repos/{owner}/{repo}/forks', {
-				owner: owner,
-				repo: repoName,
-				name: repoName,
-				default_branch_only: true,
-				headers: {
-					'X-GitHub-Api-Version': '2022-11-28',
-				},
-			});
-			console.log(result.data);
-			return result.data.html_url;
-		} catch (e) {
-			console.dir(e);
-			throw new Error('github repo 포크 오류');
-		}
-	}
+            const result = await useOctokit.request('POST /repos/{owner}/{repo}/forks', {
+                owner: owner,
+                repo: repoName,
+                name: repoName,
+                default_branch_only: true,
+                headers: {
+                    'X-GitHub-Api-Version': '2022-11-28',
+                },
+            });
+            console.log(result.data);
+            return result.data.html_url;
+        } catch (e) {
+            console.dir(e);
+            throw new Error('github repo 포크 오류');
+        }
+    }
 
-    async updateCodeRequestState(userToken:string, postId:string, state:string){
+    async updateCodeRequestState(userToken: string, postId: string, state: string) {
         try {
             const { error } = await supabase.from('post')
-                .update({ state : state })
+                .update({ state: state })
                 .eq('id', postId)
-                .eq('user_token',userToken);
+                .eq('user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);
@@ -810,12 +828,12 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateCodeRequestRejectMessage(userToken:string, postId:string, rejectMessage:string){
+    async updateCodeRequestRejectMessage(userToken: string, postId: string, rejectMessage: string) {
         try {
             const { error } = await supabase.from('post')
-                .update({ reject_message : rejectMessage })
+                .update({ reject_message: rejectMessage })
                 .eq('id', postId)
-                .eq('user_token',userToken);
+                .eq('user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);
@@ -833,10 +851,10 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateAdminGithubRepoUrl(postId:string, adminGithubRepoUrl:string){
+    async updateAdminGithubRepoUrl(postId: string, adminGithubRepoUrl: string) {
         try {
             const { error } = await supabase.from('code')
-                .update({ admin_github_repo_url : adminGithubRepoUrl })
+                .update({ admin_github_repo_url: adminGithubRepoUrl })
                 .eq('post_id', postId);
 
             if (error) {
@@ -856,7 +874,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async getMyCodeByStatus(userToken:string, type:string): Promise<CodeModel[]> {
+    async getMyCodeByStatus(userToken: string, type: string): Promise<CodeModel[]> {
         try {
             const { data, error } = await supabase.from('post')
                 .select('*, code!inner(*)')
@@ -877,14 +895,14 @@ class ApiClient implements SupabaseAuthAPI {
                     postType: e.post_type,
                     createdAt: e.created_at,
                     buyerGuide: e.code.buyer_guide,
-                    sellerGithubName : e.code.seller_github_name,
+                    sellerGithubName: e.code.seller_github_name,
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
                     hashTag: e.hash_tag,
                     state: e.state,
-                    githubRepoUrl : e.code.github_repo_url,
+                    githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage : e.reject_message,
+                    rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                 }
                 lstCodeModel.push(codeModel);
@@ -938,38 +956,38 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMyMentorings(myUserToken: string): Promise<MentoringResponseEntity[] | null>{
-        
-        try{
+    async getMyMentorings(myUserToken: string): Promise<MentoringResponseEntity[] | null> {
+
+        try {
             const { data, error } = await supabase.from('mentoring_request_history')
-            .select('*')
-            .eq('from_user_token', myUserToken);
+                .select('*')
+                .eq('from_user_token', myUserToken);
 
-        let lstMentoring: MentoringResponseEntity[] = [];
-        data?.forEach((e) => {
-            let mentoring: MentoringResponseEntity = {
-                id: e.id,
-                title : e.title,
-                content : e.content,
-                to_user_token : e.to_user_token,
-                from_user_token : e.from_user_token,
-                request_date : e.request_data,
-                created_at: e.created_at,
+            let lstMentoring: MentoringResponseEntity[] = [];
+            data?.forEach((e) => {
+                let mentoring: MentoringResponseEntity = {
+                    id: e.id,
+                    title: e.title,
+                    content: e.content,
+                    to_user_token: e.to_user_token,
+                    from_user_token: e.from_user_token,
+                    request_date: e.request_data,
+                    created_at: e.created_at,
+                }
+                lstMentoring.push(mentoring);
+            });
+            //console.log("구매내역" + { ...data });
+
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
             }
-            lstMentoring.push(mentoring);
-        });
-        //console.log("구매내역" + { ...data });
 
-        if (error) {
-            console.log("error" + error.message);
-            console.log("error" + error.code);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-
-            throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
-        }
-
-        return lstMentoring;
+            return lstMentoring;
 
 
         } catch (e: any) {

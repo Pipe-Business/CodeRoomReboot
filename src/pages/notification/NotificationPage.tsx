@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
-import { Box, Typography, Paper } from '@mui/material';
+import { Box, Typography, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField } from '@mui/material';
 import { NotificationEntity } from '../../data/entity/NotificationEntity';
 import { NotificationType } from '../../enums/NotificationType';
 import { format } from 'date-fns';
-import { apiClient } from '../../api/ApiClient.ts'; // supabase가 필요 없는 것으로 보임
+import { useNavigate } from 'react-router-dom';
+import { apiClient } from '../../api/ApiClient.ts';
+import AlertDialog from './components/AlertDialogProps.tsx';
 
 const NotificationContainer = styled(Paper)`
   width: 100%;  
@@ -15,16 +17,16 @@ const NotificationContainer = styled(Paper)`
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center align the NotificationItem elements */
+  align-items: center;
 `;
 
-const NotificationItem = styled(Paper)<{ notificationType: string }>`
+const NotificationItem = styled(Paper) <{ notification_type: string }>`
   margin-bottom: 16px;
   padding: 16px;
   background-color: #ffffff;
   border-left: 5px solid;
   border-left-color: ${(props) => {
-    switch (props.notificationType) {
+    switch (props.notification_type) {
       case 'granted':
         return '#4caf50'; // Green
       case 'sale':
@@ -39,8 +41,9 @@ const NotificationItem = styled(Paper)<{ notificationType: string }>`
         return '#3f51b5'; // Default color
     }
   }};
-  width: 100%; /* Ensure the item takes full width */
-  max-width: 800px; /* Optional: Max width for the item */
+  width: 100%;
+  max-width: 800px;
+  cursor: pointer; /* Add cursor pointer to indicate clickable */
 `;
 
 const NotificationTitle = styled(Typography)`
@@ -62,15 +65,15 @@ const NotificationTimestamp = styled(Typography)`
   color: #999999;
 `;
 
-const NotificationPage: FC = () => {  
+const NotificationPage: FC = () => {
   const [notifications, setNotifications] = useState<NotificationEntity[]>([]);
-  // get last notification db
-  
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState('');
+  const [dialogContent, setDialogContent] = useState('');
+  const [showReply, setShowReply] = useState(false);
+  const navigate = useNavigate();
 
-
-  // subscribe insert listener for notification table
   const handleInserts = async (payload) => {
-    console.log('Change received!', payload);
     const notificationData: NotificationEntity = {
       id: payload.new.id,
       title: payload.new.title,
@@ -80,23 +83,28 @@ const NotificationPage: FC = () => {
       notification_type: payload.new.notification_type,
       created_at: payload.new.created_at,
     };
+
     const userResponse = await apiClient.getCurrentLoginUser();
     if (notificationData.from_user_token === userResponse.user.id) {
-      setNotifications((prevNotifications) => [...prevNotifications, notificationData]);
+      setNotifications((prevNotifications) => {
+        const newNotifications = prevNotifications.filter(
+          (notification) => notification.id !== notificationData.id
+        );
+        return [...newNotifications, notificationData];
+      });
     }
-    console.log('current_notifications', notifications);
   };
 
   useEffect(() => {
-    console.log('NotificationPage가 마운트되었습니다.');
-
     const initialize = async () => {
-      console.log('초기화 로직 실행');
+      const userResponse = await apiClient.getCurrentLoginUser();
+      const lastNotifications: NotificationEntity[] = await apiClient.getLastMyNotifications(userResponse.user.id);
+      setNotifications(lastNotifications);
       await apiClient.subscribeInsertNotification(handleInserts);
     };
 
     initialize();
-  }, []); // 빈 배열을 두 번째 인자로 전달하여 컴포넌트가 마운트될 때만 실행되도록 합니다.
+  }, []);
 
   const handleRemoveNotification = () => {
     setNotifications((prevNotifications) => {
@@ -106,21 +114,61 @@ const NotificationPage: FC = () => {
     });
   };
 
+  const handleNotificationClick = (notification: NotificationEntity) => {
+    switch (notification.notification_type) {
+      case 'granted':
+        navigate(`/posts/${notification.id}`); // Replace with actual route
+        break;
+      case 'rejected':
+        setDialogTitle('반려 사유');
+        setDialogContent(notification.content);
+        setShowReply(false);
+        setDialogOpen(true);
+        break;
+      case 'get_point':
+      case 'sale':
+        navigate('/profile') // Replace with actual route
+        break;
+      case 'message_from_user':
+      case 'message_from_admin':
+        setDialogTitle(notification.title);
+        setDialogContent(notification.content);
+        setShowReply(true);
+        setDialogOpen(true);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <MainLayout>
-      <h1>알림함</h1>    
+      <h1>알림함</h1>
       <NotificationContainer elevation={3} sx={{ width: { xs: 400, sm: 500, md: 1000 } }}>
         {notifications.map((notification) => (
-          <NotificationItem key={notification.id} notificationType={notification.notification_type} elevation={3} sx={{ width: { xs: 300, sm: 400, md: 800 } }}>
+          <NotificationItem
+            key={notification.id}
+            notification_type={notification.notification_type}
+            elevation={3}
+            sx={{ width: { xs: 300, sm: 400, md: 800 } }}
+            onClick={() => handleNotificationClick(notification)}
+          >
             <NotificationTitle variant="h6">{notification.title}</NotificationTitle>
             <NotificationContent variant="body1">{notification.content}</NotificationContent>
             <NotificationItemType variant="body2">{notification.notification_type}</NotificationItemType>
-            <NotificationTimestamp variant="body2">{notification.created_at ? format(notification.created_at, 'yyyy-MM-dd HH:mm') : ''}</NotificationTimestamp>
+            <NotificationTimestamp variant="body2">{notification.created_at ? format(new Date(notification.created_at), 'yyyy-MM-dd HH:mm') : ''}</NotificationTimestamp>
           </NotificationItem>
         ))}
       </NotificationContainer>
       <Box height={128} />
       <button onClick={handleRemoveNotification}>Remove Last Notification</button>
+      <AlertDialog
+        open={dialogOpen}
+        title={dialogTitle}
+        content={dialogContent}
+        onClose={() => setDialogOpen(false)}
+        showReply={showReply}
+      />
     </MainLayout>
   );
 };
