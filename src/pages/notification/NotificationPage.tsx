@@ -106,28 +106,17 @@ const NotificationPage: FC = () => {
     initialize();
   }, []);
 
-  const handleRemoveNotification = () => {
-    setNotifications((prevNotifications) => {
-      const updatedNotifications = [...prevNotifications];
-      updatedNotifications.pop();
-      return updatedNotifications;
-    });
-  };
-
   const handleNotificationClick = (notification: NotificationEntity) => {
     switch (notification.notification_type) {
       case 'granted':
-        navigate(`/posts/${notification.id}`); // Replace with actual route
+        navigate('/profile/my') // Replace with actual route
         break;
       case 'rejected':
-        setDialogTitle('반려 사유');
-        setDialogContent(notification.content);
-        setShowReply(false);
-        setDialogOpen(true);
+        navigate('/profile/my') // Replace with actual route
         break;
       case 'get_point':
       case 'sale':
-        navigate('/profile') // Replace with actual route
+        navigate('/profile/my') // Replace with actual route
         break;
       case 'message_from_user':
       case 'message_from_admin':
@@ -160,8 +149,7 @@ const NotificationPage: FC = () => {
           </NotificationItem>
         ))}
       </NotificationContainer>
-      <Box height={128} />
-      <button onClick={handleRemoveNotification}>Remove Last Notification</button>
+      <Box height={128} />      
       <AlertDialog
         open={dialogOpen}
         title={dialogTitle}
