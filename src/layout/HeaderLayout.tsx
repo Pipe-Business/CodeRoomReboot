@@ -1,23 +1,17 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Badge, IconButton, InputBase, Paper, Button } from '@mui/material';
-import { HeaderIconButton, HeaderSearch, HeaderTitle, HeaderWrapper, ColorButton } from './styles.ts';
-import { CenterBox, MarginHorizontal } from '../components/styles.ts';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import useDialogState from '../hooks/useDialogState.ts';
-//import { useQueryUserLogin } from '../hooks/fetcher/UserFetcher.ts';
-import useInput from '../hooks/useInput.ts';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
-import SearchIcon from '@mui/icons-material/Search';
+import { Badge, CircularProgress } from '@mui/material';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { FC, useCallback, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { apiClient } from '../api/ApiClient.ts';
+import localApi from '../api/local/LocalApi.ts';
 import LoginModal from '../components/login/modal/LoginModal.tsx';
-import { User } from '@supabase/supabase-js';
-import { apiClient, supabase } from '../api/ApiClient.ts';
-import { useQuery } from '@tanstack/react-query';
+import { CenterBox, MarginHorizontal } from '../components/styles.ts';
 import { REACT_QUERY_KEY } from '../constants/define.ts';
 import { useQueryUserLogin } from '../hooks/fetcher/UserFetcher.ts';
-import {CircularProgress} from '@mui/material';
-import localApi from '../api/local/LocalApi.ts';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useDialogState from '../hooks/useDialogState.ts';
+import useInput from '../hooks/useInput.ts';
+import { ColorButton, HeaderIconButton, HeaderTitle, HeaderWrapper } from './styles.ts';
 
 interface Props {
     children?: React.ReactNode;
@@ -29,8 +23,6 @@ const HeaderLayout: FC<Props> = () => {
     const { userLogin , isLoadingUserLogin} = useQueryUserLogin();
 	const queryClient = useQueryClient();
 
-    //const [userLogin, setUser] = useState<User | null>(null)
-    //todo cash 가져오기
 
    /*
 	* useQuery에서 넘어온 data를 cashData로 선언
@@ -48,18 +40,6 @@ const HeaderLayout: FC<Props> = () => {
 		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
 	});
 
-    // useEffect(() => {
-    //     const getSession = async () => {
-    //         const { data, error } = await supabase.auth.getSession()
-    //         if (error) {
-    //             console.error(error)
-    //         } else {
-    //             const { data: { user } } = await supabase.auth.getUser()
-    //             setUser(user);
-    //         }
-    //     }
-    //     getSession()
-    // }, [])
 
 	const location = useLocation();
     const currentPath = location.pathname;

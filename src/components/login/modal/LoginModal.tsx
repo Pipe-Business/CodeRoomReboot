@@ -1,20 +1,16 @@
-import React, { FC , useCallback, useRef, useState, useEffect } from 'react';
-import useInput from '../../../hooks/useInput.ts';
-import { EMAIL_EXP } from '../../../constants/define.ts'
-import { Dialog, DialogContent, DialogTitle, IconButton ,Card, TextField, Box, Button, Divider} from '@mui/material';
-import { Link, useNavigate, useLocation} from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
-import EmailIcon from '@mui/icons-material/Email';
-import PasswordIcon from '@mui/icons-material/Email';
+import { Box, Card, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material';
+import { User } from '@supabase/supabase-js';
+import React, { FC, useCallback, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiClient } from '../../../api/ApiClient.ts';
-import { ColorButton, TextButton } from '../../styles.ts';
-import { User } from '@supabase/supabase-js';
 import localApi from '../../../api/local/LocalApi.ts';
-import { supabase } from '../../../api/ApiClient.ts';
-import { REACT_QUERY_KEY } from '../../../constants/define.ts';
+import { EMAIL_EXP, REACT_QUERY_KEY } from '../../../constants/define.ts';
+import useInput from '../../../hooks/useInput.ts';
+import { ColorButton, TextButton } from '../../styles.ts';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
 	children?: React.ReactNode;
@@ -23,22 +19,7 @@ interface Props {
 }
 
 const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
-	// const [userLogin, setUser] = useState<User | null>(null);
 	const queryClient = useQueryClient();
-
-
-		// useEffect(() => {
-		// 	const getSession = async () => {
-		// 		const { data, error } = await supabase.auth.getSession()
-		// 		if (error) {
-		// 			console.error(error)
-		// 		} else {
-		// 			const { data: { user } } = await supabase.auth.getUser()
-		// 			setUser(user);
-		// 		}
-		// 	}
-		// 	getSession()
-		// }, [])
 
 	const [inputEmail, onChangeEmail, setInputEmail] = useInput('');
 	const inputEmailRef = useRef<HTMLInputElement | null>(null);
