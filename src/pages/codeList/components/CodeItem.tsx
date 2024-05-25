@@ -1,8 +1,6 @@
 import { ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { User } from '@supabase/supabase-js';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../../api/ApiClient';
 import { CodeModel } from '../../../data/model/CodeModel';
 import styles from '../../../global.module.css';
 import { calcTimeDiff } from '../../../utils/DayJsHelper';
@@ -16,23 +14,10 @@ interface Props {
 const CodeItem: FC<Props> = ({item}) => {
 
 	const navigate = useNavigate();
-	const [userLogin, setUser] = useState<User | null>(null);
 	const onClickCode = useCallback(() => {
 		navigate(`/code/${item.id}`);
-	}, [userLogin]);
-
-	useEffect(() => {
-        const getSession = async () => {
-            const { data, error } = await supabase.auth.getSession()
-            if (error) {
-                console.error(error)
-            } else {
-                const { data: { user } } = await supabase.auth.getUser()
-                setUser(user);
-            }
-        }
-        getSession()
-    }, []);
+	}, [item.id]);
+	
 	return (
 		<ListItemButton sx={{
 			'&:hover': {
