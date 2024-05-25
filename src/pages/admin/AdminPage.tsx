@@ -19,8 +19,6 @@ interface Props {
 }
 
 const AdminPage: FC<Props> = () => {
-	const [userLogin, setUser] = useState<User | null>(null);
-
 	const [value, setValue] = React.useState('1');
 	const location = useLocation();
 	const navigate = useNavigate();

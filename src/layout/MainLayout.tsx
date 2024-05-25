@@ -18,8 +18,6 @@ const MainLayoutWrapper = styled.div`
 
 
 const MainLayout: FC<Props> = ({ children }) => {
-	//const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
-
 
 	// xs -> sm -> md -> lg -> xl
 	return (

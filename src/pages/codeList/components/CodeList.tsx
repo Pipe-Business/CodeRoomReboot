@@ -1,12 +1,8 @@
 import React, { FC } from 'react';
 import { CodeModel } from '../../../data/model/CodeModel.ts';
-//import CodeItem from './CodeItem.tsx';
-import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@mui/material';
+import { Link, useSearchParams } from 'react-router-dom';
 import CodeItem from './CodeItem.tsx';
-import { useState } from 'react';
-import Paging from '../../../components/paging/Paging.tsx';
-import { User } from '@supabase/supabase-js';
 
 interface Props {
 	children?: React.ReactNode,

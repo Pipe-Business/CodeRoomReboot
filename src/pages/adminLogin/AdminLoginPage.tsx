@@ -1,35 +1,19 @@
 
-import React, { FC , useCallback, useRef, useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogTitle, IconButton ,Card, TextField, Box, Button, Divider} from '@mui/material';
-import { supabase } from '../../api/ApiClient';
+import { Box, Card, TextField } from '@mui/material';
 import { User } from '@supabase/supabase-js';
-import useInput from '../../hooks/useInput';
-import { Link, useNavigate, useLocation} from 'react-router-dom';
+import React, { FC, useCallback, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { EMAIL_EXP } from '../../constants/define';
 import { apiClient } from '../../api/ApiClient';
-import { ColorButton,TextButton } from './styles';
+import { EMAIL_EXP } from '../../constants/define';
+import useInput from '../../hooks/useInput';
+import { ColorButton } from './styles';
 
 interface Props {
 	children?: React.ReactNode;
 }
 
 const AdminLoginPage: FC<Props> = () => {
-    const [userLogin, setUser] = useState<User | null>(null);
-
-    useEffect(() => {
-        const getSession = async () => {
-            const { data, error } = await supabase.auth.getSession()
-            if (error) {
-                console.error(error)
-            } else {
-                const { data: { user } } = await supabase.auth.getUser()
-                setUser(user);
-            }
-        }
-        getSession()
-    }, [])
-
 const [inputEmail, onChangeEmail, setInputEmail] = useInput('');
 const inputEmailRef = useRef<HTMLInputElement | null>(null);
 const inputPwdRef = useRef<HTMLInputElement | null>(null);

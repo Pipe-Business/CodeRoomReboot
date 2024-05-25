@@ -1,11 +1,8 @@
-import React, { FC, useCallback, useRef, useState, useEffect } from 'react';
-import useInput from '../../../hooks/useInput.ts';
-import { EMAIL_EXP } from '../../../constants/define.ts'
-import { Dialog, DialogContent, DialogTitle, IconButton, Card, TextField, Box, Button, Divider } from '@mui/material';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
+import { Card, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ColorButton } from '../../styles.ts';
-import { MarginHorizontal } from '../../styles.ts';
 
 interface Props {
     children?: React.ReactNode;

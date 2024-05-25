@@ -1,13 +1,11 @@
-import React, { FC, useCallback, useState, useEffect } from 'react';
-import { Divider, ListItem, ListItemButton, ListItemText, CircularProgress } from '@mui/material';
+import { ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { User } from '@supabase/supabase-js';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../../../api/ApiClient';
 import { CodeModel } from '../../../data/model/CodeModel';
 import styles from '../../../global.module.css';
 import { calcTimeDiff } from '../../../utils/DayJsHelper';
-import { apiClient, supabase } from '../../../api/ApiClient';
-import { User } from '@supabase/supabase-js';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Skeleton } from '@mui/material';
-import FullLayout from '../../../layout/FullLayout';
 
 
 
