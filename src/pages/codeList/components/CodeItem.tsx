@@ -20,7 +20,7 @@ const CodeItem: FC<Props> = ({item}) => {
 	const navigate = useNavigate();
 	const [userLogin, setUser] = useState<User | null>(null);
 	const onClickCode = useCallback(() => {
-		navigate(`/code/${item.id}`, { state: { userLogin: userLogin } });
+		navigate(`/code/${item.id}`);
 	}, [userLogin]);
 
 	useEffect(() => {

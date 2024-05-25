@@ -1,39 +1,28 @@
-import React, { CSSProperties, FC, useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Box, Button, Card, CardContent, CardHeader, CircularProgress, IconButton, Tooltip } from '@mui/material';
-import useDialogState from '../../hooks/useDialogState.ts';
+import { ArrowBack } from '@mui/icons-material';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import { Box, Card, CardContent, CardHeader, CircularProgress, IconButton } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import { calcTimeDiff, reformatTime } from '../../utils/DayJsHelper.ts';
-import { ArrowBack, Favorite, ThumbUp, } from '@mui/icons-material';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-// import 'prismjs/themes/prism.css';
-// import '@toast-ui/editor-plugin-code-syntax-highlight/dist/toastui-editor-plugin-code-syntax-highlight.css';
-// import '@toast-ui/editor/dist/toastui-editor.css';
-// import 'react-slideshow-image/dist/styles.css';
-// import 'slick-carousel/slick/slick.css';
-// import 'slick-carousel/slick/slick-theme.css';
-import HelpIcon from '@mui/icons-material/Help';
-import MainLayout from '../../layout/MainLayout.tsx';
-import { REACT_QUERY_KEY } from '../../constants/define.ts';
-import { CenterBox } from '../main/styles.ts';
-import { User } from '@supabase/supabase-js';
-import { supabase } from '../../api/ApiClient.ts';
+import React, { CSSProperties, FC, useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from '../../api/ApiClient.ts';
-import { MarginHorizontal } from '../main/styles.ts';
-import { MarginVertical } from '../main/styles.ts';
-import { ColorButton } from './styles.ts';
-import { BlurContainer } from './styles.ts';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal.tsx';
+import { REACT_QUERY_KEY } from '../../constants/define.ts';
+import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher.ts';
+import useDialogState from '../../hooks/useDialogState.ts';
+import MainLayout from '../../layout/MainLayout.tsx';
+import { calcTimeDiff } from '../../utils/DayJsHelper.ts';
+import { CenterBox, MarginHorizontal } from '../main/styles.ts';
 import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton.tsx';
-import CashPaymentDialog from './components/CoinPaymentDialog.tsx';
 import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton.tsx';
+import CashPaymentDialog from './components/CoinPaymentDialog.tsx';
 import PointPaymentDialog from './components/PointPaymentDialog.tsx';
+import { BlurContainer } from './styles.ts';
 
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 
 
 dayjs.locale('ko');
@@ -67,23 +56,19 @@ function SamplePrevArrow(props: { className?: string, style?: CSSProperties, onC
 
 const CodeInfo: FC<Props> = () => {
 	const navigate = useNavigate();
-	//const [userLogin, setUser] = useState<User | null>(null);
+	const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
 	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
 	const [isLike, setLike] = useState<boolean>(false);
 	const [onCashClickConfirm] = CashPaymentDialog();
 	const [onPointClickConfirm] = PointPaymentDialog();
-
-	const { state: {
-		userLogin,
-	} } = useLocation();
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 
 
 	/*
-   * 	조회수 증가
-   */
+   	* 	조회수 증가
+   	*/
 
 	useEffect(() => {
 		if (id) {
@@ -95,7 +80,6 @@ const CodeInfo: FC<Props> = () => {
 		if (!userLogin) { // 로그인 확인 필요
 			setBlur(true);
 			onOpenRequireLoginModal();
-			// alert('로그인이 필요한 서비스입니다.');
 		} else {
 			setBlur(false);
 		}
@@ -106,7 +90,7 @@ const CodeInfo: FC<Props> = () => {
    */
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
+		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
 	});
 
 	/*
@@ -114,18 +98,18 @@ const CodeInfo: FC<Props> = () => {
    */
 	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin!.id),
+		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
 	});
 
 	const onClickLike = async () => {
 		if (isLike) {
 			setLike(false);
-			await apiClient.deleteLikeData(userLogin!.id, postData!.id);
+			await apiClient.deleteLikeData(userLogin?.userToken!, postData!.id);
 
 		} else {
 			setLike(true);
 			const likedData: LikeRequestEntity = {
-				user_token: userLogin!.id,
+				user_token: userLogin?.userToken!,
 				post_id: postData!.id,
 			}
 			await apiClient.insertLikedData(likedData);
@@ -170,7 +154,7 @@ const CodeInfo: FC<Props> = () => {
 
 	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
-		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin.id, postData!.id),
+		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id),
 	});
 
 	/*
@@ -179,7 +163,7 @@ const CodeInfo: FC<Props> = () => {
 
 	const { isLoading: isLikeLoading, data: likeData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.like],
-		queryFn: () => apiClient.getLikeData(userLogin.id, postData!.id),
+		queryFn: () => apiClient.getLikeData(userLogin?.userToken!, postData!.id),
 	});
 
 	useEffect(() => {
@@ -190,7 +174,7 @@ const CodeInfo: FC<Props> = () => {
 	}, [likeData]);
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading) {
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -374,7 +358,7 @@ const CodeInfo: FC<Props> = () => {
 									isBlur={isBlur}
 									point={postData.price}
 									codeHostId={postData.userToken}
-									userId={userLogin?.id}
+									userId={userLogin?.userToken!}
 									userHavePoint={cashData ?? 0}
 									githubRepoUrl={postData.githubRepoUrl}
 									purchasedSaleData={purchaseSaleData}
@@ -390,7 +374,7 @@ const CodeInfo: FC<Props> = () => {
 									isBlur={isBlur}
 									point={postData.price * 5}
 									codeHostId={postData.userToken}
-									userId={userLogin?.id}
+									userId={userLogin?.userToken!}
 									userHavePoint={pointData ?? 0}
 									githubRepoUrl={postData.githubRepoUrl}
 									purchasedSaleData={purchaseSaleData}
@@ -427,7 +411,7 @@ const CodeInfo: FC<Props> = () => {
 							isBlur={isBlur}
 							point={postData.price}
 							codeHostId={postData.userToken}
-							userId={userLogin?.id}
+							userId={userLogin?.userToken!}
 							userHavePoint={cashData ?? 0}
 							githubRepoUrl={postData.githubRepoUrl}
 							purchasedSaleData={purchaseSaleData}
@@ -444,7 +428,7 @@ const CodeInfo: FC<Props> = () => {
 							isBlur={isBlur}
 							point={postData.price * 5}
 							codeHostId={postData.userToken}
-							userId={userLogin?.id}
+							userId={userLogin?.userToken!}
 							userHavePoint={pointData ?? 0}
 							githubRepoUrl={postData.githubRepoUrl}
 							purchasedSaleData={purchaseSaleData}
