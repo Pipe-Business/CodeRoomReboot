@@ -16,6 +16,9 @@ class LocalApi{
     getUserToken():string|null{
         return localStorage.getItem(LocalApi.SUPABASE_USER_TOKEN);
     }
+    removeUserToken():void{
+        localStorage.removeItem(LocalApi.SUPABASE_USER_TOKEN)
+    }
 }
 
 export default new LocalApi();

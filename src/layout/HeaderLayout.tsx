@@ -14,6 +14,11 @@ import { User } from '@supabase/supabase-js';
 import { apiClient, supabase } from '../api/ApiClient.ts';
 import { useQuery } from '@tanstack/react-query';
 import { REACT_QUERY_KEY } from '../constants/define.ts';
+import { useQueryUserLogin } from '../hooks/fetcher/UserFetcher.ts';
+import {CircularProgress} from '@mui/material';
+import localApi from '../api/local/LocalApi.ts';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 interface Props {
     children?: React.ReactNode;
 }
@@ -21,7 +26,10 @@ interface Props {
 
 const HeaderLayout: FC<Props> = () => {
 
-    const [userLogin, setUser] = useState<User | null>(null)
+    const { userLogin , isLoadingUserLogin} = useQueryUserLogin();
+	const queryClient = useQueryClient();
+
+    //const [userLogin, setUser] = useState<User | null>(null)
     //todo cash 가져오기
 
    /*
@@ -29,7 +37,7 @@ const HeaderLayout: FC<Props> = () => {
 	*/
 	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin!.id),
+		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
 	});
 
      /*
@@ -37,26 +45,28 @@ const HeaderLayout: FC<Props> = () => {
 	*/
 	const { isLoading : isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin!.id),
+		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
 	});
 
-    useEffect(() => {
-        const getSession = async () => {
-            const { data, error } = await supabase.auth.getSession()
-            if (error) {
-                console.error(error)
-            } else {
-                const { data: { user } } = await supabase.auth.getUser()
-                setUser(user);
-            }
-        }
-        getSession()
-    }, [])
+    // useEffect(() => {
+    //     const getSession = async () => {
+    //         const { data, error } = await supabase.auth.getSession()
+    //         if (error) {
+    //             console.error(error)
+    //         } else {
+    //             const { data: { user } } = await supabase.auth.getUser()
+    //             setUser(user);
+    //         }
+    //     }
+    //     getSession()
+    // }, [])
 
 	const location = useLocation();
     const currentPath = location.pathname;
     const signOut = async () => {
         console.log("signout");
+        localApi.removeUserToken();
+			queryClient.setQueryData([REACT_QUERY_KEY.login], null);
         await apiClient.signOut();
         if(currentPath == '/'){
             navigate(0);
@@ -78,6 +88,10 @@ const HeaderLayout: FC<Props> = () => {
 
     const [notiCount, setNotiCount] = useState<number>(0);
     const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
+
+    if(isLoadingUserLogin){
+        return <CenterBox><CircularProgress /></CenterBox>;
+}
 
     return (
 

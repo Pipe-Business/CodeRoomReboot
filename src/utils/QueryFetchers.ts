@@ -1,15 +1,15 @@
-// import localApi from "../api/local/LocalApi";
-import { supabase } from "../api/ApiClient"
+ import localApi from "../api/local/LocalApi";
+import { apiClient, supabase } from "../api/ApiClient"
 import { QueryFunctionContext, QueryKey } from '@tanstack/react-query';
 
-// export const loginFetcher = async () => {
-// 	const userId = localApi.getUserToken();
-// 	if (!userId) {
-// 		return null;
-// 	}
-// 	return getUserById(userId);
+export const loginFetcher = async () => {
+	const userToken = localApi.getUserToken();
+	if (!userToken) {
+		return null;
+	}
+	return apiClient.getTargetUser(userToken);
 
-// };
+};
 
 // export const loginFetcher = async () =>{
 //    return await supabase.auth.getSession();

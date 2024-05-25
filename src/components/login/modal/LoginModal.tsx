@@ -12,6 +12,9 @@ import { ColorButton, TextButton } from '../../styles.ts';
 import { User } from '@supabase/supabase-js';
 import localApi from '../../../api/local/LocalApi.ts';
 import { supabase } from '../../../api/ApiClient.ts';
+import { REACT_QUERY_KEY } from '../../../constants/define.ts';
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Props {
 	children?: React.ReactNode;
@@ -20,20 +23,22 @@ interface Props {
 }
 
 const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
-	const [userLogin, setUser] = useState<User | null>(null);
+	// const [userLogin, setUser] = useState<User | null>(null);
+	const queryClient = useQueryClient();
 
-		useEffect(() => {
-			const getSession = async () => {
-				const { data, error } = await supabase.auth.getSession()
-				if (error) {
-					console.error(error)
-				} else {
-					const { data: { user } } = await supabase.auth.getUser()
-					setUser(user);
-				}
-			}
-			getSession()
-		}, [])
+
+		// useEffect(() => {
+		// 	const getSession = async () => {
+		// 		const { data, error } = await supabase.auth.getSession()
+		// 		if (error) {
+		// 			console.error(error)
+		// 		} else {
+		// 			const { data: { user } } = await supabase.auth.getUser()
+		// 			setUser(user);
+		// 		}
+		// 	}
+		// 	getSession()
+		// }, [])
 
 	const [inputEmail, onChangeEmail, setInputEmail] = useInput('');
 	const inputEmailRef = useRef<HTMLInputElement | null>(null);
@@ -70,6 +75,10 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 			const user:User = result as User;
 			console.log("user info:"+user.id);
 			localApi.saveUserToken(user.id);
+			const getUserById = await apiClient.getTargetUser(user.id);
+			queryClient.setQueryData([REACT_QUERY_KEY.login], () => {
+					return getUserById;
+				});
 			onClose();
 			
 			if(currentPath == '/'){
