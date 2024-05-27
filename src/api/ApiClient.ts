@@ -1112,6 +1112,27 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
+    async updateAboutMeData(userToken:string, introduceText: string) {
+        try {
+            const { error } = await supabase.from('users')
+                .update({ about_me: introduceText }).eq('user_token', userToken);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('자기소개 저장에 실패하였습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('자기소개 저장에 실패하였습니다.');
+        }
+    }
+
 
 
 

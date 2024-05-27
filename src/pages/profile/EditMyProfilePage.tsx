@@ -6,7 +6,7 @@ import { Box, Button, Card, CardHeader, TextField, IconButton } from '@mui/mater
 import { useInputValidate } from '../../hooks/common/useInputValidate.ts';
 import { EMAIL_EXP } from '../../constants/define.ts';
 import { toast } from 'react-toastify';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout.tsx';
 import { apiClient } from '../../api/ApiClient.ts';
 import { createTodayDate } from '../../utils/DayJsHelper.ts';
@@ -31,29 +31,38 @@ interface Props {
 }
 
 
+interface RouteState{
+    state : {
+		userData : UserEntity;
+    }
+}
+
 const EditMyProfilePage: FC<Props> = () => {
 
+	const { state } = useLocation() as RouteState;
 	const { userLogin , isLoadingUserLogin } = useQueryUserLogin();
 	const navigate = useNavigate();
 	const inputEmailRef = useRef<HTMLInputElement | null>(null);
-	const [inputIntroduce, onChangeInputIntroduce, errorIntroduce, errorIntroduceMessage,
-		, successIntroduce, successIntroduceMsg,
-		setErrIntroduce, setErrIntroduceMsg,
-		, ,inputIntroduceCount
-	] = useInputValidate({
-		minLen: 100, 
-		maxLen: 1000,
-		validRegexMessage: '100자 이상 입력해주세요',
-	});
-	const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.userToken!], queryFn: async() => await apiClient.getTargetUser(userLogin?.userToken!) })
+	//const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.userToken!], queryFn: async() => await apiClient.getTargetUser(userLogin?.userToken!) })
 	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
 		queryFn: () => apiClient.getUserTotalPoint(userLogin!.userToken!),
 	});
 
+	const [inputIntroduce, onChangeInputIntroduce, errorIntroduce, errorIntroduceMessage,
+		, successIntroduce, successIntroduceMsg,
+		setErrIntroduce, setErrIntroduceMsg,
+		, ,inputIntroduceCount
+	] = useInputValidate({
+		defaultValue : state.userData.aboutMe == null ? "" : state.userData.aboutMe,
+		minLen: 100, 
+		maxLen: 1000,
+		validRegexMessage: '100자 이상 입력해주세요',
+	});
+
 	const {mutateAsync: mutateSetProfilePoint} = useMutation({
 		mutationFn: async() => {
-			// 포인트 지급
+			// 프로필 보상 포인트 지급
 			const pointHistory: PointHistoryRequestEntity = {
 				user_token: userLogin!.userToken!,
 				point: 100,
@@ -71,6 +80,28 @@ const EditMyProfilePage: FC<Props> = () => {
 
 		}
 	});
+
+	const {mutateAsync: mutateSetIntroducePoint} = useMutation({
+		mutationFn: async() => {
+			// 자기소개 보상 포인트 지급
+			const pointHistory: PointHistoryRequestEntity = {
+				user_token: userLogin!.userToken!,
+				point: 500,
+				amount: pointData == undefined ? 0 : pointData + 500,
+				description: "프로필 자기소개 작성 보상",
+				point_history_type: PointHistoryType.earn_point,
+			}
+			await apiClient.insertUserPointHistory(pointHistory);
+		},
+		onSuccess: () => {
+			toast.success('프로필 자기소개 작성 보상 포인트 500p가 지급되었습니다.');
+
+		},
+		onError: () => {
+
+		}
+	});
+
 	const { mutateAsync: mutate } = useMutation({
 		mutationFn: async (userEntity: UserEntity) => {
 			 if(file!=null){ // 프로필 이미지 처리
@@ -81,6 +112,13 @@ const EditMyProfilePage: FC<Props> = () => {
 				
 				//mutateSetProfilePoint();
 
+			 }
+			 if(inputIntroduce.length > 100){
+				// db업데이트
+				await apiClient.updateAboutMeData(userLogin?.userToken! , inputIntroduce);
+				
+				// 포인트 지급
+				//mutateSetIntroducePoint();
 			 }
 
 			 //todo 자기소개 처리
@@ -154,6 +192,7 @@ const EditMyProfilePage: FC<Props> = () => {
 
 	}, [inputIntroduce]);
 
+
 	return (
 		<MainLayout>
 			<Card>
@@ -176,12 +215,12 @@ const EditMyProfilePage: FC<Props> = () => {
 							</div>
 
 							<SectionTitle title='이메일' />
-							<div style={{ fontWeight: 'bold', color: 'grey', fontSize: '24px' }}>{userData?.email}</div>
+							<div style={{ fontWeight: 'bold', color: 'grey', fontSize: '24px' }}>{state.userData?.email}</div>
 
 							<Box height={24} />
 
 							<SectionTitle title='닉네임' />
-							<div style={{ fontWeight: 'bold', color: 'grey', fontSize: '24px' }}>{userData?.nickname}</div>
+							<div style={{ fontWeight: 'bold', color: 'grey', fontSize: '24px' }}>{state.userData?.nickname}</div>
 							<Box height={24} />
 							<div>
 								<SectionTitle title='자기소개'
