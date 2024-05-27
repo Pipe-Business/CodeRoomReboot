@@ -16,7 +16,7 @@ import { REACT_QUERY_KEY } from '../../constants/define';
 import PurchaseList from './components/purchaseData/PurchaseList';
 import MentoringList from './components/mentoringData/MentoringList';
 import { ColorButton,SectionWrapper, CashColorButton } from './styles';
-
+import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher';
 interface Props {
 	children?: React.ReactNode;
 }
@@ -24,47 +24,34 @@ interface Props {
 
 const MyPage: FC<Props> = () => {
 
-	const [userLogin, setUser] = useState<User | null>(null);
+    const { userLogin , isLoadingUserLogin} = useQueryUserLogin();
 	const navigate = useNavigate();
 	const inputNickNameRef = useRef<HTMLInputElement | null>(null);
-	const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.id], queryFn: () => apiClient.getTargetUser(userLogin!.id) })
+	const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.id], queryFn: () => apiClient.getTargetUser(userLogin!.userToken!) })
 	const { data: approvedCodeData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.approvedCode, userLogin?.id, 'state'],
-		queryFn: () => apiClient.getMyCodeByStatus(userLogin!.id, 'approve')
+		queryKey: [REACT_QUERY_KEY.approvedCode, userLogin?.userToken!, 'state'],
+		queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'approve')
 	});
 	const { data: pendingCodeData, isLoading: pendingCodeDataLoading } = useQuery({
-		queryKey: [REACT_QUERY_KEY.pendingCode, userLogin?.id],
-		queryFn: () => apiClient.getMyCodeByStatus(userLogin!.id, 'pending')
+		queryKey: [REACT_QUERY_KEY.pendingCode, userLogin?.userToken!],
+		queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'pending')
 	});
 	const { data: rejectedCodeData, isLoading: rejectedCodeDataLoading } = useQuery({
-		queryKey: [REACT_QUERY_KEY.rejectedCode, userLogin?.id],
-		queryFn: () => apiClient.getMyCodeByStatus(userLogin!.id, 'rejected')
+		queryKey: [REACT_QUERY_KEY.rejectedCode, userLogin?.userToken!],
+		queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'rejected')
 	});
 
 	const { data: purchaseData, isLoading: purchaseCodeDataLoading } = useQuery({
-		queryKey: [REACT_QUERY_KEY.user, userLogin?.id],
-		queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin!.id),
+		queryKey: [REACT_QUERY_KEY.user, userLogin?.userToken!],
+		queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin!.userToken!),
 	});
 
 	const { data: mentoringData, isLoading: mentoringDataLoading } = useQuery({
-		queryKey: [REACT_QUERY_KEY.mentoring, userLogin?.id],
-		queryFn: () => apiClient.getMyMentorings(userLogin!.id),
+		queryKey: [REACT_QUERY_KEY.mentoring, userLogin?.userToken!],
+		queryFn: () => apiClient.getMyMentorings(userLogin!.userToken!),
 	});
 
 
-
-	useEffect(() => {
-		const getSession = async () => {
-			const { data, error } = await supabase.auth.getSession()
-			if (error) {
-				console.error(error)
-			} else {
-				const { data: { user } } = await supabase.auth.getUser()
-				setUser(user);
-			}
-		}
-		getSession()
-	}, []);
 
 	const onClickCashPointManage = () => {
 		navigate('/my/profile/cashpoint/management')
@@ -102,11 +89,11 @@ const MyPage: FC<Props> = () => {
 					<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent:'space-between'}}>
 					<SectionWrapper>
 						<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-							<h2>기본 정보</h2> <Box width={16} /> <TextButton onClick={() => {navigate('/profile/my/edit')}} style={{ color: '#448FCE', backgroundColor:'#F4F5F8'}}>수정하기</TextButton>
+							<h2>기본 정보</h2> <Box width={16} /> <TextButton onClick={() => {navigate('/profile/my/edit', {state: { userData : userLogin }})}} style={{ color: '#448FCE', backgroundColor:'#F4F5F8'}}>수정하기</TextButton>
 						</div>
 						<Card raised elevation={0} style={{ width: 'fit-content', maxWidth: '100%' }}>
 							<CardHeader
-								avatar={<UserProfileImage size={60} userId={userLogin.id} />}
+								avatar={<UserProfileImage size={60} userId={userLogin.userToken!} />}
 								title={userData?.nickname}
 								titleTypographyProps={{
 									fontSize: 25,
@@ -157,7 +144,7 @@ const MyPage: FC<Props> = () => {
 							}
 						/>
 						<CardContent>
-							<PurchaseList purchaseData={purchaseData?.slice(0, 3)} userLogin={userLogin} />
+							<PurchaseList purchaseData={purchaseData?.slice(0, 3)}/>
 						</CardContent>
 					</Card>
 					<Box height={32} />
