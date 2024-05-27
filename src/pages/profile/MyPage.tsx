@@ -104,6 +104,11 @@ const MyPage: FC<Props> = () => {
 								}}
 							/>
 						</Card>
+						<h4>자기소개</h4>
+						<div>
+							{userLogin.aboutMe}
+						</div>
+
 					</SectionWrapper>
 					<CashColorButton style={{width:300, height:70}} onClick={onClickCashPointManage}>캐사, 커밋 포인트 관리 / 수익 통계</CashColorButton>
 					</div>
