@@ -10,7 +10,7 @@ interface Props {
 }
 
 const PurchaseList: FC<Props> = ({ purchaseData, userLogin }) => {
-	console.log("purchase",purchaseData);
+	//console.log("purchase",purchaseData);
 	return (
 		<>
 			<List>

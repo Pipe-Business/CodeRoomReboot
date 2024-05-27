@@ -528,7 +528,7 @@ class ApiClient implements SupabaseAuthAPI {
                 console.log("error" + error.hint);
                 console.log("error" + error.details);
 
-                throw new Error('게시글 업로드에 실패하였습니다.');
+                throw new Error('유저의 캐시 히스토리를 insert 하는데 실패했습니다.');
             }
 
 
@@ -550,7 +550,7 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('코드 거래 기록을 insert 하는데 실패했습니다.');
             }
-            console.log(...data);
+            //console.log(...data);
         } catch (e: any) {
             console.log(e);
             throw new Error('코드 거래 기록을 insert 하는데 실패했습니다.');
@@ -1038,6 +1038,18 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
             }
+            // const { data, error } = await supabase.from('users_point_history')
+            //     .insert(pointHistoryRequestEntity).select();
+
+            // if (error) {
+            //     console.log("error" + error.code);
+            //     console.log("error" + error.message);
+            //     console.log("error" + error.details);
+            //     console.log("error" + error.hint);
+            //     console.log("error" + error.details);
+
+            //     throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
+            // }
 
 
         } catch (e: any) {
@@ -1045,6 +1057,58 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
         }
 
+    }
+
+    async uploadProfileImage(userToken: string,file: File): Promise<string> {
+        try {
+
+           // const lstPublicUrl: string[] = [];
+
+
+                const path: string = `profile/${userToken}/${file.name}`;
+
+                const { data, error } = await supabase
+                    .storage
+                    .from('coderoom')
+                    .upload(path, file);
+                const publicUrl = await this.getImgPublicUrl(path);
+                // lstPublicUrl.push(publicUrl);
+
+                if (error) {
+                    console.log("error" + error.message);
+                    console.log("error" + error.name);
+                    console.log("error" + error.stack);
+
+                    throw new Error('이미지 저장에 실패했습니다.');
+                }
+
+            return publicUrl;
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('이미지 저장에 실패했습니다.');
+        }
+    }
+
+    async updateProfileImgUrl(userToken:string, profileUrl: string) {
+        try {
+            const { error } = await supabase.from('users')
+                .update({ profile_url: profileUrl }).eq('user_token', userToken);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('프로필 이미지 링크 저장에 실패하였습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('프로필 이미지 링크 저장에 실패하였습니다.');
+        }
     }
 
 

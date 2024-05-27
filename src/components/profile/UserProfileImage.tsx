@@ -13,7 +13,7 @@ interface Props {
 }
 
 const UserProfileImage: FC<Props> = ({userId,size}) => {
-    const {data:userData} = useQuery({queryKey:['users',userId],queryFn:() => apiClient.getTargetUser(userId)})
+    const {data:userData} = useQuery({queryKey:['users',userId],queryFn: async () => await apiClient.getTargetUser(userId)})
     if(!userData){
         return <Skeleton variant={"circular"}/>
     }

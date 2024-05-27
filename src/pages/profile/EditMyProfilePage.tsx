@@ -14,6 +14,7 @@ import { UserEntity } from '../../data/entity/UserEntity.ts';
 import { useMutation } from '@tanstack/react-query';
 import { User } from '@supabase/supabase-js';
 import { API_ERROR } from '../../constants/define.ts';
+import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher.ts';
 import { supabase } from '../../api/ApiClient.ts';
 import { useQuery } from "@tanstack/react-query"
 import SectionTitle from './components/SectionTitle.tsx';
@@ -21,6 +22,9 @@ import UserProfileImage from '../../components/profile/UserProfileImage.tsx';
 import ImageCard from '../../components/ImageCard.tsx';
 import { Avatar } from '@mui/material';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { REACT_QUERY_KEY } from '../../constants/define.ts';
+import { PointHistoryType } from '../../enums/PointHistoryType.tsx';
+import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity.ts';
 
 interface Props {
 	children?: React.ReactNode;
@@ -29,7 +33,7 @@ interface Props {
 
 const EditMyProfilePage: FC<Props> = () => {
 
-	const [userLogin, setUser] = useState<User | null>(null);
+	const { userLogin , isLoadingUserLogin } = useQueryUserLogin();
 	const navigate = useNavigate();
 	const inputEmailRef = useRef<HTMLInputElement | null>(null);
 	const [inputIntroduce, onChangeInputIntroduce, errorIntroduce, errorIntroduceMessage,
@@ -41,25 +45,47 @@ const EditMyProfilePage: FC<Props> = () => {
 		maxLen: 1000,
 		validRegexMessage: '100자 이상 입력해주세요',
 	});
-	const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.id], queryFn: () => apiClient.getTargetUser(userLogin!.id) })
+	const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.userToken!], queryFn: async() => await apiClient.getTargetUser(userLogin?.userToken!) })
+	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.point],
+		queryFn: () => apiClient.getUserTotalPoint(userLogin!.userToken!),
+	});
 
-
-	useEffect(() => {
-		const getSession = async () => {
-			const { data, error } = await supabase.auth.getSession()
-			if (error) {
-				console.error(error)
-			} else {
-				const { data: { user } } = await supabase.auth.getUser()
-				setUser(user);
+	const {mutateAsync: mutateSetProfilePoint} = useMutation({
+		mutationFn: async() => {
+			// 포인트 지급
+			const pointHistory: PointHistoryRequestEntity = {
+				user_token: userLogin!.userToken!,
+				point: 100,
+				amount: pointData == undefined ? 0 : pointData + 100,
+				description: "프로필 사진 설정 보상",
+				point_history_type: PointHistoryType.earn_point,
 			}
+			await apiClient.insertUserPointHistory(pointHistory);
+		},
+		onSuccess: () => {
+			toast.success('프로필 사진 설정 보상 포인트 100p가 지급되었습니다.');
+
+		},
+		onError: () => {
+
 		}
-		getSession()
-	}, []);
-
-
+	});
 	const { mutateAsync: mutate } = useMutation({
 		mutationFn: async (userEntity: UserEntity) => {
+			 if(file!=null){ // 프로필 이미지 처리
+
+				
+				const profileUrl = await apiClient.uploadProfileImage(userLogin?.userToken!, file); // 이미지 스토리지 업로드
+                await apiClient.updateProfileImgUrl(userLogin?.userToken!,profileUrl);    // db update
+				
+				//mutateSetProfilePoint();
+
+			 }
+
+			 //todo 자기소개 처리
+
+				
 			
 		},
 		onSuccess: () => {
@@ -93,13 +119,13 @@ const EditMyProfilePage: FC<Props> = () => {
 	const onSubmitRegisterForm = useCallback(async (e: any) => {
 		try {
 			e.preventDefault();
-			if (!inputIntroduce) {
-				setErrIntroduceMsg('빈칸을 입력해주세요');
-				setErrIntroduce(true);
-				inputEmailRef.current?.focus();
-				toast.error('빈칸을 입력해주세요');
-				return;
-			}
+			// if (!inputIntroduce) {
+			// 	setErrIntroduceMsg('빈칸을 입력해주세요');
+			// 	setErrIntroduce(true);
+			// 	inputEmailRef.current?.focus();
+			// 	toast.error('빈칸을 입력해주세요');
+			// 	return;
+			// }
 			if (errorIntroduce) {
 				inputEmailRef.current?.focus();
 				toast.error(errorIntroduceMessage);
@@ -119,7 +145,7 @@ const EditMyProfilePage: FC<Props> = () => {
 				userToken: null,
 			}
 			await mutate(user);
-			navigate('/signup-complete');
+			navigate('/profile/my');
 		} catch (e) {
 			console.log('supabase error', e);
 			console.log(e);
@@ -138,7 +164,7 @@ const EditMyProfilePage: FC<Props> = () => {
 								helpText={`프로필 이미지를 설정하면 100 커밋 포인트 증정`} />
 							<div style={{ display: 'flex', justifyContent: 'row', }}>
 								<div>
-									{userLogin && <CardHeader avatar={<UserProfileImage size={60} userId={userLogin!.id} />} />}
+									{userLogin && <CardHeader avatar={<UserProfileImage size={60} userId={userLogin.userToken!} />} />}
 									<input type="file" onChange={handleChangeImage} accept="image/*" />
 								</div>
 								{src && <div style ={{display: 'flex', justifyContent:'row',alignItems:'center'}}>

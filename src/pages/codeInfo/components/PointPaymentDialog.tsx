@@ -58,7 +58,18 @@ const PointPaymentDialog = () => {
 			}
 
 			await apiClient.insertUserPointHistory(pointHistory);
+			await apiClient.insertUserPointHistory(pointHistory);
 
+			// purchase sale history insert(코드 거래내역 insert) 로직
+			if (postData) {
+				const purchaseSaleHistory: PurchaseSaleRequestEntity = {
+					post_id: postData!.id,
+					price: postData!.price * 5, // 포인트는 캐시의 5배
+					is_confirmed: false,
+					purchase_user_token: userLogin!.id,
+					sales_user_token: postData!.userToken,
+					pay_type: "point"
+				}
 			// purchase sale history insert(코드 거래내역 insert) 로직
 			if (postData) {
 				const purchaseSaleHistory: PurchaseSaleRequestEntity = {
@@ -72,13 +83,15 @@ const PointPaymentDialog = () => {
 
 				await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 			}
+				await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
+			}
 
 		}, onSuccess: async (result) => {
-			// if (postData) {
-			// 	// 구매자수 update
-			// 	console.log("구매자수 update")
-			// 	await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
-			// }
+			if (postData) {
+				// 구매자수 update
+				console.log("구매자수 update")
+				await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
+			}
 
 
 			// todo 구매자에게 구매 알림
