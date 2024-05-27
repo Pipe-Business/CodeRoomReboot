@@ -148,7 +148,7 @@ const NotificationPage: FC = () => {
           >
             <NotificationTitle variant="h6">{notification.title}</NotificationTitle>
             <NotificationContent variant="body1">{notification.content}</NotificationContent>
-            <NotificationItemType variant="body2">{notification.notification_type}</NotificationItemType>
+            {/* <NotificationItemType variant="body2">{notification.notification_type}</NotificationItemType> */}
             <NotificationTimestamp variant="body2">{notification.created_at ? format(new Date(notification.created_at), 'yyyy-MM-dd HH:mm') : ''}</NotificationTimestamp>
           </NotificationItem>
         ))}
