@@ -70,6 +70,7 @@ const NotificationPage: FC = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogTitle, setDialogTitle] = useState('');
   const [dialogContent, setDialogContent] = useState('');
+  const [dialogFromToken, setDialogFromToken] = useState('');
   const [showReply, setShowReply] = useState(false);
   const navigate = useNavigate();
 
@@ -118,10 +119,13 @@ const NotificationPage: FC = () => {
       case 'sale':
         navigate('/profile/my') // Replace with actual route
         break;
-      case 'message_from_user':
       case 'message_from_admin':
+        break;
+      case 'message_from_user':
+      
         setDialogTitle(notification.title);
         setDialogContent(notification.content);
+        setDialogFromToken(notification.from_user_token)
         setShowReply(true);
         setDialogOpen(true);
         break;
@@ -154,6 +158,7 @@ const NotificationPage: FC = () => {
         open={dialogOpen}
         title={dialogTitle}
         content={dialogContent}
+        fromUserToken={dialogFromToken}
         onClose={() => setDialogOpen(false)}
         showReply={showReply}
       />

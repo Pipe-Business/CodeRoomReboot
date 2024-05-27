@@ -260,7 +260,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     title: e.title,
                     content: e.content,
-                    to_user_token: e.to_user_token,                
+                    to_user_token: e.to_user_token,
                     from_user_token: e.from_user_token,
                     notification_type: e.notification_type,
                     created_at: e.created_at,
@@ -945,6 +945,38 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async replyMessageToUser(content: string, targetUserToken: string) {
+        try {
+            const userResponse = await this.getCurrentLoginUser();
+            console.log(`${content}`);
+            console.log(`${targetUserToken}`);
+            console.log(`${userResponse.user.id}`);
+            const myToken: string = userResponse.user.id;
+            const userModel = await this.getTargetUser(myToken);                 
+            const notificationObj = {
+                "title": `${userModel.name}님이 보낸 메시지`,
+                "content": content,
+                "to_user_token": targetUserToken,
+                "from_user_token": userResponse.user?.id,
+                "notification_type": NotificationType.message_from_user,
+            }
+            const { data, error } = await supabase.from('notification').insert(notificationObj).select();
+
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('답장 전송을 하는 도중 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('답장 전송을 하는 도중 실패했습니다.');
+        }
+    }
+
     async getMyMentorings(myUserToken: string): Promise<MentoringResponseEntity[] | null> {
 
         try {
@@ -1016,17 +1048,17 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async insertUserPointHistory(pointHistoryRequestEntity: PointHistoryRequestEntity) {
-        console.log(pointHistoryRequestEntity); 
+        console.log(pointHistoryRequestEntity);
         const pointHistoryObj = {
             "point": pointHistoryRequestEntity.point,
             "amount": pointHistoryRequestEntity.amount,
-            "user_token": pointHistoryRequestEntity.user_token,        
+            "user_token": pointHistoryRequestEntity.user_token,
             "description": pointHistoryRequestEntity.description,
             "from_user_token": pointHistoryRequestEntity.from_user_token,
             "point_history_type": pointHistoryRequestEntity.point_history_type,
         }
 
-        try {            
+        try {
             const { data, error } = await supabase.from("users_point_history").insert(pointHistoryObj).select();
 
             if (error) {
