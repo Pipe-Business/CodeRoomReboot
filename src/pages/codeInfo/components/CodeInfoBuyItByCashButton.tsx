@@ -1,8 +1,7 @@
-import React, { FC, useState, useEffect } from 'react';
-import { Button } from '@mui/material';
-import CodeDownloadButton from './CodeDownloadButton';
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ColorButton } from '../styles';
-import { Link, useNavigate } from 'react-router-dom';
+import CodeDownloadButton from './CodeDownloadButton';
 
 
 interface Props {

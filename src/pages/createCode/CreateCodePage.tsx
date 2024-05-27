@@ -1,23 +1,20 @@
-import React, { ChangeEvent, FC, useCallback, useRef, useState, useEffect} from 'react';
-import MainLayout from '../../layout/MainLayout.tsx';
-import { Box, Button, Card, TextField, Tooltip, IconButton } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { CenterBox, MarginVertical } from '../main/styles.ts';
-import { MarginHorizontal } from '../main/styles.ts';
-import { useInputValidate } from '../../hooks/common/useInputValidate.ts';
-import { TextFieldWrapper } from './styles.ts';
-import SelectCodeCategory from './components/SelectCodeCategory.tsx';
-import SectionTitle from './components/SectionTitle.tsx';
-import SelectCodeLanguage from './components/SelectCodeLanguage.tsx';
-import useInput from '../../hooks/useInput.ts';
-import LinkIcon from '@mui/icons-material/Link';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import ImageCard from '../../components/ImageCard.tsx';
+import LinkIcon from '@mui/icons-material/Link';
+import { Box, Card, IconButton, TextField } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import React, { ChangeEvent, FC, useCallback, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { apiClient } from '../../api/ApiClient.ts';
+import ImageCard from '../../components/ImageCard.tsx';
+import { useInputValidate } from '../../hooks/common/useInputValidate.ts';
+import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher.ts';
+import useInput from '../../hooks/useInput.ts';
+import MainLayout from '../../layout/MainLayout.tsx';
+import SectionTitle from './components/SectionTitle.tsx';
+import SelectCodeCategory from './components/SelectCodeCategory.tsx';
+import SelectCodeLanguage from './components/SelectCodeLanguage.tsx';
 import { ColorButton } from './styles.ts';
-import { User } from '@supabase/supabase-js';
-import { apiClient, supabase } from '../../api/ApiClient.ts';
-import { useMutation, useQuery } from '@tanstack/react-query';
 
 
 interface Props {
@@ -28,29 +25,13 @@ const CreateCodePage: FC<Props> = () => {
 
     const navigate = useNavigate();
     const [loadingUpload, setUpload] = useState(false);
+    const { userLogin , isLoadingUserLogin} = useQueryUserLogin();
 
     const inputTitleRef = useRef<HTMLInputElement | null>(null);
     const inputPointRef = useRef<HTMLInputElement | null>(null);
     const inputContentRef = useRef<HTMLInputElement | null>(null);
     const inputUrlRef = useRef<HTMLInputElement | null>(null);
     const inputGuideRef = useRef<HTMLInputElement | null>(null);
-
-    const [userLogin, setUser] = useState<User | null>(null);
-
-
-
-    useEffect(() => {
-        const getSession = async () => {
-            const { data, error } = await supabase.auth.getSession()
-            if (error) {
-                console.error(error)
-            } else {
-                const { data: { user } } = await supabase.auth.getUser()
-                setUser(user);
-            }
-        }
-        getSession()
-    }, [])
 
     const [inputCategory, setCategory] = useState('');
     const [inputLanguage, setLanguage] = useState('');
@@ -155,7 +136,7 @@ const CreateCodePage: FC<Props> = () => {
         const postReqEntity: PostRequestEntity = {
             title:inputTitle,
             description:inputDescription,
-            user_token : userLogin?.id!,
+            user_token : userLogin?.userToken!,
             category : inputLanguage,
             state : 'pending',
             post_type : 'code',
@@ -191,7 +172,7 @@ const CreateCodePage: FC<Props> = () => {
 
              if (files) { //2 이미지 업로드
                 console.log("postid in codepage2: "+postId);
-				const urls = await apiClient.uploadImages(userLogin?.id!, postId, files);
+				const urls = await apiClient.uploadImages(userLogin?.userToken!, postId, files);
 				console.log(urls);
                 await apiClient.insertImgUrl(postId,urls);   // post에 이미지 저장
             }
