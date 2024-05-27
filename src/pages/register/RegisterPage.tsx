@@ -44,9 +44,20 @@ const RegisterPage: FC<Props> = () => {
 				}
 	
 				await apiClient.insertUserCashHistory(cashHistory);
+				
+				// 초기 포인트 기록 내역 생성
+				const pointHistory : PointHistoryRequestEntity = {
+					user_token : user.id,
+					point : 1000,
+					amount : 1000,
+					description : "가입 축하 포인트",
+				}
+	
+				await apiClient.insertUserPointHistory(pointHistory);
 		},
 		onSuccess: () => {
 			toast.success('회원가입에 성공하였습니다. 로그인 해주세요.');
+			toast.success('가입 축하 포인트 1000p가 지급되었습니다.');
 		},
 		onError: (error) => {
 			if (error.message == API_ERROR.USER_ALREADY_REGISTERED) {
