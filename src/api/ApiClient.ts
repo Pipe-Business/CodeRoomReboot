@@ -189,8 +189,7 @@ class ApiClient implements SupabaseAuthAPI {
 
 
     async insertMentoringHistory(mentoring: MentoringRequestEntity) {
-        console.log("mentoring: " + { ...mentoring });
-
+        console.log("mentoring: "+ {...mentoring});
         try {
             const { error } = await supabase.from('mentoring_request_history').insert(mentoring);
             if (error) {
@@ -207,6 +206,7 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('멘토링 신청내역 저장에 실패하였습니다.');
         }
     }
+
 
     async insertCodeReviewHistory(codeReview: CodeReviewRequestEntity) {
         console.log("codeReview: " + { ...codeReview });
@@ -227,7 +227,6 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('코드리뷰 신청내역 저장에 실패하였습니다.');
         }
     }
-
     async insertImgUrl(postId: number, imageUrls: string[]) {
         try {
             const { error } = await supabase.from('post')
