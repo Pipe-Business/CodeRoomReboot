@@ -13,6 +13,7 @@ import { isConditionalExpression } from "typescript";
 import { NotificationEntity } from "../data/entity/NotificationEntity.ts";
 import { NotificationType } from '../enums/NotificationType';
 import { PointHistoryRequestEntity } from "../data/entity/PointHistoryRequestEntity";
+import { BootPayPaymentEntity } from "../data/entity/BootpayPaymentEntity.ts";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -1163,6 +1164,29 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('자기소개 저장에 실패하였습니다.');
         }
     }
+
+
+    async insertBootpayPayment(bootpayPayment: BootPayPaymentEntity) {
+
+     try {
+        const { error, data } = await supabase.from('bootpay_payment').insert(bootpayPayment).select();
+        if(data){
+            console.log(JSON.stringify(data));
+        }
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('결제내역 insert에 실패했습니다.');
+        }
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('결제내역 insert에 실패했습니다.');
+    }
+	}
 
 
 
