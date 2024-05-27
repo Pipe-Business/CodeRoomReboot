@@ -12,6 +12,7 @@ import { useOctokit } from "../index.tsx";
 import { isConditionalExpression } from "typescript";
 import { NotificationEntity } from "../data/entity/NotificationEntity.ts";
 import { NotificationType } from '../enums/NotificationType';
+import { PointHistoryRequestEntity } from "../data/entity/PointHistoryRequestEntity";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -1038,9 +1039,18 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async insertUserPointHistory(pointHistoryRequestEntity: PointHistoryRequestEntity) {
-        try {
-            const { data, error } = await supabase.from('users_point_history')
-                .insert(pointHistoryRequestEntity).select();
+        console.log(pointHistoryRequestEntity); 
+        const pointHistoryObj = {
+            "point": pointHistoryRequestEntity.point,
+            "amount": pointHistoryRequestEntity.amount,
+            "user_token": pointHistoryRequestEntity.user_token,        
+            "description": pointHistoryRequestEntity.description,
+            "from_user_token": pointHistoryRequestEntity.from_user_token,
+            "point_history_type": pointHistoryRequestEntity.point_history_type,
+        }
+
+        try {            
+            const { data, error } = await supabase.from("users_point_history").insert(pointHistoryObj).select();
 
             if (error) {
                 console.log("error" + error.code);

@@ -9,6 +9,8 @@ import { REACT_QUERY_KEY } from '../../../constants/define';
 import { apiClient } from '../../../api/ApiClient';
 import { createTodayDate } from '../../../utils/DayJsHelper';
 import { toast } from 'react-toastify';
+import { PointHistoryType } from '../../../enums/PointHistoryType';
+import { PointHistoryRequestEntity } from '../../../data/entity/PointHistoryRequestEntity';
 
 const PointPaymentDialog = () => {
 	const { id } = useParams();
@@ -46,30 +48,30 @@ const PointPaymentDialog = () => {
 		mutationFn: async () => {
 //errorColumn 'point_history_type' of relation 'users_point_history' does not exist 에러 발생하여 추후 구현
 
-			// // 유저 포인트 차감 -> 포인트 사용기록 insert
-			// const pointHistory: PointHistoryRequestEntity = {
-			// 	user_token: userLogin!.id,
-			// 	point: postData?.price! * 5,
-			// 	amount: pointData == undefined ? 0 : pointData - postData?.price! * 5,
-			// 	description: "코드 구매",
-			// 	point_history_type: "use_point"
-			// }
+			// 유저 포인트 차감 -> 포인트 사용기록 insert
+			const pointHistory: PointHistoryRequestEntity = {
+				user_token: userLogin!.id,
+				point: postData?.price! * 5,
+				amount: pointData == undefined ? 0 : pointData - postData?.price! * 5,
+				description: "코드 구매",
+				point_history_type: PointHistoryType.use_point,
+			}
 
-			// await apiClient.insertUserPointHistory(pointHistory);
+			await apiClient.insertUserPointHistory(pointHistory);
 
-			// // purchase sale history insert(코드 거래내역 insert) 로직
-			// if (postData) {
-			// 	const purchaseSaleHistory: PurchaseSaleRequestEntity = {
-			// 		post_id: postData!.id,
-			// 		price: postData!.price * 5, // 포인트는 캐시의 5배
-			// 		is_confirmed: false,
-			// 		purchase_user_token: userLogin!.id,
-			// 		sales_user_token: postData!.userToken,
-			// 		pay_type: "point"
-			// 	}
+			// purchase sale history insert(코드 거래내역 insert) 로직
+			if (postData) {
+				const purchaseSaleHistory: PurchaseSaleRequestEntity = {
+					post_id: postData!.id,
+					price: postData!.price * 5, // 포인트는 캐시의 5배
+					is_confirmed: false,
+					purchase_user_token: userLogin!.id,
+					sales_user_token: postData!.userToken,
+					pay_type: "point"
+				}
 
-			// 	await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
-			// }
+				await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
+			}
 
 		}, onSuccess: async (result) => {
 			// if (postData) {
