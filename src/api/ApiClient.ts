@@ -489,38 +489,26 @@ class ApiClient implements SupabaseAuthAPI {
                 .eq('user_token', myUserToken)
                 .order('created_at', { ascending: false });
 
-            let lstCashEntity: CashHistoryResponseEntity[] = [];
+            //const stringdata = JSON.stringify(data);
+            //console.log("getUserTotalCash: "+stringdata);
 
-            data?.forEach((e) => {
-
+            if (!data || data.length === 0) {
+                return 0;  // 데이터가 없는 경우 합산 캐시는 0으로 반환
+              }
+              
                 let cashEntity: CashHistoryResponseEntity = {
-                    id: e.id,
-                    user_token: e.user_token,
-                    cash: e.cash,
-                    amount: e.amount,
-                    cash_history_type: e.cash_history_type,
-                    created_at: e.created_at,
+                    id: data[0].id,
+                    user_token: data[0].user_token,
+                    cash: data[0].cash,
+                    amount: data[0].amount,
+                    description: data[0].description,
+                    cash_history_type: data[0].cash_history_type,
+                    created_at: data[0].created_at,
                 }
-                //  console.log("sdfsdf"+cashEntity.amount);
-
-                lstCashEntity.push(cashEntity);
-            });
-
-            const totalCash: number = Number(lstCashEntity[0].amount);
-
-
-
-            //console.log(data);
-
-            if (error) {
-                console.log("error" + error.message);
-                console.log("error" + error.code);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
-
-                throw new Error('유저의 합산 캐시를 가져오는 데 실패했습니다.');
-            }
+                const totalCash: number = cashEntity.amount;
             return totalCash;
+
+
         } catch (e: any) {
             console.log(e);
             throw new Error('유저의 합산 캐시를 가져오는 데 실패했습니다.');
@@ -1003,34 +991,23 @@ class ApiClient implements SupabaseAuthAPI {
                 .eq('user_token', myUserToken)
                 .order('created_at', { ascending: false });
 
-            let lstPointEntity: PointHistoryResponseEntity[] = [];
-
-            data?.forEach((e) => {
-
-                let pointEntity: PointHistoryResponseEntity = {
-                    id: e.id,
-                    user_token: e.user_token,
-                    point: e.point,
-                    amount: e.amount,
-                    point_history_type: e.point_history_type,
-                    description: e.description,
-                    created_at: e.created_at,
-                }
-
-                lstPointEntity.push(pointEntity);
-            });
-
-            const totalPoint: number = Number(lstPointEntity[0].amount);
-
-            if (error) {
-                console.log("error" + error.message);
-                console.log("error" + error.code);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
-
-                throw new Error('유저의 합산 커밋 포인트를 가져오는 데 실패했습니다.');
+            //let lstPointEntity: PointHistoryResponseEntity[] = [];
+            if (!data || data.length === 0) {
+                return 0;  // 데이터가 없는 경우 합산 포인트 0으로 반환
+              }
+              let pointEntity: PointHistoryResponseEntity = {
+                id: data[0].id,
+                user_token: data[0].user_token,
+                point: data[0].point,
+                amount: data[0].amount,
+                description: data[0].description,
+                point_history_type: data[0].point_history_type,
+                created_at: data[0].created_at,
             }
+            
+            const totalPoint: number = pointEntity.amount;
             return totalPoint;
+
         } catch (e: any) {
             console.log(e);
             throw new Error('유저의 합산 커밋 포인트를 가져오는 데 실패했습니다.');
@@ -1038,9 +1015,12 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async insertUserPointHistory(pointHistoryRequestEntity: PointHistoryRequestEntity) {
+        let jsonstring = JSON.stringify(pointHistoryRequestEntity);
         try {
-            const { data, error } = await supabase.from('users_point_history')
-                .insert(pointHistoryRequestEntity).select();
+            console.log("TEST HONGCHUL : " + jsonstring)
+            const { error } = await supabase.from('users_point_history').insert(pointHistoryRequestEntity);
+            // const { data, error } = await supabase.from('users_point_history')
+            //     .insert(pointHistoryRequestEntity).select();
 
             if (error) {
                 console.log("error" + error.code);
