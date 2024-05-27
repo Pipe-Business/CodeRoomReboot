@@ -1,13 +1,16 @@
 
 import { Box, Card, TextField } from '@mui/material';
 import { User } from '@supabase/supabase-js';
-import React, { FC, useCallback, useRef } from 'react';
+import React, { FC, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiClient } from '../../api/ApiClient';
 import { EMAIL_EXP } from '../../constants/define';
 import useInput from '../../hooks/useInput';
 import { ColorButton } from './styles';
+import { useQueryClient } from '@tanstack/react-query';
+import { REACT_QUERY_KEY } from '../../constants/define';
+import localApi from '../../api/local/LocalApi';
 
 interface Props {
 	children?: React.ReactNode;
@@ -20,6 +23,14 @@ const inputPwdRef = useRef<HTMLInputElement | null>(null);
 const [inputPwd, onChangePwd, setInputPwd] = useInput('');
 const navigate = useNavigate();
 const location = useLocation();
+const queryClient = useQueryClient();
+
+useEffect(() => {
+    localApi.removeUserToken();
+    queryClient.setQueryData([REACT_QUERY_KEY.login], null);
+    apiClient.signOut();
+},[]);
+
     const onSubmitLoginForm = useCallback(async (e: any) => {
 		e.preventDefault();
 		if (inputEmail === '' || inputEmail.trim() === '') {
