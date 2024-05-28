@@ -1,18 +1,19 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Badge, CircularProgress } from '@mui/material';
+import { Avatar, Badge, CircularProgress } from '@mui/material';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { FC, useCallback, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/ApiClient.ts';
 import localApi from '../api/local/LocalApi.ts';
 import LoginModal from '../components/login/modal/LoginModal.tsx';
-import { CenterBox, MarginHorizontal } from '../components/styles.ts';
+import { CenterBox, Margin, MarginHorizontal } from '../components/styles.ts';
 import { REACT_QUERY_KEY } from '../constants/define.ts';
 import { useQueryUserLogin } from '../hooks/fetcher/UserFetcher.ts';
 import useDialogState from '../hooks/useDialogState.ts';
 import useInput from '../hooks/useInput.ts';
 import { ColorButton, HeaderIconButton, HeaderTitle, HeaderWrapper } from './styles.ts';
-
+import UserProfileImage from '../components/profile/UserProfileImage.tsx';
+import ProfileMenu from '../components/profile/ProfileMenu.tsx';
 interface Props {
     children?: React.ReactNode;
 }
@@ -142,10 +143,10 @@ const HeaderLayout: FC<Props> = () => {
                             </Link>
                         </MarginHorizontal>
                           <MarginHorizontal size={8}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' 캐시'}</span>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' ©'}</span>
                         </MarginHorizontal>
                         <MarginHorizontal size={8}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isPointDataLoading ? '' : pointData+' 커밋 포인트'}</span>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isPointDataLoading ? '' : pointData+' 🌱'}</span>
                         </MarginHorizontal>
 
 
@@ -155,11 +156,19 @@ const HeaderLayout: FC<Props> = () => {
                             </Link>
                         </MarginHorizontal>
 
-                        <MarginHorizontal size={8}>
+                        {/* <MarginHorizontal size={8}>
+                           <UserProfileImage userId={userLogin.userToken!} size={26} onClick={()=>{navigate('/profile/my')}}/>
+                            </MarginHorizontal> */}
+
+                            <MarginHorizontal size={8}>
+                                <ProfileMenu profileUrl={userLogin.profileUrl!}/>
+                            </MarginHorizontal>
+
+                        {/* <MarginHorizontal size={8}>
                             <Link to={'/profile/my'} style={{ textDecoration: "none" }}>
                                 <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>프로필</span>
                             </Link>
-                        </MarginHorizontal>
+                        </MarginHorizontal> */}
 
                       
                         <MarginHorizontal size={8}>
@@ -173,14 +182,14 @@ const HeaderLayout: FC<Props> = () => {
                         </MarginHorizontal>
                     </CenterBox>
                 }
-                {
+                {/* {
                     userLogin && <CenterBox>
                         <MarginHorizontal size={8}>
                             <ColorButton variant="text" disableRipple onClick={signOut}>로그아웃</ColorButton>
 
                         </MarginHorizontal>
                     </CenterBox>
-                }
+                } */}
 
             </CenterBox>
 
