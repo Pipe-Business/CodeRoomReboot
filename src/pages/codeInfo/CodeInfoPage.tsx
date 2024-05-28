@@ -1,6 +1,6 @@
 import { ArrowBack } from '@mui/icons-material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import { Box, Card, CardContent, CardHeader, CircularProgress, IconButton } from '@mui/material';
+import { Box, Button, Card, CardContent, CardHeader, CircularProgress, IconButton } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
@@ -23,6 +23,7 @@ import { BlurContainer } from './styles.ts';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
+import EditCodeButton from './components/EditCodeButton.tsx';
 
 
 dayjs.locale('ko');
@@ -194,16 +195,13 @@ const CodeInfo: FC<Props> = () => {
 					}}>
 					<CardHeader
 						avatar={
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<div style={{ display: 'flex', alignItems: 'center',}}>
 								<IconButton onClick={onClickBackButton}>
 									<ArrowBack sx={{ fontSize: '32px' }} />
 								</IconButton>
 								<div style={{ fontWeight: 'bold' }}>
 									코드 목록으로 돌아가기
 								</div>
-								<span style={{ marginLeft: 4 }}>
-
-								</span>
 							</div>
 						}
 					/>
@@ -221,6 +219,7 @@ const CodeInfo: FC<Props> = () => {
 								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
 									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.buyerCount}명 구매 💰</span>
 								</MarginHorizontal>
+								
 							</div>
 
 							<Box height={8} />
@@ -402,11 +401,15 @@ const CodeInfo: FC<Props> = () => {
 
 				<Box width={24} />
 				<BlurContainer isBlur={isBlur}>
+				<Box height={48} />	
 					<Card sx={{
 						width: { sm: 150, md: 250 }, height: { sm: 150, md: 250, }
 					}}
 						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} elevation={0}
 					>
+						
+						{userLogin?.userToken! === postData.userToken && <EditCodeButton codePost={postData}/>}
+						<Box height={48} />	
 						<CodeInfoBuyItByCashButton
 							isBlur={isBlur}
 							point={postData.price}
