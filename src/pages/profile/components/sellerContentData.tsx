@@ -34,7 +34,7 @@ const SellerContentData: FC<Props> = ({ purchaseData}) => {
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>판매된 코드 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/purchase`, { state: { saleData: purchaseData, userLogin: userLogin } });
+                            navigate(`/profile/my/sale`, { state: { saleData: purchaseData, userLogin: userLogin } });
                         }}>
                             더보기</Button>
                     }

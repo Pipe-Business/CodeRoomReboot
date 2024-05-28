@@ -9,6 +9,7 @@ import { REACT_QUERY_KEY } from '../../../constants/define';
 import { apiClient } from '../../../api/ApiClient';
 import { createTodayDate } from '../../../utils/DayJsHelper';
 import { toast } from 'react-toastify';
+import { PurchaseSaleRequestEntity } from '../../../data/entity/PurchaseSaleRequestEntity';
 
 const CashPaymentDialog = () => {
 	const { id } = useParams();

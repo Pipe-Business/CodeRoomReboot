@@ -29,6 +29,7 @@ const MyMentoringDataPage = React.lazy(() => import('./pages/profile/MyMentoring
 const MyMentoringDetailPage = React.lazy(() => import('./pages/profile/MyMentoringDetailPage.tsx'));
 const EditMyProfilePage = React.lazy(() => import('./pages/profile/EditMyProfilePage.tsx'));
 const MyCodeDataPage = React.lazy(() => import('./pages/profile/MyCodeDataPage.tsx'));
+const MySaleDataPage = React.lazy(() => import('./pages/profile/MySaleDataPage.tsx'));
 const CashPointManagementPage = React.lazy(() => import('./pages/profile/CashPointManagementPage.tsx'));
 const ChargePage = React.lazy(() => import('./pages/coin/ChargePage.tsx'));
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage.tsx'));
@@ -39,6 +40,7 @@ const AdminLoginPage = React.lazy(() => import('./pages/adminLogin/AdminLoginPag
 const AdminCodeRequestInfo = React.lazy(() => import('./pages/admin/AdminCodeRequestInfoPage.tsx'));
 const NotificationPage = React.lazy(() => import('./pages/notification/NotificationPage.tsx'));
 const EditCodePage = React.lazy(() => import('./pages/editCode/EditCodePage.tsx'));
+
 
 const queryClient = new QueryClient();
 
@@ -82,6 +84,7 @@ root.render(
       <Route path='/profile/my/mentoring' element={<MyMentoringDataPage/>}/>
       <Route path='/profile/my/mentoring/:id' element={<MyMentoringDetailPage/>}/>
       <Route path='/profile/my/code-page' element={<MyCodeDataPage/>}/>
+      <Route path='/profile/my/sale' element={<MySaleDataPage/>}/>
       <Route path='/profile/my/edit' element={<EditMyProfilePage/>}/>
       <Route path='/charge' element={<ChargePage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
