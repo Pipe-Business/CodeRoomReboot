@@ -24,7 +24,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import EditCodeButton from './components/EditCodeButton.tsx';
-
+import MessageModal from './components/MessageModal';
 
 dayjs.locale('ko');
 
@@ -68,8 +68,8 @@ const CodeInfo: FC<Props> = () => {
 
 
 	/*
-   	* 	조회수 증가
-   	*/
+		  * 	조회수 증가
+		  */
 
 	useEffect(() => {
 		if (id) {
@@ -195,7 +195,7 @@ const CodeInfo: FC<Props> = () => {
 					}}>
 					<CardHeader
 						avatar={
-							<div style={{ display: 'flex', alignItems: 'center',}}>
+							<div style={{ display: 'flex', alignItems: 'center', }}>
 								<IconButton onClick={onClickBackButton}>
 									<ArrowBack sx={{ fontSize: '32px' }} />
 								</IconButton>
@@ -219,7 +219,7 @@ const CodeInfo: FC<Props> = () => {
 								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
 									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.buyerCount}명 구매 💰</span>
 								</MarginHorizontal>
-								
+
 							</div>
 
 							<Box height={8} />
@@ -264,7 +264,7 @@ const CodeInfo: FC<Props> = () => {
 									</MarginHorizontal>
 
 									<div style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price} 캐시 / ${postData.price*5} 커밋 포인트`} </span>
+										<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price} 캐시 / ${postData.price * 5} 커밋 포인트`} </span>
 									</div>
 
 								</div>
@@ -401,15 +401,15 @@ const CodeInfo: FC<Props> = () => {
 
 				<Box width={24} />
 				<BlurContainer isBlur={isBlur}>
-				<Box height={48} />	
+					<Box height={48} />
 					<Card sx={{
 						width: { sm: 150, md: 250 }, height: { sm: 150, md: 250, }
 					}}
 						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} elevation={0}
 					>
-						
-						{userLogin?.userToken! === postData.userToken && <EditCodeButton codePost={postData}/>}
-						<Box height={48} />	
+
+						{userLogin?.userToken! === postData.userToken && <EditCodeButton codePost={postData} />}
+						<Box height={48} />
 						<CodeInfoBuyItByCashButton
 							isBlur={isBlur}
 							point={postData.price}
@@ -441,6 +441,14 @@ const CodeInfo: FC<Props> = () => {
 							onOpenPointDialog={onOpenPointDailog}
 						/>
 						{/* CodeInfoBuyItByPointButton */}
+
+						<div style={{ flexDirection: 'row', display: 'flex', marginTop: '16px' }}>
+							{/* 기존 내용 */}
+
+							{/* 쪽지 보내기 버튼 추가 */}
+							<MessageModal targetUserToken={postData.userToken} />
+
+						</div>
 
 					</Card>
 				</BlurContainer>
