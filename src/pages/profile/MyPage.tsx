@@ -62,7 +62,15 @@ const MyPage: FC<Props> = () => {
 		queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.userToken!],
 		queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!,false),
 	});
+	const { data: cashHistoryData, isLoading: cashHistoryLoading} = useQuery({
+		queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.userToken!],
+		queryFn: () => apiClient.getUserCashHistory(userLogin!.userToken!),
+	});
 
+	const { data: pointHistoryData, isLoading: pointHistoryLoading} = useQuery({
+		queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.userToken!],
+		queryFn: () => apiClient.getUserPointHistory(userLogin!.userToken!),
+	});
 	useEffect(() => {
 		setValue(searchParams.get('tab') ?? '1');
 	}, []);
@@ -77,7 +85,7 @@ const MyPage: FC<Props> = () => {
 		navigate('/my/profile/cashpoint/management')
 	}
 
-	if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading) {
+	if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading ||cashHistoryLoading ||pointHistoryLoading) {
 		return (
 			<FullLayout>
 				<Skeleton style={{ height: '200px' }} />
@@ -144,7 +152,7 @@ const MyPage: FC<Props> = () => {
 								</TabList>
 							</Box>
 							<TabPanel value='1' sx={{ flex: 1 }}>
-								<BuyerContentData purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!} />
+								<BuyerContentData purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!}  cashHistoryData={cashHistoryData!} pointHistoryData={pointHistoryData!}/>
 							</TabPanel>
 							<TabPanel value='2' sx={{ flex: 1 }}>
 								<SellerContentData purchaseData={purchaseData!} cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>

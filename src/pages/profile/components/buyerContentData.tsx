@@ -6,6 +6,7 @@ import { CodeModel } from '../../../data/model/CodeModel';
 import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
 import PurchaseList from './purchaseData/PurchaseList';
 import CodePendingOrPendingList from './code/MyCodeList';
+import CashHistoryList from './CashHistoryData/CashHistoryList';
 
 
 interface Props {
@@ -14,9 +15,11 @@ interface Props {
     pendingCodeData: CodeModel[],
     approvedCodeData: CodeModel[],
     rejectedCodeData: CodeModel[],
+    cashHistoryData :  CashHistoryResponseEntity[],
+    pointHistoryData :  PointHistoryResponseEntity[],
 }
 
-const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCodeData, rejectedCodeData }) => {
+const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCodeData, rejectedCodeData, cashHistoryData, pointHistoryData }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
 
     const navigate = useNavigate();
@@ -129,7 +132,7 @@ const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCo
                     }
                 />
                 <CardContent>
-                    {/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} /> */}
+                    <CashHistoryList cashHistoryData={cashHistoryData?.slice(0, 3)} />
                 </CardContent>
             </Card>
 

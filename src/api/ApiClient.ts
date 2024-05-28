@@ -1308,7 +1308,62 @@ async getMySaleConfirmedHistory(myUserToken: string, isConfirmed: boolean): Prom
     }
 }
 
+async getUserCashHistory(myUserToken: string): Promise<CashHistoryResponseEntity[]> {
+    try {
+        const { data, error } = await supabase.from('users_cash_history')
+            .select('*')
+            .eq('user_token', myUserToken)
+            .order('created_at', { ascending: false });
 
+            let lstCashHistory: CashHistoryResponseEntity[] = [];
+            data?.forEach((e) => {
+                let cashHistory: CashHistoryResponseEntity = {
+                    id: e.id,
+                    user_token : e.user_token,
+                    cash : e.cash,
+                    amount : e.amount,
+                    description: e.description,
+                    cash_history_type : e.cash_history_type,
+                    created_at: e.created_at,
+                }
+                lstCashHistory.push(cashHistory);
+            });
+        return lstCashHistory;
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
+    }
+}
+
+
+async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEntity[]> {
+    try {
+        const { data, error } = await supabase.from('users_point_history')
+            .select('*')
+            .eq('user_token', myUserToken)
+            .order('created_at', { ascending: false });
+
+            let lstPointHistory: PointHistoryResponseEntity[] = [];
+            data?.forEach((e) => {
+                let cashHistory: PointHistoryResponseEntity = {
+                    id: e.id,
+                    user_token : e.user_token,
+                    point : e.point,
+                    amount : e.amount,
+                    description: e.description,
+                    point_history_type : e.point_history_type,
+                    created_at: e.created_at,
+                }
+                lstPointHistory.push(cashHistory);
+            });
+        return lstPointHistory;
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+    }
+}
 
 
 

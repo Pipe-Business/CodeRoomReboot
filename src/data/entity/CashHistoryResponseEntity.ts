@@ -5,5 +5,5 @@ interface CashHistoryResponseEntity {
     amount: number; // 총 금액
     description: string; // 설명
     cash_history_type: string // 획득 또는 소비
-    created_at?: number; // 생성 일시
+    created_at?: string; // 생성 일시
 }
