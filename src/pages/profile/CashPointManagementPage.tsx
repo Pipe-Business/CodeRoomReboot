@@ -10,7 +10,9 @@ import { useQuery } from "@tanstack/react-query"
 import { apiClient } from "../../api/ApiClient";
 import { REACT_QUERY_KEY } from '../../constants/define';
 import { SectionWrapper } from "./styles";
-
+//*
+//* 안쓰는 화면 
+//* 
 interface Props {
 	children?: React.ReactNode;
 }
@@ -47,42 +49,13 @@ const CashPointManagementPage: FC<Props> = () => {
 				<div>
 					<Box height={16} />
 
-					<h3>판매</h3>
-						<SectionWrapper>
-					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-						elevation={1}>
-						<CardHeader
-							title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시 정산 내역</div>}
-							action={
-								<Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-									navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
-								}}>
-									더보기</Button>
-							}
-						/>
-						<CardContent>
-							{/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} userLogin={userLogin} /> */}
-						</CardContent>
-					</Card>
+				
+						
+				
 
-					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-						elevation={1}>
-						<CardHeader
-							title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시 정산 대기 내역</div>}
-							action={
-								<Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-									navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
-								}}>
-									더보기</Button>
-							}
-						/>
-						<CardContent>
-							{/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} userLogin={userLogin} /> */}
-						</CardContent>
-					</Card>
+				
 
-					</SectionWrapper>
-
+				
 
 
 
