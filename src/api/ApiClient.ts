@@ -14,6 +14,7 @@ import { NotificationEntity } from "../data/entity/NotificationEntity.ts";
 import { NotificationType } from '../enums/NotificationType';
 import { PointHistoryRequestEntity } from "../data/entity/PointHistoryRequestEntity";
 import { BootPayPaymentEntity } from "../data/entity/BootpayPaymentEntity.ts";
+import { title } from "process";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -1187,6 +1188,65 @@ class ApiClient implements SupabaseAuthAPI {
         throw new Error('결제내역 insert에 실패했습니다.');
     }
 	}
+
+    async updatePostData(codeEditRequestEntity: CodeEditRequestEntity) {
+        // post table 수정
+        try {
+            const { error } = await supabase.from('post')
+                .update({ 
+                    img_urls: codeEditRequestEntity.img_urls,
+                    title:codeEditRequestEntity.title, 
+                    description:codeEditRequestEntity.description,
+                    category:codeEditRequestEntity.category,
+                 })
+                .eq('id', codeEditRequestEntity.post_id);
+            await this.updateCodeData(codeEditRequestEntity);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('게시글 수정 - post데이터 업데이트 실패');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('게시글 수정 - post데이터 업데이트 실패');
+        }
+    }
+
+    async updateCodeData(codeEditRequestEntity: CodeEditRequestEntity) {
+        // 코드 테이블 수정
+        try {
+            const { error } = await supabase.from('code')
+                .update({
+                    cost: codeEditRequestEntity.cost,
+                    buyer_guide: codeEditRequestEntity.buyer_guide,
+                 })
+                .eq('post_id', codeEditRequestEntity.post_id);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('게시글 수정 - code 데이터 업데이트 실패');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('게시글 수정 - code 데이터 업데이트 실패');
+        }
+    }
+
+
+
+
 
 
 
