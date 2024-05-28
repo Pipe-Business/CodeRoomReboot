@@ -1,22 +1,22 @@
-import React, { FC, useCallback, useRef, useState, useEffect } from 'react';
-import styled from '@emotion/styled';
-import MainLayout from '../../layout/MainLayout';
-import { Button, Card, CardContent, CardHeader, Divider, Typography, Box, Skeleton } from '@mui/material';
-import { User } from '@supabase/supabase-js';
-import { supabase } from '../../api/ApiClient';
-import { Link, useNavigate } from 'react-router-dom';
-import UserProfileImage from '../../components/profile/UserProfileImage';
-import { useQuery } from "@tanstack/react-query"
+import { TabContext } from '@mui/lab';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import { Box, Button, Card, CardHeader, Skeleton } from '@mui/material';
+import Tab from '@mui/material/Tab';
+import { useQuery } from "@tanstack/react-query";
+import React, { FC, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { apiClient } from '../../api/ApiClient';
-import FullLayout from '../../layout/FullLayout';
-import { TextButton } from '../main/styles';
-import AddIcon from '@mui/icons-material/Add';
-import CodePendingOrPendingList from './components/code/MyCodeList';
+import UserProfileImage from '../../components/profile/UserProfileImage';
 import { REACT_QUERY_KEY } from '../../constants/define';
-import PurchaseList from './components/purchaseData/PurchaseList';
-import MentoringList from './components/mentoringData/MentoringList';
-import { ColorButton,SectionWrapper, CashColorButton } from './styles';
 import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher';
+import FullLayout from '../../layout/FullLayout';
+import MainLayout from '../../layout/MainLayout';
+import { TextButton } from '../main/styles';
+import BuyerContentData from './components/buyerContentData';
+import { SectionWrapper } from './styles';
+import SellerContentData from './components/sellerContentData';
+
 interface Props {
 	children?: React.ReactNode;
 }
@@ -24,8 +24,12 @@ interface Props {
 
 const MyPage: FC<Props> = () => {
 
-    const { userLogin , isLoadingUserLogin} = useQueryUserLogin();
+	const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
 	const navigate = useNavigate();
+	const location = useLocation();
+	const [value, setValue] = React.useState('1');
+	const tab = location.state?.tab;
+	const [searchParams, setSearchParams] = useSearchParams();
 	const inputNickNameRef = useRef<HTMLInputElement | null>(null);
 	const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.id], queryFn: () => apiClient.getTargetUser(userLogin!.userToken!) })
 	const { data: approvedCodeData } = useQuery({
@@ -51,7 +55,15 @@ const MyPage: FC<Props> = () => {
 		queryFn: () => apiClient.getMyMentorings(userLogin!.userToken!),
 	});
 
+	useEffect(() => {
+		setValue(searchParams.get('tab') ?? '1');
+	}, []);
 
+	const handleChange = (_: React.SyntheticEvent, newValue: string) => {
+		searchParams.set('tab', newValue);
+		setSearchParams(searchParams);
+		setValue(newValue);
+	};
 
 	const onClickCashPointManage = () => {
 		navigate('/my/profile/cashpoint/management')
@@ -86,122 +98,53 @@ const MyPage: FC<Props> = () => {
 			{userLogin ?
 				<div>
 					<Box height={8} />
-					<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent:'space-between'}}>
 					<SectionWrapper>
-						<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-							<h2>기본 정보</h2> <Box width={16} /> <TextButton onClick={() => {navigate('/profile/my/edit', {state: { userData : userLogin }})}} style={{ color: '#448FCE', backgroundColor:'#F4F5F8'}}>수정하기</TextButton>
-						</div>
-						<Card raised elevation={0} style={{ width: 'fit-content', maxWidth: '100%' }}>
-							<CardHeader
-								avatar={<UserProfileImage size={60} userId={userLogin.userToken!} />}
-								title={userData?.nickname}
-								titleTypographyProps={{
-									fontSize: 25,
-								}}
-								subheader={userLogin.email}
-								subheaderTypographyProps={{
-									fontSize: 20,
-								}}
-							/>
-						</Card>
-						<h4>자기소개</h4>
-						<div>
-							{userLogin.aboutMe}
-						</div>
-
-					</SectionWrapper>
-					<CashColorButton style={{width:300, height:70}} onClick={onClickCashPointManage}>캐사, 커밋 포인트 관리 / 수익 통계</CashColorButton>
-					</div>
-					<Box height={32} />
-					<SectionWrapper>
-					<h2>나의 활동 내역</h2>
-
-					{/* <Box height={16} />
-					<h4>내가 신청한 멘토링</h4>
-					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-						elevation={1}>
-						<CardHeader
-							title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>멘토링 목록</div>}
-							action={
-								<Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-									navigate(`/profile/my/mentoring`, { state: { mentoringData: mentoringData, userLogin: userLogin } });
-								}}>
-									더보기</Button>
-							}
-						/>
-						<CardContent>
-							<MentoringList mentoringData={mentoringData?.slice(0, 3)} userLogin={userLogin} />
-						</CardContent>
-					</Card> */}
+					<div style={{ display: 'flex', flexDirection:'column'}}>
 					
+							<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+								<h2>기본 정보</h2> <Box width={16} /> <TextButton onClick={() => { navigate('/profile/my/edit', { state: { userData: userLogin } }) }} style={{ color: '#448FCE', backgroundColor: '#F4F5F8' }}>수정하기</TextButton>
+							</div>
+							<Card raised elevation={0} style={{ width: 'fit-content', maxWidth: '100%' }}>
+								<CardHeader
+									avatar={<UserProfileImage size={60} userId={userLogin.userToken!} />}
+									title={userData?.nickname}
+									titleTypographyProps={{
+										fontSize: 25,
+									}}
+									subheader={userLogin.email}
+									subheaderTypographyProps={{
+										fontSize: 20,
+									}}
+								/>
+							</Card>
+							<h4>자기소개</h4>
+							<div>
+								{userLogin.aboutMe}
+							</div>
+					</div>
+					</SectionWrapper>
 					<Box height={32} />
 
-					<h4>내가 구매한 코드</h4>
-					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-						elevation={1}>
-						<CardHeader
-							title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>구매 목록</div>}
-							action={
-								<Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-									navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
-								}}>
-									더보기</Button>
-							}
-						/>
-						<CardContent>
-							<PurchaseList purchaseData={purchaseData?.slice(0, 3)}/>
-						</CardContent>
-					</Card>
-					<Box height={32} />
-					<h4>나의 코드</h4>
-					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-						elevation={1}>
-						<CardHeader
-							title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>승인 대기 내역</div>}
-							action={
-								// todo maxCount변수 제거 필요 : 맨 처음 코드는 maxcount가 false면 3개만 보이도록 지정하고 있다.
-								// 지금은 여기서 data 넘길 때 3개만 넘김
-								<Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-									navigate(`/profile/my/code-page`, { state: { codeData: pendingCodeData, type: 'pending', maxCount: false } });
-								}}>
-									더보기</Button>
-							}
-						/>
-						<CardContent>
-							<CodePendingOrPendingList maxCount={true} data={pendingCodeData?.slice(0, 3)} type={'pending'} />
-						</CardContent>
-					</Card>
-					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-						elevation={1}>
-						<CardHeader
-							title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>반려 내역</div>}
-							action={
-								<Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-									navigate(`/profile/my/code-page`, { state: { codeData: rejectedCodeData, type: 'rejected', maxCount: false } });
-								}}>
-									더보기</Button>
-							}
-						/>
-						<CardContent>
-							<CodePendingOrPendingList maxCount={true} data={rejectedCodeData?.slice(0, 3)} type={'rejected'} />
-						</CardContent>
-					</Card>
-					<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-						elevation={1}>
-						<CardHeader
-							title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>승인 내역</div>}
-							action={
-								<Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-									navigate(`/profile/my/code-page`, { state: { codeData: approvedCodeData, type: 'approve', maxCount: false } });
-								}}>
-									더보기</Button>
-							}
-						/>
-						<CardContent>
-							<CodePendingOrPendingList maxCount={true} data={approvedCodeData?.slice(0, 3)} type={'approve'} />
-						</CardContent>
-					</Card>
+					<SectionWrapper>
+
+						{tab}
+						<TabContext value={value}>
+							<Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%', display: 'flex' }}>
+								<TabList onChange={handleChange} aria-label='lab API tabs example' style={{ width: '100%', display: 'flex' }} sx={{ flexGrow: 1 }}>
+									<Tab label='나의 활동 내역' value='1' sx={{ flex: 1 }} />
+									<Tab label='판매 / 수익통계' value='2' sx={{ flex: 1 }} />
+								</TabList>
+							</Box>
+							<TabPanel value='1' sx={{ flex: 1 }}>
+								<BuyerContentData purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!} />
+							</TabPanel>
+							<TabPanel value='2' sx={{ flex: 1 }}>
+								<SellerContentData purchaseData={purchaseData!}/>
+							</TabPanel>
+						</TabContext>
+
 					</SectionWrapper>
+
 				</div>
 				:
 				<></>
