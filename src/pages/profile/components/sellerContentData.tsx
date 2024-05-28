@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { CodeModel } from '../../../data/model/CodeModel';
 import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
 import { SectionWrapper } from '../styles';
+import SaleList from './saleData/SaleList';
 
 
 interface Props {
@@ -33,17 +34,18 @@ const SellerContentData: FC<Props> = ({ purchaseData}) => {
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>판매된 코드 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
+                            navigate(`/profile/my/purchase`, { state: { saleData: purchaseData, userLogin: userLogin } });
                         }}>
                             더보기</Button>
                     }
                 />
                 <CardContent>
-                    {/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} userLogin={userLogin} /> */}
+                    <SaleList saleData={purchaseData?.slice(0, 3)}/>
                 </CardContent>
             </Card>
            
-
+            <Box height={32} />
+            <h4>수익</h4>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
                 elevation={1}>
                 <CardHeader
@@ -59,8 +61,6 @@ const SellerContentData: FC<Props> = ({ purchaseData}) => {
                     {/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} userLogin={userLogin} /> */}
                 </CardContent>
             </Card>
-            <Box height={32} />
-            <h4>수익</h4>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
                 elevation={1}>
                 <CardHeader

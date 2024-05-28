@@ -1244,7 +1244,36 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+async getMySaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[] | null> {
+    try {
+        const { data, error } = await supabase.from('purchase_sale_history')
+            .select('*')            
+            .eq('sales_user_token', myUserToken,)
+            .order('created_at', { ascending: false });
+          
+            let lstPurchaseSaleData:PurchaseSaleResponseEntity[] = [];
 
+            // id를 가져와야됨
+            data?.forEach((e) => {
+                lstPurchaseSaleData.push(e);
+            });
+
+        if (error) {
+            console.log("error" + error.message);
+            console.log("error" + error.code);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+
+            throw new Error('판매 기록을 가져오는 데 실패했습니다.');
+        }
+
+        return lstPurchaseSaleData;
+    }
+    catch (e: any) {
+        console.log(e);
+        throw new Error('판매 기록을 가져오는 데 실패했습니다.');
+    }
+}
 
 
 

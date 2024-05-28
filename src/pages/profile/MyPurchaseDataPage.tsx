@@ -24,7 +24,7 @@ const MyPurchaseDataPage: FC<Props> = () => {
 		<FullLayout>
 			<Box height={32} />
 			<h2>내가 구매한 코드</h2>
-			<PurchaseList purchaseData={purchaseData} userLogin={userLogin} />
+			<PurchaseList purchaseData={purchaseData}/>
 		</FullLayout>
 	);
 };
