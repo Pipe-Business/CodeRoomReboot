@@ -9,6 +9,7 @@ import { CircularProgress } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { QueryClient } from '@tanstack/react-query';
 import { Octokit } from '@octokit/core';
+import CashConfirmDataPage from './pages/profile/CashConfirmDataPage.tsx';
 
 
 const MainPage = React.lazy(() => import('./pages/main/MainPage.tsx'));
@@ -86,6 +87,7 @@ root.render(
       <Route path='/profile/my/code-page' element={<MyCodeDataPage/>}/>
       <Route path='/profile/my/sale' element={<MySaleDataPage/>}/>
       <Route path='/profile/my/edit' element={<EditMyProfilePage/>}/>
+      <Route path='profile/my/cashconfirm' element={<CashConfirmDataPage/>}/>
       <Route path='/charge' element={<ChargePage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
       <Route path='/admin/coderequest/:userId/:codeId' element={<AdminCodeRequestInfo />} />

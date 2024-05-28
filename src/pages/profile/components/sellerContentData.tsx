@@ -6,14 +6,17 @@ import { CodeModel } from '../../../data/model/CodeModel';
 import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
 import { SectionWrapper } from '../styles';
 import SaleList from './saleData/SaleList';
+import CashConfirmList from './cashData/CashConfirmList';
 
 
 interface Props {
     children?: React.ReactNode;
     purchaseData: PurchaseSaleResponseEntity[],  
+    cashConfirmData : PurchaseSaleResponseEntity[],
+    cashConfirmPendingData : PurchaseSaleResponseEntity[],
 }
 
-const SellerContentData: FC<Props> = ({ purchaseData}) => {
+const SellerContentData: FC<Props> = ({ purchaseData, cashConfirmData, cashConfirmPendingData}) => {
     const navigate = useNavigate();
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
 
@@ -52,13 +55,13 @@ const SellerContentData: FC<Props> = ({ purchaseData}) => {
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시 정산 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
+                            navigate(`/profile/my/cashconfirm`, { state: { cashConfirm: cashConfirmData, title: '캐시 정산 내역'} });
                         }}>
                             더보기</Button>
                     }
                 />
                 <CardContent>
-                    {/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} userLogin={userLogin} /> */}
+                    <CashConfirmList cashConfirmData={cashConfirmData?.slice(0, 3)}/>
                 </CardContent>
             </Card>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
@@ -67,13 +70,13 @@ const SellerContentData: FC<Props> = ({ purchaseData}) => {
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시 정산 대기 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
+                            navigate(`/profile/my/cashconfirm`, { state: { cashConfirm: cashConfirmPendingData, title: '캐시 정산 대기 내역' } });
                         }}>
                             더보기</Button>
                     }
                 />
                 <CardContent>
-                    {/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} userLogin={userLogin} /> */}
+                <CashConfirmList cashConfirmData={cashConfirmPendingData?.slice(0, 3)}/>
                 </CardContent>
             </Card>
 

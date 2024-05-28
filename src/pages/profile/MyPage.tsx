@@ -54,6 +54,14 @@ const MyPage: FC<Props> = () => {
 		queryKey: [REACT_QUERY_KEY.mentoring, userLogin?.userToken!],
 		queryFn: () => apiClient.getMyMentorings(userLogin!.userToken!),
 	});
+	const { data: cashConfirmData, isLoading: cashConfirmLoading} = useQuery({
+		queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.userToken!],
+		queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!,true),
+	});
+	const { data: cashConfirmPendingData, isLoading: cashConfirmPendingLoading} = useQuery({
+		queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.userToken!],
+		queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!,false),
+	});
 
 	useEffect(() => {
 		setValue(searchParams.get('tab') ?? '1');
@@ -69,7 +77,7 @@ const MyPage: FC<Props> = () => {
 		navigate('/my/profile/cashpoint/management')
 	}
 
-	if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading) {
+	if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading) {
 		return (
 			<FullLayout>
 				<Skeleton style={{ height: '200px' }} />
@@ -139,7 +147,7 @@ const MyPage: FC<Props> = () => {
 								<BuyerContentData purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!} />
 							</TabPanel>
 							<TabPanel value='2' sx={{ flex: 1 }}>
-								<SellerContentData purchaseData={purchaseData!}/>
+								<SellerContentData purchaseData={purchaseData!} cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>
 							</TabPanel>
 						</TabContext>
 

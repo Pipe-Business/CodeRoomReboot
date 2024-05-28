@@ -7,22 +7,22 @@ import { reformatTime } from '../../../../utils/DayJsHelper';
 
 interface Props {
     children?: React.ReactNode;
-    saleData: PurchaseSaleResponseEntity;
+    cashConfirmData: PurchaseSaleResponseEntity;
 }
 
-const SaleItem: FC<Props> = ({ saleData }) => {
+const CashConfirmItem: FC<Props> = ({ cashConfirmData }) => {
     const { userId } = useParams();
     const navigate = useNavigate();
 
-    const { data: codeData, isLoading } = useQuery({ queryKey: ['codeStore', saleData.post_id], queryFn: () => apiClient.getTargetCode(saleData.post_id) });
+    const { data: codeData, isLoading } = useQuery({ queryKey: ['codeStore', cashConfirmData.post_id], queryFn: () => apiClient.getTargetCode(cashConfirmData.post_id) });
     const onClickListItem = useCallback((e: any) => {
         e.stopPropagation();
-        if (saleData) {
-            navigate(`/code/${saleData?.post_id}`);
+        if (cashConfirmData) {
+            navigate(`/code/${cashConfirmData?.post_id}`);
 
         }
-    }, [saleData?.post_id]);
-    if (!saleData?.post_id || isLoading) {
+    }, [cashConfirmData?.post_id]);
+    if (!cashConfirmData?.post_id || isLoading) {
         return <></>;
     }
 
@@ -37,20 +37,17 @@ const SaleItem: FC<Props> = ({ saleData }) => {
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                width:'40%'
+                                width:'50%'
                             }}>{codeData?.title!}</div>
 
+                            <div style={{  width:'30%'}}>
+                                {cashConfirmData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
+                            </div>
+                            {/* <div style={{  width:'20%'}}>
+                                {cashConfirmData.is_confirmed == "point" ? "포인트" : "캐시"}
+                            </div> */}
                             <div style={{  width:'20%'}}>
-                                {saleData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
-                            </div>
-                            <div style={{  width:'20%'}}>
-                                {saleData.pay_type == "point" ? "포인트" : "캐시"}
-                            </div>
-                            <div style={{  width:'10%'}}>
-                               {saleData.is_confirmed ? '정산됨' : '미정산'}
-                            </div>
-                            <div style={{  width:'10%'}}>
-                                {reformatTime(saleData?.created_at!)}
+                                {reformatTime(cashConfirmData?.created_at!)}
                             </div>
                         </div>
                     </ListItemText>
@@ -62,4 +59,4 @@ const SaleItem: FC<Props> = ({ saleData }) => {
 
     );
 };
-export default SaleItem;
+export default CashConfirmItem;
