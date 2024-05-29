@@ -1457,6 +1457,48 @@ async insertNotification(notificationObj:NotificationEntity) {
     }
 }
 
+async getQueryCode(searchTargetWord: string){
+    try {
+        const { data, error } = await supabase.from('post')
+            .select('*, code!inner(*)')
+            .or(`title.like.%${searchTargetWord}%,description.like.%${searchTargetWord}%`)
+            .eq('state', "approve")
+            .order('created_at', { ascending: false });
+
+        let lstCodeModel: CodeModel[] = [];
+        data?.forEach((e) => {
+            let codeModel: CodeModel = {
+                id: e.id,
+                title: e.title,
+                description: e.description,
+                images: e.images,
+                price: e.code.cost,
+                userToken: e.user_token,
+                category: e.category,
+                postType: e.post_type,
+                createdAt: e.created_at,
+                buyerGuide: e.code.buyer_guide,
+                githubRepoUrl: e.code.github_repo_url,
+                buyerCount: e.code.buyer_count,
+                popularity: e.code.popularity,
+                hashTag: e.hash_tag,
+                sellerGithubName: e.code.seller_github_name,
+                state: e.state,
+                adminGitRepoURL: e.code.admin_git_repo_url,
+                rejectMessage: e.reject_message,
+                viewCount: e.view_count,
+            }
+            lstCodeModel.push(codeModel);
+        });
+        //console.log(data);
+        return lstCodeModel;
+    }
+    catch (e: any) {
+        console.log(e);
+        throw new Error('검색 게시글 목록을 가져오는 데 실패했습니다.');
+    }
+}
+
 
 
 

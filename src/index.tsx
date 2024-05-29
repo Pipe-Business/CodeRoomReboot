@@ -42,7 +42,7 @@ const AdminLoginPage = React.lazy(() => import('./pages/adminLogin/AdminLoginPag
 const AdminCodeRequestInfo = React.lazy(() => import('./pages/admin/AdminCodeRequestInfoPage.tsx'));
 const NotificationPage = React.lazy(() => import('./pages/notification/NotificationPage.tsx'));
 const EditCodePage = React.lazy(() => import('./pages/editCode/EditCodePage.tsx'));
-
+const SearchPage = React.lazy(() => import('./pages/search/SearchPage.tsx'));
 
 const queryClient = new QueryClient();
 
@@ -101,6 +101,7 @@ root.render(
       <Route path='/admin' element={<AdminPage/>}/>
       <Route path='/admin/login' element={<AdminLoginPage/>}/>
       <Route path='/notification' element={<NotificationPage/>}/>
+      <Route path='/code/search' element={<SearchPage />} />
 
 
       <Route path='/*' element={<NotFoundPage/>}/>
