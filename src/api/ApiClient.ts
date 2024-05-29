@@ -1343,7 +1343,8 @@ async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEnti
             .select('*')
             .eq('user_token', myUserToken)
             .order('created_at', { ascending: false });
-
+            // let stringi = JSON.stringify(data);
+            // console.log('point'+stringi);
             let lstPointHistory: PointHistoryResponseEntity[] = [];
             data?.forEach((e) => {
                 let cashHistory: PointHistoryResponseEntity = {

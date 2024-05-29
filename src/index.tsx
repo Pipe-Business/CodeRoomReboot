@@ -32,6 +32,7 @@ const EditMyProfilePage = React.lazy(() => import('./pages/profile/EditMyProfile
 const MyCodeDataPage = React.lazy(() => import('./pages/profile/MyCodeDataPage.tsx'));
 const MySaleDataPage = React.lazy(() => import('./pages/profile/MySaleDataPage.tsx'));
 const CashPointManagementPage = React.lazy(() => import('./pages/profile/CashPointManagementPage.tsx'));
+const CashPointHistoryDataPage = React.lazy(() => import('./pages/profile/CashPointHistoryDataPage.tsx'));
 const ChargePage = React.lazy(() => import('./pages/coin/ChargePage.tsx'));
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage.tsx'));
 const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage.tsx'));
@@ -88,6 +89,7 @@ root.render(
       <Route path='/profile/my/sale' element={<MySaleDataPage/>}/>
       <Route path='/profile/my/edit' element={<EditMyProfilePage/>}/>
       <Route path='profile/my/cashconfirm' element={<CashConfirmDataPage/>}/>
+      <Route path='/profile/my/cashhistory' element={<CashPointHistoryDataPage/>}/>
       <Route path='/charge' element={<ChargePage/>}/>
       <Route path='/create/code' element={<CreateCodePage/>}/>
       <Route path='/admin/coderequest/:userId/:codeId' element={<AdminCodeRequestInfo />} />

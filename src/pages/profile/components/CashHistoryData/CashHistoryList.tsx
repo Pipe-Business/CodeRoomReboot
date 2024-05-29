@@ -9,7 +9,8 @@ import CashHistoryItem from './CashHistoryItem';
 
 interface Props {
 	children?: React.ReactNode,
-	cashHistoryData : CashHistoryResponseEntity[],
+	cashHistoryData? : CashHistoryResponseEntity[],
+	pointHistoryData? : PointHistoryResponseEntity[],
 }
 
 const TableHeader: FC = () => {
@@ -27,15 +28,22 @@ const TableHeader: FC = () => {
     </ListItem>;
 };
 
-const CashHistoryList: FC<Props> = ({ cashHistoryData }) => {
+const CashHistoryList: FC<Props> = ({ cashHistoryData, pointHistoryData }) => {
 	return (
 		<>
-			<List>
+			{cashHistoryData && <List>
                 <TableHeader />
 				{cashHistoryData && cashHistoryData.map((v,i) => {
 					return <CashHistoryItem key={i} cashHistoryData={v}/>;
 				})}
-			</List>
+			</List>}
+
+			{pointHistoryData && <List>
+                <TableHeader />
+				{pointHistoryData && pointHistoryData.map((v,i) => {
+					return <CashHistoryItem key={i} pointHistoryData={v}/>;
+				})}
+			</List>}
 		</>
 	);
 };

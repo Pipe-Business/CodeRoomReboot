@@ -68,7 +68,7 @@ const MyPage: FC<Props> = () => {
 	});
 
 	const { data: pointHistoryData, isLoading: pointHistoryLoading} = useQuery({
-		queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.userToken!],
+		queryKey: [REACT_QUERY_KEY.pointistory, userLogin?.userToken!],
 		queryFn: () => apiClient.getUserPointHistory(userLogin!.userToken!),
 	});
 	useEffect(() => {
