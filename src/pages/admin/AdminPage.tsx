@@ -14,6 +14,7 @@ import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList.tsx';
 import { supabase } from '../../api/ApiClient.ts';
 import AdminCashPaymentChargePage from './AdminCashPaymentChargePage.tsx';
+import UserManageList from './components/userManage/UserManageList.tsx';
 
 interface Props {
 	children?: React.ReactNode;
@@ -92,15 +93,8 @@ const AdminPage: FC<Props> = () => {
 					<AdminCashPaymentChargePage />
 				</TabPanel>
 				<TabPanel value='7'>
-					<AdminCodeRequestList type={'approve'} />
-				</TabPanel>
-			
-				{/* <TabPanel value='6'>
-					<AdminBootpayPaymentPage />
-				</TabPanel>
-				<TabPanel value='7'>
 					<UserManageList />
-				</TabPanel> */}
+				</TabPanel>
 			</TabContext>
 		</AdminLayout>
 	);
