@@ -112,8 +112,8 @@ const MyPage: FC<Props> = () => {
 	return (
 		<FullLayout>
 			<Box height={64} />
-			
-			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)}></ReviewDialog>
+
+			{/* <ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)}></ReviewDialog> */}
 
 			{userLogin ?
 				<div>
