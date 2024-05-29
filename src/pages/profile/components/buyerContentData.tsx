@@ -126,7 +126,7 @@ const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCo
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
+                            navigate(`/profile/my/cashhistory`, { state: { cashHistoryData: cashHistoryData , title:'캐시 내역'} });
                         }}>
                             더보기</Button>
                     }
@@ -142,13 +142,13 @@ const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCo
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>포인트 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/purchase`, { state: { purchaseData: purchaseData, userLogin: userLogin } });
+                            navigate(`/profile/my/cashhistory`, { state: { pointHistoryData: pointHistoryData, title:'포인트 내역'} });
                         }}>
                             더보기</Button>
                     }
                 />
                 <CardContent>
-                    {/* <PurchaseList purchaseData={purchaseData?.slice(0, 3)} /> */}
+                    <CashHistoryList pointHistoryData={pointHistoryData?.slice(0, 3)} />
                 </CardContent>
             </Card>
           
