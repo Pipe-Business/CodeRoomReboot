@@ -13,6 +13,9 @@ import { apiClient } from '../../../api/ApiClient.ts';
 import { REACT_QUERY_KEY } from '../../../constants/define.ts';
 import { PointHistoryRequestEntity } from '../../../data/entity/PointHistoryRequestEntity.ts';
 import { PointHistoryType } from '../../../enums/PointHistoryType.tsx';
+import { NotificationEntity } from '../../../data/entity/NotificationEntity.ts';
+import { NotificationType } from '../../../enums/NotificationType.tsx';
+
 interface Props {
 	children?: React.ReactNode;
 	paymentCash: number, // 코드룸 캐시
@@ -144,6 +147,17 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
 			}
 	
 			await apiClient.insertUserPointHistory(pointHistory);
+
+			// 포인트 지급 알림
+			const notificationEntity: NotificationEntity ={
+				title : '포인트 지급 알림',
+				content: '캐시 충전 보너스 포인트가 지급되었습니다.',
+				from_user_token: userLogin!.userToken!, // todo 관리자 토큰으로 수정 필요. 현재 관리자 토큰으로 보내면 안됨
+				to_user_token: userLogin!.userToken!,
+				notification_type: NotificationType.get_point,
+			}
+			await apiClient.insertNotification(notificationEntity);
+
 	
 			handleOpenDialog();
 		}
