@@ -1417,7 +1417,7 @@ async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_toke
     try {
         const { error } = await supabase.from('purchase_sale_history')
             .update({ is_confirmed: true })
-            .eq('id', postId)
+            .eq('post_id', postId)
             .eq('purchase_user_token', purchase_user_token)
             .eq('sales_user_token',sales_user_token);
 

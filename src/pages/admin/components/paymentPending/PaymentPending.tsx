@@ -4,7 +4,7 @@ import { Button, Divider, ListItem, ListItemText } from '@mui/material';
 
 
 import { toast } from 'react-toastify';
-import { useMutateSettleCashBySeller } from '../../../../hooks/mutate/PaymentMutate';
+import { useMutateSettleCashBySeller, useMutateUpdateConfirmedStatus } from '../../../../hooks/mutate/PaymentMutate';
 import { reformatTime } from '../../../../utils/DayJsHelper';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../../api/ApiClient';
@@ -29,38 +29,36 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
    
 
 	const { settleCashMutate } = useMutateSettleCashBySeller();
-	// const { updatePayPendingMutate } = useMutateUpdatePaymentPendingById();
-	// const { addSettlementHistoryMutate } = useMutateAddSettlementHistoryForSeller();
-	// const onClickSettleButton = useCallback(async () => {
-	// 	const result = confirm(` 정산 하시겠습니까?`);
-	// 	if(!result) return
-	// 	console.log(codeData, userById, item);
-	// 	if (codeData?.price !== undefined && userById?.point !== undefined && item.id) {
-	// 		await settlePointMutate({
-	// 			sellerId: item.sellerId,
-	// 			point: parseInt((Math.floor(item.point * 0.9)).toString()) + parseInt(userById.point.toString()),
-	// 		});
-	// 		const entity: SettlementHistoryEntity = {
-	// 			codeId: codeData.id,
-	// 			priceByCode: Math.floor(item.point * 0.9),
-	// 			userId: userById.id,
-	// 			userPoint: userById.point,
-	// 			settleDate: createTodayDate(),
-	// 		};
-	// 		const { date } = await updatePayPendingMutate(item.id);
-	// 		const notiEntity: UserNotificationEntity = {
-	// 			createdAt: date,
-	// 			content: `관리자가 회원님의 ${codeData.title} ${codeData.formType === 'code' ? '(코드)를' : '(게시글)을'} ${Math.floor(item.point * 0.9)}p 정산하였습니다.`,
-	// 			sender: 'admin',
-	// 		};
-	// 		await apiClient.sendNotificationByUser(userById.id, notiEntity);
-	// 		await addSettlementHistoryMutate({ sellerId: item.sellerId, entity: entity });
-	// 		refetch();
-	// 	} else {
-	// 		toast.error('정산오류 : 개발팀에 문의해주세요');
-	// 	}
-	// }, [item, codeData, userById]);
-	if (codeDataLoading || purchaseUserLoading) return <>no data</>;
+    const { updatePayConfirmedMutate } = useMutateUpdateConfirmedStatus();
+
+	
+	
+	const onClickSettleButton = useCallback(async () => {
+		const result = window.confirm(` 정산 하시겠습니까?`);
+		if(!result) return
+
+        const sellerPrevTotalCash = await apiClient.getUserTotalCash(item.sales_user_token); // 판매자 정산 전 캐시
+        const codeData = await apiClient.getTargetCode(item.post_id); // 코드 정보
+        console.log(codeData, purchaseUserData, item);
+
+
+		if (codeData?.price !== undefined && sellerPrevTotalCash !== undefined && item.id) {
+           
+            let settlementCashHistoryRequestEntity : CashHistoryResponseEntity = {
+                user_token : item.sales_user_token,
+                cash : item.price!,
+                amount: item.price! + sellerPrevTotalCash, 
+                description : `[${codeData.title}] 코드 캐시 정산`,
+                cash_history_type : 'earn_cash',
+            }
+            await settleCashMutate(settlementCashHistoryRequestEntity); // 판매자 캐시 증액
+            await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id});  // 정산 status 처리
+			refetch();
+		} else {
+			toast.error('정산오류 : 개발팀에 문의해주세요');
+		}
+	}, [item, codeData]);
+	if (codeDataLoading || purchaseUserLoading) return <>로딩중</>;
 
 	return (
 		<>
@@ -95,7 +93,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 						<div style={{ width: '5%' }}>
 							{item.is_confirmed ?
 								<Button variant={'text'}>정산됨 </Button> :
-								<Button onClick={()=>{}}>정산하기</Button>
+								<Button onClick={onClickSettleButton}>정산하기</Button>
 							}
 						</div>
 					</div>

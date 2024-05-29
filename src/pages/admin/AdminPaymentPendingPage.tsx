@@ -97,7 +97,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			{!isSettlement &&
 				<>
 					<div style={{ display: 'flex' }}>
-						{/* {isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>} */}
+						{isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>}
 						<TextField fullWidth type={'number'} value={date} onChange={onChangeDate}
 								   placeholder={'YYYYMMDD'} />
 						<Button onClick={onClickFilterData}>조회</Button>
@@ -128,7 +128,6 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			</ListItem>
 			{!isFilter ? paymentPendingData!.map((item) => {
 				if (item.is_confirmed === isSettlement) {
-                    //return <div>{item.purchase_user_token}</div>
 					 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
 				}
 			}) : filterData?.map(item => {
