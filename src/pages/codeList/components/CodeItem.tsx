@@ -62,7 +62,8 @@ const CodeItem: FC<Props> = ({item}) => {
 								{0}
 							</div> */}
 							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey' }}>
-								코드룸 포인트 : {item.popularity}
+								{/* 코드룸 포인트 : {item.popularity} */}
+								코드룸 포인트 : {item.buyerCount*item.price}
 							</div>
 
 							{/* <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
