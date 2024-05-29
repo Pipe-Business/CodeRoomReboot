@@ -86,7 +86,7 @@ const CashPaymentDialog = () => {
 					content: `'${postData?.title}' 게시글이 판매 되었습니다`,
 					from_user_token: '045148b1-77db-4dfc-8d76-e11f7f9a4a10',// todo 변경 필요
 					to_user_token: postData?.userToken!,
-					notification_type: NotificationType.granted,
+					notification_type: NotificationType.sale,
 				}
 				let notistring=JSON.stringify(notificationEntity);
 				console.log("sdf"+notistring);
