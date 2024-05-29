@@ -845,7 +845,7 @@ class ApiClient implements SupabaseAuthAPI {
     async updateAdminGithubRepoUrl(postId: string, adminGithubRepoUrl: string) {
         try {
             const { error } = await supabase.from('code')
-                .update({ admin_github_repo_url: adminGithubRepoUrl })
+                .update({ admin_git_repo_url: adminGithubRepoUrl })
                 .eq('post_id', postId);
 
             if (error) {
@@ -1434,6 +1434,26 @@ async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_toke
     } catch (e: any) {
         console.log(e);
         throw new Error('관리자 - 정산에 실패했습니다.');
+    }
+}
+
+async insertNotification(notificationObj:NotificationEntity) {
+    try {
+        const { data, error } = await supabase.from('notification').insert(notificationObj).select();
+
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('알림 전송에 실패했습니다.');
+        }
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('알림 전송에 실패했습니다.');
     }
 }
 
