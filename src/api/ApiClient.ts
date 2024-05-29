@@ -1562,20 +1562,55 @@ async getAllUserManage(): Promise<AdminUserManageEntity[]> {
         }
         //console.log(data);
 
-        if (error) {
-            console.log("error" + error.message);
-            console.log("error" + error.code);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-
-            throw new Error('관리자 : 모든 유저 데이터를 가져오는 데 실패했습니다.');
-        }
 
         return lstUserModel;
     }
     catch (e: any) {
         console.log(e);
         throw new Error('관리자 : 모든 유저 데이터를 가져오는 데 실패했습니다.');
+    }
+
+}
+
+async getTargetUserManageData(userToken : string): Promise<AdminUserManageEntity> { 
+    try {
+        const { data, error } = await supabase.from('users')
+            .select('*')
+            .eq('user_token',userToken);
+           
+
+        let lstUserModel: AdminUserManageEntity[] = [];
+        
+        
+        for(const adminUserManage of data!){
+            const point = await this.getUserTotalPoint(adminUserManage.user_token!);
+            const cash = await this.getUserTotalCash(adminUserManage.user_token!);
+
+            let userManageEntity: AdminUserManageEntity = {
+                id : adminUserManage.id,
+                auth_type: adminUserManage.auth_type,
+                email: adminUserManage.email,
+                name: adminUserManage.name,
+                nickname: adminUserManage.nickname,
+                profile_url: adminUserManage.profile_url,
+                about_me: adminUserManage.about_me,
+                contacts: adminUserManage.contacts,
+                user_token: adminUserManage.user_token,
+                point: point,
+                cash: cash,
+                created_at: adminUserManage.created_at,
+
+            }
+            lstUserModel.push(userManageEntity);
+        }
+        //console.log(data);
+
+
+        return lstUserModel[0];
+    }
+    catch (e: any) {
+        console.log(e);
+        throw new Error('관리자 : 특정 유저 데이터를 가져오는 데 실패했습니다.');
     }
 
 }

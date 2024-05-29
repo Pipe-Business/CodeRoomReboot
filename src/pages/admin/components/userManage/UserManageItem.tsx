@@ -20,7 +20,7 @@ const UserManageItem: FC<Props> = ({ item }) => {
 	const navigate = useNavigate();
 	const [isDialog, handleOpenDialog, handleCloseDialog] = useDialogState();
 	const onClickItem = useCallback(() => {
-		//navigate(`/admin/user/${item.id}`);
+		navigate(`/admin/user/${item.user_token}`);
 
 	}, [item]);
 	

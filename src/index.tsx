@@ -40,6 +40,7 @@ const CoinPage = React.lazy(() => import('./pages/coin/CoinPage.tsx'));
 const AdminPage = React.lazy(() => import ('./pages/admin/AdminPage.tsx'));
 const AdminLoginPage = React.lazy(() => import('./pages/adminLogin/AdminLoginPage.tsx'));
 const AdminCodeRequestInfo = React.lazy(() => import('./pages/admin/AdminCodeRequestInfoPage.tsx'));
+const AdminUserInfo = React.lazy(() => import('./pages/admin/components/userManage/AdminUserInfo.tsx'))
 const NotificationPage = React.lazy(() => import('./pages/notification/NotificationPage.tsx'));
 const EditCodePage = React.lazy(() => import('./pages/editCode/EditCodePage.tsx'));
 const SearchPage = React.lazy(() => import('./pages/search/SearchPage.tsx'));
@@ -100,6 +101,7 @@ root.render(
       <Route path='/coin' element={<CoinPage/>}/>
       <Route path='/admin' element={<AdminPage/>}/>
       <Route path='/admin/login' element={<AdminLoginPage/>}/>
+      <Route path='/admin/user/:userId' element={<AdminUserInfo />} />
       <Route path='/notification' element={<NotificationPage/>}/>
       <Route path='/code/search' element={<SearchPage />} />
 
