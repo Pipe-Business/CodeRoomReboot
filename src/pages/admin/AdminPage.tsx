@@ -13,6 +13,7 @@ import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 //import AdminBootpayPaymentPage from './AdminBootpayPaymentPage.tsx';
 import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList.tsx';
 import { supabase } from '../../api/ApiClient.ts';
+import AdminCashPaymentChargePage from './AdminCashPaymentChargePage.tsx';
 
 interface Props {
 	children?: React.ReactNode;
@@ -67,7 +68,7 @@ const AdminPage: FC<Props> = () => {
 						<Tab label='승인내역' value='3' />
 						<Tab label='정산대기' value='4' />
 						<Tab label='정산내역' value='5' />
-						<Tab label='결제관리' value='6' />
+						<Tab label='캐시 정산/충전 관리' value='6' />
 						<Tab label='유저관리' value='7' />
 						
 					</TabList>
@@ -88,7 +89,7 @@ const AdminPage: FC<Props> = () => {
 					<AdminPaymentPendingPage isSettlement={true}/>
 				</TabPanel>
 				<TabPanel value='6'>
-					<AdminCodeRequestList type={'approve'} />
+					<AdminCashPaymentChargePage />
 				</TabPanel>
 				<TabPanel value='7'>
 					<AdminCodeRequestList type={'approve'} />
