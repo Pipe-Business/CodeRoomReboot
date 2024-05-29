@@ -4,6 +4,8 @@ import useInput from '../../../hooks/useInput';
 import { apiClient } from '../../../api/ApiClient';
 import { createTodayDate } from '../../../utils/DayJsHelper';
 import { toast } from 'react-toastify';
+import { NotificationEntity } from '../../../data/entity/NotificationEntity';
+import { NotificationType } from '../../../enums/NotificationType';
 
 interface Props {
 	children?: React.ReactNode,
@@ -26,6 +28,15 @@ const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken, refet
 	
 		await apiClient.updateCodeRequestState(userToken, postId, 'rejected');
 		await apiClient.updateCodeRequestRejectMessage(userToken, postId, inputText);
+
+		const notificationEntity: NotificationEntity ={
+			title : '심사 반려 알림',
+			content: inputText,
+			from_user_token: '045148b1-77db-4dfc-8d76-e11f7f9a4a10', // todo 관리자 토큰으로 수정 필요. 현재 관리자토큰을 입력하면 유저 알림함에서 보이지 않음
+			to_user_token: userToken,
+			notification_type: NotificationType.granted,
+		}
+		await apiClient.insertNotification(notificationEntity);
 
 		toast.info('반려처리가 완료되었습니다.');
 
