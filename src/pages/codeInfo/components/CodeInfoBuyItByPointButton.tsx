@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import CodeDownloadButton from './CodeDownloadButton';
 import { ColorButton } from '../styles';
 import { Link, useNavigate } from 'react-router-dom';
-
+import ReviewDialog from './ReviewDialog';
 
 interface Props {
 	children?: React.ReactNode,
@@ -35,6 +35,7 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 		onOpenPointDialog,
 	}) => {
 
+	const [dialogOpen, setDialogOpen] = useState(false);
 
 
 	const navigate = useNavigate();
@@ -43,6 +44,8 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 			const result = window.confirm(`구매하시겠습니까?\n ${userHavePoint}(보유 커밋 포인트) - ${point}(상품 포인트) = ${userHavePoint - point}`);
 			if (result) {
 				onPaymentConfirm();
+				setDialogOpen(true);
+				return <ReviewDialog postId={purchasedSaleData!.post_id} open={dialogOpen} onClose={() => setDialogOpen(false)}></ReviewDialog>;			
 			}
 		}
 
@@ -64,7 +67,7 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 		return null;
 
 	} else { // 구매 내역이 없으면
-		
+
 		if (userHavePoint >= point) { // 캐시가 충분하면
 			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => onClickPurchase()} disabled={isBlur} variant='contained'>커밋 포인트로 구매하기</ColorButton>
 

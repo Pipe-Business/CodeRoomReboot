@@ -10,12 +10,14 @@ import { apiClient } from '../../../api/ApiClient';
 import { createTodayDate } from '../../../utils/DayJsHelper';
 import { toast } from 'react-toastify';
 import { PurchaseSaleRequestEntity } from '../../../data/entity/PurchaseSaleRequestEntity';
+import ReviewDialog from './ReviewDialog';
 
 const CashPaymentDialog = () => {
 	const { id } = useParams();
 	const queryClient = useQueryClient();
 	const [userLogin, setUser] = useState<User | null>(null);
 	const navigate = useNavigate();
+	
 
 
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
@@ -78,7 +80,10 @@ const CashPaymentDialog = () => {
 				await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
 			}
 
+			
 
+            // navigate('/');
+            toast.success('구매가 완료되었습니다.');
 			// todo 구매자에게 구매 알림
 
 		},
@@ -91,9 +96,9 @@ const CashPaymentDialog = () => {
 				const todayDate = createTodayDate();
 
 
-				navigate('/');
-				toast.success('구매가 완료되었습니다.');
-
+				// navigate('/');
+				// toast.success('구매가 완료되었습니다.');
+			
 				// 	const notiEntity: UserNotificationEntity = {
 				// 		createdAt: todayDate,
 				// 		content: `🎉축하합니다! ${userLogin?.nickname} 님이 ${codeData.title} 코드를 ${codeData.price}point 에 구매하였습니다.`,
@@ -124,6 +129,7 @@ const CashPaymentDialog = () => {
 				// 		};
 				// 		await set(salesPushRef, salesEntity);
 				// 	}
+				
 			}
 		} catch (e) {
 			console.log(e);
