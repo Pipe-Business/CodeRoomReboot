@@ -31,18 +31,6 @@ const CashPaymentDialog = (onConfirm) => {
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
-    useEffect(() => {
-        const getSession = async () => {
-            const { data, error } = await supabase.auth.getSession();
-            if (error) {
-                console.error(error);
-            } else {
-                const { data: { user } } = await supabase.auth.getUser();
-                setUser(user);
-            }
-        };
-        getSession();
-    }, []);
 
     const { mutate } = useMutation({
         mutationFn: async () => {
