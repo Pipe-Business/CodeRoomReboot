@@ -15,6 +15,7 @@ import { NotificationType } from '../enums/NotificationType';
 import { PointHistoryRequestEntity } from "../data/entity/PointHistoryRequestEntity";
 import { BootPayPaymentEntity } from "../data/entity/BootpayPaymentEntity.ts";
 import { title } from "process";
+import { PurchaseReviewEntity } from "../data/entity/PurchaseReviewEntity.ts";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -1366,6 +1367,20 @@ async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEnti
     }
 }
 
+
+async setReviewData(review: PurchaseReviewEntity) {
+    const { data, error } = await supabase.from('purchase_review').insert([review]).select();
+
+    if (error) {
+        console.log("error" + error.message);
+        console.log("error" + error.code);
+        console.log("error" + error.details);
+        console.log("error" + error.hint);
+
+        throw new Error('리뷰 작성에 실패했습니다.');
+    }
+}
+
 async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
     try {
         const { data, error } = await supabase.from('purchase_sale_history')
@@ -1421,7 +1436,6 @@ async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_toke
         throw new Error('관리자 - 정산에 실패했습니다.');
     }
 }
-
 
 
 
