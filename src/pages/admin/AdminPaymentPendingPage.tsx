@@ -1,158 +1,142 @@
-// import React, { FC, useCallback, useState } from 'react';
-// import { useQuery } from '@tanstack/react-query';
-// import { Button, IconButton, ListItem, ListItemText, TextField } from '@mui/material';
-// import dayjs from 'dayjs';
-// import { compareDates, createTodayDate, DATE_FORMAT } from '../../utils/DayJsHelper.ts';
-// // import { SettlementHistoryEntity } from '../../data/entity/firebase/realtime/user/SettlementHistoryEntity.ts';
-// // import {
-// // 	useMutateAddSettlementHistoryForSeller,
-// // 	useMutateSettlePointBySeller,
-// // 	useMutateUpdatePaymentPendingById,
-// // } from '../../hooks/mutate/PaymentMutate.ts';
-// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import React, { FC, useCallback, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Button, IconButton, ListItem, ListItemText, TextField } from '@mui/material';
+import dayjs from 'dayjs';
+import { compareDates, createTodayDate, DATE_FORMAT } from '../../utils/DayJsHelper.ts';
+// import { SettlementHistoryEntity } from '../../data/entity/firebase/realtime/user/SettlementHistoryEntity.ts';
+// import {
+// 	useMutateAddSettlementHistoryForSeller,
+// 	useMutateSettlePointBySeller,
+// 	useMutateUpdatePaymentPendingById,
+// } from '../../hooks/mutate/PaymentMutate.ts';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { apiClient } from '../../api/ApiClient.ts';
+import { useMutateSettleCashBySeller,useMutateUpdateConfirmedStatus} from '../../hooks/mutate/PaymentMutate.ts';
+import PaymentPending from './components/paymentPending/PaymentPending.tsx';
 
-// interface Props {
-// 	children?: React.ReactNode;
-// 	isSettlement: boolean;
-// }
+interface Props {
+	children?: React.ReactNode;
+	isSettlement: boolean;
+}
 
-// const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
-// 	// const { settlementCol } = settlementManageStore();
-// 	// const { isLoading, data, refetch } = useQuery({
-// 	// 	queryKey: ['paymentPending'],
-// 	// 	queryFn: () => firebaseGetAllWithQuery<PaymentSettlementEntity>(['paymentPending'], orderByChild('settlementDate')),
-// 	// });
-// 	const [date, setDate] = useState<string>();
-// 	// const onChangeDate = useCallback((e: any) => {
-// 	// 	setDate(e.target.value);
-// 	// }, [date]);
-// 	// const [isFilter, setFilter] = useState(false);
-// 	// const [filterData, setFilterData] = useState<PaymentSettlementEntity[] | null>(null);
-// 	// const onClickFilterData = useCallback(() => {
-// 	// 	if (date && data) {
-// 	// 		setFilter(true);
-// 	// 		const filterDayjs = dayjs(date, 'YYMMDD');
-// 	// 		const startDay = filterDayjs.startOf('day').format(DATE_FORMAT);
-// 	// 		const endDay = filterDayjs.endOf('day').format(DATE_FORMAT);
-// 	// 		console.log(startDay, endDay);
-// 	// 		const myList: PaymentSettlementEntity[] = [];
-// 	// 		data.map(item => {
-// 	// 			if (item.isSettlement === isSettlement) {
-// 	// 				if (compareDates(item.paymentDate, endDay) <= 0 && compareDates(startDay, item.paymentDate) <= 0) {
-// 	// 					myList.push(item);
-// 	// 				}
-// 	// 			}
-// 	// 		});
-// 	// 		console.log(myList);
-// 	// 		setFilterData([...myList]);
-// 	// 	}
+const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 
-// 	// }, [date, data]);
-// 	// const onClickFilterInit = useCallback(() => {
-// 	// 	setFilter(false);
-// 	// 	setDate('');
-// 	// }, []);
-// 	// const { settlePointMutate } = useMutateSettlePointBySeller();
-// 	// const { updatePayPendingMutate } = useMutateUpdatePaymentPendingById();
-// 	// const { addSettlementHistoryMutate } = useMutateAddSettlementHistoryForSeller();
-// 	// const onClickAllSettlement = useCallback(() => {
-// 	// 	if (data && filterData) {
-// 	// 		const result = confirm(`전체 정산 하시겠습니까? ${filterData.length}건`);
-// 	// 		if(!result) return
-// 	// 		filterData.map(async (item) => {
-// 	// 			const userById = await getOneFirebaseData<UserEntity>(['users', item.sellerId]);
-// 	// 			const codeData = await getOneFirebaseData<CodeEntity>(['codeStore', item.codeId]);
-// 	// 			await settlePointMutate({
-// 	// 				sellerId: item.sellerId,
-// 	// 				point: parseInt((Math.floor(item.point * 0.9)).toString()) + parseInt(userById.point.toString()),
-// 	// 			});
-// 	// 			const entity: SettlementHistoryEntity = {
-// 	// 				codeId: codeData.id,
-// 	// 				priceByCode: Math.floor(item.point * 0.9),
-// 	// 				userId: userById.id,
-// 	// 				userPoint: userById.point,
-// 	// 				settleDate: createTodayDate(),
-// 	// 			};
-// 	// 			await updatePayPendingMutate(item.id!);
-// 	// 			await addSettlementHistoryMutate({ sellerId: item.sellerId, entity: entity });
-// 	// 		});
-// 	// 		setFilterData(null);
-// 	// 	}
+	const { isLoading:paymentPendingLoading, data: paymentPendingData, refetch } = useQuery({
+		queryKey: ['/purchaseSalehistory'],
+		queryFn: () => apiClient.getAdminPurchaseSaleHistory(false)
+	});
+	const [date, setDate] = useState<string>();
+	const onChangeDate = useCallback((e: any) => {
+		setDate(e.target.value);
+	}, [date]);
+	const [isFilter, setFilter] = useState(false);
+	const [filterData, setFilterData] = useState<PurchaseSaleResponseEntity[] | null>(null);
+	const onClickFilterData = useCallback(() => {
+		if (date && paymentPendingData) {
+			setFilter(true);
+			const filterDayjs = dayjs(date, 'YYMMDD');
+			const startDay = filterDayjs.startOf('day').format(DATE_FORMAT);
+			const endDay = filterDayjs.endOf('day').format(DATE_FORMAT);
+			console.log(startDay, endDay);
+			const myList: PurchaseSaleResponseEntity[] = [];
+			paymentPendingData.map(item => {
+				if (item.is_confirmed === isSettlement) {
+					if (compareDates(item.created_at!, endDay) <= 0 && compareDates(startDay, item.created_at!) <= 0) {
+						myList.push(item);
+					}
+				}
+			});
+			console.log(myList);
+			setFilterData([...myList]);
+		}
 
-// 	// }, [isFilter, date, filterData, data]);
+	}, [date, paymentPendingData]);
+	const onClickFilterInit = useCallback(() => {
+		setFilter(false);
+		setDate('');
+	}, []);
+	const { settleCashMutate } = useMutateSettleCashBySeller();
+	const { updatePayConfirmedMutate } = useMutateUpdateConfirmedStatus();
+	const onClickAllSettlement = useCallback(() => {
+		if (paymentPendingData && filterData) {
+			const result = window.confirm(`전체 정산 하시겠습니까? ${filterData.length}건`);
+			if(!result) return
+			filterData.map(async (item) => {
+
+                const sellerPrevTotalCash = await apiClient.getUserTotalCash(item.sales_user_token); // 판매자 정산 전 캐시
+                const codeData = await apiClient.getTargetCode(item.post_id); // 코드 정보
+	
+                let settlementCashHistoryRequestEntity : CashHistoryResponseEntity = {
+                    user_token : item.sales_user_token,
+                    cash : item.price!,
+                    amount: item.price! + sellerPrevTotalCash, 
+                    description : `[${codeData.title}] 코드 캐시 정산`,
+                    cash_history_type : 'earn_cash',
+                }
+				await settleCashMutate(settlementCashHistoryRequestEntity); // 판매자 캐시 증액
+                await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id});  // 정산 status 처리
+                
+			});
+			setFilterData(null);
+		}
+
+	}, [isFilter, date, filterData, paymentPendingData]);
 
 
-// 	// if (isLoading) {
-// 	// 	return <>로딩중</>;
-// 	// }
-// 	// if (!data) {
-// 	// 	return <>noData</>;
-// 	// }
-// 	// if (settlementCol) {
-// 	// 	console.log('AAA', settlementCol);
-// 	// 	return <></>;
-// 	// }
-// 	return (
-// 		<>
-// 			{/* {!isSettlement &&
-// 				<>
-// 					<div style={{ display: 'flex' }}>
-// 						{isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>}
-// 						<TextField fullWidth type={'number'} value={date} onChange={onChangeDate}
-// 								   placeholder={'YYYYMMDD'} />
-// 						<Button onClick={onClickFilterData}>조회</Button>
-// 						<Button onClick={onClickAllSettlement}>전체 정산</Button>
-// 					</div>
-// 				</>
-// 			} */}
+	if (paymentPendingLoading) {
+		return <>로딩중</>;
+	}
+	if (!paymentPendingData) {
+		return <>noData</>;
+	}
+	
+	return (
+		<>
+        {/* 정산되지 않음 */}
 
-// 			{!isSettlement &&
-// 				<>
-// 					<div style={{ display: 'flex' }}>
-// 						{/* {isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>} */}
-// 						<TextField fullWidth type={'number'} value={date} onChange={()=>{}}
-// 								   placeholder={'YYYYMMDD'} />
-// 						<Button onClick={()=> {}}>조회</Button>
-// 						<Button onClick={() => {}}>전체 정산</Button>
-// 					</div>
-// 				</>
-// 			}
-// 			<ListItem>
-// 				<ListItemText>
-// 					<div style={{ display: 'flex', width: '100%' }}>
-// 						<div style={{ width: '10%' }}>
-// 							정산시간
-// 						</div>
-// 						<div style={{ width: '8%' }}>
-// 							구매&후원
-// 						</div>
-// 						<div style={{ width: '10%' }}>
-// 							구매&후원시간
-// 						</div>
-// 						<div style={{ display: 'flex', alignItems: 'center', width: '25%' }}>
-// 							구매한 상품
-// 						</div>
-// 						<div style={{ width: '25%' }}>
-// 							구매한 유저
-// 						</div>
-// 						<div style={{ width: '17%' }}>
-// 							결제한 캐시
-// 						</div>
-// 						<div style={{ width: '5%' }}>
-// 							정산
-// 						</div>
-// 					</div>
-// 				</ListItemText>
-// 			</ListItem>
-// 			{!isFilter ? data.map((item) => {
-// 				if (item.isSettlement === isSettlement) {
-// 					return <PaymentPending key={item.id} item={item} refetch={refetch} />;
-// 				}
-// 			}) : filterData?.map(item => {
-// 				return <PaymentPending key={item.id} item={item} refetch={refetch} />;
-// 			})}
-// 		</>
-// 	);
-// };
+			{!isSettlement &&
+				<>
+					<div style={{ display: 'flex' }}>
+						{/* {isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>} */}
+						<TextField fullWidth type={'number'} value={date} onChange={onChangeDate}
+								   placeholder={'YYYYMMDD'} />
+						<Button onClick={onClickFilterData}>조회</Button>
+						<Button onClick={onClickAllSettlement}>전체정산</Button>
+					</div>
+				</>
+			}
+			<ListItem>
+				<ListItemText>
+					<div style={{ display: 'flex', width: '100%' }}>
+						<div style={{ width: '10%' }}>
+							정산시간
+						</div>
+						<div style={{ display: 'flex', alignItems: 'center', width: '35%' }}>
+							구매한 상품
+						</div>
+						<div style={{ width: '35%' }}>
+							구매한 유저
+						</div>
+						<div style={{ width: '15%' }}>
+							결제한 캐시
+						</div>
+						<div style={{ width: '5%' }}>
+							정산
+						</div>
+					</div>
+				</ListItemText>
+			</ListItem>
+			{!isFilter ? paymentPendingData!.map((item) => {
+				if (item.is_confirmed === isSettlement) {
+                    //return <div>{item.purchase_user_token}</div>
+					 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
+				}
+			}) : filterData?.map(item => {
+                return <div>{item.purchase_user_token}</div>
+				// return <PaymentPending key={item.id} item={item} refetch={refetch} />;
+			})}
+		</>
+	);
+};
 
-// export default AdminPaymentPendingPage;
+export default AdminPaymentPendingPage;

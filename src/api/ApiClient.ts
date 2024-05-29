@@ -1366,6 +1366,63 @@ async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEnti
     }
 }
 
+async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
+    try {
+        const { data, error } = await supabase.from('purchase_sale_history')
+            .select('*')
+            .eq('is_confirmed', isConfirmed)
+            .eq('pay_type','cash')
+            .order('created_at', { ascending: false });
+          
+            let lstPurchaseSaleData:PurchaseSaleResponseEntity[] = [];
+
+            // id를 가져와야됨
+            data?.forEach((e) => {
+                lstPurchaseSaleData.push(e);
+            });
+
+        if (error) {
+            console.log("error" + error.message);
+            console.log("error" + error.code);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+
+            throw new Error('판매 기록을 가져오는 데 실패했습니다.');
+        }
+
+        return lstPurchaseSaleData;
+    }
+    catch (e: any) {
+        console.log(e);
+        throw new Error('판매 기록을 가져오는 데 실패했습니다.');
+    }
+}
+
+async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_token: string,postId: number) {
+    try {
+        const { error } = await supabase.from('purchase_sale_history')
+            .update({ is_confirmed: true })
+            .eq('id', postId)
+            .eq('purchase_user_token', purchase_user_token)
+            .eq('sales_user_token',sales_user_token);
+
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('관리자- 정산에 실패했습니다.');
+        }
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('관리자 - 정산에 실패했습니다.');
+    }
+}
+
+
 
 
 
