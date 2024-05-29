@@ -12,9 +12,8 @@ import { toast } from 'react-toastify';
 import { PointHistoryType } from '../../../enums/PointHistoryType';
 import { PointHistoryRequestEntity } from '../../../data/entity/PointHistoryRequestEntity';
 import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
-import ReviewDialog from './ReviewDialog';
 
-const PointPaymentDialog = () => {
+const PointPaymentDialog = (onConfirm) => {
 	const { id } = useParams();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
@@ -84,7 +83,10 @@ const PointPaymentDialog = () => {
 
 				navigate('/');
 				toast.success('구매가 완료되었습니다.');
-				<ReviewDialog postId={postData.id} />
+				if (onConfirm) {
+					onConfirm();
+				}
+								
 				// 	const notiEntity: UserNotificationEntity = {
 				// 		createdAt: todayDate,
 				// 		content: `🎉축하합니다! ${userLogin?.nickname} 님이 ${codeData.title} 코드를 ${codeData.price}point 에 구매하였습니다.`,

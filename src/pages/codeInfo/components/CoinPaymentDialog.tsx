@@ -15,13 +15,12 @@ import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
 import { NotificationType } from '../../../enums/NotificationType';
 import { NotificationEntity } from '../../../data/entity/NotificationEntity';
 
-const CashPaymentDialog = () => {
-	const { id } = useParams();
-	const queryClient = useQueryClient();
-	const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
-	const navigate = useNavigate();
-	
 
+const CashPaymentDialog = (onConfirm) => {
+    const { id } = useParams();
+    const queryClient = useQueryClient();
+    const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
+    const navigate = useNavigate();
 
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
@@ -32,10 +31,50 @@ const CashPaymentDialog = () => {
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
+    useEffect(() => {
+        const getSession = async () => {
+            const { data, error } = await supabase.auth.getSession();
+            if (error) {
+                console.error(error);
+            } else {
+                const { data: { user } } = await supabase.auth.getUser();
+                setUser(user);
+            }
+        };
+        getSession();
+    }, []);
 
+    const { mutate } = useMutation({
+        mutationFn: async () => {
+            const cashHistory = {
+                user_token: userLogin!.id,
+                cash: postData?.price!,
+                amount: cashData == undefined ? 0 : cashData - postData?.price!,
+                description: "코드 구매",
+                cash_history_type: "use_cash"
+            };
 
-	const { mutate } = useMutation({
-		mutationFn: async () => {
+            await apiClient.insertUserCashHistory(cashHistory);
+
+            if (postData) {
+                const purchaseSaleHistory = {
+                    post_id: postData!.id,
+                    price: postData!.price,
+                    is_confirmed: false,
+                    purchase_user_token: userLogin!.id,
+                    sales_user_token: postData!.userToken,
+                    pay_type: "cash"
+                };
+
+                await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
+            }
+        },
+        onSuccess: async () => {
+            if (postData) {
+				// 구매자수 update
+				console.log("구매자수 update")
+				await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
+			}			
 
 			// 유저 캐시 차감 -> 캐시 사용기록 insert
 			const cashHistory: CashHistoryRequestEntity = {
@@ -62,18 +101,14 @@ const CashPaymentDialog = () => {
 				await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 			}
 
-		}, onSuccess: async (result) => {
-			if (postData) {
-				// 구매자수 update
-				console.log("구매자수 update")
-				await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
-			}
-
 			// navigate('/');
 			toast.success('구매가 완료되었습니다.');
+            if (onConfirm) {
+                onConfirm();
+            }
 
 		},
-	});
+    });
 
 	const onClickConfirm = useCallback(async () => {
 		try {
@@ -92,7 +127,7 @@ const CashPaymentDialog = () => {
 				console.log("sdf"+notistring);
 				await apiClient.insertNotification(notificationEntity);
 
-				navigate('/');
+				// navigate('/');
 				// toast.success('구매가 완료되었습니다.');
 			
 				// 	const notiEntity: UserNotificationEntity = {

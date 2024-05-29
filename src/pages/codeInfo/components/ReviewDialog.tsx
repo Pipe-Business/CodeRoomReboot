@@ -1,6 +1,7 @@
 // ReviewDialog.tsx
 import React, { FC, useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import Rating from '@mui/lab/Rating';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box } from '@mui/material';
 import { PurchaseReviewEntity } from '../../../data/entity/PurchaseReviewEntity';
 import { apiClient } from '../../../api/ApiClient';
 
@@ -11,6 +12,7 @@ interface ReviewDialogProps {
 }
 
 const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose }) => {
+    console.log(`@@@@@@ hongchul post id ${postId} @@@@@@`);
     const [review, setReview] = useState<PurchaseReviewEntity>({
         post_id: postId,
         review_title: '',
@@ -28,11 +30,17 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose }) => {
         setReview({ ...review, [name]: value });
     };
 
+    const handleRatingChange = (event: React.ChangeEvent<{}>, newValue: number | null) => {
+        if (newValue !== null) {
+            setReview({ ...review, rating: newValue });
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
+        try {            
             await apiClient.setReviewData(review);
-            alert('Review submitted successfully!');
+            alert('소중한 리뷰 감사드립니다 :)');
             onClose();
         } catch (error) {
             console.error('Error submitting review:', error);
@@ -41,22 +49,12 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose }) => {
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Write a Review</DialogTitle>
+            <DialogTitle>구매해주셔서 감사합니다 리뷰를 남겨주시면 포인트가 적립됩니다!</DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
                     <TextField
                         margin="dense"
-                        label="Post ID"
-                        type="number"
-                        name="post_id"
-                        value={review.post_id}
-                        onChange={handleChange}
-                        fullWidth
-                        disabled
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Review Title"
+                        label="제목"
                         type="text"
                         name="review_title"
                         value={review.review_title}
@@ -66,7 +64,7 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose }) => {
                     />
                     <TextField
                         margin="dense"
-                        label="Review Content"
+                        label="내용"
                         type="text"
                         name="review_content"
                         value={review.review_content}
@@ -76,35 +74,20 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose }) => {
                         rows={4}
                         required
                     />
-                    <TextField
-                        margin="dense"
-                        label="Rating"
-                        type="number"
-                        inputProps={{
-                            step: 0.1,
-                          }}
-                        name="rating"
-                        value={review.rating}
-                        onChange={handleChange}
-                        fullWidth
-                        required
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Reviewer User Token"
-                        type="text"
-                        name="reviewer_user_token"
-                        value={review.reviewer_user_token}
-                        onChange={handleChange}
-                        fullWidth
-                        required
-                    />
+                    <Box component="fieldset" mb={3} borderColor="transparent">
+                        <Rating
+                            name="rating"
+                            value={review.rating}
+                            precision={0.5}
+                            onChange={handleRatingChange}
+                        />
+                    </Box>
                     <DialogActions>
                         <Button onClick={onClose} color="primary">
-                            Cancel
+                            나중에
                         </Button>
                         <Button type="submit" color="primary">
-                            Submit Review
+                            작성 완료
                         </Button>
                     </DialogActions>
                 </form>

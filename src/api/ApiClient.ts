@@ -1370,6 +1370,8 @@ async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEnti
 
 
 async setReviewData(review: PurchaseReviewEntity) {
+    const userResponse = await this.getCurrentLoginUser();
+    review.reviewer_user_token = userResponse.user?.id;
     const { data, error } = await supabase.from('purchase_review').insert([review]).select();
 
     if (error) {
@@ -1613,6 +1615,44 @@ async getTargetUserManageData(userToken : string): Promise<AdminUserManageEntity
         throw new Error('관리자 : 특정 유저 데이터를 가져오는 데 실패했습니다.');
     }
 
+}
+
+
+async getPurchaseReviews(postId: number): Promise<PurchaseReviewEntity[] | null> {
+    try {
+        const { data, error } = await supabase.from('purchase_review')
+            .select()
+            .eq('post_id', postId)
+            .order('created_at', { ascending: false });                        
+
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('리뷰 리스트 조회에 실패했습니다');
+        }
+        let lstReview: PurchaseReviewEntity[] = [];    
+        data?.forEach((e) => {
+            let reviewModel: PurchaseReviewEntity = {
+                id: e.id,
+                post_id: e.post_id,
+                review_title: e.review_title,
+                review_content: e.review_content,
+                rating: e.rating,
+                reviewer_user_token: e.reviewer_user_token,
+                created_at: e.created_at
+            }
+            lstReview.push(reviewModel);
+        });
+        console.log(data);
+        return lstReview;        
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('리뷰 리스트 조회에 실패했습니다');
+    }
 }
 
 

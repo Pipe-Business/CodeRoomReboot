@@ -3,9 +3,9 @@ import { Button } from '@mui/material';
 import CodeDownloadButton from './CodeDownloadButton';
 import { ColorButton } from '../styles';
 import { Link, useNavigate } from 'react-router-dom';
-import ReviewDialog from './ReviewDialog';
 
 interface Props {
+	postId: number,
 	children?: React.ReactNode,
 	codeHostId: string,
 	userId?: string,
@@ -23,6 +23,7 @@ interface Props {
 
 const CodeInfoBuyItByPointButton: FC<Props> = (
 	{
+		postId,
 		codeHostId,
 		userId,
 		purchasedSaleData,
@@ -35,17 +36,13 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 		onOpenPointDialog,
 	}) => {
 
-	const [dialogOpen, setDialogOpen] = useState(false);
-
 
 	const navigate = useNavigate();
 	const onClickPurchase =
 		() => {
 			const result = window.confirm(`구매하시겠습니까?\n ${userHavePoint}(보유 커밋 포인트) - ${point}(상품 포인트) = ${userHavePoint - point}`);
 			if (result) {
-				onPaymentConfirm();
-				setDialogOpen(true);
-				return <ReviewDialog postId={purchasedSaleData!.post_id} open={dialogOpen} onClose={() => setDialogOpen(false)}></ReviewDialog>;			
+				onPaymentConfirm();				
 			}
 		}
 

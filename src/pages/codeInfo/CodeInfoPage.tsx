@@ -25,6 +25,9 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import EditCodeButton from './components/EditCodeButton.tsx';
 import MessageModal from './components/MessageModal';
+import ReviewDialog from './components/ReviewDialog';
+import { PurchaseReviewEntity } from '../../data/entity/PurchaseReviewEntity';
+import ReviewList from './components/ReviewList';
 
 dayjs.locale('ko');
 
@@ -56,24 +59,40 @@ function SamplePrevArrow(props: { className?: string, style?: CSSProperties, onC
 }
 
 const CodeInfo: FC<Props> = () => {
+	const [reviews, setReviews] = useState<PurchaseReviewEntity[]>([]);
 	const navigate = useNavigate();
 	const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
 	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
 	const [isLike, setLike] = useState<boolean>(false);
-	const [onCashClickConfirm] = CashPaymentDialog();
-	const [onPointClickConfirm] = PointPaymentDialog();
+	const [onCashClickConfirm] = CashPaymentDialog(() => {
+		console.log("현금 결제가 확인되었습니다!");
+		// 현금 결제 확인 후 추가 로직
+		setDialogOpen(true);
+	});
+
+	const [onPointClickConfirm] = PointPaymentDialog(() => {
+		console.log("포인트 결제가 확인되었습니다!");
+		// 포인트 결제 확인 후 추가 로직
+		setDialogOpen(true);
+	});
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
-
+	const [dialogOpen, setDialogOpen] = useState(false);
 
 	/*
 		  * 	조회수 증가
 		  */
 
 	useEffect(() => {
+		async function fetchReviews() {
+			const reviews: PurchaseReviewEntity[] = await apiClient.getPurchaseReviews(Number(id));
+			setReviews(reviews);
+		}
 		if (id) {
-			apiClient.updateViewCount(Number(id));
+			apiClient.updateViewCount(Number(id));			
+			fetchReviews();        	
+			console.log(`reviews is ${reviews}`);
 		}
 	}, []);
 
@@ -356,6 +375,7 @@ const CodeInfo: FC<Props> = () => {
 
 							<div style={{ display: 'flex', flexDirection: 'row', }}>
 								<CodeInfoBuyItByCashButton
+									postId={postData.id}
 									isBlur={isBlur}
 									point={postData.price}
 									codeHostId={postData.userToken}
@@ -372,6 +392,7 @@ const CodeInfo: FC<Props> = () => {
 								<Box width={32} />
 
 								<CodeInfoBuyItByPointButton
+									postId={postData.id}
 									isBlur={isBlur}
 									point={postData.price * 5}
 									codeHostId={postData.userToken}
@@ -395,6 +416,8 @@ const CodeInfo: FC<Props> = () => {
 									<RequiredLoginModal isOpen={openRequireLoginModal} onClose={onCloseLoginModal} />
 								</MarginHorizontal>
 							</CenterBox>}
+
+							{reviews && <ReviewList reviews={reviews} />}
 
 						</CardContent>
 
@@ -455,6 +478,8 @@ const CodeInfo: FC<Props> = () => {
 					</Card>
 				</BlurContainer>
 			</div>
+
+			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)}></ReviewDialog>
 		</MainLayout>
 	);
 };

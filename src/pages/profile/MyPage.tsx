@@ -16,6 +16,7 @@ import { TextButton } from '../main/styles';
 import BuyerContentData from './components/buyerContentData';
 import { SectionWrapper } from './styles';
 import SellerContentData from './components/sellerContentData';
+import ReviewDialog from '../codeInfo/components/ReviewDialog';
 
 interface Props {
 	children?: React.ReactNode;
@@ -24,6 +25,7 @@ interface Props {
 
 const MyPage: FC<Props> = () => {
 
+	const [dialogOpen, setDialogOpen] = React.useState(false);
 	const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -94,7 +96,7 @@ const MyPage: FC<Props> = () => {
 				<Skeleton style={{ height: '200px' }} />
 			</FullLayout>
 		);
-	}
+	}	
 
 	if (!userLogin) {
 		return <MainLayout>로그인 먼저 해주세요
@@ -110,6 +112,8 @@ const MyPage: FC<Props> = () => {
 	return (
 		<FullLayout>
 			<Box height={64} />
+			
+			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)}></ReviewDialog>
 
 			{userLogin ?
 				<div>
@@ -165,7 +169,7 @@ const MyPage: FC<Props> = () => {
 				:
 				<></>
 			}
-			<Box height={128} />
+			<Box height={128} />				
 		</FullLayout>
 	);
 }
