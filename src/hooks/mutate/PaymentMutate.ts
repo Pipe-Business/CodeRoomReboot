@@ -21,7 +21,7 @@ export const useMutateBootPayPaymentRequest = () => {
 };
 
 /**
- * 포인트 정산하는 mutate
+ * 캐시 정산하는 mutate
  */
 export const useMutateSettleCashBySeller = () => {
 	const { mutateAsync } = useMutation({
