@@ -11,6 +11,8 @@ import { BootPayPaymentEntity } from '../../../data/entity/BootpayPaymentEntity.
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../api/ApiClient.ts';
 import { REACT_QUERY_KEY } from '../../../constants/define.ts';
+import { PointHistoryRequestEntity } from '../../../data/entity/PointHistoryRequestEntity.ts';
+import { PointHistoryType } from '../../../enums/PointHistoryType.tsx';
 interface Props {
 	children?: React.ReactNode;
 	paymentCash: number, // 코드룸 캐시
@@ -25,6 +27,10 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
 	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
 		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
+	});
+	const { isLoading : isPointDataLoading, data: pointData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.point],
+		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
 	});
 	const { mutateBootpayRequest } = useMutateBootPayPaymentRequest();
 
@@ -114,7 +120,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
 		};
 
 		console.log(entity);
-		if(cashData){
+		if(cashData && pointData){
 			await mutateBootpayRequest(entity);
 
 			// 유저 캐시 증가 -> 캐시 사용기록 insert
@@ -127,6 +133,17 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
 			}
 	
 			await apiClient.insertUserCashHistory(cashHistory);
+
+			// 포인트 증가
+			const pointHistory: PointHistoryRequestEntity = {
+				user_token: userLogin!.userToken!,
+				point: bonusPoint!,
+				amount: pointData + bonusPoint!,
+				description: "캐시 충전 보너스 포인트",
+				point_history_type: PointHistoryType.earn_point,
+			}
+	
+			await apiClient.insertUserPointHistory(pointHistory);
 	
 			handleOpenDialog();
 		}
