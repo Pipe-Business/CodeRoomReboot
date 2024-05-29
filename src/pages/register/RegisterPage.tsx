@@ -15,6 +15,9 @@ import { UserEntity } from '../../data/entity/UserEntity.ts';
 import { useMutation } from '@tanstack/react-query';
 import { User } from '@supabase/supabase-js';
 import { API_ERROR } from '../../constants/define';
+import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity.ts';
+import { NotificationEntity } from '../../data/entity/NotificationEntity.ts';
+import { NotificationType } from '../../enums/NotificationType.tsx';
 interface Props {
 	children?: React.ReactNode;
 }
@@ -54,8 +57,18 @@ const RegisterPage: FC<Props> = () => {
 				}
 	
 				await apiClient.insertUserPointHistory(pointHistory);
+				return user.id;
 		},
-		onSuccess: () => {
+		onSuccess: async (userToken:string) => {
+			const notificationEntity: NotificationEntity ={
+				title : '포인트 지급 알림',
+				content: '가입 축하 포인트로 1000 포인트가 지급 되었습니다',
+				from_user_token: userToken, // todo 관리자 토큰으로 수정 필요. 현재 관리자 토큰으로 보내면 안됨
+				to_user_token: userToken,
+				notification_type: NotificationType.get_point,
+			}
+			await apiClient.insertNotification(notificationEntity);
+
 			toast.success('회원가입에 성공하였습니다. 로그인 해주세요.');
 			toast.success('가입 축하 포인트 1000p가 지급되었습니다.');
 		},
