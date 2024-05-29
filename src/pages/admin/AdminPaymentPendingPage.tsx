@@ -23,7 +23,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 
 	const { isLoading:paymentPendingLoading, data: paymentPendingData, refetch } = useQuery({
 		queryKey: ['/purchaseSalehistory'],
-		queryFn: () => apiClient.getAdminPurchaseSaleHistory(false)
+		queryFn: () => apiClient.getAdminPurchaseSaleHistory(isSettlement)
 	});
 	const [date, setDate] = useState<string>();
 	const onChangeDate = useCallback((e: any) => {
@@ -108,7 +108,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			<ListItem>
 				<ListItemText>
 					<div style={{ display: 'flex', width: '100%' }}>
-						<div style={{ width: '10%' }}>
+						<div style={{ width: '15%' }}>
 							정산시간
 						</div>
 						<div style={{ display: 'flex', alignItems: 'center', width: '35%' }}>
@@ -117,7 +117,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 						<div style={{ width: '35%' }}>
 							구매한 유저
 						</div>
-						<div style={{ width: '15%' }}>
+						<div style={{ width: '10%' }}>
 							결제한 캐시
 						</div>
 						<div style={{ width: '5%' }}>
@@ -131,8 +131,8 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 					 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
 				}
 			}) : filterData?.map(item => {
-                return <div>{item.purchase_user_token}</div>
-				// return <PaymentPending key={item.id} item={item} refetch={refetch} />;
+                // return <div>{item.purchase_user_token}</div>
+				 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
 			})}
 		</>
 	);

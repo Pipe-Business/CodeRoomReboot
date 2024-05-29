@@ -85,14 +85,8 @@ const AdminPage: FC<Props> = () => {
 					<AdminPaymentPendingPage isSettlement={false}/>
 				</TabPanel>
 				<TabPanel value='5'>
-					<AdminCodeRequestList type={'approve'} />
+					<AdminPaymentPendingPage isSettlement={true}/>
 				</TabPanel>
-				{/* <TabPanel value='4'>
-					<AdminPaymentPendingPage isSettlement={false} />
-				</TabPanel> 
-				 <TabPanel value='5'>
-					<AdminPaymentPendingPage isSettlement={true} />
-				</TabPanel> */}
 				<TabPanel value='6'>
 					<AdminCodeRequestList type={'approve'} />
 				</TabPanel>

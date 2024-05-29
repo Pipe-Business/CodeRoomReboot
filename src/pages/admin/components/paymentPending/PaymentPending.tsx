@@ -65,7 +65,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 			<ListItem>
 				<ListItemText>
 					<div style={{ display: 'flex', width: '100%' }}>
-						<div style={{ width: '10%' }}>
+						<div style={{ width: '15%' }}>
 							{item.is_confirmed ?reformatTime(item.created_at!):'정산전'}
 						</div>
 						
@@ -78,7 +78,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 								<div style={{ fontSize: 12 }}>{purchaseUserData!.nickname}</div>
 							</div>
 						</div>
-						<div style={{ width: '25%' }}>
+						<div style={{ width: '35%' }}>
 							<div style={{display:'flex'}}>
 								<UserProfileImage userId={item.purchase_user_token!}/>
 								<div>
@@ -87,7 +87,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 								</div>
 							</div>
 						</div>
-						<div style={{ width: '17%' }}>
+						<div style={{ width: '10%' }}>
 							{item.price!.toLocaleString()} 캐시
 						</div>
 						<div style={{ width: '5%' }}>
