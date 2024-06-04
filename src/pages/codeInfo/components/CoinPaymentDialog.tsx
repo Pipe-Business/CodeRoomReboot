@@ -35,7 +35,7 @@ const CashPaymentDialog = (onConfirm) => {
     const { mutate } = useMutation({
         mutationFn: async () => {
             const cashHistory = {
-                user_token: userLogin!.id,
+                user_token: userLogin!.userToken,
                 cash: postData?.price!,
                 amount: cashData == undefined ? 0 : cashData - postData?.price!,
                 description: "코드 구매",
