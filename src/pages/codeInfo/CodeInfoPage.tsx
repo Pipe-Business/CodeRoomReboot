@@ -91,8 +91,8 @@ const CodeInfo: FC<Props> = () => {
 			setReviews(reviews);
 		}
 		if (id) {
-			apiClient.updateViewCount(Number(id));			
-			fetchReviews();        	
+			apiClient.updateViewCount(Number(id));
+			fetchReviews();
 			console.log(`reviews is ${reviews}`);
 		}
 	}, []);
@@ -188,7 +188,7 @@ const CodeInfo: FC<Props> = () => {
 	});
 
 	const { isLoading: isLikedNumberLoading, data: likedNumberData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.like,postData?.id],
+		queryKey: [REACT_QUERY_KEY.like, postData?.id],
 		queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
 	});
 
@@ -233,18 +233,6 @@ const CodeInfo: FC<Props> = () => {
 
 					<BlurContainer isBlur={isBlur}>
 						<CardContent>
-							<div style={{ display: 'flex', flexDirection: 'row' }}>
-
-								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-
-									{/* <span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.popularity} 코드룸 포인트 🔥</span> */}
-									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.buyerCount * postData.price} 코드룸 포인트 🔥</span>
-								</MarginHorizontal>
-
-								<Box width={16} />
-
-							</div>
-
 							<Box height={8} />
 
 							<MarginHorizontal size={8} style={{ marginTop: 24, }}>
@@ -272,7 +260,7 @@ const CodeInfo: FC<Props> = () => {
 									</MarginHorizontal>
 
 									<div style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', }}>{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR ]} /  {postData.language}</span>
+										<span style={{ color: '#000000', fontSize: '16px', }}>{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} /  {postData.language}</span>
 									</div>
 
 								</div>
@@ -288,18 +276,6 @@ const CodeInfo: FC<Props> = () => {
 
 									<div style={{ marginTop: 8, marginBottom: 8, }}>
 										<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price} 캐시 / ${postData.price * 5} 커밋 포인트`} </span>
-									</div>
-
-								</div>
-
-								<div style={{ display: 'flex', flexDirection: 'row', }}>
-
-									<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>판매자 : </span>
-									</MarginHorizontal>
-
-									<div style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', }}>{postUserData.nickname} </span>
 									</div>
 
 								</div>
@@ -324,12 +300,12 @@ const CodeInfo: FC<Props> = () => {
 										<Box height={64} />
 
 										<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-											<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>결과물 이미지</span>
+											<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>템플릿 결과물 이미지</span>
 										</MarginHorizontal>
 
 										<Box height={16} />
 
-										<Slider
+										<Slider									
 											nextArrow={<SampleNextArrow />}
 											prevArrow={<SamplePrevArrow />}
 											dots={true}
@@ -341,8 +317,8 @@ const CodeInfo: FC<Props> = () => {
 										>
 
 											{postData.images.map((url, key) => {
-												return <img alt={'image'} key={key} style={{
-													objectFit: 'contain',
+												return <img alt={'image'} key={key} style={{													
+													objectFit: 'contain'
 												}} src={url} />;
 											})
 											}
@@ -382,6 +358,7 @@ const CodeInfo: FC<Props> = () => {
 							<Box height={32} />
 
 							<div style={{ display: 'flex', flexDirection: 'row', }}>
+
 								<CodeInfoBuyItByCashButton
 									postId={postData.id}
 									isBlur={isBlur}
@@ -412,12 +389,16 @@ const CodeInfo: FC<Props> = () => {
 									onPaymentConfirm={onPointClickConfirm}
 									onClickLoginRegister={onOpenLoginDialog}
 									onOpenPointDialog={onOpenPointDailog}
-								/>
-								<Box width={32} />
-								<IconButton onClick={onClickLike}>
-									{isLike ? <ThumbUpIcon sx={{ color: 'red' }} /> : <ThumbUpIcon />}
-								</IconButton>
+								/>															
 							</div>
+							<Box height={48}/>
+							<MarginHorizontal>
+							<span style={{ color: '#000000', fontSize: '22px', fontWeight: 'bold' }}>이 코드 템플릿이 좋아요</span>							
+							</MarginHorizontal>
+							<IconButton onClick={onClickLike}>
+									{isLike ? <ThumbUpIcon sx={{ color: '#3179f8' ,width: '50px', height: '50px'}} /> : <ThumbUpIcon />}
+							</IconButton>	
+							
 
 							{!userLogin && <CenterBox>
 								<MarginHorizontal size={8}>
@@ -434,15 +415,23 @@ const CodeInfo: FC<Props> = () => {
 
 				<Box width={24} />
 				<BlurContainer isBlur={isBlur}>
-					<Box height={48} />
+					<Box height={150} />
+
+
 					<Card sx={{
 						width: { sm: 150, md: 250 }, height: { sm: 150, md: 250, }
 					}}
 						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} elevation={0}
 					>
-
+						<MarginHorizontal>
+							<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>코드 템플릿 판매자 : </span>
+							<span style={{ color: '#000000', fontSize: '16px', }}>{postUserData.nickname} </span>
+						</MarginHorizontal>
+						<Box height={16} />
+						<span style={{ color: '#000000', fontSize: '20px', fontWeight: 'bold' }}>{postData.buyerCount * postData.price} 인기도 🔥</span>
+						<Box height={16} />
 						{userLogin?.userToken! === postData.userToken && <EditCodeButton codePost={postData} />}
-						<Box height={48} />
+
 						<CodeInfoBuyItByCashButton
 							isBlur={isBlur}
 							point={postData.price}
