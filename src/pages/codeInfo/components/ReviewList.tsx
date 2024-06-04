@@ -13,7 +13,11 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
     return (
         <Box>
             <Box height={100} />
+            <div style={{display:'flex', flexDirection:'row', alignItems:'center'}}>
             <SectionTitle title='구매자 후기' helpText='' /> 
+            <Box width={16}/>
+            <div>{`(${reviews.length}개)`}</div>
+            </div>
             <List>
                 {reviews && reviews.map((review) => (
                     <ListItem key={review.id} alignItems="flex-start">
