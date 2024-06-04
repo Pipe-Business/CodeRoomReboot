@@ -1679,6 +1679,36 @@ async getPurchaseReviews(postId: number): Promise<PurchaseReviewEntity[] | null>
     }
 }
 
+async getTargetPostLikedNumber(postId: number): Promise<Number> {
+    try {
+        const { data, count, error } = await supabase.from('liked')
+            .select('*', {count:'exact'})
+            .eq('post_id', postId);
+
+            let resultNumber;
+            if(!count){
+                resultNumber = 0
+            }else{
+                resultNumber = count;
+            }
+        
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('게시글 좋아요 수 조회에 실패했습니다.');
+        }
+       
+       
+        return resultNumber;        
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('게시글 좋아요 수 조회에 실패했습니다.');
+    }
+}
 
 
 
