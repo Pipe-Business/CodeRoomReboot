@@ -187,6 +187,11 @@ const CodeInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getLikeData(userLogin?.userToken!, postData!.id),
 	});
 
+	const { isLoading: isLikedNumberLoading, data: likedNumberData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.like,postData?.id],
+		queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
+	});
+
 	useEffect(() => {
 		if (likeData != null) {
 			console.log("likedata" + { likeData });
@@ -195,7 +200,7 @@ const CodeInfo: FC<Props> = () => {
 	}, [likeData]);
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin) {
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -237,10 +242,6 @@ const CodeInfo: FC<Props> = () => {
 								</MarginHorizontal>
 
 								<Box width={16} />
-
-								<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-									<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{postData.buyerCount}명 구매 💰</span>
-								</MarginHorizontal>
 
 							</div>
 
@@ -308,6 +309,10 @@ const CodeInfo: FC<Props> = () => {
 
 							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
 								<span style={{ color: '#000000', fontSize: '16px', }}>조회수 : {postData.viewCount} </span>
+							</MarginHorizontal>
+
+							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
+								<span style={{ color: '#000000', fontSize: '16px', }}>좋아요 수 : {likedNumberData!.toString()} </span>
 							</MarginHorizontal>
 
 
