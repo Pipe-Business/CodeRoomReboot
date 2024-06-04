@@ -17,6 +17,7 @@ import { Skeleton } from '@mui/material';
 import { supabase } from '../../api/ApiClient.ts';
 import { User } from '@supabase/supabase-js';
 import FullLayout from '../../layout/FullLayout.tsx';
+import { MainPageCodeListEntity } from '../../data/entity/MainPageCodeListEntity.ts';
 
 function MainPage() {
     // xs -> sm -> md -> lg -> xl
@@ -38,13 +39,13 @@ function MainPage() {
     }, [inputSearch]);
     const navigate = useNavigate();
 
-    const [list, setList] = useState<CodeModel[]>([]);
+    const [list, setList] = useState<MainPageCodeListEntity[]>([]);
     const [count, setCount] = useState(0); // 아이템 총 개수
     const [currentPage, setCurrentPage] = useState(1); // 현재 페이지. default 값으로 1
     const [postPerPage] = useState(20); // 한 페이지에 보여질 아이템 수 
     const [indexOfLastPost, setIndexOfLastPost] = useState(0); // 현재 페이지의 마지막 아이템 인덱스
     const [indexOfFirstPost, setIndexOfFirstPost] = useState(0); // 현재 페이지의 첫번째 아이템 인덱스
-    const [currentPosts, setCurrentPosts] = useState<CodeModel[]>([]); // 현재 페이지에서 보여지는 아이템들
+    const [currentPosts, setCurrentPosts] = useState<MainPageCodeListEntity[]>([]); // 현재 페이지에서 보여지는 아이템들
 
     const setPage = useCallback(
         (page: any) => {

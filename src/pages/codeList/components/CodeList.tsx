@@ -3,10 +3,11 @@ import { CodeModel } from '../../../data/model/CodeModel.ts';
 import { Button } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 import CodeItem from './CodeItem.tsx';
+import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity.ts';
 
 interface Props {
 	children?: React.ReactNode,
-	data?: CodeModel[],
+	data?: MainPageCodeListEntity[],
 	type?: 'code' | 'article'
 }
 

@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { CodeModel } from '../../../data/model/CodeModel';
 import styles from '../../../global.module.css';
 import { calcTimeDiff } from '../../../utils/DayJsHelper';
-
-
+import {Box} from '@mui/material';
+import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity';
 
 interface Props {
 	children?: React.ReactNode;
-	item: CodeModel;
+	item: MainPageCodeListEntity;
 }
 const CodeItem: FC<Props> = ({item}) => {
 
@@ -44,10 +44,14 @@ const CodeItem: FC<Props> = ({item}) => {
 							</div>
 						</div>
 
-						{/* 포인트, 닉네임, 시간*/}
+						{/* 캐시, 닉네임, 시간*/}
 						<div style={{ display: 'flex', alignItems: '', flexDirection: 'row', marginLeft: '8px', marginTop: '8px' }}>
 							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey', fontWeight: 'bold' }}>
-								{parseInt(item.price.toString()).toLocaleString()} c
+								{parseInt(item.price.toString()).toLocaleString()} ©
+							</div>
+							<Box width={8}/>
+							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey', fontWeight: 'bold' }}>
+								{parseInt((item.price* 5).toString()).toLocaleString()} 🌱
 							</div>
 						</div>
 
@@ -58,23 +62,25 @@ const CodeItem: FC<Props> = ({item}) => {
 									{item.hashTag.map((e)=>`#${e} `)}
 								</div> */}
 
-							{/* <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
-								{0}
-							</div> */}
-							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey' }}>
+							<div className={styles.textOverflow} style={{ textAlign: 'center', color:'grey'}}>
+								좋아요 : {item.likeCount} 
+							</div>
+
+							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey',marginLeft:'16px' }}>
 								{/* 코드룸 포인트 : {item.popularity} */}
 								코드룸 포인트 : {item.buyerCount*item.price}
 							</div>
 
-							{/* <div className={styles.textOverflow} style={{ textAlign: 'center',marginLeft:'16px', color:'grey'}}>
-								 {userById.nickname} 
-                                닉네임
-							</div> */}
-							<div className={styles.textOverflow} style={{ textAlign: 'center', marginLeft: '16px', color: 'grey' }}>
-								{calcTimeDiff(item.createdAt)}
+							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey',marginLeft:'16px' }}>
+								후기 : {item.reviewCount}
 							</div>
+							
+							
 
 						</div>
+						<div className={styles.textOverflow} style={{ textAlign: 'center', marginLeft: '8px', color: 'grey' }}>
+								{calcTimeDiff(item.createdAt)}
+							</div>
 					</div>
 				</ListItemText>
 			</ListItem>
