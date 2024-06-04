@@ -315,7 +315,7 @@ class ApiClient implements SupabaseAuthAPI {
 
             for (const file of files) {
 
-                const path: string = `boards/code/${userToken}_${postId}_${file.name}.png`;
+                const path: string = `boards/code/${userToken}_${postId}_${file.name}`;
 
                 const { data, error } = await supabase
                     .storage
@@ -338,6 +338,25 @@ class ApiClient implements SupabaseAuthAPI {
         } catch (e: any) {
             console.log(e);
             throw new Error('이미지 저장에 실패했습니다.');
+        }
+    }
+
+    async deleteUnselectedImg(lstDeleteImg:string[]) {
+        try {
+            const lstDeleteImgName:string[] = [];
+            for(const url of lstDeleteImg){
+                console.log("삭제될 이미지 경로: "+JSON.stringify(url));
+                const imageName = url.split('coderoom/'); // https:~~형태로 시작하는 문자열을 split
+                lstDeleteImgName.push(imageName[1]);
+            }
+            //console.log("삭제될 이미지 이름: "+JSON.stringify(lstDeleteImgName));
+
+            await supabase.storage.from('coderoom').remove(lstDeleteImgName);
+
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('게시글 수정 중 이미지 삭제에 실패했습니다.');
         }
     }
 
