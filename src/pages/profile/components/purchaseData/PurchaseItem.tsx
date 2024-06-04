@@ -4,20 +4,25 @@ import { Divider, ListItem, ListItemAvatar, ListItemButton, ListItemText, Button
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from '../../../../api/ApiClient';
 import CodeDownloadButton from '../../../codeInfo/components/CodeDownloadButton';
-import { User } from '@supabase/supabase-js';
 
 interface Props {
     children?: React.ReactNode;
     purchaseData: PurchaseSaleResponseEntity;
+    onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
+    reviewerUserToken: string;
 }
 
-const PurchaseItem: FC<Props> = ({ purchaseData }) => {
+const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
     const { userId } = useParams();
     const { data: codeData } = useQuery({ queryKey: ['codeStore', purchaseData.post_id], queryFn: () => apiClient.getTargetCode(purchaseData.post_id) });
     const navigate = useNavigate();
     const { data: postedUser } = useQuery({
         queryKey: ['users', purchaseData?.sales_user_token, 'nickname'],
         queryFn: () => apiClient.getTargetUser(purchaseData.sales_user_token),
+    });
+    const { data: reviewData } = useQuery({
+        queryKey: ['review', purchaseData.post_id],
+        queryFn: () => apiClient.getReviewByPostAndUser(purchaseData.post_id),
     });
 
     const onClickListItem = useCallback((e: any) => {
@@ -27,12 +32,11 @@ const PurchaseItem: FC<Props> = ({ purchaseData }) => {
         }
     }, [codeData]);
 
-    const onWriteReviewClick = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const handleWriteReviewClick = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
-        // show write review dialog
-		
-		
-    }, [purchaseData]);
+        console.log('handleWriteReviewClick : ' + purchaseData.post_id);
+        onWriteReviewClick(purchaseData);    
+    }, [onWriteReviewClick, purchaseData]);
 
     if (!codeData) {
         return <></>;
@@ -43,11 +47,10 @@ const PurchaseItem: FC<Props> = ({ purchaseData }) => {
             <ListItemButton onClick={onClickListItem}>
                 <ListItem secondaryAction={
                     <>
-                        {!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.githubRepoUrl} />}					
-                        <Button variant="outlined" onClick={onWriteReviewClick} style={{ height: '53px', width: '200px' }}>리뷰 작성하기</Button>						
+                        {!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.githubRepoUrl} />}
+                        {!reviewData && <Button variant="outlined" onClick={handleWriteReviewClick} style={{ height: '53px', width: '200px' }}>리뷰 작성하기</Button>}
                     </>
                 }>
-					
                     <ListItemText
                         primary={codeData?.title}
                         secondary={postedUser?.nickname}

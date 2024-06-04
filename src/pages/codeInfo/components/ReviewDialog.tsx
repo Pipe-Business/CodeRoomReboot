@@ -9,10 +9,10 @@ interface ReviewDialogProps {
     postId: number;
     open: boolean;
     onClose: () => void;
+    onReviewSubmit: () => void;
 }
 
-const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose }) => {
-    console.log(`@@@@@@ hongchul post id ${postId} @@@@@@`);
+const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSubmit }) => { 
     const [review, setReview] = useState<PurchaseReviewEntity>({
         post_id: postId,
         review_title: '',
@@ -41,6 +41,7 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose }) => {
         try {            
             await apiClient.setReviewData(review);
             alert('소중한 리뷰 감사드립니다 :)');
+            onReviewSubmit();
             onClose();
         } catch (error) {
             console.error('Error submitting review:', error);

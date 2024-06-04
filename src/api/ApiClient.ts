@@ -1407,6 +1407,30 @@ async setReviewData(review: PurchaseReviewEntity) {
     }
 }
 
+// 특정 post_id와 reviewer_user_token에 대한 리뷰 조회 함수 추가
+async getReviewByPostAndUser (post_id: number): Promise<PurchaseReviewEntity> {
+    const userResponse = await this.getCurrentLoginUser();            
+    const myToken: string = userResponse.user.id;
+
+    const { data, error } = await supabase
+        .from('purchase_review')
+        .select()
+        .eq('post_id', post_id)
+        .eq('reviewer_user_token', myToken)
+        .single();
+
+    if (error) {
+        console.log("error" + error.message);
+        console.log("error" + error.code);
+        console.log("error" + error.details);
+        console.log("error" + error.hint);
+
+        throw new Error('작성된 리뷰 데이터를 가져오는데에 실패했습니다.');
+    }
+
+    return data;
+};
+
 async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
     try {
         const { data, error } = await supabase.from('purchase_sale_history')
