@@ -164,7 +164,6 @@ const MyPage: FC<Props> = () => {
                     </div>
                     </SectionWrapper>
                     <Box height={32} />
-
                     <SectionWrapper>
 
                         {tab}

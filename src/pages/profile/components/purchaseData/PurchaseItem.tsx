@@ -20,6 +20,7 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
         queryKey: ['users', purchaseData?.sales_user_token, 'nickname'],
         queryFn: () => apiClient.getTargetUser(purchaseData.sales_user_token),
     });
+
     const { data: reviewData } = useQuery({
         queryKey: ['review', purchaseData.post_id],
         queryFn: () => apiClient.getReviewByPostAndUser(purchaseData.post_id),
@@ -37,6 +38,7 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
         console.log('handleWriteReviewClick : ' + purchaseData.post_id);
         onWriteReviewClick(purchaseData);    
     }, [onWriteReviewClick, purchaseData]);
+
 
     if (!codeData) {
         return <></>;

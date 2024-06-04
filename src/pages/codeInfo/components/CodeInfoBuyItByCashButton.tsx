@@ -5,6 +5,7 @@ import CodeDownloadButton from './CodeDownloadButton';
 
 
 interface Props {
+	postId: number,
 	children?: React.ReactNode,
 	codeHostId: string,
 	userId?: string,
@@ -22,6 +23,7 @@ interface Props {
 
 const CodeInfoBuyItByCashButton: FC<Props> = (
 	{
+		postId,
 		codeHostId,
 		userId,
 		purchasedSaleData,

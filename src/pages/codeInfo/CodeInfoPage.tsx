@@ -327,6 +327,8 @@ const CodeInfo: FC<Props> = () => {
 											<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>결과물 이미지</span>
 										</MarginHorizontal>
 
+										<Box height={16} />
+
 										<Slider
 											nextArrow={<SampleNextArrow />}
 											prevArrow={<SamplePrevArrow />}
