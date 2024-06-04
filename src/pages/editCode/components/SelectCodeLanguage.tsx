@@ -5,11 +5,11 @@ import { LANGUAGE_FILTER } from '../../../constants/define';
 interface Props {
 	children?: React.ReactNode;
 	inputCategory: string;
-	setCategory:React.Dispatch<React.SetStateAction<string>>
+	setLanguage:React.Dispatch<React.SetStateAction<string>>
 }
 
 
-const SelectCodeLanguage: FC<Props> = ({ inputCategory, setCategory }) => {
+const SelectCodeLanguage: FC<Props> = ({ inputCategory, setLanguage: setLanguage }) => {
 	const [labelMsg,setLabelMsg] = useState('사용언어를 선택해주세요.')
 	const onChangeSelectCategory = useCallback((e: SelectChangeEvent) => {
 		const updateValue = e.target.value as string
@@ -20,7 +20,7 @@ const SelectCodeLanguage: FC<Props> = ({ inputCategory, setCategory }) => {
 		else{
 			setLabelMsg('')
 		}
-		setCategory(updateValue);
+		setLanguage(updateValue);
 
 	}, [inputCategory]);
 

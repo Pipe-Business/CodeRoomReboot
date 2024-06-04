@@ -28,6 +28,7 @@ import MessageModal from './components/MessageModal';
 import ReviewDialog from './components/ReviewDialog';
 import { PurchaseReviewEntity } from '../../data/entity/PurchaseReviewEntity';
 import ReviewList from './components/ReviewList';
+import { CATEGORY_TO_KOR } from '../../constants/define.ts';
 
 dayjs.locale('ko');
 
@@ -259,7 +260,7 @@ const CodeInfo: FC<Props> = () => {
 								<span style={{ color: 'blue', fontSize: '24px', fontWeight: 'lighter' }}>{postData.hashTag.map((e) => `#${e} `)} </span>
 							</MarginHorizontal> */}
 
-							{/* 카테고리, 가격  */}
+							{/* 카테고리, 언어 ,가격  */}
 							<div style={{ display: 'flex', flexDirection: 'row' }}>
 
 								{/* 카테고리 */}
@@ -270,7 +271,7 @@ const CodeInfo: FC<Props> = () => {
 									</MarginHorizontal>
 
 									<div style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', }}>{postData.postType} / {postData.category} </span>
+										<span style={{ color: '#000000', fontSize: '16px', }}>{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR ]} /  {postData.language}</span>
 									</div>
 
 								</div>

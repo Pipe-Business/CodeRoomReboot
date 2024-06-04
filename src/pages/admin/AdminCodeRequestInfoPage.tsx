@@ -135,8 +135,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 				<ContentWrapper>
 					<div style={{ whiteSpace: 'pre-wrap' }}>개발언어</div>
 					<span style={{ display: 'flex', alignItems: 'center' }}>
-					{/* <PictogramImage size={40} formType={data.formType} category={data.category} /> */}
-					<span style={{ marginLeft: 16 }}>{data.category}</span>
+					<span style={{ marginLeft: 16 }}>{data.language}</span>
 					</span>
 				</ContentWrapper>
 				<Divider />

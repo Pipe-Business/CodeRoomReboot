@@ -44,8 +44,8 @@ const EditCodePage: FC<Props> = () => {
     const inputUrlRef = useRef<HTMLInputElement | null>(null);
     const inputGuideRef = useRef<HTMLInputElement | null>(null);
 
-    const [inputCategory, setCategory] = useState('');
-    const [inputLanguage, setLanguage] = useState(postData?.category ?? "");//카테고리를 언어로 저장하고 있음..
+    const [inputCategory, setCategory] = useState(postData?.category ?? "");
+    const [inputLanguage, setLanguage] = useState(postData?.language ?? "");
     const [inputPoint, , setPoint] = useInput<number | ''>(postData?.price ?? 0);
     const [inputGithubUrl, setGithubUrl] = useState(postData?.githubRepoUrl ?? "");
     let postId: number;
@@ -195,7 +195,8 @@ const EditCodePage: FC<Props> = () => {
                 title: inputTitle,
                 post_id: postData?.id!,
                 description: inputDescription,
-                category: inputLanguage,
+                language : inputLanguage,
+                category: inputCategory,
                 cost: inputPoint,
                 buyer_guide: inputGuide,
                 img_urls : resultImgUrl,
@@ -283,7 +284,7 @@ const EditCodePage: FC<Props> = () => {
 
                     <div>
                         <SectionTitle title='개발언어' />
-                        <SelectCodeLanguage inputCategory={inputLanguage} setCategory={setLanguage} />
+                        <SelectCodeLanguage inputCategory={inputLanguage} setLanguage={setLanguage} />
                     </div>
 
                 </div>
