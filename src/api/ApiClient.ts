@@ -17,6 +17,7 @@ import { BootPayPaymentEntity } from "../data/entity/BootpayPaymentEntity.ts";
 import { title } from "process";
 import { PurchaseReviewEntity } from "../data/entity/PurchaseReviewEntity.ts";
 import { AdminUserManageEntity } from "../data/entity/AdminUserManageEntity.ts";
+import { MainPageCodeListEntity } from "../data/entity/MainPageCodeListEntity.ts";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -54,39 +55,49 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getAllCode(): Promise<CodeModel[]> {
+    async getAllCode(): Promise<MainPageCodeListEntity[]> {
         try {
             const { data, error } = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .eq('state', "approve")
                 .order('created_at', { ascending: false });
 
-            let lstCodeModel: CodeModel[] = [];
-            data?.forEach((e) => {
-                let codeModel: CodeModel = {
-                    id: e.id,
-                    title: e.title,
-                    description: e.description,
-                    images: e.images,
-                    price: e.code.cost,
-                    userToken: e.user_token,
-                    category: e.category,
-                    language:e.code.language,
-                    postType: e.post_type,
-                    createdAt: e.created_at,
-                    buyerGuide: e.code.buyer_guide,
-                    githubRepoUrl: e.code.github_repo_url,
-                    buyerCount: e.code.buyer_count,
-                    popularity: e.code.popularity,
-                    hashTag: e.hash_tag,
-                    sellerGithubName: e.code.seller_github_name,
-                    state: e.state,
-                    adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage: e.reject_message,
-                    viewCount: e.view_count,
-                }
-                lstCodeModel.push(codeModel);
-            });
+
+            let lstCodeModel: MainPageCodeListEntity[] = [];
+            if(data){
+                for(const e of data){
+                   const likedCount: number =  await this.getTargetPostLikedNumber(e.id);
+                    const reviewCount: number = await this.getPurchaseReviewsCount(e.id);
+                
+    
+                        let codeModel: MainPageCodeListEntity = {
+                            id: e.id,
+                            title: e.title,
+                            description: e.description,
+                            images: e.images,
+                            price: e.code.cost,
+                            userToken: e.user_token,
+                            category: e.category,
+                            language:e.code.language,
+                            postType: e.post_type,
+                            createdAt: e.created_at,
+                            buyerGuide: e.code.buyer_guide,
+                            githubRepoUrl: e.code.github_repo_url,
+                            buyerCount: e.code.buyer_count,
+                            popularity: e.code.popularity,
+                            hashTag: e.hash_tag,
+                            sellerGithubName: e.code.seller_github_name,
+                            state: e.state,
+                            adminGitRepoURL: e.code.admin_git_repo_url,
+                            rejectMessage: e.reject_message,
+                            viewCount: e.view_count,
+                            likeCount:likedCount,
+                            reviewCount:reviewCount,
+                        }
+                        lstCodeModel.push(codeModel);
+                    }
+            }
+           
             //console.log(data);
             return lstCodeModel;
         }
@@ -1703,7 +1714,37 @@ async getPurchaseReviews(postId: number): Promise<PurchaseReviewEntity[] | null>
     }
 }
 
-async getTargetPostLikedNumber(postId: number): Promise<Number> {
+async getPurchaseReviewsCount(postId: number): Promise<number> {
+    try {
+        const { data, count, error } = await supabase.from('purchase_review')
+            .select('*', {count:'exact'})
+            .eq('post_id', postId);                        
+
+            let resultNumber;
+            if(!count){
+                resultNumber = 0
+            }else{
+                resultNumber = count;
+            }
+        
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('리뷰 리스트 갯수 조회에 실패했습니다');
+        }
+        return resultNumber;
+       
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('리뷰 리스트 갯수 조회에 실패했습니다');
+    }
+}
+
+async getTargetPostLikedNumber(postId: number): Promise<number> {
     try {
         const { data, count, error } = await supabase.from('liked')
             .select('*', {count:'exact'})
@@ -1733,45 +1774,6 @@ async getTargetPostLikedNumber(postId: number): Promise<Number> {
         throw new Error('게시글 좋아요 수 조회에 실패했습니다.');
     }
 }
-
-async getPurchaseReviews(postId: number): Promise<PurchaseReviewEntity[] | null> {
-    try {
-        const { data, error } = await supabase.from('purchase_review')
-            .select()
-            .eq('post_id', postId)
-            .order('created_at', { ascending: false });                        
-
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
-
-            throw new Error('리뷰 리스트 조회에 실패했습니다');
-        }
-        let lstReview: PurchaseReviewEntity[] = [];    
-        data?.forEach((e) => {
-            let reviewModel: PurchaseReviewEntity = {
-                id: e.id,
-                post_id: e.post_id,
-                review_title: e.review_title,
-                review_content: e.review_content,
-                rating: e.rating,
-                reviewer_user_token: e.reviewer_user_token,
-                created_at: e.created_at
-            }
-            lstReview.push(reviewModel);
-        });
-        console.log(data);
-        return lstReview;        
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('리뷰 리스트 조회에 실패했습니다');
-    }
-}
-
-
 
 
 }
