@@ -11,12 +11,11 @@ import CashConfirmList from './cashData/CashConfirmList';
 
 interface Props {
     children?: React.ReactNode;
-    purchaseData: PurchaseSaleResponseEntity[],  
     cashConfirmData : PurchaseSaleResponseEntity[],
     cashConfirmPendingData : PurchaseSaleResponseEntity[],
 }
 
-const SellerContentData: FC<Props> = ({ purchaseData, cashConfirmData, cashConfirmPendingData}) => {
+const SellerContentData: FC<Props> = ({ cashConfirmData, cashConfirmPendingData}) => {
     const navigate = useNavigate();
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
 
@@ -29,24 +28,6 @@ const SellerContentData: FC<Props> = ({ purchaseData, cashConfirmData, cashConfi
           
             {/* <SectionWrapper> */}
 
-            <h4>판매</h4>
-
-            <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
-                elevation={1}>
-                <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>판매된 코드 내역</div>}
-                    action={
-                        <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/sale`, { state: { saleData: purchaseData, userLogin: userLogin } });
-                        }}>
-                            더보기</Button>
-                    }
-                />
-                <CardContent>
-                    <SaleList saleData={purchaseData?.slice(0, 3)}/>
-                </CardContent>
-            </Card>
-           
             <Box height={32} />
             <h4>수익</h4>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised

@@ -7,6 +7,7 @@ import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
 import PurchaseList from './purchaseData/PurchaseList';
 import CodePendingOrPendingList from './code/MyCodeList';
 import CashHistoryList from './CashHistoryData/CashHistoryList';
+import SaleList from './saleData/SaleList';
 
 interface Props {
     children?: React.ReactNode;
@@ -43,6 +44,27 @@ const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCo
             </Card>
 
             <Box height={32} />
+
+            <h4>판매</h4>
+
+            <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
+                elevation={1}>
+                <CardHeader
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>판매된 코드 내역</div>}
+                    action={
+                        <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
+                            navigate(`/profile/my/sale`, { state: { saleData: purchaseData, userLogin: userLogin } });
+                        }}>
+                            더보기</Button>
+                    }
+                />
+                <CardContent>
+                    <SaleList saleData={purchaseData?.slice(0, 3)}/>
+                </CardContent>
+            </Card>
+
+            <Box height={32} />
+
 
             <h4>나의 코드</h4>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>

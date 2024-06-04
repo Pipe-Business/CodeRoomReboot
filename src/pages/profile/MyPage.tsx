@@ -178,7 +178,7 @@ const MyPage: FC<Props> = () => {
                                 <BuyerContentData purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!}  cashHistoryData={cashHistoryData!} pointHistoryData={pointHistoryData!} onWriteReviewClick={handleWriteReviewClick} />
                             </TabPanel>
                             <TabPanel value='2' sx={{ flex: 1 }}>
-                                <SellerContentData purchaseData={purchaseData!} cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>
+                                <SellerContentData cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>
                             </TabPanel>
                         </TabContext>
 
