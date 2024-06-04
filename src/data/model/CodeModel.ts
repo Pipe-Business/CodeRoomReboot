@@ -6,7 +6,8 @@ export type CodeModel = {
     price: number /** 코드 가격 */
     userToken: string, // 게시자 usertoken
     popularity:number, // 코드 평점
-    category: string, /** 카테고리(사용언어) */
+    category: string, /** 카테고리(프론트엔드, 웹 퍼블리싱 등..) */
+    language:string, // 개발 언어
     createdAt: string,  /** 코드 생성일 */
     postType:string, // 코드 / 글
     hashTag: string[],
