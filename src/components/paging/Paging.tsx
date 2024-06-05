@@ -1,12 +1,12 @@
-import React, { FC , useCallback, useRef, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 import Pagination from "react-js-pagination";
 import "./Paging.css";
 
-interface Props{
-    children?: React.ReactNode;
-    page:number,
-    count:number,
-    setPage: (page: any) => void
+interface Props {
+  children?: React.ReactNode;
+  page: number;
+  count: number;
+  setPage: (page: any) => void;
 }
 
 export const Paging: FC<Props> = ({ page, count, setPage }) => {
@@ -16,7 +16,7 @@ export const Paging: FC<Props> = ({ page, count, setPage }) => {
         activePage={page}
         itemsCountPerPage={20}
         totalItemsCount={count}
-        pageRangeDisplayed={20}
+        pageRangeDisplayed={5}
         prevPageText={"<"}
         nextPageText={">"}
         onChange={setPage}
@@ -24,5 +24,5 @@ export const Paging: FC<Props> = ({ page, count, setPage }) => {
     </div>
   );
 };
- 
+
 export default Paging;

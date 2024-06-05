@@ -143,7 +143,7 @@ const HeaderLayout: FC<Props> = () => {
                             </Link>
                         </MarginHorizontal>
                           <MarginHorizontal size={8}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' ©'}</span>
+                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' 💰'}</span>
                         </MarginHorizontal>
                         <MarginHorizontal size={8}>
                                 <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isPointDataLoading ? '' : pointData+' 🌱'}</span>

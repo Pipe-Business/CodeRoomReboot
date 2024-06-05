@@ -92,7 +92,7 @@ function MainPage() {
                 {/* xs={24} sm={24} md={16} lg={16} xl={18}  */}
                 <CenterBox>
                     <MarginHorizontal size={8} style={{ marginTop: 24, marginBottom: 24, }}>
-                        <span style={{ color: '#000000', fontSize: '18px', fontWeight: 'bold' }}>코드룸은 개발자들을 위한 코드거래 플랫폼입니다. </span>
+                        <span style={{ color: '#000000', fontSize: '30px', fontWeight: 'bold' }}>"코드룸은 개발자들을 위한 코드거래 플랫폼입니다"</span>
                     </MarginHorizontal>
                 </CenterBox>
 

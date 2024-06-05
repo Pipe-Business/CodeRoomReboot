@@ -1,91 +1,121 @@
-import { ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { ListItem, ListItemButton, ListItemText, Typography, Box } from '@mui/material';
 import React, { FC, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CodeModel } from '../../../data/model/CodeModel';
+import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity';
 import styles from '../../../global.module.css';
 import { calcTimeDiff } from '../../../utils/DayJsHelper';
-import {Box} from '@mui/material';
-import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity';
 
 interface Props {
-	children?: React.ReactNode;
-	item: MainPageCodeListEntity;
+  children?: React.ReactNode;
+  item: MainPageCodeListEntity;
 }
-const CodeItem: FC<Props> = ({item}) => {
 
-	const navigate = useNavigate();
-	const onClickCode = useCallback(() => {
-		navigate(`/code/${item.id}`);
-	}, [item.id]);
-	
-	return (
-		<ListItemButton sx={{
-			'&:hover': {
-				backgroundColor: '#999',
-			},
-		}} onClick={onClickCode}>
-			<ListItem style={{ paddingLeft: '0px', paddingRight: '0px', paddingTop: '4px', paddingBottom: '4px' }}>
-				<ListItemText>
-					<div style={{
-						display: 'flex', alignItems: 'start', flexDirection: 'column',
-						paddingTop: '24px',
-						paddingBottom: '24px',
-						backgroundColor: '#F3F6FD',
-					}}>
+const CodeItem: FC<Props> = ({ item }) => {
+  const navigate = useNavigate();
+  const onClickCode = useCallback(() => {
+    navigate(`/code/${item.id}`);
+  }, [item.id]);
 
-						<div style={{
-							display: 'flex',
-							alignItems: 'center',
-							// width: item.formType === 'code' ? '65%' : '75%',
+  return (
+    <ListItemButton
+      sx={{
+        transition: 'background-color 0.3s, transform 0.3s, box-shadow 0.3s',
+        '&:hover': {
+          backgroundColor: '#e0e0e0',
+          transform: 'scale(1.02)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)',
+          borderRadius: '8px',
+        },
+      }}
+      onClick={onClickCode}
+    >
+      <ListItem style={{ padding: '4px 0', position: 'relative' }}>
+  <ListItemText>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        padding: '24px 16px',
+        backgroundColor: '#F3F6FD',
+        borderRadius: '8px',
+        position: 'relative', // 리스트 아이템의 위치를 상대적으로 설정
+      }}
+    >
+      <Typography
+        variant="h6"
+        sx={{ marginLeft: '8px', fontWeight: 'bold' }}
+        className={styles.textOverflow}
+      >
+        {item.title}
+      </Typography>
 
-						}}>
-							<div style={{ marginLeft: '8px', fontSize: '24px', }} className={styles.textOverflow}>
-								{item.title}
-							</div>
-						</div>
+      {/* 캐시, 닉네임, 시간 */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row',
+          marginLeft: '8px',
+          marginTop: '8px',
+        }}
+      >
+        <Typography variant="body2" sx={{ color: 'grey', fontWeight: 'bold', textAlign: 'center' }}>
+          {parseInt(item.price.toString()).toLocaleString()} 💰
+        </Typography>
+        <Box width={8} />
+        <Typography variant="body2" sx={{ color: 'grey', fontWeight: 'bold', textAlign: 'center' }}>
+          {parseInt((item.price * 5).toLocaleString())} 🌱
+        </Typography>
+      </Box>
 
-						{/* 캐시, 닉네임, 시간*/}
-						<div style={{ display: 'flex', alignItems: '', flexDirection: 'row', marginLeft: '8px', marginTop: '8px' }}>
-							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey', fontWeight: 'bold' }}>
-								{parseInt(item.price.toString()).toLocaleString()} ©
-							</div>
-							<Box width={8}/>
-							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey', fontWeight: 'bold' }}>
-								{parseInt((item.price* 5).toString()).toLocaleString()} 🌱
-							</div>
-						</div>
+      {/* 태그, 좋아요 수, popularity */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row',
+          marginLeft: '8px',
+          marginTop: '8px',
+        }}
+      >
+        <Typography variant="body2" sx={{ color: 'grey', textAlign: 'center' }}>
+          좋아요 : {item.likeCount}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'grey', textAlign: 'center', marginLeft: '16px' }}>
+          인기도 : {item.buyerCount * item.price}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'grey', textAlign: 'center', marginLeft: '16px' }}>
+          후기 : {item.reviewCount}
+        </Typography>
+      </Box>
 
+      <Typography
+        variant="body2"
+        sx={{ textAlign: 'center', marginLeft: '8px', color: 'grey', marginTop: '8px' }}
+        className={styles.textOverflow}
+      >
+        {/* 기존의 위치 */}
+      </Typography>
 
-						{/*  태그, 좋아요 수, popularity*/}
-						<div style={{ display: 'flex', alignItems: '', flexDirection: 'row', marginLeft: '8px', marginTop: '8px' }}>
-							{/* <div className={styles.textOverflow} style={{textAlign: 'center',color:'grey'}}>
-									{item.hashTag.map((e)=>`#${e} `)}
-								</div> */}
+      {/* item.createdAt을 우측 상단으로 이동 */}
+      <Typography
+        variant="body2"
+        sx={{
+          position: 'absolute',
+          top: '24px',
+          right: '24px',
+          color: 'grey',
+          textAlign: 'center',
+        }}
+        className={styles.textOverflow}
+      >
+        {calcTimeDiff(item.createdAt)}
+      </Typography>
+    </Box>
+  </ListItemText>
+</ListItem>
+    </ListItemButton>
+  );
+};
 
-							<div className={styles.textOverflow} style={{ textAlign: 'center', color:'grey'}}>
-								좋아요 : {item.likeCount} 
-							</div>
-
-							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey',marginLeft:'16px' }}>
-								{/* 코드룸 포인트 : {item.popularity} */}
-								인기도 : {item.buyerCount*item.price}
-							</div>
-
-							<div className={styles.textOverflow} style={{ textAlign: 'center', color: 'grey',marginLeft:'16px' }}>
-								후기 : {item.reviewCount}
-							</div>
-							
-							
-
-						</div>
-						<div className={styles.textOverflow} style={{ textAlign: 'center', marginLeft: '8px', color: 'grey' }}>
-								{calcTimeDiff(item.createdAt)}
-							</div>
-					</div>
-				</ListItemText>
-			</ListItem>
-
-		</ListItemButton>
-	);
-}
-export default CodeItem; 
+export default CodeItem;
