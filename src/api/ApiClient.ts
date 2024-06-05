@@ -963,7 +963,7 @@ class ApiClient implements SupabaseAuthAPI {
                 }
                 lstPurchaseSale.push(purchaseSale);
             });
-            //console.log("구매내역" + { ...data });
+            //console.log("구매내역" +  JSON.stringify(data) );
 
             if (error) {
                 console.log("error" + error.message);
@@ -1293,6 +1293,8 @@ async getMySaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[
             data?.forEach((e) => {
                 lstPurchaseSaleData.push(e);
             });
+            // console.log("판매 기록" +  JSON.stringify(data) );
+
 
         if (error) {
             console.log("error" + error.message);

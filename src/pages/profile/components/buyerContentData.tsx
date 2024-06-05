@@ -11,6 +11,7 @@ import SaleList from './saleData/SaleList';
 
 interface Props {
     children?: React.ReactNode;
+    saleData: PurchaseSaleResponseEntity[];
     purchaseData: PurchaseSaleResponseEntity[];
     pendingCodeData: CodeModel[];
     approvedCodeData: CodeModel[];
@@ -20,7 +21,7 @@ interface Props {
     onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
 }
 
-const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCodeData, rejectedCodeData, cashHistoryData, pointHistoryData, onWriteReviewClick }) => {
+const BuyerContentData: FC<Props> = ({ saleData, purchaseData, pendingCodeData, approvedCodeData, rejectedCodeData, cashHistoryData, pointHistoryData, onWriteReviewClick }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
     const navigate = useNavigate();
 
@@ -53,13 +54,13 @@ const BuyerContentData: FC<Props> = ({ purchaseData, pendingCodeData, approvedCo
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>판매된 코드 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/sale`, { state: { saleData: purchaseData, userLogin: userLogin } });
+                            navigate(`/profile/my/sale`, { state: { saleData: saleData, userLogin: userLogin } });
                         }}>
                             더보기</Button>
                     }
                 />
                 <CardContent>
-                    <SaleList saleData={purchaseData?.slice(0, 3)}/>
+                    <SaleList saleData={saleData?.slice(0, 3)}/>
                 </CardContent>
             </Card>
 

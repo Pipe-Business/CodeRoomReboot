@@ -43,11 +43,11 @@ const SaleItem: FC<Props> = ({ saleData }) => {
                             <div style={{  width:'20%'}}>
                                 {saleData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
                             </div>
-                            <div style={{  width:'20%'}}>
+                            <div style={{  width:'15%'}}>
                                 {saleData.pay_type == "point" ? "포인트" : "캐시"}
                             </div>
-                            <div style={{  width:'10%'}}>
-                               {saleData.is_confirmed ? '정산됨' : saleData.pay_type == "point" ? '' : '미정산'}
+                            <div style={{  width:'15%'}}>
+                               {saleData.is_confirmed ? '정산됨' : saleData.pay_type == "point" ? '해당없음' : '미정산'}
                             </div>
                             <div style={{  width:'10%'}}>
                                 {reformatTime(saleData?.created_at!)}

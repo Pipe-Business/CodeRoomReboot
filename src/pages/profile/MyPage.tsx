@@ -47,8 +47,13 @@ const MyPage: FC<Props> = () => {
     });
 
     const { data: purchaseData, isLoading: purchaseCodeDataLoading, refetch: refetchPurchaseData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.user, userLogin?.userToken!],
+        queryKey: ['/purchase', userLogin?.userToken!],
         queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin!.userToken!),
+    });
+
+    const { data: saleData, isLoading: saleCodeDataLoading, refetch: refetchSaleData } = useQuery({
+        queryKey: ['/sale', userLogin?.userToken!],
+        queryFn: () => apiClient.getMySaleHistory(userLogin!.userToken!),
     });
 
     const { data: mentoringData, isLoading: mentoringDataLoading, refetch: refetchMentoringData } = useQuery({
@@ -108,7 +113,7 @@ const MyPage: FC<Props> = () => {
     };
 
 
-    if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading) {
+    if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading || saleCodeDataLoading) {
         return (
             <FullLayout>
                 <Skeleton style={{ height: '200px' }} />
@@ -175,7 +180,7 @@ const MyPage: FC<Props> = () => {
                                 </TabList>
                             </Box>
                             <TabPanel value='1' sx={{ flex: 1 }}>
-                                <BuyerContentData purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!}  cashHistoryData={cashHistoryData!} pointHistoryData={pointHistoryData!} onWriteReviewClick={handleWriteReviewClick} />
+                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!}  cashHistoryData={cashHistoryData!} pointHistoryData={pointHistoryData!} onWriteReviewClick={handleWriteReviewClick} />
                             </TabPanel>
                             <TabPanel value='2' sx={{ flex: 1 }}>
                                 <SellerContentData cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>
