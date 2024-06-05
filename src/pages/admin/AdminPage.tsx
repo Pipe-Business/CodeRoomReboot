@@ -13,7 +13,7 @@ import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 //import AdminBootpayPaymentPage from './AdminBootpayPaymentPage.tsx';
 import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList.tsx';
 import { supabase } from '../../api/ApiClient.ts';
-import AdminCashPaymentChargePage from './AdminCashPaymentChargePage.tsx';
+import AdminCashPointPage from './AdminCashPointPage.tsx';
 import UserManageList from './components/userManage/UserManageList.tsx';
 
 interface Props {
@@ -36,10 +36,10 @@ const AdminPage: FC<Props> = () => {
 				const { data: { user } } = await supabase.auth.getUser();
 				
 				if(!user || user.id != "cb8378c7-5531-43e0-882d-0f84e19f03ad"){ // 관리자의 유저토큰인지 확인
-					console.log('here!!')
+					// console.log('here!!')
 					navigate('/admin/login');
 				}else{
-					console.log('not here!!')
+					//console.log('not here!!')
 				}
 
 				
@@ -67,10 +67,11 @@ const AdminPage: FC<Props> = () => {
 						<Tab label='요청대기' value='1' />
 						<Tab label='반려내역' value='2' />
 						<Tab label='승인내역' value='3' />
-						<Tab label='정산대기' value='4' />
-						<Tab label='정산내역' value='5' />
-						<Tab label='캐시 정산/충전 관리' value='6' />
-						<Tab label='유저관리' value='7' />
+						<Tab label='캐시' value='4' />
+						<Tab label='포인트' value='5' />
+						<Tab label='정산대기' value='6' />
+						<Tab label='정산내역' value='7' />
+						<Tab label='유저관리' value='8' />
 						
 					</TabList>
 				</Box>
@@ -84,15 +85,18 @@ const AdminPage: FC<Props> = () => {
 					<AdminCodeRequestList type={'approve'} />
 				</TabPanel>
 				<TabPanel value='4'>
-					<AdminPaymentPendingPage isSettlement={false}/>
+					<AdminCashPointPage type={'cash'}/>
 				</TabPanel>
 				<TabPanel value='5'>
-					<AdminPaymentPendingPage isSettlement={true}/>
+					<AdminCashPointPage type={'point'}/>
 				</TabPanel>
 				<TabPanel value='6'>
-					<AdminCashPaymentChargePage />
+					<AdminPaymentPendingPage isSettlement={false}/>
 				</TabPanel>
 				<TabPanel value='7'>
+					<AdminPaymentPendingPage isSettlement={true}/>
+				</TabPanel>
+				<TabPanel value='8'>
 					<UserManageList />
 				</TabPanel>
 			</TabContext>

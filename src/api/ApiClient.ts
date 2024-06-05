@@ -1850,6 +1850,56 @@ async setTrueUserIntroduceRewardStatus(userToken:string) {
 }
 
 
+async getAllUserPointHistory (): Promise<PointHistoryResponseEntity[]> {
+        const { data, error } = await supabase.from('users_point_history')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+            let lstPointHistory: PointHistoryResponseEntity[] = [];
+            data?.forEach((e) => {
+                let pointHistory: PointHistoryResponseEntity = {
+                    id: e.id,
+                    user_token : e.user_token,
+                    point : e.point,
+                    amount : e.amount,
+                    description: e.description,
+                    point_history_type : e.point_history_type,
+                    created_at: e.created_at,
+                }
+                lstPointHistory.push(pointHistory);
+            });
+        return lstPointHistory;
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('관리자 - 유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+    }
+
+    async getAllUserCashHistory (): Promise<CashHistoryResponseEntity[]> {
+        const { data, error } = await supabase.from('users_cash_history')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+            let lstCashHistory: CashHistoryResponseEntity[] = [];
+            data?.forEach((e) => {
+                let cashHistory: CashHistoryResponseEntity = {
+                    id: e.id,
+                    user_token : e.user_token,
+                    cash : e.cash,
+                    amount : e.amount,
+                    description: e.description,
+                    cash_history_type : e.cash_history_type,
+                    created_at: e.created_at,
+                }
+                lstCashHistory.push(cashHistory);
+            });
+        return lstCashHistory;
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('관리자 - 유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
+    }
 }
+
 
 export const apiClient = new ApiClient();
