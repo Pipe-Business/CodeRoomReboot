@@ -29,6 +29,7 @@ import ReviewDialog from './components/ReviewDialog';
 import { PurchaseReviewEntity } from '../../data/entity/PurchaseReviewEntity';
 import ReviewList from './components/ReviewList';
 import { CATEGORY_TO_KOR } from '../../constants/define.ts';
+import DeleteCodeButton from './components/DeleteCodeButton.tsx';
 
 dayjs.locale('ko');
 
@@ -419,7 +420,7 @@ const CodeInfo: FC<Props> = () => {
 
 
 					<Card sx={{
-						width: { sm: 150, md: 250 }, height: { sm: 150, md: 250, }
+						width: { sm: 150, md: 250 }, height: { sm: 300, md: 450, }
 					}}
 						style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} elevation={0}
 					>
@@ -430,8 +431,11 @@ const CodeInfo: FC<Props> = () => {
 						<Box height={16} />
 						<span style={{ color: '#000000', fontSize: '20px', fontWeight: 'bold' }}>{postData.buyerCount * postData.price} 인기도 🔥</span>
 						<Box height={16} />
-						{userLogin?.userToken! === postData.userToken && <EditCodeButton codePost={postData} />}
 
+						{userLogin?.userToken! === postData.userToken && <EditCodeButton codePost={postData} />}
+						<Box height={8} />
+						{userLogin?.userToken! === postData.userToken && <DeleteCodeButton codePost={postData} />}
+						<Box height={24} />
 						<CodeInfoBuyItByCashButton
 							isBlur={isBlur}
 							point={postData.price}
@@ -446,7 +450,7 @@ const CodeInfo: FC<Props> = () => {
 							onOpenPointDialog={onOpenPointDailog}
 						/>
 
-						<Box height={24} />
+						<Box height={8} />
 
 
 						<CodeInfoBuyItByPointButton
@@ -464,7 +468,7 @@ const CodeInfo: FC<Props> = () => {
 						/>
 						{/* CodeInfoBuyItByPointButton */}
 
-						<div style={{ flexDirection: 'row', display: 'flex', marginTop: '16px' }}>
+						<div style={{ flexDirection: 'row', display: 'flex', marginTop: '24px' }}>
 							{/* 기존 내용 */}
 
 							{/* 쪽지 보내기 버튼 추가 */}
