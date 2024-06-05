@@ -28,9 +28,14 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
 
     const onClickListItem = useCallback((e: any) => {
         e.stopPropagation();
-        if (purchaseData) {
-            navigate(`/code/${codeData?.id}`);
+        if(codeData?.is_deleted){
+            window.alert('삭제된 게시글입니다.');
+        }else{
+            if (purchaseData) {
+                navigate(`/code/${codeData?.id}`);
+            }
         }
+       
     }, [codeData]);
 
     const handleWriteReviewClick = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

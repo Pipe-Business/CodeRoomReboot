@@ -17,15 +17,19 @@ const SaleItem: FC<Props> = ({ saleData }) => {
     const { data: codeData, isLoading } = useQuery({ queryKey: ['codeStore', saleData.post_id], queryFn: () => apiClient.getTargetCode(saleData.post_id) });
     const onClickListItem = useCallback((e: any) => {
         e.stopPropagation();
-        if (saleData) {
-            navigate(`/code/${saleData?.post_id}`);
+        if (codeData?.is_deleted) {
+            window.alert('삭제된 게시글입니다.');
+        }
+        else {
+            if (saleData) {
+                navigate(`/code/${saleData?.post_id}`);
 
+            }
         }
     }, [saleData?.post_id]);
     if (!saleData?.post_id || isLoading) {
         return <></>;
     }
-
     return (
         <>
             <ListItemButton onClick={onClickListItem}>
@@ -37,19 +41,19 @@ const SaleItem: FC<Props> = ({ saleData }) => {
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                width:'40%'
+                                width: '40%'
                             }}>{codeData?.title!}</div>
 
-                            <div style={{  width:'20%'}}>
+                            <div style={{ width: '20%' }}>
                                 {saleData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
                             </div>
-                            <div style={{  width:'15%'}}>
+                            <div style={{ width: '15%' }}>
                                 {saleData.pay_type == "point" ? "포인트" : "캐시"}
                             </div>
-                            <div style={{  width:'15%'}}>
-                               {saleData.is_confirmed ? '정산됨' : saleData.pay_type == "point" ? '해당없음' : '미정산'}
+                            <div style={{ width: '15%' }}>
+                                {saleData.is_confirmed ? '정산됨' : saleData.pay_type == "point" ? '해당없음' : '미정산'}
                             </div>
-                            <div style={{  width:'10%'}}>
+                            <div style={{ width: '10%' }}>
                                 {reformatTime(saleData?.created_at!)}
                             </div>
                         </div>

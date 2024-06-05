@@ -60,6 +60,7 @@ class ApiClient implements SupabaseAuthAPI {
             const { data, error } = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .eq('state', "approve")
+                .eq('is_deleted',false) // 삭제된 게시글은 메인에서 안보이도록 처리
                 .order('created_at', { ascending: false });
 
 
@@ -453,6 +454,7 @@ class ApiClient implements SupabaseAuthAPI {
                     rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                     adminGitRepoURL: e.code.admin_git_repo_url,
+                    is_deleted: e.is_deleted,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -794,6 +796,7 @@ class ApiClient implements SupabaseAuthAPI {
                     adminGitRepoURL: e.code.admin_git_repo_url,
                     rejectMessage: e.reject_message,
                     viewCount: e.view_count,
+                    is_deleted: e.is_deleted,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -930,6 +933,7 @@ class ApiClient implements SupabaseAuthAPI {
                     adminGitRepoURL: e.code.admin_git_repo_url,
                     rejectMessage: e.reject_message,
                     viewCount: e.view_count,
+                    is_deleted: e.is_deleted,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -1551,6 +1555,7 @@ async getQueryCode(searchTargetWord: string){
                 adminGitRepoURL: e.code.admin_git_repo_url,
                 rejectMessage: e.reject_message,
                 viewCount: e.view_count,
+                is_deleted: e.is_deleted,
             }
             lstCodeModel.push(codeModel);
         });

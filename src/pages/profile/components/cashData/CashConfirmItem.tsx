@@ -17,10 +17,16 @@ const CashConfirmItem: FC<Props> = ({ cashConfirmData }) => {
     const { data: codeData, isLoading } = useQuery({ queryKey: ['codeStore', cashConfirmData.post_id], queryFn: () => apiClient.getTargetCode(cashConfirmData.post_id) });
     const onClickListItem = useCallback((e: any) => {
         e.stopPropagation();
-        if (cashConfirmData) {
-            navigate(`/code/${cashConfirmData?.post_id}`);
 
+        if(codeData?.is_deleted){
+                window.alert('삭제된 게시글입니다.');
+        }else{
+            if (cashConfirmData) {
+                navigate(`/code/${cashConfirmData?.post_id}`);
+    
+            }
         }
+       
     }, [cashConfirmData?.post_id]);
     if (!cashConfirmData?.post_id || isLoading) {
         return <></>;

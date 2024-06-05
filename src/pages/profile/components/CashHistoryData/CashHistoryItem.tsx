@@ -15,7 +15,10 @@ const CashHistoryItem: FC<Props> = ({ cashHistoryData, pointHistoryData }) => {
 
     return (
         <>
-            { cashHistoryData && <ListItemButton>
+            {/* { cashHistoryData && <ListItemButton> */}
+
+            { cashHistoryData && 
+
                 <ListItem>
                     <ListItemText>
                         <div style={{ display: 'flex' }}>
@@ -44,10 +47,11 @@ const CashHistoryItem: FC<Props> = ({ cashHistoryData, pointHistoryData }) => {
                     </ListItemText>
                 </ListItem>
 
-            </ListItemButton>}
+            // </ListItemButton>
+            }
 
 
-            { pointHistoryData && <ListItemButton>
+            { pointHistoryData && 
                 <ListItem>
                     <ListItemText>
                         <div style={{ display: 'flex' }}>
@@ -75,8 +79,8 @@ const CashHistoryItem: FC<Props> = ({ cashHistoryData, pointHistoryData }) => {
                         </div>
                     </ListItemText>
                 </ListItem>
-
-            </ListItemButton>}
+            }
+          
             <Divider />
         </>
 
