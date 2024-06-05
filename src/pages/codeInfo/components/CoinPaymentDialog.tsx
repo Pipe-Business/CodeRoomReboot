@@ -15,7 +15,6 @@ import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
 import { NotificationType } from '../../../enums/NotificationType';
 import { NotificationEntity } from '../../../data/entity/NotificationEntity';
 
-
 const CashPaymentDialog = (onConfirm) => {
     const { id } = useParams();
     const queryClient = useQueryClient();
@@ -34,37 +33,8 @@ const CashPaymentDialog = (onConfirm) => {
 
     const { mutate } = useMutation({
         mutationFn: async () => {
-            const cashHistory = {
-                user_token: userLogin!.userToken,
-                cash: postData?.price!,
-                amount: cashData == undefined ? 0 : cashData - postData?.price!,
-                description: "코드 구매",
-                cash_history_type: "use_cash"
-            };
 
-            await apiClient.insertUserCashHistory(cashHistory);
-
-            if (postData) {
-                const purchaseSaleHistory = {
-                    post_id: postData!.id,
-                    price: postData!.price,
-                    is_confirmed: false,
-                    purchase_user_token: userLogin!.userToken,
-                    sales_user_token: postData!.userToken,
-                    pay_type: "cash"
-                };
-
-                await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
-            }
-        },
-        onSuccess: async () => {
-            if (postData) {
-				// 구매자수 update
-				console.log("구매자수 update")
-				await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
-			}			
-
-			// 유저 캐시 차감 -> 캐시 사용기록 insert
+     	// 유저 캐시 차감 -> 캐시 사용기록 insert
 			const cashHistory: CashHistoryRequestEntity = {
 				user_token: userLogin!.userToken!,
 				cash: postData?.price!,
@@ -88,6 +58,14 @@ const CashPaymentDialog = (onConfirm) => {
 
 				await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 			}
+
+        },
+        onSuccess: async () => {
+            if (postData) {
+				// 구매자수 update
+				console.log("구매자수 update")
+				await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
+			}			
 
 			// navigate('/');
 			toast.success('구매가 완료되었습니다.');
