@@ -76,7 +76,7 @@ const PointPaymentDialog = (onConfirm) => {
 
 	const onClickConfirm = useCallback(async () => {
 		try {
-			if (postData && userLogin?.id) {
+			if (postData && userLogin?.userToken) {
 				mutate();
 				const todayDate = createTodayDate();
 

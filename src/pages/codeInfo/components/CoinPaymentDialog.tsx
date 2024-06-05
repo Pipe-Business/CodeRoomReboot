@@ -49,7 +49,7 @@ const CashPaymentDialog = (onConfirm) => {
                     post_id: postData!.id,
                     price: postData!.price,
                     is_confirmed: false,
-                    purchase_user_token: userLogin!.id,
+                    purchase_user_token: userLogin!.userToken,
                     sales_user_token: postData!.userToken,
                     pay_type: "cash"
                 };
@@ -100,7 +100,7 @@ const CashPaymentDialog = (onConfirm) => {
 
 	const onClickConfirm = useCallback(async () => {
 		try {
-			if (postData && userLogin?.id) {
+			if (postData && userLogin?.userToken) {
 				mutate();
 				const todayDate = createTodayDate();
 				//  판매자에게 판매알림
