@@ -153,6 +153,8 @@ class ApiClient implements SupabaseAuthAPI {
                 "nickname": user.nickname,
                 "profile_url": user.profileUrl,
                 "about_me": user.aboutMe,
+                "is_profile_image_rewarded": user.is_profile_image_rewarded,
+				"is_introduce_rewarded": user.is_introduce_rewarded,
                 "contacts": user.contacts,
                 "user_token": user.userToken,
             }
@@ -496,6 +498,8 @@ class ApiClient implements SupabaseAuthAPI {
                     aboutMe: e.about_me,
                     contacts: e.contacts,
                     userToken: e.user_token,
+                    is_introduce_rewarded: e.is_introduce_rewarded,
+                    is_profile_image_rewarded: e.is_profile_image_rewarded,
                     createdAt: e.created_at,
                 }
                 lstUserModel.push(userModel);
@@ -1800,6 +1804,48 @@ async deletePost(postId: number) {
     } catch (e: any) {
         console.log(e);
         throw new Error('게시글 삭제처리(숨김)에 실패하였습니다.');
+    }
+}
+
+async setTrueUserProfileImageRewardStatus(userToken:string) {
+    try {
+        const { error } = await supabase.from('users')
+            .update({ is_profile_image_rewarded: true }).eq('user_token', userToken);
+
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('프로필 이미지 설정 보상 상태 저장에 실패했습니다.');
+        }
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('프로필 이미지 설정 보상 상태 저장에 실패했습니다.');
+    }
+}
+
+async setTrueUserIntroduceRewardStatus(userToken:string) {
+    try {
+        const { error } = await supabase.from('users')
+            .update({ is_introduce_rewarded: true }).eq('user_token', userToken);
+
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('자기소개 설정 보상 상태 저장에 실패했습니다.');
+        }
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('자기소개 설정 보상 상태 저장에 실패했습니다.');
     }
 }
 

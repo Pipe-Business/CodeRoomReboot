@@ -63,54 +63,71 @@ const EditMyProfilePage: FC<Props> = () => {
 	const {mutateAsync: mutateSetProfilePoint} = useMutation({
 		mutationFn: async() => {
 			// 프로필 보상 포인트 지급
-			const pointHistory: PointHistoryRequestEntity = {
-				user_token: userLogin!.userToken!,
-				point: 100,
-				amount: pointData == undefined ? 0 : pointData + 100,
-				description: "프로필 사진 설정 보상",
-				point_history_type: PointHistoryType.earn_point,
+			if(pointData){
+				const pointHistory: PointHistoryRequestEntity = {
+					user_token: userLogin!.userToken!,
+					point: 100,
+					amount: pointData + 100,
+					description: "프로필 사진 설정 보상",
+					point_history_type: PointHistoryType.earn_point,
+				}
+				await apiClient.insertUserPointHistory(pointHistory);
+			}else{
+				return false;
 			}
-			await apiClient.insertUserPointHistory(pointHistory);
+
+			
 		},
-		onSuccess: () => {
+		onSuccess: async () => {
+			await apiClient.setTrueUserProfileImageRewardStatus(userLogin?.userToken!);
 			toast.success('프로필 사진 설정 보상 포인트 100p가 지급되었습니다.');
 
 		},
 		onError: () => {
-
+			toast.error('프로필 사진 설정 보상 포인트 지급에 실패했습니다.');
 		}
 	});
 
 	const {mutateAsync: mutateSetIntroducePoint} = useMutation({
-		mutationFn: async() => {
+		mutationFn: async () => {
 			// 자기소개 보상 포인트 지급
-			const pointHistory: PointHistoryRequestEntity = {
-				user_token: userLogin!.userToken!,
-				point: 500,
-				amount: pointData == undefined ? 0 : pointData + 500,
-				description: "프로필 자기소개 작성 보상",
-				point_history_type: PointHistoryType.earn_point,
+
+			if(pointData){
+				const pointHistory: PointHistoryRequestEntity = {
+					user_token: userLogin!.userToken!,
+					point: 500,
+					amount: pointData + 500,
+					description: "프로필 자기소개 작성 보상",
+					point_history_type: PointHistoryType.earn_point,
+				}
+				await apiClient.insertUserPointHistory(pointHistory);
+			}else{
+				return false;
 			}
-			await apiClient.insertUserPointHistory(pointHistory);
+
 		},
-		onSuccess: () => {
+		onSuccess: async () => {
+			await apiClient.setTrueUserIntroduceRewardStatus(userLogin?.userToken!);
 			toast.success('프로필 자기소개 작성 보상 포인트 500p가 지급되었습니다.');
 
 		},
 		onError: () => {
-
+			toast.error ('프로필 자기소개 작성 보상 포인트 500p가 지급되었습니다.');
 		}
 	});
 
 	const { mutateAsync: mutate } = useMutation({
-		mutationFn: async (userEntity: UserEntity) => {
+		mutationFn: async () => {
 			 if(file!=null){ // 프로필 이미지 처리
 
 				
 				const profileUrl = await apiClient.uploadProfileImage(userLogin?.userToken!, file); // 이미지 스토리지 업로드
                 await apiClient.updateProfileImgUrl(userLogin?.userToken!,profileUrl);    // db update
 				
-				//mutateSetProfilePoint();
+				if(!userLogin?.is_profile_image_rewarded){
+					mutateSetProfilePoint();
+				}
+				
 
 			 }
 			 if(inputIntroduce.length > 100){
@@ -118,7 +135,9 @@ const EditMyProfilePage: FC<Props> = () => {
 				await apiClient.updateAboutMeData(userLogin?.userToken! , inputIntroduce);
 				
 				// 포인트 지급
-				//mutateSetIntroducePoint();
+				if(!userLogin?.is_introduce_rewarded){
+					mutateSetIntroducePoint();
+				}
 			 }
 
 			 //todo 자기소개 처리
@@ -170,19 +189,8 @@ const EditMyProfilePage: FC<Props> = () => {
 				return;
 			}
 
-			const date = createTodayDate();
-
-			const user: UserEntity = {
-				authType: 'CODEROOM',
-				email: inputIntroduce,
-				nickname: '',
-				name: null,
-				profileUrl: null,
-				contacts: null,
-				aboutMe: null,
-				userToken: null,
-			}
-			await mutate(user);
+	
+			await mutate();
 			navigate('/profile/my');
 		} catch (e) {
 			console.log('supabase error', e);

@@ -226,6 +226,8 @@ const RegisterPage: FC<Props> = () => {
 				contacts : null,
 				aboutMe:null,
 				userToken : null,
+				is_profile_image_rewarded: false,
+				is_introduce_rewarded: false,
 			}	
 			await mutate(user);
 			navigate('/signup-complete');

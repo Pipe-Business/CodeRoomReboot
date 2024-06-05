@@ -8,5 +8,7 @@ export type UserModel = {
     aboutMe: string|null, // 내 소개
     contacts: string[]|null, // 연락처 (URL,SNS,이메일)
     userToken: string|null, // 유저 고유 토큰
+    is_profile_image_rewarded: boolean, // 프로필 이미지 설정 보상 수령 여부
+    is_introduce_rewarded: boolean, // 자기소개 설정 보상 수령 여부
     createdAt: string|null, // 생성일
 }
