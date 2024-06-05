@@ -9,6 +9,7 @@ import { reformatTime } from '../../../../utils/DayJsHelper';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../../api/ApiClient';
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
+import { PurchaseSaleResponseEntity } from '../../../../data/entity/PurchaseSaleResponseEntity';
 
 interface Props {
 	children?: React.ReactNode;
@@ -24,6 +25,10 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 
     const { data: purchaseUserData, isLoading: purchaseUserLoading } = useQuery({ 
         queryKey: ['users', item.purchase_user_token!], 
+        queryFn: async() => await apiClient.getTargetUser(item?.purchase_user_token!) 
+    })
+	const { data: salesUserData, isLoading: salesUserLoading } = useQuery({ 
+        queryKey: ['users', item.sales_user_token!], 
         queryFn: async() => await apiClient.getTargetUser(item?.purchase_user_token!) 
     })
    
@@ -58,27 +63,39 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 			toast.error('정산오류 : 개발팀에 문의해주세요');
 		}
 	}, [item, codeData]);
-	if (codeDataLoading || purchaseUserLoading) return <>로딩중</>;
+	if (codeDataLoading || purchaseUserLoading || salesUserLoading) return <>로딩중</>;
 
 	return (
 		<>
 			<ListItem>
 				<ListItemText>
 					<div style={{ display: 'flex', width: '100%' }}>
-						<div style={{ width: '15%' }}>
-							{item.is_confirmed ?reformatTime(item.created_at!):'정산전'}
+						{
+							item.is_confirmed && 
+							<div style={{ width: '15%' }}>
+							{reformatTime(item.created_at!)}
 						</div>
+						}
 						
 						{/* <div style={{ width: '10%' }}>
 							{reformatTime(item.paymentDate)}
 						</div> */}
-						<div style={{ display: 'flex', alignItems: 'center', width: '35%' }}>
+						<div style={{ display: 'flex', alignItems: 'center', width: '15%' }}>
 							<div>
 								<div style={{ fontSize: 15, fontWeight: 'bold' }}>{codeData?.title!}</div>
 								<div style={{ fontSize: 12 }}>{purchaseUserData!.nickname}</div>
 							</div>
 						</div>
-						<div style={{ width: '35%' }}>
+						<div style={{ width: '25%' }}>
+							<div style={{display:'flex'}}>
+								<UserProfileImage userId={item.sales_user_token!}/>
+								<div>
+									<div>{salesUserData?.nickname}</div>
+									<div>{salesUserData?.email}</div>
+								</div>
+							</div>
+						</div>
+						<div style={{ width: '25%' }}>
 							<div style={{display:'flex'}}>
 								<UserProfileImage userId={item.purchase_user_token!}/>
 								<div>
@@ -87,7 +104,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 								</div>
 							</div>
 						</div>
-						<div style={{ width: '10%' }}>
+						<div style={{ width: '5%' }}>
 							{item.price!.toLocaleString()} 캐시
 						</div>
 						<div style={{ width: '5%' }}>

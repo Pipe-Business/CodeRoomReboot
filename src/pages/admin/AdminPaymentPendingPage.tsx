@@ -3,16 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Button, IconButton, ListItem, ListItemText, TextField } from '@mui/material';
 import dayjs from 'dayjs';
 import { compareDates, createTodayDate, DATE_FORMAT } from '../../utils/DayJsHelper.ts';
-// import { SettlementHistoryEntity } from '../../data/entity/firebase/realtime/user/SettlementHistoryEntity.ts';
-// import {
-// 	useMutateAddSettlementHistoryForSeller,
-// 	useMutateSettlePointBySeller,
-// 	useMutateUpdatePaymentPendingById,
-// } from '../../hooks/mutate/PaymentMutate.ts';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { apiClient } from '../../api/ApiClient.ts';
 import { useMutateSettleCashBySeller,useMutateUpdateConfirmedStatus} from '../../hooks/mutate/PaymentMutate.ts';
 import PaymentPending from './components/paymentPending/PaymentPending.tsx';
+import { PurchaseSaleResponseEntity } from '../../data/entity/PurchaseSaleResponseEntity.ts';
 
 interface Props {
 	children?: React.ReactNode;
@@ -108,16 +103,20 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			<ListItem>
 				<ListItemText>
 					<div style={{ display: 'flex', width: '100%' }}>
+					{isSettlement &&
 						<div style={{ width: '15%' }}>
 							정산시간
-						</div>
-						<div style={{ display: 'flex', alignItems: 'center', width: '35%' }}>
+						</div>}
+						<div style={{ display: 'flex', width: '15%' }}>
 							구매한 상품
 						</div>
-						<div style={{ width: '35%' }}>
+						<div style={{ width: '25%' }}>
+							판매한 유저
+						</div>
+						<div style={{ width: '25%' }}>
 							구매한 유저
 						</div>
-						<div style={{ width: '10%' }}>
+						<div style={{ width: '5%' }}>
 							결제한 캐시
 						</div>
 						<div style={{ width: '5%' }}>
