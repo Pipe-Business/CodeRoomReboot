@@ -11,7 +11,10 @@ import { createTodayDate } from '../../../utils/DayJsHelper';
 import { toast } from 'react-toastify';
 import { PointHistoryType } from '../../../enums/PointHistoryType';
 import { PointHistoryRequestEntity } from '../../../data/entity/PointHistoryRequestEntity';
+import { PurchaseSaleRequestEntity } from '../../../data/entity/PurchaseSaleRequestEntity';
 import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
+import { NotificationType } from '../../../enums/NotificationType';
+import { NotificationEntity } from '../../../data/entity/NotificationEntity';
 
 const PointPaymentDialog = (onConfirm) => {
 	const { id } = useParams();
@@ -70,7 +73,10 @@ const PointPaymentDialog = (onConfirm) => {
 
 
 			// todo 구매자에게 구매 알림
-
+			toast.success('구매가 완료되었습니다.');
+            if (onConfirm) {
+                onConfirm();
+            }
 		},
 	});
 
@@ -79,13 +85,17 @@ const PointPaymentDialog = (onConfirm) => {
 			if (postData && userLogin?.userToken) {
 				mutate();
 				const todayDate = createTodayDate();
-
-
-				navigate('/');
-				toast.success('구매가 완료되었습니다.');
-				if (onConfirm) {
-					onConfirm();
+				//  판매자에게 판매알림
+				const notificationEntity: NotificationEntity ={
+					title : '코드 판매 알림',
+					content: `'${postData?.title}' 게시글이 판매 되었습니다`,
+					from_user_token: userLogin!.userToken!,// todo 변경 필요
+					to_user_token: postData?.userToken!,
+					notification_type: NotificationType.sale,
 				}
+				let notistring=JSON.stringify(notificationEntity);
+				console.log("sdf"+notistring);
+				await apiClient.insertNotification(notificationEntity);
 								
 				// 	const notiEntity: UserNotificationEntity = {
 				// 		createdAt: todayDate,

@@ -108,11 +108,11 @@ const MyPage: FC<Props> = () => {
 
 		let amountUpdateValue;
 		if (purchaseData.pay_type == "point") {
-			// 구매를 포인트로 했었다면 구매가의 5%
-			amountUpdateValue = purchaseData.price! * 0.05;
+			// 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
 		} else {
-			// 구매를 캐시로 했었다면 구매가의 5% * 10
-			amountUpdateValue = (purchaseData.price! * 0.05) * 10;
+			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+			amountUpdateValue = Math.round((purchaseData.price! * 0.05) * 10);
 		}
 		 
 		const pointHistoryRequest : PointHistoryRequestEntity = {			

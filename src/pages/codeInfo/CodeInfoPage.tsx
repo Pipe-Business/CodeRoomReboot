@@ -30,6 +30,9 @@ import { PurchaseReviewEntity } from '../../data/entity/PurchaseReviewEntity';
 import ReviewList from './components/ReviewList';
 import { CATEGORY_TO_KOR } from '../../constants/define.ts';
 import DeleteCodeButton from './components/DeleteCodeButton.tsx';
+import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity';
+import { PurchaseSaleRequestEntity } from '../../data/entity/PurchaseSaleRequestEntity';
+import { PointHistoryType } from '../../enums/PointHistoryType';
 
 dayjs.locale('ko');
 
@@ -81,6 +84,34 @@ const CodeInfo: FC<Props> = () => {
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 	const [dialogOpen, setDialogOpen] = useState(false);
+
+	const handleReviewSubmit = async () =>  {	
+		// 리뷰 작성 완료시 이 콜백을 수행	
+		const purchaseData: PurchaseSaleRequestEntity = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id);
+		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
+	
+		let amountUpdateValue;
+		if (purchaseData.pay_type == "point") {
+			// 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
+		} else {
+			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+			amountUpdateValue = Math.round((purchaseData.price! * 0.05) * 10);
+		}
+		 
+		const pointHistoryRequest : PointHistoryRequestEntity = {			
+			description: "리뷰 작성 보상",
+			amount: (currentAmount + amountUpdateValue),
+			user_token: userLogin?.userToken!,
+			point: amountUpdateValue,
+			point_history_type: PointHistoryType.earn_point,
+		}
+	
+		await apiClient.insertUserPointHistory(pointHistoryRequest);
+	
+		setDialogOpen(false);
+	
+	};
 
 	/*
 		  * 	조회수 증가
@@ -480,7 +511,7 @@ const CodeInfo: FC<Props> = () => {
 				</BlurContainer>
 			</div>
 
-			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)}></ReviewDialog>
+			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)} onReviewSubmit={handleReviewSubmit}></ReviewDialog>
 		</MainLayout>
 	);
 };
