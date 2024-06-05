@@ -1777,6 +1777,27 @@ async getTargetPostLikedNumber(postId: number): Promise<number> {
     }
 }
 
+async deletePost(postId: number) {
+    try {
+        const { error } = await supabase.from('post')
+            .update({ is_deleted: true }).eq('id', postId);
+
+        if (error) {
+            console.log("error" + error.code);
+            console.log("error" + error.message);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
+            console.log("error" + error.details);
+
+            throw new Error('게시글 삭제처리(숨김)에 실패하였습니다.');
+        }
+
+    } catch (e: any) {
+        console.log(e);
+        throw new Error('게시글 삭제처리(숨김)에 실패하였습니다.');
+    }
+}
+
 
 }
 

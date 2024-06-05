@@ -19,4 +19,5 @@ export type CodeModel = {
     sellerGithubName: string, // 판매자의 GitHub 사용자명
     viewCount : number, // 조회수
     rejectMessage : string, // 반려사유
+    is_deleted: boolean; // 삭제된 게시물인지 확인
 }
