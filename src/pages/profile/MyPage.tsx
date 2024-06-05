@@ -17,6 +17,9 @@ import BuyerContentData from './components/buyerContentData';
 import { SectionWrapper } from './styles';
 import SellerContentData from './components/sellerContentData';
 import ReviewDialog from '../codeInfo/components/ReviewDialog';
+import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity';
+import { PurchaseSaleRequestEntity } from '../../data/entity/PurchaseSaleRequestEntity';
+import { PointHistoryType } from '../../enums/PointHistoryType';
 
 interface Props {
     children?: React.ReactNode;
@@ -98,7 +101,30 @@ const MyPage: FC<Props> = () => {
 		setPurchasePostId(purchaseData.post_id);
     };
 
-	const handleReviewSubmit = () => {
+	const handleReviewSubmit = async () =>  {	
+		// 리뷰 작성 완료시 이 콜백을 수행	
+		const purchaseData: PurchaseSaleRequestEntity = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!,purchasePostId);
+		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
+
+		let amountUpdateValue;
+		if (purchaseData.pay_type == "point") {
+			// 구매를 포인트로 했었다면 구매가의 5%
+			amountUpdateValue = purchaseData.price! * 0.05;
+		} else {
+			// 구매를 캐시로 했었다면 구매가의 5% * 10
+			amountUpdateValue = (purchaseData.price! * 0.05) * 10;
+		}
+		 
+		const pointHistoryRequest : PointHistoryRequestEntity = {			
+			description: "리뷰 작성 보상",
+			amount: (currentAmount + amountUpdateValue),
+			user_token: userLogin?.userToken!,
+			point: amountUpdateValue,
+			point_history_type: PointHistoryType.earn_point,
+		}
+
+		await apiClient.insertUserPointHistory(pointHistoryRequest);
+
         setDialogOpen(false);
         refetchPurchaseData();
         refetchUserData();

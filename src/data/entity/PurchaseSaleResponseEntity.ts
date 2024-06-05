@@ -1,4 +1,4 @@
-interface PurchaseSaleResponseEntity {
+export interface PurchaseSaleResponseEntity {
 	id?: number;
 	post_id: number; // 게시글 id
 	price?: number; // 가격
