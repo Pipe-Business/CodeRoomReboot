@@ -28,7 +28,7 @@ const BuyerContentData: FC<Props> = ({ saleData, purchaseData, pendingCodeData, 
     return (
         <div>
             <Box height={32} />
-            <h4>내가 구매한 코드</h4>
+            <h3>내가 구매한 코드</h3>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
                 <CardHeader
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>구매 목록</div>}
@@ -46,7 +46,7 @@ const BuyerContentData: FC<Props> = ({ saleData, purchaseData, pendingCodeData, 
 
             <Box height={32} />
 
-            <h4>판매</h4>
+            <h3>판매</h3>
 
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
                 elevation={1}>
@@ -67,7 +67,7 @@ const BuyerContentData: FC<Props> = ({ saleData, purchaseData, pendingCodeData, 
             <Box height={32} />
 
 
-            <h4>나의 코드</h4>
+            <h3>나의 코드</h3>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
                 <CardHeader
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>승인 대기 내역</div>}

@@ -270,7 +270,9 @@ class ApiClient implements SupabaseAuthAPI {
     async getLastMyNotifications(userToken: string): Promise<NotificationEntity[]> {
         // 현재 로그인한 계정의 마지막까지 저장되어있었던 알림 목록 가져오기
         try {
-            const { data, error } = await supabase.from('notification').select().eq('from_user_token', userToken);
+            const { data, error } = await supabase.from('notification')
+            .select()
+            .eq('to_user_token', userToken);
 
             let lstNotifications: NotificationEntity[] = [];
             data?.forEach((e) => {

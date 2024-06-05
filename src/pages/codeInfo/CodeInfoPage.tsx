@@ -256,84 +256,69 @@ const CodeInfo: FC<Props> = () => {
 								<IconButton onClick={onClickBackButton}>
 									<ArrowBack sx={{ fontSize: '32px' }} />
 								</IconButton>
-								<div style={{ fontWeight: 'bold' }}>
-									코드 목록으로 돌아가기
-								</div>
+								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>{postData.title} </span>
 							</div>
 						}
 					/>
 
 					<BlurContainer isBlur={isBlur}>
-						<CardContent>
+						<CardContent style={{margin: 16}}>
 							<Box height={8} />
 
 							<MarginHorizontal size={8} style={{ marginTop: 24, }}>
-								<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'lighter' }}>{calcTimeDiff(postData.createdAt)} </span>
+								<span style={{ color: 'grey', fontSize: '16px', fontWeight: 'lighter' }}>{calcTimeDiff(postData.createdAt)} </span>
 							</MarginHorizontal>
 
 							<Box height={8} />
 
-							<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>{postData.title} </span>
+							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
+								<span style={{ color: 'grey', fontSize: '16px', }}>조회수 : {postData.viewCount} </span>
 							</MarginHorizontal>
+
+							{/* <MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
+								<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>{postData.title} </span>
+							</MarginHorizontal> */}
 
 							{/* <MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
 								<span style={{ color: 'blue', fontSize: '24px', fontWeight: 'lighter' }}>{postData.hashTag.map((e) => `#${e} `)} </span>
 							</MarginHorizontal> */}
 
 							{/* 카테고리, 언어 ,가격  */}
-							<div style={{ display: 'flex', flexDirection: 'row' }}>
+							<div style={{ display: 'flex', flexDirection: 'column', marginTop: 24 }}>
 
 								{/* 카테고리 */}
-								<div style={{ display: 'flex', flexDirection: 'row' }}>
-
-									<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>카테고리 : </span>
-									</MarginHorizontal>
-
-									<div style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', }}>{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} /  {postData.language}</span>
+								<div style={{ display: 'flex', flexDirection: 'column' }}>
+									<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>카테고리</span>
+										<div style={{ marginTop: 8, marginBottom: 8, }}>
+										<span style={{ color: '#000000', fontSize: '24px', }}>{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} /  {postData.language}</span>
 									</div>
-
 								</div>
 								<Box width={16} />
 
 								{/* 가격 */}
 
-								<div style={{ display: 'flex', flexDirection: 'row', }}>
+								{/* <div style={{ display: 'flex', flexDirection: 'row', }}>
 
 									<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', fontWeight: 'bold' }}>판매가격 : </span>
+										<span style={{ color: '#000000', fontSize: '20px', fontWeight: 'bold' }}>판매가격 : </span>
 									</MarginHorizontal>
 
 									<div style={{ marginTop: 8, marginBottom: 8, }}>
-										<span style={{ color: '#000000', fontSize: '16px', }}>{`${postData.price} 캐시 / ${postData.price * 5} 커밋 포인트`} </span>
+										<span style={{ color: '#000000', fontSize: '20px', }}>{`${postData.price} 캐시 / ${postData.price * 5} 커밋 포인트`} </span>
 									</div>
 
-								</div>
+								</div> */}
 
 							</div>
 
 
-							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
-								<span style={{ color: '#000000', fontSize: '16px', }}>조회수 : {postData.viewCount} </span>
-							</MarginHorizontal>
-
-							<MarginHorizontal size={8} style={{ marginTop: 4, }}>
-								<span style={{ color: '#000000', fontSize: '16px', }}>좋아요 수 : {likedNumberData!.toString()} </span>
-							</MarginHorizontal>
-
-
-
-							<MarginHorizontal size={8} style={{ marginTop: 32, }}>
+							<MarginHorizontal>
 								{postData.images &&
 
 									<div>
-										<Box height={64} />
-
-										<MarginHorizontal size={8} style={{ marginTop: 8, marginBottom: 8, }}>
-											<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>템플릿 결과물 이미지</span>
-										</MarginHorizontal>
+										<Box height={32} />
+									
+										<span style={{ color: '#000000', fontSize: '24px', fontWeight: 'bold' }}>템플릿 결과물 이미지</span>
 
 										<Box height={16} />
 
@@ -424,12 +409,18 @@ const CodeInfo: FC<Props> = () => {
 								/>															
 							</div>
 							<Box height={48}/>
-							<MarginHorizontal>
+							
 							<span style={{ color: '#000000', fontSize: '22px', fontWeight: 'bold' }}>이 코드 템플릿이 좋아요</span>							
+							
+							<Box height={16}/>
+
+							<MarginHorizontal size={8}>
+								<span style={{ color: '#000000', fontSize: '40px', fontWeight: 'bold' }}>{likedNumberData!.toString()}</span>														
+								<IconButton onClick={onClickLike}>
+										{isLike ? <ThumbUpIcon sx={{ color: '#3179f8' ,width: '40px', height: '40px'}} /> : <ThumbUpIcon sx={{ color: 'grey' ,width: '50px', height: '50px'}} />}
+								</IconButton>	
 							</MarginHorizontal>
-							<IconButton onClick={onClickLike}>
-									{isLike ? <ThumbUpIcon sx={{ color: '#3179f8' ,width: '50px', height: '50px'}} /> : <ThumbUpIcon />}
-							</IconButton>	
+							
 							
 
 							{!userLogin && <CenterBox>

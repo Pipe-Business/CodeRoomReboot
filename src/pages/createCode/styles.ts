@@ -16,8 +16,8 @@ export  const TextFieldWrapper = styled.div`
   `;
 
   export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-    color: '#000000',
-    backgroundColor: '#50C1FF',
+    color: 'white',
+    backgroundColor: '#0156b3',
     height : '52px',
   '&:hover': {
     backgroundColor: '#569CD6',

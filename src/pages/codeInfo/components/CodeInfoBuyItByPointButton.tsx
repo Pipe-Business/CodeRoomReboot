@@ -66,7 +66,7 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 	} else { // 구매 내역이 없으면
 
 		if (userHavePoint >= point) { // 캐시가 충분하면
-			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => onClickPurchase()} disabled={isBlur} variant='contained'>커밋 포인트로 구매하기</ColorButton>
+			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => onClickPurchase()} disabled={isBlur} variant='contained'>${point} 커밋 포인트로 구매</ColorButton>
 
 		} else {						// 캐시가 충분하지 않으면
 			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => {

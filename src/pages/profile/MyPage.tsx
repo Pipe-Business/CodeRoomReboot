@@ -188,7 +188,7 @@ const MyPage: FC<Props> = () => {
                                     }}
                                 />
                             </Card>
-                            <h4>자기소개</h4>
+                            <h2>자기소개</h2>
                             <div>
                                 {userLogin.aboutMe}
                             </div>

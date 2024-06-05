@@ -59,15 +59,17 @@ const CodeItem: FC<Props> = ({ item }) => {
           marginTop: '8px',
         }}
       >
-        <Typography variant="body2" sx={{ color: 'grey', fontWeight: 'bold', textAlign: 'center' }}>
+        <Typography variant="body2" sx={{ color: 'grey', fontWeight: 'bold', textAlign: 'center', fontSize: '18px'}}>
           {parseInt(item.price.toString()).toLocaleString()} 💰
         </Typography>
         <Box width={8} />
-        <Typography variant="body2" sx={{ color: 'grey', fontWeight: 'bold', textAlign: 'center' }}>
+        <Typography variant="body2" sx={{ color: 'grey', fontWeight: 'bold', textAlign: 'center', fontSize: '18px'}}>
           {parseInt((item.price * 5).toLocaleString())} 🌱
         </Typography>
       </Box>
 
+	  <Box height={16}/>
+	  
       {/* 태그, 좋아요 수, popularity */}
       <Box
         sx={{
@@ -78,14 +80,15 @@ const CodeItem: FC<Props> = ({ item }) => {
           marginTop: '8px',
         }}
       >
+		  
         <Typography variant="body2" sx={{ color: 'grey', textAlign: 'center' }}>
-          좋아요 : {item.likeCount}
+          👍 {item.likeCount}
         </Typography>
         <Typography variant="body2" sx={{ color: 'grey', textAlign: 'center', marginLeft: '16px' }}>
-          인기도 : {item.buyerCount * item.price}
+          🔥 {item.buyerCount * item.price}
         </Typography>
         <Typography variant="body2" sx={{ color: 'grey', textAlign: 'center', marginLeft: '16px' }}>
-          후기 : {item.reviewCount}
+          💬 {item.reviewCount}
         </Typography>
       </Box>
 

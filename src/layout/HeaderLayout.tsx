@@ -156,6 +156,16 @@ const HeaderLayout: FC<Props> = () => {
                             </Link>
                         </MarginHorizontal>
 
+                        <MarginHorizontal size={8}>
+                            <Link to={'/notification'}>
+                                <HeaderIconButton>
+                                    <Badge color={'error'} badgeContent={notiCount} max={9}>
+                                        <NotificationsIcon sx={{ fontSize: '24px', color: '#000000'}} />
+                                    </Badge>
+                                </HeaderIconButton>
+                            </Link>
+                        </MarginHorizontal>
+
                         {/* <MarginHorizontal size={8}>
                            <UserProfileImage userId={userLogin.userToken!} size={26} onClick={()=>{navigate('/profile/my')}}/>
                             </MarginHorizontal> */}
@@ -169,17 +179,7 @@ const HeaderLayout: FC<Props> = () => {
                                 <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>프로필</span>
                             </Link>
                         </MarginHorizontal> */}
-
-                      
-                        <MarginHorizontal size={8}>
-                            <Link to={'/notification'}>
-                                <HeaderIconButton>
-                                    <Badge color={'error'} badgeContent={notiCount} max={9}>
-                                        <NotificationsIcon sx={{ fontSize: '24px' }} />
-                                    </Badge>
-                                </HeaderIconButton>
-                            </Link>
-                        </MarginHorizontal>
+                                              
                     </CenterBox>
                 }
                 {/* {
