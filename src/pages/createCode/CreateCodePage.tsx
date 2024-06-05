@@ -66,6 +66,10 @@ const CreateCodePage: FC<Props> = () => {
 
     }, [inputPoint]);
 
+    const handleDeleteImage = (index : number) => {
+        const newImages = src!.filter((_, i) => i !== index);
+        setSrc(newImages)
+    }
 
     const onChangeGithubUrl = useCallback((e: any) => {
 
@@ -314,7 +318,7 @@ const CreateCodePage: FC<Props> = () => {
 
                         </>
                     </IconButton>
-                    {src && <ImageCard src={src} />}
+                    {src && <ImageCard src={src} handleDeleteImage={handleDeleteImage}/>}
                 </div>
 
             </div>
