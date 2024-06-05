@@ -35,8 +35,8 @@ const AdminPointItem: FC<Props> = ({ item }) => {
 						</div>
 					</div>
 					<div style={{ width: '40%' }}>{item.description}</div>
-					<div style={{ width: '10%' }}>{item.point_history_type == PointHistoryType.earn_point? "획득" : "사용"}</div>
 					<div style={{ width: '10%' }}>{item.point.toLocaleString()}포인트</div>
+					<div style={{ width: '10%' }}>{item.point_history_type == PointHistoryType.earn_point? "획득" : "사용"}</div>
 				</div>
 			</ListItemText>
 		</ListItem>

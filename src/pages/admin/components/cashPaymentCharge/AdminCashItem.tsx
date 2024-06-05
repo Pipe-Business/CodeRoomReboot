@@ -34,8 +34,8 @@ const AdminCashItem: FC<Props> = ({ item }) => {
 						</div>
 					</div>
 					<div style={{ width: '40%' }}>{item.description}</div>
-					<div style={{ width: '10%' }}>{item.cash_history_type == CashHistoryType.earn_cash? "충전" : "사용"}</div>
 					<div style={{ width: '10%' }}>{item.cash.toLocaleString()}캐시</div>
+					<div style={{ width: '10%' }}>{item.cash_history_type == CashHistoryType.earn_cash? "충전" : "사용"}</div>
 				</div>
 			</ListItemText>
 		</ListItem>

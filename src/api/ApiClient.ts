@@ -1901,6 +1901,33 @@ async getAllUserPointHistory (): Promise<PointHistoryResponseEntity[]> {
         console.log(e);
         throw new Error('관리자 - 유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
     }
+
+    async messageFromAdminToUser(content: string, targetUserToken: string) {
+        try {
+           
+            const notificationObj = {
+                "title": `관리자 메시지`,
+                "content": content,
+                "to_user_token": targetUserToken,
+                "from_user_token": 'admin',
+                "notification_type": NotificationType.message_from_admin,
+            }
+            const { data, error } = await supabase.from('notification').insert(notificationObj).select();
+
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('관리자 - 쪽지를 보내는 도중 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('답장 전송을 하는 도중 실패했습니다.');
+        }
+    }
 }
 
 

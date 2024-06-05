@@ -15,9 +15,10 @@ const UserManageHeader: FC = () => {
 				<div style={{ width: '15%' }}>가입날짜</div>
 				<div style={{ width: '10%' }}>닉네임</div>
 				<div style={{ width: '40%' }}>이메일</div>
-				<div style={{ width: '10%' }}>캐시</div>
-				<div style={{ width: '10%' }}>포인트</div>
+				<div style={{ width: '5%' }}>캐시</div>
+				<div style={{ width: '5%' }}>포인트</div>
 				<div style={{ width: '15%' }}>포인트지급</div>
+				<div style={{ width: '10%' }}>쪽지보내기</div>
 			</div>
 		</ListItemText>
 	</ListItem>;
