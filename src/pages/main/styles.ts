@@ -2,7 +2,8 @@ import styled from '@emotion/styled'
 import Button, { ButtonProps } from '@mui/material/Button';
 
 export const SearchBar = styled.div`
-    margin-top: 24px;
+    margin-top: 16px;
+    width: 1100px;    
 `
 
 export const CenterBox = styled.div`
