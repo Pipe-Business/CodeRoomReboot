@@ -138,7 +138,7 @@ const CreateCodePage: FC<Props> = () => {
 
   const { mutate } = useMutation({
     mutationFn: async (postRequest: PostRequestEntity) => {
-      setUpload(true);
+      //setUpload(true);
       postId = await apiClient.insertPostData(postRequest);
       if (files) {
         const urls = await apiClient.uploadImages(userLogin?.userToken!, postId, files);
