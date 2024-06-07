@@ -18,7 +18,7 @@ import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton.ts
 import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton.tsx';
 import CashPaymentDialog from './components/CoinPaymentDialog.tsx';
 import PointPaymentDialog from './components/PointPaymentDialog.tsx';
-import { BlurContainer } from './styles.ts';
+import { BlurContainer, StyledSlider } from './styles.ts';
 
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick-theme.css';
@@ -33,6 +33,7 @@ import DeleteCodeButton from './components/DeleteCodeButton.tsx';
 import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity';
 import { PurchaseSaleRequestEntity } from '../../data/entity/PurchaseSaleRequestEntity';
 import { PointHistoryType } from '../../enums/PointHistoryType';
+import ImageCard from '../../components/ImageCard.tsx';
 
 dayjs.locale('ko');
 
@@ -322,7 +323,7 @@ const CodeInfo: FC<Props> = () => {
 
 										<Box height={16} />
 
-										<Slider									
+										<StyledSlider									
 											nextArrow={<SampleNextArrow />}
 											prevArrow={<SamplePrevArrow />}
 											dots={true}
@@ -334,13 +335,13 @@ const CodeInfo: FC<Props> = () => {
 										>
 
 											{postData.images.map((url, key) => {
-												return <img alt={'image'} key={key} style={{													
-													objectFit: 'contain'
+												return <img alt={'image'} key={key} style={{											
+													objectFit: 'contain',
 												}} src={url} />;
 											})
 											}
 
-										</Slider>
+										</StyledSlider>
 
 										<Box height={128} />
 									</div>
