@@ -52,15 +52,7 @@ const CodeItem: FC<Props> = ({ item }) => {
             <Typography variant="body2" sx={{ marginLeft: '8px', color: 'grey', fontSize: '14px' }}>
               {item.description}
             </Typography>
-
-            <Typography variant="body2" sx={{ marginLeft: '8px', color: 'grey', fontSize: '14px' }}>
-              {item.hashTag.map((item, index) => (
-                <Typography key={index} sx={{ display: 'inline', marginRight: '8px', color: '#0275c2' }}>
-                  #{item}
-                </Typography>
-              ))}
-            </Typography>
-
+            
             {/* 캐시, 닉네임, 시간 */}
             <Box
               sx={{
