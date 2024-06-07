@@ -43,21 +43,18 @@ const EditMyProfilePage: FC<Props> = () => {
 	const { userLogin , isLoadingUserLogin } = useQueryUserLogin();
 	const navigate = useNavigate();
 	const inputEmailRef = useRef<HTMLInputElement | null>(null);
-	//const { data: userData, isLoading: userDataLoading } = useQuery({ queryKey: ['users', userLogin?.userToken!], queryFn: async() => await apiClient.getTargetUser(userLogin?.userToken!) })
+	
 	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
 		queryFn: () => apiClient.getUserTotalPoint(userLogin!.userToken!),
 	});
 
-	const [inputIntroduce, onChangeInputIntroduce, errorIntroduce, errorIntroduceMessage,
+	const [inputIntroduce, onChangeInputIntroduce, , ,
 		, successIntroduce, successIntroduceMsg,
 		setErrIntroduce, setErrIntroduceMsg,
 		, ,inputIntroduceCount
 	] = useInputValidate({
 		defaultValue : state.userData.aboutMe == null ? "" : state.userData.aboutMe,
-		minLen: 100, 
-		maxLen: 1000,
-		validRegexMessage: '100자 이상 입력해주세요',
 	});
 
 	const {mutateAsync: mutateSetProfilePoint} = useMutation({
@@ -130,12 +127,12 @@ const EditMyProfilePage: FC<Props> = () => {
 				
 
 			 }
-			 if(inputIntroduce.length > 100){
+			 if(inputIntroduce.length > 0){
 				// db업데이트
 				await apiClient.updateAboutMeData(userLogin?.userToken! , inputIntroduce);
 				
 				// 포인트 지급
-				if(!userLogin?.is_introduce_rewarded){
+				if(inputIntroduce.length > 100 && !userLogin?.is_introduce_rewarded){
 					mutateSetIntroducePoint();
 				}
 			 }
@@ -176,18 +173,11 @@ const EditMyProfilePage: FC<Props> = () => {
 	const onSubmitRegisterForm = useCallback(async (e: any) => {
 		try {
 			e.preventDefault();
-			// if (!inputIntroduce) {
-			// 	setErrIntroduceMsg('빈칸을 입력해주세요');
-			// 	setErrIntroduce(true);
+			// if (errorIntroduce) {
 			// 	inputEmailRef.current?.focus();
-			// 	toast.error('빈칸을 입력해주세요');
+			// 	toast.error(errorIntroduceMessage);
 			// 	return;
 			// }
-			if (errorIntroduce) {
-				inputEmailRef.current?.focus();
-				toast.error(errorIntroduceMessage);
-				return;
-			}
 
 	
 			await mutate();
@@ -232,8 +222,8 @@ const EditMyProfilePage: FC<Props> = () => {
 							<Box height={24} />
 							<div>
 								<SectionTitle title='자기소개'
-									helpText={`구매자들에게 자신을 소개해보세요. 소개 작성 시 500 커밋 포인트 증정
-			(최소 100자 이상 작성)`} />
+									helpText={`구매자들에게 자신을 소개해보세요. 소개 작성 시 500 커밋 포인트 증정`} 
+									/>
 								<Box height={8} />
 
 							</div>
@@ -243,12 +233,12 @@ const EditMyProfilePage: FC<Props> = () => {
 								}}
 								onChange={onChangeInputIntroduce}
 								type={'text'}
-								color={errorIntroduce ? 'error' : successIntroduce ? 'success' : 'info'}
+								// color={errorIntroduce ? 'error' : successIntroduce ? 'success' : 'info'}
 								placeholder={'eg. 안녕하세요 10년차 안드로이드 개발자 입니다.'}
 								inputRef={inputEmailRef}
-								error={errorIntroduce}
+								// error={errorIntroduce}
 								autoComplete={'off'}
-								helperText={errorIntroduce ? errorIntroduceMessage : successIntroduce ? successIntroduceMsg : ''}
+								// helperText={errorIntroduce ? errorIntroduceMessage : successIntroduce ? successIntroduceMsg : ''}
 								fullWidth
 								multiline
 								rows={10}
