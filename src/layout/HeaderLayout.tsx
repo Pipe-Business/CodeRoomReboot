@@ -75,8 +75,6 @@ const HeaderLayout: FC<Props> = () => {
     }
 
     return (
-
-
         <HeaderWrapper>
             <header style={{ display: 'flex', alignItems: 'center' }}>
 
