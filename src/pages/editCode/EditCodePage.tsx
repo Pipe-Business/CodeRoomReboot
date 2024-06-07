@@ -256,7 +256,7 @@ const EditCodePage: FC<Props> = () => {
                 <SectionTitle title='코드제목' helpText='코드 제목은 기능과 사용한 기술에 대한 정보를 포함하여 직관적으로 설명해주시면 좋습니다' />
                 <TextField value={inputTitle}
                     sx={{
-                        width: { sm: 600, md: 700, lg: 800 },
+                        width: { sm: 600, md: 800, lg: 1200 },
                     }}
                     onChange={onChangeTitle}
                     type={'text'}
@@ -372,7 +372,7 @@ const EditCodePage: FC<Props> = () => {
                 </div>
                 <TextField value={inputGuide}
                     sx={{
-                        width: { sm: 600, md: 700, lg: 800 },
+                        width: { sm: 600, md: 800, lg: 1200 },
                     }}
                     onChange={onChangeGuide}
                     type={'text'}

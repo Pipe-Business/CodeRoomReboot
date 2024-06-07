@@ -249,7 +249,7 @@ const CodeInfo: FC<Props> = () => {
 				<Card
 					elevation={0}
 					sx={{
-						width: { sm: 700, md: 800 },
+						width: { sm: 400, md: 600,  lg:800,},
 					}}>
 					<CardHeader
 						avatar={

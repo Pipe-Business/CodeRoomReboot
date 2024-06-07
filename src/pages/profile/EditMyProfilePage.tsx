@@ -237,7 +237,7 @@ const EditMyProfilePage: FC<Props> = () => {
 							</div>
 							<TextField value={inputIntroduce}
 								sx={{
-									width: { sm: 600, md: 700, lg: 800 },
+									width: { sm: 600, md: 800, lg: 1200 },
 								}}
 								onChange={onChangeInputIntroduce}
 								type={'text'}

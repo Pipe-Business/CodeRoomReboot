@@ -42,7 +42,7 @@ const NotificationItem = styled(Paper) <{ notification_type: string }>`
     }
   }};
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px;
   cursor: pointer; /* Add cursor pointer to indicate clickable */
 `;
 
@@ -137,13 +137,13 @@ const NotificationPage: FC = () => {
   return (
     <MainLayout>
       <h1>알림함</h1>
-      <NotificationContainer elevation={3} sx={{ width: { xs: 400, sm: 500, md: 1000 } }}>
+      <NotificationContainer elevation={3} sx={{ width: { xs: 400, sm: 600, md: 800, lg: 1200 } }}>
         {notifications.map((notification) => (
           <NotificationItem
             key={notification.id}
             notification_type={notification.notification_type}
             elevation={3}
-            sx={{ width: { xs: 300, sm: 400, md: 800 } }}
+            sx={{ width: { xs: 300, sm: 500, md: 700, lg: 1100 } }}
             onClick={() => handleNotificationClick(notification)}
           >
             <NotificationTitle variant="h6">{notification.title}</NotificationTitle>
