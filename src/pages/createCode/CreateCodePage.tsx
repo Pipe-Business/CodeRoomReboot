@@ -215,7 +215,7 @@ const CreateCodePage: FC<Props> = () => {
       </Card>
 
       <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
-        <SectionTitle title='캐시' />
+        <SectionTitle title='판매 금액 (캐시)' />
         <TextField
           sx={{ width: '100%', maxWidth: 300, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}
           value={inputPoint}

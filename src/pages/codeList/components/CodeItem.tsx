@@ -29,46 +29,67 @@ const CodeItem: FC<Props> = ({ item }) => {
       }}
       onClick={onClickCode}
     >
-      <ListItem style={{ padding: '4px 0', position: 'relative' }}>
+      <ListItem sx={{ padding: '4px 0', position: 'relative', width: '100%' }}>
         <ListItemText>
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              padding: '24px 16px',
+              padding: { xs: '16px', sm: '24px', md: '24px' },
               backgroundColor: '#ffffff',
               borderRadius: '8px',
               position: 'relative',
             }}
           >
             <Typography
-              variant="h6"
-              sx={{ marginLeft: '8px', fontWeight: 'bold', color: '#0275c2' }}
+              variant="h5"
+              sx={{
+                ml: '8px',
+                fontWeight: 'bold',
+                color: '#0275c2',
+                fontSize: { xs: '18px', sm: '22px', md: '24px' }
+              }}
               className={styles.textOverflow}
             >
               {item.title}
             </Typography>
 
-            <Typography variant="body2" sx={{ marginLeft: '8px', color: 'grey', fontSize: '14px' }}>
+            <Typography
+              variant="body2"
+              sx={{
+                ml: '8px',
+                mt: '16px',
+                mb: '16px',
+                mr: { xs: '16px', sm: '16px', md: '250px' },
+                color: 'grey',
+                fontSize: { xs: '12px', sm: '14px', md: '14px' },
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                display: '-webkit-box',
+                WebkitBoxOrient: 'vertical',
+                WebkitLineClamp: { xs: 2, sm: 1 },
+                lineClamp: { xs: 2, sm: 1 },
+              }}
+            >
               {item.description}
             </Typography>
-            
+
             {/* 캐시, 닉네임, 시간 */}
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 flexDirection: 'row',
-                marginLeft: '8px',
-                marginTop: '8px',
-                marginBottom: '8px'                
+                ml: '8px',
+                mt: '8px',
+                mb: '8px',
               }}
             >
-              <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: '22px' }}>
+              <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>
                 💵 {parseInt(item.price.toString()).toLocaleString()}
               </Typography>
               <Box width={8} />
-              <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: '22px' }}>
+              <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>
                 🌱 {parseInt((item.price * 5).toLocaleString())}
               </Typography>
             </Box>
@@ -78,10 +99,11 @@ const CodeItem: FC<Props> = ({ item }) => {
               variant="body2"
               sx={{
                 position: 'absolute',
-                bottom: '24px',
-                left: '24px',
+                bottom: { xs: '16px', md: '24px' },
+                left: { xs: '16px', md: '24px' },
                 color: 'grey',
                 textAlign: 'center',
+                fontSize: { xs: '10px', sm: '12px', md: '14px' },
               }}
               className={styles.textOverflow}
             >
@@ -94,54 +116,56 @@ const CodeItem: FC<Props> = ({ item }) => {
             <Box
               sx={{
                 display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center', // 수평 가운데 정렬
+                flexDirection: { xs: 'column', md: 'row' },
+                alignItems: 'center',
                 position: 'absolute',
-                top: '24px',
-                right: '24px',
+                top: { xs: '16px', md: '24px' },
+                right: { xs: '16px', md: '24px' },
               }}
             >
-              <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="body2" sx={{ color: '#0275c2', fontSize: '24px' }}>
+              <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
+                <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
                   {item.likeCount}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'grey' }}>
+                <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
                   좋아요
                 </Typography>
               </Box>
 
               <Box
                 sx={{
-                  width: '1px',
-                  height: '48px',
+                  width: { xs: '48px', md: '1px' },
+                  height: { xs: '1px', md: '48px' },
                   backgroundColor: '#e0e0e0',
-                  marginLeft: '16px',
+                  mx: { xs: 0, md: '16px' },
+                  my: { xs: '8px', md: 0 },
                 }}
               />
 
-              <Box sx={{ textAlign: 'center', marginLeft: '16px' }}>
-                <Typography variant="body2" sx={{ color: '#0275c2', fontSize: '24px' }}>
+              <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
+                <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
                   {item.reviewCount}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'grey' }}>
+                <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
                   리뷰
                 </Typography>
               </Box>
 
               <Box
                 sx={{
-                  width: '1px',
-                  height: '48px',
+                  width: { xs: '48px', md: '1px' },
+                  height: { xs: '1px', md: '48px' },
                   backgroundColor: '#e0e0e0',
-                  marginLeft: '16px',
+                  mx: { xs: 0, md: '16px' },
+                  my: { xs: '8px', md: 0 },
                 }}
               />
 
-              <Box sx={{ textAlign: 'center', marginLeft: '16px' }}>
-                <Typography variant="body2" sx={{ color: '#0275c2', fontSize: '24px' }}>
-                  {item.buyerCount * item.price}
+              <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
+                <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
+                  {(item.buyerCount * item.price).toLocaleString()}
                 </Typography>
-                <Typography variant="body2" sx={{ color: 'grey' }}>
+                <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
                   인기도
                 </Typography>
               </Box>

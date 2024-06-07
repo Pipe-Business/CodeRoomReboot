@@ -2,8 +2,7 @@ import React, { FC } from 'react';
 import BaseLayout from './BaseLayout.tsx';
 import Grid from '@mui/material/Unstable_Grid2';
 import HeaderLayout from './HeaderLayout.tsx';
-import { Divider, Hidden } from '@mui/material';
-import { CenterBox } from '../components/styles.ts';
+import { Box, Divider } from '@mui/material';
 import styled from "@emotion/styled"
 import FooterLayout from './FooterLayout.tsx';
 
@@ -11,38 +10,41 @@ interface Props {
 	children?: React.ReactNode;
 }
 
-const MainLayoutWrapper = styled.div`
+const MainLayoutWrapper = styled(Box)`
   display: flex;
   justify-content: center;
+  padding: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+
+  @media (max-width: 600px) {
+    padding: 8px;
+  }
 `
 
-
 const MainLayout: FC<Props> = ({ children }) => {
-
-	// xs -> sm -> md -> lg -> xl
 	return (
-		<div>
-			<div style={{ position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 2 }}>
+		<Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+			<Box sx={{ position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 2, width: '100%' }}>
 				<BaseLayout>
 					<HeaderLayout />
 				</BaseLayout>
 				{/* <Divider /> */}
-			</div>
-			<BaseLayout>
-				{/* <Grid container columns={24} spacing={4}>
-				<Grid xs={24} sm={24} md={18} lg={18} xl={18}> */}
-				 <MainLayoutWrapper>
-							<div style={{marginTop : 16}}>
+			</Box>
+			<Box sx={{ flex: 1 }}>
+				<BaseLayout>
+					<MainLayoutWrapper>
+						<Box sx={{ mt: 2, width: '100%' }}>
 							{children}
-							</div>
-							</MainLayoutWrapper>
-					{/* </Grid>
-				</Grid> */}
-			</BaseLayout>
+						</Box>
+					</MainLayoutWrapper>
+				</BaseLayout>
+			</Box>
 			<BaseLayout>
-			<FooterLayout />
+				<FooterLayout />
 			</BaseLayout>
-		</div>
+		</Box>
 	);
 };
 
