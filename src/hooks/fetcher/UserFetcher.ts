@@ -5,8 +5,9 @@ import { loginFetcher } from "../../utils/QueryFetchers";
 
 export function useQueryUserById(userToken: string) {
 	const { isLoading, data, isFetching, error } = useQuery({
-		queryKey: ['users', userToken],
-		queryFn: () => apiClient.getTargetUser(userToken)
+		queryKey: [REACT_QUERY_KEY.user, userToken],
+		queryFn: () => apiClient.getTargetUser(userToken),
+		refetchOnMount: "always",
 	});
 	return {
 		isLoadingUserById: isLoading,
@@ -24,6 +25,7 @@ export function useQueryUserLogin() {
 	const { isLoading, data: userLogin, error, isFetching } = useQuery({
 		queryKey: [REACT_QUERY_KEY.login],
 		queryFn: loginFetcher,
+		refetchOnMount: "always",
 	});
 	return {
 		isLoadingUserLogin: isLoading,

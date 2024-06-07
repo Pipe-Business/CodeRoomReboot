@@ -25,6 +25,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { REACT_QUERY_KEY } from '../../constants/define.ts';
 import { PointHistoryType } from '../../enums/PointHistoryType.tsx';
 import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity.ts';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface Props {
 	children?: React.ReactNode;
@@ -39,6 +40,7 @@ interface RouteState{
 
 const EditMyProfilePage: FC<Props> = () => {
 
+	const queryClient = useQueryClient();
 	const { state } = useLocation() as RouteState;
 	const { userLogin , isLoadingUserLogin } = useQueryUserLogin();
 	const navigate = useNavigate();
@@ -127,7 +129,7 @@ const EditMyProfilePage: FC<Props> = () => {
 				
 
 			 }
-			 if(inputIntroduce.length > 0){
+			 
 				// db업데이트
 				await apiClient.updateAboutMeData(userLogin?.userToken! , inputIntroduce);
 				
@@ -135,7 +137,7 @@ const EditMyProfilePage: FC<Props> = () => {
 				if(inputIntroduce.length > 100 && !userLogin?.is_introduce_rewarded){
 					mutateSetIntroducePoint();
 				}
-			 }
+			 
 
 			 //todo 자기소개 처리
 
@@ -143,6 +145,12 @@ const EditMyProfilePage: FC<Props> = () => {
 			
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries(
+				{queryKey: [REACT_QUERY_KEY.login],}
+			);
+			queryClient.invalidateQueries(
+				{queryKey: [REACT_QUERY_KEY.user,userLogin?.userToken],}
+			);
 			toast.success('편집이 완료되었습니다.');
 		},
 		onError: (error) => {

@@ -35,7 +35,11 @@ const MyPage: FC<Props> = () => {
     const tab = location.state?.tab;
     const [searchParams, setSearchParams] = useSearchParams();
     const inputNickNameRef = useRef<HTMLInputElement | null>(null);
-    const { data: userData, isLoading: userDataLoading, refetch: refetchUserData } = useQuery({ queryKey: ['users', userLogin?.id], queryFn: () => apiClient.getTargetUser(userLogin!.userToken!) })
+    const { data: userData, isLoading: userDataLoading, refetch: refetchUserData } = useQuery({ 
+        queryKey: [REACT_QUERY_KEY.user, userLogin?.userToken],
+        queryFn: () => apiClient.getTargetUser(userLogin!.userToken!),
+        refetchOnMount: "always",
+    })
     const { data: approvedCodeData, refetch: refetchApprovedCodeData } = useQuery({
         queryKey: [REACT_QUERY_KEY.approvedCode, userLogin?.userToken!, 'state'],
         queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'approve')

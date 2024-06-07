@@ -10,7 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../../../../api/ApiClient';
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
 import { PurchaseSaleResponseEntity } from '../../../../data/entity/PurchaseSaleResponseEntity';
-
+import { REACT_QUERY_KEY } from '../../../../constants/define';
 interface Props {
 	children?: React.ReactNode;
 	item: PurchaseSaleResponseEntity;
@@ -24,11 +24,11 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
         });
 
     const { data: purchaseUserData, isLoading: purchaseUserLoading } = useQuery({ 
-        queryKey: ['users', item.purchase_user_token!], 
+        queryKey: [REACT_QUERY_KEY.user, item.purchase_user_token!], 
         queryFn: async() => await apiClient.getTargetUser(item?.purchase_user_token!) 
     })
 	const { data: salesUserData, isLoading: salesUserLoading } = useQuery({ 
-        queryKey: ['users', item.sales_user_token!], 
+        queryKey: [REACT_QUERY_KEY.user, item.sales_user_token!], 
         queryFn: async() => await apiClient.getTargetUser(item?.purchase_user_token!) 
     })
    

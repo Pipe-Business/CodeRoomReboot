@@ -4,7 +4,7 @@ import { Divider, ListItem, ListItemAvatar, ListItemButton, ListItemText, Button
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from '../../../../api/ApiClient';
 import CodeDownloadButton from '../../../codeInfo/components/CodeDownloadButton';
-
+import { REACT_QUERY_KEY } from '../../../../constants/define';
 interface Props {
     children?: React.ReactNode;
     purchaseData: PurchaseSaleResponseEntity;
@@ -17,7 +17,7 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
     const { data: codeData } = useQuery({ queryKey: ['codeStore', purchaseData.post_id], queryFn: () => apiClient.getTargetCode(purchaseData.post_id) });
     const navigate = useNavigate();
     const { data: postedUser } = useQuery({
-        queryKey: ['users', purchaseData?.sales_user_token, 'nickname'],
+        queryKey: [REACT_QUERY_KEY.user, purchaseData?.sales_user_token, 'nickname'],
         queryFn: () => apiClient.getTargetUser(purchaseData.sales_user_token),
     });
 

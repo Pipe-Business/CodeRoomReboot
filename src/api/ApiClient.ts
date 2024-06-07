@@ -506,7 +506,7 @@ class ApiClient implements SupabaseAuthAPI {
                 }
                 lstUserModel.push(userModel);
             });
-            //console.log(data);
+            console.log("userModel"+JSON.stringify(data));
 
             if (error) {
                 console.log("error" + error.message);
@@ -1149,7 +1149,7 @@ class ApiClient implements SupabaseAuthAPI {
                 const { data, error } = await supabase
                     .storage
                     .from('coderoom')
-                    .upload(path, file, {upsert: true});
+                    .upload(path, file, {upsert: true, cacheControl: '0'});
                 const publicUrl = await this.getImgPublicUrl(path);
                 // lstPublicUrl.push(publicUrl);
 

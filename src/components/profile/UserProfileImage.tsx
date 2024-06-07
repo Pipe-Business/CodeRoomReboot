@@ -5,6 +5,8 @@ import {useQuery} from "@tanstack/react-query"
 import { UserModel } from "../../data/model/UserModel";
 import { apiClient } from "../../api/ApiClient";
 import gravatar from "gravatar";
+import { REACT_QUERY_KEY } from "../../constants/define";
+import { useQueryUserById } from "../../hooks/fetcher/UserFetcher";
 
 interface Props {
     children?: React.ReactNode,
@@ -13,7 +15,8 @@ interface Props {
 }
 
 const UserProfileImage: FC<Props> = ({userId,size}) => {
-    const {data:userData} = useQuery({queryKey:['users',userId],queryFn: async () => await apiClient.getTargetUser(userId)})
+    const {userById:userData} = useQueryUserById(userId);
+
     if(!userData){
         return <Skeleton variant={"circular"}/>
     }
