@@ -1144,12 +1144,12 @@ class ApiClient implements SupabaseAuthAPI {
            // const lstPublicUrl: string[] = [];
 
 
-                const path: string = `profile/${userToken}/${file.name}`;
+                const path: string = `profile/${userToken}`;
 
                 const { data, error } = await supabase
                     .storage
                     .from('coderoom')
-                    .upload(path, file);
+                    .upload(path, file, {upsert: true});
                 const publicUrl = await this.getImgPublicUrl(path);
                 // lstPublicUrl.push(publicUrl);
 
