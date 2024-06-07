@@ -21,35 +21,35 @@ interface Props {
 
 const HeaderLayout: FC<Props> = () => {
 
-    const { userLogin , isLoadingUserLogin} = useQueryUserLogin();
-	const queryClient = useQueryClient();
+    const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
+    const queryClient = useQueryClient();
 
 
-   /*
-	* useQuery에서 넘어온 data를 cashData로 선언
-	*/
-	const { isLoading : isCashDataLoading, data: cashData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
-	});
+    /*
+     * useQuery에서 넘어온 data를 cashData로 선언
+     */
+    const { isLoading: isCashDataLoading, data: cashData } = useQuery({
+        queryKey: [REACT_QUERY_KEY.cash],
+        queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
+    });
 
-     /*
-	* useQuery에서 넘어온 data를 pointData 선언
-	*/
-	const { isLoading : isPointDataLoading, data: pointData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
-	});
+    /*
+   * useQuery에서 넘어온 data를 pointData 선언
+   */
+    const { isLoading: isPointDataLoading, data: pointData } = useQuery({
+        queryKey: [REACT_QUERY_KEY.point],
+        queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
+    });
 
 
-	const location = useLocation();
+    const location = useLocation();
     const currentPath = location.pathname;
     const signOut = async () => {
         console.log("signout");
         localApi.removeUserToken();
-			queryClient.setQueryData([REACT_QUERY_KEY.login], null);
+        queryClient.setQueryData([REACT_QUERY_KEY.login], null);
         await apiClient.signOut();
-        if(currentPath == '/'){
+        if (currentPath == '/') {
             navigate(0);
         }
         navigate('/');
@@ -70,9 +70,9 @@ const HeaderLayout: FC<Props> = () => {
     const [notiCount, setNotiCount] = useState<number>(0);
     const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
 
-    if(isLoadingUserLogin){
+    if (isLoadingUserLogin) {
         return <CenterBox><CircularProgress /></CenterBox>;
-}
+    }
 
     return (
 
@@ -138,21 +138,21 @@ const HeaderLayout: FC<Props> = () => {
 
                     userLogin && <CenterBox>
                         <MarginHorizontal size={8}>
-                            <Link to={'/charge'} style={{ textDecoration: "none" }}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>충전하기</span>
-                            </Link>
-                        </MarginHorizontal>
-                          <MarginHorizontal size={8}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isCashDataLoading ? '' : cashData+' 💰'}</span>
+                            <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{isCashDataLoading ? '' : cashData + ' 💵'}</span>
                         </MarginHorizontal>
                         <MarginHorizontal size={8}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{ isPointDataLoading ? '' : pointData+' 🌱'}</span>
+                            <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>{isPointDataLoading ? '' : pointData + ' 🌱'}</span>
                         </MarginHorizontal>
-
+                        
+                        <MarginHorizontal size={8}>
+                            <Link to={'/charge'} style={{ textDecoration: "none" }}>
+                                <span style={{ color: '#000000', fontSize: '14px' }}>충전하기</span>
+                            </Link>
+                        </MarginHorizontal>
 
                         <MarginHorizontal size={8}>
                             <Link to={'/create/code'} style={{ textDecoration: "none" }}>
-                                <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>코드 올리기</span>
+                                <span style={{ color: '#000000', fontSize: '14px' }}>코드 올리기</span>
                             </Link>
                         </MarginHorizontal>
 
@@ -160,7 +160,7 @@ const HeaderLayout: FC<Props> = () => {
                             <Link to={'/notification'}>
                                 <HeaderIconButton>
                                     <Badge color={'error'} badgeContent={notiCount} max={9}>
-                                        <NotificationsIcon sx={{ fontSize: '24px', color: '#000000'}} />
+                                        <NotificationsIcon sx={{ fontSize: '24px', color: '#000000' }} />
                                     </Badge>
                                 </HeaderIconButton>
                             </Link>
@@ -170,16 +170,16 @@ const HeaderLayout: FC<Props> = () => {
                            <UserProfileImage userId={userLogin.userToken!} size={26} onClick={()=>{navigate('/profile/my')}}/>
                             </MarginHorizontal> */}
 
-                            <MarginHorizontal size={8}>
-                                <ProfileMenu profileUrl={userLogin.profileUrl!}/>
-                            </MarginHorizontal>
+                        <MarginHorizontal size={8}>
+                            <ProfileMenu profileUrl={userLogin.profileUrl!} />
+                        </MarginHorizontal>
 
                         {/* <MarginHorizontal size={8}>
                             <Link to={'/profile/my'} style={{ textDecoration: "none" }}>
                                 <span style={{ color: '#000000', fontSize: '14px', fontWeight: 'bold' }}>프로필</span>
                             </Link>
                         </MarginHorizontal> */}
-                                              
+
                     </CenterBox>
                 }
                 {/* {
