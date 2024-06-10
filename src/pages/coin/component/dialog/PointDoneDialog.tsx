@@ -4,8 +4,6 @@ import { useQueryUserLogin } from '../../../../hooks/fetcher/UserFetcher';
 import { useQuery } from '@tanstack/react-query';
 import { REACT_QUERY_KEY } from '../../../../constants/define';
 import { apiClient } from '../../../../api/ApiClient';
-// import { useMutateAdaptToPointForUser } from '../../../../hooks/mutate/PaymentMutate.ts';
-//import { paymentStore } from '../../../../store/paymentStore.ts';
 
 interface Props {
 	children?: React.ReactNode,

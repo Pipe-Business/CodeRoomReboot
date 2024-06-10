@@ -4,6 +4,7 @@ import MainLayout from '../../layout/MainLayout';
 import {Box, Card} from '@mui/material';
 import {User} from '@supabase/supabase-js';
 import dayjs from 'dayjs';
+import {MentoringResponseEntity} from "../../data/entity/MentoringResponseEntity";
 
 
 interface Props {

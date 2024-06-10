@@ -1,4 +1,4 @@
-interface MentoringResponseEntity {
+export interface MentoringResponseEntity {
 	id?: number;
 	title: string; // 멘토링 신청 제목 
 	content: string; // 멘토링 신청 내용

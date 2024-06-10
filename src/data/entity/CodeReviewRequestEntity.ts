@@ -1,4 +1,4 @@
-interface CodeReviewRequestEntity {
+export interface CodeReviewRequestEntity {
 	id?: number;
 	title: string; // 코드리뷰 신청 제목 
 	content: string; // 코드리뷰 신청 내용

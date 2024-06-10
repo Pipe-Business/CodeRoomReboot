@@ -14,6 +14,8 @@ import MainLayout from '../../layout/MainLayout';
 import SectionTitle from './components/SectionTitle';
 import SelectCodeCategory from './components/SelectCodeCategory';
 import SelectCodeLanguage from './components/SelectCodeLanguage';
+import {PostRequestEntity} from "../../data/entity/PostRequestEntity";
+import {CodeRequestEntity} from "../../data/entity/CodeRequestEntity";
 
 interface Props {
   children?: React.ReactNode;

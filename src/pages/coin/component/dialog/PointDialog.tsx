@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import PointData from '../PointData.tsx';
+import PointData from '../PointData';
 import CloseIcon from '@mui/icons-material/Close';
 
 interface Props {

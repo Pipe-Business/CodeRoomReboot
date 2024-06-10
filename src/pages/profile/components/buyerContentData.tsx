@@ -8,6 +8,9 @@ import PurchaseList from './purchaseData/PurchaseList';
 import CodePendingOrPendingList from './code/MyCodeList';
 import CashHistoryList from './CashHistoryData/CashHistoryList';
 import SaleList from './saleData/SaleList';
+import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
+import {PointHistoryResponseEntity} from "../../../data/entity/PointHistoryResponseEntity";
+import {CashHistoryResponseEntity} from "../../../data/entity/CashHistoryResponseEntity";
 
 interface Props {
     children?: React.ReactNode;

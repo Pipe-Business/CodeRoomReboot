@@ -5,6 +5,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../../api/ApiClient';
 import CodeDownloadButton from '../../../codeInfo/components/CodeDownloadButton';
 import {REACT_QUERY_KEY} from '../../../../constants/define';
+import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleResponseEntity";
 
 interface Props {
     children?: React.ReactNode;

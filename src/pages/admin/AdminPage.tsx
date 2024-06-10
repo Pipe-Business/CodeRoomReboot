@@ -1,18 +1,14 @@
-import React, { FC, useEffect,useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import React, {FC, useEffect} from 'react';
 import AdminLayout from '../../layout/AdminLayout';
-import { Box } from '@mui/material';
+import {Box} from '@mui/material';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import AdminPaymentPendingPage from './AdminPaymentPendingPage';
-// import UserManageList from './components/userList/UserManageList';
-// import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList';
-import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
-//import AdminBootpayPaymentPage from './AdminBootpayPaymentPage';
+import {useLocation, useNavigate, useSearchParams} from 'react-router-dom';
 import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList';
-import { supabase } from 'src/api/ApiClient';
+import {supabase} from "../../api/ApiClient.ts";
 import AdminCashPointPage from './AdminCashPointPage';
 import UserManageList from './components/userManage/UserManageList';
 

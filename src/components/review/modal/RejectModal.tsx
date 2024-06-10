@@ -5,7 +5,7 @@ import {apiClient} from "../../../api/ApiClient";
 import {createTodayDate} from "../../../utils/DayJsHelper";
 import { toast } from 'react-toastify';
 import {NotificationEntity} from "../../../data/entity/NotificationEntity";
-import {NotificationType} from "src/enums/NotificationType";
+import {NotificationType} from "../../../enums/NotificationType";
 
 interface Props {
 	children?: React.ReactNode,

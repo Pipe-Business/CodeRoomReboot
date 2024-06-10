@@ -8,6 +8,7 @@ import {apiClient} from "../../api/ApiClient";
 import {useMutateSettleCashBySeller, useMutateUpdateConfirmedStatus} from "../../hooks/mutate/PaymentMutate";
 import PaymentPending from './components/paymentPending/PaymentPending';
 import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
+import {CashHistoryResponseEntity} from "../../data/entity/CashHistoryResponseEntity";
 
 interface Props {
 	children?: React.ReactNode;

@@ -3,7 +3,8 @@ import { Divider, ListItem, ListItemText } from '@mui/material';
 import {reformatTime} from "../../../../utils/DayJsHelper";
 import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher";
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
-import {PointHistoryType} from "src/enums/PointHistoryType";
+import {PointHistoryType} from "../../../../enums/PointHistoryType";
+import {PointHistoryResponseEntity} from "../../../../data/entity/PointHistoryResponseEntity";
 
 interface Props {
 	children?: React.ReactNode;

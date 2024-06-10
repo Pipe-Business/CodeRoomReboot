@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import MentoringItem from './MentoringItem';
 import { User } from '@supabase/supabase-js';
 import { Divider, List, ListItem, ListItemText } from '@mui/material';
+import {MentoringResponseEntity} from "../../../../data/entity/MentoringResponseEntity";
 
 interface Props {
 	children?: React.ReactNode,

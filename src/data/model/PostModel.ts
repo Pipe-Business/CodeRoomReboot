@@ -1,4 +1,4 @@
-interface PostModel {
+export interface PostModel {
 	id?: number;
 	title: string; // 제목 
 	description: string; // 설명

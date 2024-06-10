@@ -1,6 +1,8 @@
 import React, {FC} from 'react';
 import {Divider, ListItem, ListItemText} from '@mui/material';
 import {reformatTime} from '../../../../utils/DayJsHelper';
+import {CashHistoryResponseEntity} from "../../../../data/entity/CashHistoryResponseEntity";
+import {PointHistoryResponseEntity} from "../../../../data/entity/PointHistoryResponseEntity";
 
 interface Props {
     children?: React.ReactNode;

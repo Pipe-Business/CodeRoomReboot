@@ -9,6 +9,7 @@ import {PurchaseSaleRequestEntity} from '../../../data/entity/PurchaseSaleReques
 import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import {NotificationType} from '../../../enums/NotificationType';
 import {NotificationEntity} from '../../../data/entity/NotificationEntity';
+import {CashHistoryRequestEntity} from "../../../data/entity/CashHistoryRequestEntity";
 
 const CashPaymentDialog = (onConfirm) => {
     const { id } = useParams();

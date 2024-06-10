@@ -15,6 +15,7 @@ import {User} from '@supabase/supabase-js';
 import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
 import {NotificationEntity} from '../../data/entity/NotificationEntity';
 import {NotificationType} from "../../enums/NotificationType";
+import {CashHistoryRequestEntity} from "../../data/entity/CashHistoryRequestEntity";
 
 interface Props {
 	children?: React.ReactNode;

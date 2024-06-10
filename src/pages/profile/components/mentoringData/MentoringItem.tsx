@@ -6,6 +6,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../../api/ApiClient';
 import {User} from '@supabase/supabase-js';
 import dayjs from 'dayjs';
+import {MentoringResponseEntity} from "../../../../data/entity/MentoringResponseEntity";
 
 interface Props {
 	children?: React.ReactNode;

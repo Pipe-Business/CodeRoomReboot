@@ -11,6 +11,7 @@ import {apiClient} from '../../../../api/ApiClient';
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
 import {PurchaseSaleResponseEntity} from '../../../../data/entity/PurchaseSaleResponseEntity';
 import {REACT_QUERY_KEY} from '../../../../constants/define';
+import {CashHistoryResponseEntity} from "../../../../data/entity/CashHistoryResponseEntity";
 
 interface Props {
 	children?: React.ReactNode;

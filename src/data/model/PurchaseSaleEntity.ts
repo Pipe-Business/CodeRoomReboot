@@ -1,4 +1,4 @@
-interface PurchaseSaleEntity {
+export interface PurchaseSaleEntity {
 	id: number;
 	postId: number; // 게시글 id
 	price?: number; // 가격

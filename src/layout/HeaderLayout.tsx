@@ -1,18 +1,19 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Avatar, Badge, CircularProgress } from '@mui/material';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { FC, useCallback, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { apiClient } from '../api/ApiClient';
+import {Badge, CircularProgress} from '@mui/material';
+import {useQuery, useQueryClient} from '@tanstack/react-query';
+import React, {FC, useCallback, useState} from 'react';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {apiClient} from '../api/ApiClient';
 import localApi from '../api/local/LocalApi';
 import LoginModal from "../components/login/modal/LoginModal";
-import { CenterBox, Margin, MarginHorizontal } from '../components/styles';
-import { REACT_QUERY_KEY } from '../constants/define';
-import { useQueryUserLogin } from '../hooks/fetcher/UserFetcher';
+import {CenterBox, MarginHorizontal} from '../components/styles';
+import {REACT_QUERY_KEY} from '../constants/define';
+import {useQueryUserLogin} from '../hooks/fetcher/UserFetcher';
 import useDialogState from '../hooks/useDialogState';
 import useInput from '../hooks/useInput';
-import { ColorButton, HeaderIconButton, HeaderTitle, HeaderWrapper } from './styles';
+import {ColorButton, HeaderIconButton, HeaderTitle, HeaderWrapper} from './styles';
 import ProfileMenu from '../components/profile/ProfileMenu';
+
 interface Props {
     children?: React.ReactNode;
 }

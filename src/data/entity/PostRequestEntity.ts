@@ -1,4 +1,4 @@
-interface PostRequestEntity {
+export interface PostRequestEntity {
 	id?: number;
 	title: string; // 제목 
 	description: string; // 설명

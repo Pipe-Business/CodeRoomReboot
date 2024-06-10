@@ -1,14 +1,12 @@
 import React, { FC, useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-// import { setOneCode } from '../../../../utils/manager/FireBaseManager';
 import { useNavigate, useParams } from 'react-router-dom';
-//import { firebaseGetOneFetcher, firebaseSetFetcher, getAllFirebaseData } from '../../../../utils/QueryFetcher';
-import { apiClient } from 'src/api/ApiClient';
+import {apiClient} from "../../../api/ApiClient.ts";
 import { toast } from 'react-toastify';
-import { CodeModel } from 'src/data/model/CodeModel';
-import { NotificationEntity } from 'src/data/entity/NotificationEntity';
-import { NotificationType } from 'src/enums/NotificationType';
+import {CodeModel} from "../../../data/model/CodeModel.ts";
+import {NotificationEntity} from "../../../data/entity/NotificationEntity.ts";
+import {NotificationType} from "../../../enums/NotificationType.tsx"
 
 interface Props {
 	children?: React.ReactNode

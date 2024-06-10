@@ -1,4 +1,4 @@
-interface CashHistoryResponseEntity {
+export interface CashHistoryResponseEntity {
     id?: string; // ai id
     user_token: string; // 캐시 충전 및 사용한 사람의 usertoken
     cash: number; // 캐시 금액

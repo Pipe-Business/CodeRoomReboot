@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import PurchaseItem from './PurchaseItem';
 import { List } from '@mui/material';
+import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleResponseEntity";
 
 interface Props {
     children?: React.ReactNode,

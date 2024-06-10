@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {ColorButton} from '../styles';
 import {useNavigate} from 'react-router-dom';
+import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
 
 interface Props {
 	postId: number,

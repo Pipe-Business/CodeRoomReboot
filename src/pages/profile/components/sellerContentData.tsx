@@ -4,6 +4,7 @@ import React, {FC} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import CashConfirmList from './cashData/CashConfirmList';
+import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
 
 
 interface Props {

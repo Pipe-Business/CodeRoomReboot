@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, {FC} from 'react';
 import AdminCashPointList from './components/cashPaymentCharge/AdminCashPointList';
 
 interface Props {

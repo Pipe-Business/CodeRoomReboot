@@ -2,6 +2,7 @@ import React, {FC} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {ColorButton} from '../styles';
 import CodeDownloadButton from './CodeDownloadButton';
+import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
 
 
 interface Props {

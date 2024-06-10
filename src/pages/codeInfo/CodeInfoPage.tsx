@@ -30,6 +30,7 @@ import DeleteCodeButton from './components/DeleteCodeButton';
 import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
 import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEntity';
 import {PointHistoryType} from '../../enums/PointHistoryType';
+import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 
 dayjs.locale('ko');
 

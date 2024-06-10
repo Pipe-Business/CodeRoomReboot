@@ -1,4 +1,5 @@
-import { NotificationType } from "src/enums/NotificationType";
+import {NotificationType} from "../../enums/NotificationType";
+
 
 export interface NotificationEntity {
     id?: number;

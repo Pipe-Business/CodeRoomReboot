@@ -1,4 +1,4 @@
-interface CodeRequestEntity {
+export interface CodeRequestEntity {
     id?: string; // ai id
     post_id: number; // Post 테이블의 Pk 참조키
     created_at?: number;

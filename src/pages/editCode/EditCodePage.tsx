@@ -16,6 +16,7 @@ import ImageCard from "../../components/ImageCard";
 import LinkIcon from '@mui/icons-material/Link';
 import {ColorButton} from './styles';
 import {REACT_QUERY_KEY} from '../../constants/define';
+import {CodeEditRequestEntity} from "../../data/entity/CodeEditRequestEntity";
 
 interface Props {
     children?: React.ReactNode,

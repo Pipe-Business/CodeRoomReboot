@@ -1,4 +1,4 @@
-interface CodeEditRequestEntity {
+export interface CodeEditRequestEntity {
     post_id: number; // Post 테이블의 Pk 참조키
     title: string; // 제목 
     category: string; //  코드 카테고리 (사용 언어 등)

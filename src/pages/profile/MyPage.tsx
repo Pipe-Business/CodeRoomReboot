@@ -20,6 +20,7 @@ import ReviewDialog from '../codeInfo/components/ReviewDialog';
 import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity';
 import { PurchaseSaleRequestEntity } from '../../data/entity/PurchaseSaleRequestEntity';
 import { PointHistoryType } from '../../enums/PointHistoryType';
+import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
 
 interface Props {
     children?: React.ReactNode;

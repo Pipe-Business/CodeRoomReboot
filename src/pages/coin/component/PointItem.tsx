@@ -1,18 +1,19 @@
 import React, { FC, useCallback } from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
-import useDialogState from '../../../hooks/useDialogState.ts';
+import useDialogState from '../../../hooks/useDialogState';
 import { Bootpay } from '@bootpay/client-js';
-import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher.ts';
-import { useMutateBootPayPaymentRequest } from '../../../hooks/mutate/PaymentMutate.ts';
-import PointDoneDialog from './dialog/PointDoneDialog.tsx';
-import { BootPayPaymentEntity } from '../../../data/entity/BootpayPaymentEntity.ts';
+import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
+import { useMutateBootPayPaymentRequest } from '../../../hooks/mutate/PaymentMutate';
+import PointDoneDialog from './dialog/PointDoneDialog';
+import { BootPayPaymentEntity } from '../../../data/entity/BootpayPaymentEntity';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../../../api/ApiClient.ts';
-import { REACT_QUERY_KEY } from '../../../constants/define.ts';
-import { PointHistoryRequestEntity } from '../../../data/entity/PointHistoryRequestEntity.ts';
-import { PointHistoryType } from '../../../enums/PointHistoryType.tsx';
-import { NotificationEntity } from '../../../data/entity/NotificationEntity.ts';
-import { NotificationType } from '../../../enums/NotificationType.tsx';
+import { apiClient } from '../../../api/ApiClient';
+import { REACT_QUERY_KEY } from '../../../constants/define';
+import { PointHistoryRequestEntity } from '../../../data/entity/PointHistoryRequestEntity';
+import { PointHistoryType } from '../../../enums/PointHistoryType';
+import { NotificationEntity } from '../../../data/entity/NotificationEntity';
+import { NotificationType } from '../../../enums/NotificationType';
+import {CashHistoryRequestEntity} from "../../../data/entity/CashHistoryRequestEntity";
 
 interface Props {
   children?: React.ReactNode;
