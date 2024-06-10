@@ -303,7 +303,7 @@ const CodeInfo: FC<Props> = () => {
 									codeHostId={postData.userToken}
 									userId={userLogin?.userToken!}
 									userHavePoint={cashData ?? 0}
-									githubRepoUrl={postData.githubRepoUrl}
+									githubRepoUrl={postData.adminGitRepoURL}
 									purchasedSaleData={purchaseSaleData}
 									onClickBuyItButton={onClickBuyItButton}
 									onPaymentConfirm={onCashClickConfirm}
@@ -317,7 +317,7 @@ const CodeInfo: FC<Props> = () => {
 									codeHostId={postData.userToken}
 									userId={userLogin?.userToken!}
 									userHavePoint={pointData ?? 0}
-									githubRepoUrl={postData.githubRepoUrl}
+									githubRepoUrl={postData.adminGitRepoURL}
 									purchasedSaleData={purchaseSaleData}
 									onClickBuyItButton={onClickBuyItButton}
 									onPaymentConfirm={onPointClickConfirm}

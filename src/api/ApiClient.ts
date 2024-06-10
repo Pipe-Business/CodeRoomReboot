@@ -689,7 +689,6 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             console.log("getCodeDownloadURL : " + userName + repoName + branchName);
             const result = await axios.get<GithubForkURLEntity>(`${serverURL}/download/${userName}/${repoName}/${branchName}`);
-            console.log(`status honghcul : ${result.status}`);
             return result.data;
         } catch (e: any) {
             console.log(e);

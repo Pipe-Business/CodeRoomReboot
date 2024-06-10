@@ -54,7 +54,7 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
             <ListItemButton onClick={onClickListItem}>
                 <ListItem secondaryAction={
                     <>
-                        {!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.githubRepoUrl} />}
+                        {!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.adminGitRepoURL} />}
                         {!reviewData && <Button variant="outlined" onClick={handleWriteReviewClick} style={{ height: '53px', width: '200px' }}>리뷰 작성하기</Button>}
                     </>
                 }>
