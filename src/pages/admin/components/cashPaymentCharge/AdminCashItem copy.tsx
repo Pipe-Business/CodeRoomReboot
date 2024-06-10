@@ -1,9 +1,9 @@
 import React, { FC, useEffect } from 'react';
 import { Divider, ListItem, ListItemText } from '@mui/material';
-import { reformatTime } from 'src/utils/DayJsHelper';
-import { useQueryUserById } from 'src/hooks/fetcher/UserFetcher';
+import {reformatTime} from "../../../../utils/DayJsHelper";
+import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher";
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
-import { PointHistoryType } from 'src/enums/PointHistoryType';
+import {PointHistoryType} from "src/enums/PointHistoryType";
 
 interface Props {
 	children?: React.ReactNode;

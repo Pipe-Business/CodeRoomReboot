@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField } from '@mui/material';
 import { toast } from 'react-toastify';
-import { apiClient } from 'src/api/ApiClient';
+import {apiClient} from "../../../../api/ApiClient";
 
 interface AdminMessageDialogProps {
   open: boolean;

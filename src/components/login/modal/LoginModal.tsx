@@ -6,7 +6,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiClient } from 'src/api/ApiClient';
 import localApi from '../../../api/local/LocalApi';
-import { EMAIL_EXP, REACT_QUERY_KEY } from 'src/constants/define';
+// import { EMAIL_EXP, REACT_QUERY_KEY } from 'src/constants/define';
+import {EMAIL_EXP, REACT_QUERY_KEY} from "../../../constants/define";
 import useInput from '../../../hooks/useInput';
 import { ColorButton, TextButton } from '../../styles';
 

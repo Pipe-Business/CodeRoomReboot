@@ -1,10 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PointHistoryRequestEntity } from 'src/data/entity/PointHistoryRequestEntity';
-import { PointHistoryType } from 'src/enums/PointHistoryType';
-import { apiClient } from 'src/api/ApiClient';
+import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
+import {PointHistoryType} from "src/enums/PointHistoryType";
+import {apiClient} from "../../api/ApiClient";
 
 export const useMutateSendPoint = () => {
-
     // 관리자 포인트 지급
 
 	const { mutateAsync } = useMutation({

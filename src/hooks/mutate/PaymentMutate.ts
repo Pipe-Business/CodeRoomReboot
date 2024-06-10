@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from 'src/api/ApiClient';
-import { BootPayPaymentEntity } from 'src/data/entity/BootpayPaymentEntity';
+import {apiClient} from "../../api/ApiClient";
+import {BootPayPaymentEntity} from "../../data/entity/BootpayPaymentEntity";
 
 export const useMutateBootPayPaymentRequest = () => {
 	const { mutateAsync } = useMutation({

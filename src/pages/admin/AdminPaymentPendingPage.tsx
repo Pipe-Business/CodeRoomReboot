@@ -2,12 +2,12 @@ import React, { FC, useCallback, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button, IconButton, ListItem, ListItemText, TextField } from '@mui/material';
 import dayjs from 'dayjs';
-import { compareDates, createTodayDate, DATE_FORMAT } from 'src/utils/DayJsHelper';
+import {compareDates, createTodayDate, DATE_FORMAT} from "../../utils/DayJsHelper";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { apiClient } from 'src/api/ApiClient';
-import { useMutateSettleCashBySeller,useMutateUpdateConfirmedStatus} from 'src/hooks/mutate/PaymentMutate';
+import {apiClient} from "../../api/ApiClient";
+import {useMutateSettleCashBySeller, useMutateUpdateConfirmedStatus} from "../../hooks/mutate/PaymentMutate";
 import PaymentPending from './components/paymentPending/PaymentPending';
-import { PurchaseSaleResponseEntity } from 'src/data/entity/PurchaseSaleResponseEntity';
+import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
 
 interface Props {
 	children?: React.ReactNode;

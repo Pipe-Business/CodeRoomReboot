@@ -1,11 +1,11 @@
 import { Avatar, Card, CardHeader, Menu, MenuItem } from '@mui/material';
 import React, { FC, useState } from "react";
-import { useQueryUserLogin } from "src/hooks/fetcher/UserFetcher";
+import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
 import UserProfileImage from "./UserProfileImage";
 import localApi from '../../api/local/LocalApi';
 import { useQueryClient } from '@tanstack/react-query';
-import { REACT_QUERY_KEY } from 'src/constants/define';
-import { apiClient } from 'src/api/ApiClient';
+import {REACT_QUERY_KEY} from "../../constants/define";
+import { apiClient } from "../../api/ApiClient";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 interface Props{

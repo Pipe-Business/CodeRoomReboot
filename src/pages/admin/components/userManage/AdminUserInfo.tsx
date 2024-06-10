@@ -3,12 +3,12 @@ import { useParams } from 'react-router-dom';
 
 import { useQuery } from '@tanstack/react-query';
 import { Button, Card, CardContent, CardHeader, Divider } from '@mui/material';
-import { apiClient } from 'src/api/ApiClient';
+import {apiClient} from "../../../../api/ApiClient";
 import styled from '@emotion/styled';
 import AdminLayout from '../../../../layout/AdminLayout';
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
 import useDialogState from '../../../../hooks/useDialogState';
-import { reformatTime } from 'src/utils/DayJsHelper';
+import {reformatTime} from "../../../../utils/DayJsHelper";
 
 interface Props {
 	children?: React.ReactNode;
