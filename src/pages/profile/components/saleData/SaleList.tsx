@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {List, ListItem, ListItemText} from '@mui/material';
 import SaleItem from './SaleItem';
+import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleResponseEntity";
 
 
 interface Props {

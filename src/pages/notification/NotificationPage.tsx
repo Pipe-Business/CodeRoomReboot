@@ -7,6 +7,7 @@ import {format} from 'date-fns';
 import {useNavigate} from 'react-router-dom';
 import {apiClient} from '../../api/ApiClient';
 import AlertDialog from './components/AlertDialogProps';
+import {RealtimePostgresInsertPayload} from "@supabase/realtime-js/src/RealtimeChannel";
 
 const NotificationContainer = styled(Paper)`
   width: 100%;  
@@ -73,7 +74,7 @@ const NotificationPage: FC = () => {
   const [showReply, setShowReply] = useState(false);
   const navigate = useNavigate();
 
-  const handleInserts = async (payload) => {
+  const handleInserts = async (payload:RealtimePostgresInsertPayload<NotificationEntity>) => {
     const notificationData: NotificationEntity = {
       id: payload.new.id,
       title: payload.new.title,

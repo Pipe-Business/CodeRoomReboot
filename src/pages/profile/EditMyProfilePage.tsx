@@ -2,7 +2,7 @@ import React, {ChangeEvent, FC, useCallback, useRef, useState} from 'react';
 import InfoLayout from '../../layout/InfoLayout';
 import {ColorButton, FormWrapper, TextFieldWrapper} from './styles';
 import {Avatar, Box, Card, CardHeader, TextField} from '@mui/material';
-import {useInputValidate} from '../../hooks/common/UseInputValidate.ts';
+import {useInputValidate} from '../../hooks/common/UseInputValidate';
 import {REACT_QUERY_KEY} from '../../constants/define';
 import {toast} from 'react-toastify';
 import {useLocation, useNavigate} from 'react-router-dom';

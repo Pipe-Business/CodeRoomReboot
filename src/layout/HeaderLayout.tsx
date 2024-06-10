@@ -9,8 +9,8 @@ import LoginModal from "../components/login/modal/LoginModal";
 import {CenterBox, MarginHorizontal} from '../components/styles';
 import {REACT_QUERY_KEY} from '../constants/define';
 import {useQueryUserLogin} from '../hooks/fetcher/UserFetcher';
-import useDialogState from '../hooks/UseDialogState.ts';
-import useInput from '../hooks/UseInput.ts';
+import useDialogState from '../hooks/UseDialogState';
+import useInput from '../hooks/UseInput';
 import {ColorButton, HeaderIconButton, HeaderTitle, HeaderWrapper} from './styles';
 import ProfileMenu from '../components/profile/ProfileMenu';
 

@@ -2,7 +2,7 @@ import MainLayout from '../../layout/MainLayout';
 import {CenterBox, SearchBar} from './styles';
 import {useQuery} from '@tanstack/react-query';
 import {Box, IconButton, InputBase, Paper, Skeleton, Typography} from '@mui/material';
-import useInput from '../../hooks/UseInput.ts';
+import useInput from '../../hooks/UseInput';
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
@@ -72,7 +72,7 @@ const MainPage: FC = () => {
 
     return (
         <MainLayout>
-            <CenterBox sx={{ flexDirection: 'column', textAlign: 'center', p: 2 }}>
+            <CenterBox>
                 <Typography
                     variant="h4"
                     sx={{
@@ -87,7 +87,7 @@ const MainPage: FC = () => {
                 </Typography>
             </CenterBox>
             <CenterBox>
-            <SearchBar sx={{ width: { xs: '90%', sm: '60%', md: '600px' }, mx: 'auto', mb: 4 }}>
+            <SearchBar>
                 <Paper
                     variant='outlined'
                     component='form'

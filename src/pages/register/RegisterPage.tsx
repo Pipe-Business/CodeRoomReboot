@@ -1,7 +1,7 @@
 import React, {FC, useCallback, useRef, useState,} from 'react';
 import InfoLayout from '../../layout/InfoLayout';
 import {Box, Card, TextField} from '@mui/material';
-import {useInputValidate} from '../../hooks/common/UseInputValidate.ts';
+import {useInputValidate} from '../../hooks/common/UseInputValidate';
 import {API_ERROR, EMAIL_EXP} from '../../constants/define';
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';

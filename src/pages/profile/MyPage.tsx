@@ -96,9 +96,6 @@ const MyPage: FC<Props> = () => {
         setValue(newValue);
     };
 
-    const onClickCashPointManage = () => {
-        navigate('/my/profile/cashpoint/management')
-    };
 
     const handleWriteReviewClick = (purchaseData: PurchaseSaleResponseEntity) => {
         console.log('Review click event received for:', purchaseData);

@@ -1,5 +1,5 @@
 import React, {FC, useCallback, useRef} from 'react';
-import useInput from '../../hooks/UseInput.ts';
+import useInput from '../../hooks/UseInput';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
 import {useNavigate} from 'react-router-dom';

@@ -7,9 +7,9 @@ import {Link, useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {apiClient} from '../../api/ApiClient';
 import ImageCard from '../../components/ImageCard';
-import {useInputValidate} from '../../hooks/common/UseInputValidate.ts';
+import {useInputValidate} from '../../hooks/common/UseInputValidate';
 import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
-import useInput from '../../hooks/UseInput.ts';
+import useInput from '../../hooks/UseInput';
 import MainLayout from '../../layout/MainLayout';
 import SectionTitle from './components/SectionTitle';
 import SelectCodeCategory from './components/SelectCodeCategory';
@@ -52,7 +52,7 @@ const CreateCodePage: FC<Props> = () => {
 
   const onChangePoint = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setPoint(value);
+    setPoint(Number(value));
     setPointError(Number(value) < 0);
   }, [setPoint]);
 

@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import useInput from '../../../hooks/UseInput.ts';
+import useInput from '../../../hooks/UseInput';
 import {apiClient} from "../../../api/ApiClient";
 import {createTodayDate} from "../../../utils/DayJsHelper";
 import { toast } from 'react-toastify';
