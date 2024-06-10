@@ -3,7 +3,7 @@ import React, {FC, useCallback, useState} from 'react';
 import {Button, Divider, ListItem, ListItemButton, ListItemText} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 
-import useDialogState from '../../../../hooks/useDialogState';
+import useDialogState from '../../../../hooks/UseDialogState.ts';
 import {reformatTime} from '../../../../utils/DayJsHelper';
 import {AdminUserManageEntity} from '../../../../data/entity/AdminUserManageEntity';
 import PointSendDialog from '../modal/PointSendDialog';

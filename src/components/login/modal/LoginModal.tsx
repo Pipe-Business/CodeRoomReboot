@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import {apiClient} from "../../../api/ApiClient";
 import localApi from '../../../api/local/LocalApi';
 import {EMAIL_EXP, REACT_QUERY_KEY} from "../../../constants/define";
-import useInput from '../../../hooks/useInput';
+import useInput from '../../../hooks/UseInput.ts';
 import { ColorButton, TextButton } from '../../styles';
 
 import { useQueryClient } from '@tanstack/react-query';

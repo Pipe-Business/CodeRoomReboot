@@ -3,7 +3,7 @@ import {Link, useNavigate, useParams} from 'react-router-dom';
 import AdminLayout from '../../layout/AdminLayout';
 import {useQuery} from '@tanstack/react-query';
 import {Button, Divider, IconButton, Skeleton} from '@mui/material';
-import useDialogState from '../../hooks/useDialogState';
+import useDialogState from '../../hooks/UseDialogState.ts';
 import AcceptModal from '../../components/review/modal/AcceptModal';
 import RejectModal from '../../components/review/modal/RejectModal';
 import styled from '@emotion/styled';

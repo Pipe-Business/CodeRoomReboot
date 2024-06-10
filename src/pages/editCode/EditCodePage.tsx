@@ -1,8 +1,8 @@
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import React, {ChangeEvent, FC, useCallback, useRef, useState} from 'react';
-import useInput from "../../hooks/useInput";
+import useInput from "../../hooks/UseInput.ts";
 import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
-import {useInputValidate} from "../../hooks/common/useInputValidate";
+import {useInputValidate} from "../../hooks/common/UseInputValidate.ts";
 import {toast} from 'react-toastify';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {apiClient} from "../../api/ApiClient";

@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { Card, CardActionArea, CardContent, Typography, Box } from '@mui/material';
-import useDialogState from '../../../hooks/useDialogState';
+import useDialogState from '../../../hooks/UseDialogState.ts';
 import { Bootpay } from '@bootpay/client-js';
 import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
 import { useMutateBootPayPaymentRequest } from '../../../hooks/mutate/PaymentMutate';

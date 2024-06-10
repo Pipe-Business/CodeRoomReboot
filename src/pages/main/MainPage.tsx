@@ -2,7 +2,7 @@ import MainLayout from '../../layout/MainLayout';
 import {CenterBox, SearchBar} from './styles';
 import {useQuery} from '@tanstack/react-query';
 import {Box, IconButton, InputBase, Paper, Skeleton, Typography} from '@mui/material';
-import useInput from '../../hooks/useInput';
+import useInput from '../../hooks/UseInput.ts';
 import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';

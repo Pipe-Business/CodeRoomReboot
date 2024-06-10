@@ -10,7 +10,7 @@ import {apiClient} from '../../api/ApiClient';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal';
 import {CATEGORY_TO_KOR, REACT_QUERY_KEY} from '../../constants/define';
 import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
-import useDialogState from '../../hooks/useDialogState';
+import useDialogState from '../../hooks/UseDialogState.ts';
 import MainLayout from '../../layout/MainLayout';
 import {calcTimeDiff} from '../../utils/DayJsHelper';
 import {CenterBox} from '../main/styles';

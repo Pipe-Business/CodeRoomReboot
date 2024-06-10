@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {ColorButton} from '../styles';
 import {CodeModel} from '../../../data/model/CodeModel';
 import DeleteModal from './DeleteModal';
-import useDialogState from '../../../hooks/useDialogState';
+import useDialogState from '../../../hooks/UseDialogState.ts';
 
 interface Props {
     children?: React.ReactNode,

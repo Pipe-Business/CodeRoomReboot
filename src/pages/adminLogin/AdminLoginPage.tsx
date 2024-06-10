@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { apiClient } from '../../api/ApiClient';
 import { EMAIL_EXP } from '../../constants/define';
-import useInput from '../../hooks/useInput';
+import useInput from '../../hooks/UseInput.ts';
 import { ColorButton } from './styles';
 import { useQueryClient } from '@tanstack/react-query';
 import { REACT_QUERY_KEY } from '../../constants/define';
