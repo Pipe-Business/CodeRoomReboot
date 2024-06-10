@@ -7,8 +7,7 @@ import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponse
 import {PurchaseSaleRequestEntity} from "../../data/entity/PurchaseSaleRequestEntity";
 import {apiClient} from "../../api/ApiClient";
 import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
-import {PointHistoryType} from "src/enums/PointHistoryType";
-import ReviewDialog from "src/pages/codeInfo/components/ReviewDialog";
+import ReviewDialog from "../codeInfo/components/ReviewDialog";
 
 interface Props {
 	children?: React.ReactNode,

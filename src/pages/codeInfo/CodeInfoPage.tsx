@@ -16,7 +16,7 @@ import {calcTimeDiff} from '../../utils/DayJsHelper';
 import {CenterBox} from '../main/styles';
 import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton';
 import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton';
-import CashPaymentDialog from './components/CoinPaymentDialog';
+import CashPaymentDialog from './components/CashPaymentDialog';
 import PointPaymentDialog from './components/PointPaymentDialog';
 import {BlurContainer, StyledSlider} from './styles';
 import 'slick-carousel/slick/slick-theme.css';
@@ -84,16 +84,16 @@ const CodeInfo: FC<Props> = () => {
 
 	const handleReviewSubmit = async () =>  {	
 		// 리뷰 작성 완료시 이 콜백을 수행	
-		const purchaseData: PurchaseSaleRequestEntity = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id);
+		const purchaseData: PurchaseSaleRequestEntity|null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id);
 		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
 	
 		let amountUpdateValue;
-		if (purchaseData.pay_type == "point") {
+		if (purchaseData?.pay_type === "point") {
 			// 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
 			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
 		} else {
 			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-			amountUpdateValue = Math.round((purchaseData.price! * 0.05) * 10);
+			amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
 		}
 		 
 		const pointHistoryRequest : PointHistoryRequestEntity = {			
@@ -111,8 +111,8 @@ const CodeInfo: FC<Props> = () => {
 
 	useEffect(() => {
 		async function fetchReviews() {
-			const reviews: PurchaseReviewEntity[] = await apiClient.getPurchaseReviews(Number(id));
-			setReviews(reviews);
+			const reviews: PurchaseReviewEntity[]|null = await apiClient.getPurchaseReviews(Number(id));
+			setReviews(reviews!);
 		}
 		if (id) {
 			apiClient.updateViewCount(Number(id));
@@ -294,7 +294,6 @@ const CodeInfo: FC<Props> = () => {
 							</Box>
 							<Box my={3} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
 								<CodeInfoBuyItByCashButton
-									postId={postData.id}
 									isBlur={isBlur}
 									point={postData.price}
 									codeHostId={postData.userToken}
@@ -308,7 +307,6 @@ const CodeInfo: FC<Props> = () => {
 									onOpenPointDialog={onOpenPointDailog}
 								/>
 								<CodeInfoBuyItByPointButton
-									postId={postData.id}
 									isBlur={isBlur}
 									point={postData.price * 5}
 									codeHostId={postData.userToken}

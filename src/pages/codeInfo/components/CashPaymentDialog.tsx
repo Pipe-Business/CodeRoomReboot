@@ -1,4 +1,4 @@
-import {useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../api/ApiClient';
@@ -11,7 +11,7 @@ import {NotificationType} from '../../../enums/NotificationType';
 import {NotificationEntity} from '../../../data/entity/NotificationEntity';
 import {CashHistoryRequestEntity} from "../../../data/entity/CashHistoryRequestEntity";
 
-const CashPaymentDialog = (onConfirm) => {
+const CashPaymentDialog = (onConfirm: () => void) => {
     const { id } = useParams();
     const queryClient = useQueryClient();
     const { isLoadingUserLogin, userLogin } = useQueryUserLogin();

@@ -12,7 +12,7 @@ import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import {NotificationType} from '../../../enums/NotificationType';
 import {NotificationEntity} from '../../../data/entity/NotificationEntity';
 
-const PointPaymentDialog = (onConfirm) => {
+const PointPaymentDialog = (onConfirm:() => void) => {
 	const { id } = useParams();
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();

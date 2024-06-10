@@ -4,7 +4,6 @@ import {useNavigate} from 'react-router-dom';
 import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
 
 interface Props {
-	postId: number,
 	children?: React.ReactNode,
 	codeHostId: string,
 	userId?: string,
@@ -22,7 +21,6 @@ interface Props {
 
 const CodeInfoBuyItByPointButton: FC<Props> = (
 	{
-		postId,
 		codeHostId,
 		userId,
 		purchasedSaleData,
