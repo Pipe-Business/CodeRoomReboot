@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import BaseLayout from './BaseLayout.tsx';
+import BaseLayout from './BaseLayout';
 import Grid from '@mui/material/Unstable_Grid2';
-import HeaderLayout from './HeaderLayout.tsx';
+import HeaderLayout from './HeaderLayout';
 import { Box, Divider } from '@mui/material';
 import styled from "@emotion/styled"
-import FooterLayout from './FooterLayout.tsx';
+import FooterLayout from './FooterLayout';
 
 interface Props {
 	children?: React.ReactNode;

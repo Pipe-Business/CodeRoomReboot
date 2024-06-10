@@ -1,5 +1,5 @@
 import internal from "stream";
-import { PointHistoryType } from "../../enums/PointHistoryType";
+import { PointHistoryType } from "src/enums/PointHistoryType";
 
 export interface PointHistoryRequestEntity {
     id?: number;

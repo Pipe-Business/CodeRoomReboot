@@ -1,11 +1,11 @@
 import React, { FC, useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import useInput from '../../../hooks/useInput';
-import { apiClient } from '../../../api/ApiClient';
-import { createTodayDate } from '../../../utils/DayJsHelper';
+import { apiClient } from 'src/api/ApiClient';
+import { createTodayDate } from 'src/utils/DayJsHelper';
 import { toast } from 'react-toastify';
-import { NotificationEntity } from '../../../data/entity/NotificationEntity';
-import { NotificationType } from '../../../enums/NotificationType';
+import { NotificationEntity } from 'src/data/entity/NotificationEntity';
+import { NotificationType } from 'src/enums/NotificationType';
 
 interface Props {
 	children?: React.ReactNode,

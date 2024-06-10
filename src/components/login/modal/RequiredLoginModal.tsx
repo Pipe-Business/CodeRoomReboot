@@ -2,7 +2,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Card, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import React, { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ColorButton } from '../../styles.ts';
+import { ColorButton } from '../../styles';
 
 interface Props {
     children?: React.ReactNode;

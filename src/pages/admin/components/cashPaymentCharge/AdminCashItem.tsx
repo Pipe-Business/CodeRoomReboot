@@ -1,10 +1,9 @@
 import React, { FC, useEffect } from 'react';
 import { Divider, ListItem, ListItemText } from '@mui/material';
-import { reformatTime } from '../../../../utils/DayJsHelper.ts';
-import { useQueryUserById } from '../../../../hooks/fetcher/UserFetcher.ts';
-import UserProfileImage from '../../../../components/profile/UserProfileImage.tsx';
-import { apiClient } from '../../../../api/ApiClient.ts';
-import { CashHistoryType } from '../../../../enums/CashHistoryType.tsx';
+import { reformatTime } from 'src/utils/DayJsHelper';
+import { useQueryUserById } from 'src/hooks/fetcher/UserFetcher';
+import UserProfileImage from '../../../../components/profile/UserProfileImage';
+import { CashHistoryType } from 'src/enums/CashHistoryType';
 
 interface Props {
 	children?: React.ReactNode;

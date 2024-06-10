@@ -1,12 +1,9 @@
 import React, { FC, useCallback } from 'react';
-//import { useQueryUserById } from '../../../../hooks/fetcher/UserFetcher.ts';
 import { ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { reformatTime } from '../../../../utils/DayJsHelper.ts';
-//import PictogramImage from '../../../../components/PictogramImage.tsx';
-//import UserProfileImage from '../../../../components/UserProfileImage.tsx';
+import { reformatTime } from 'src/utils/DayJsHelper';
 import { useNavigate } from 'react-router-dom';
-import { CodeModel } from '../../../../data/model/CodeModel.ts';
-import { useQueryUserById } from '../../../../hooks/fetcher/UserFetcher.ts';
+import { CodeModel } from 'src/data/model/CodeModel';
+import { useQueryUserById } from 'src/hooks/fetcher/UserFetcher';
 
 interface Props {
 	children?: React.ReactNode;

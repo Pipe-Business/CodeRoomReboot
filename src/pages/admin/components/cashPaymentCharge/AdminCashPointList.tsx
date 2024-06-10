@@ -1,10 +1,9 @@
 import React, { FC } from 'react';
 import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../../../../api/ApiClient';
+import { apiClient } from 'src/api/ApiClient';
 import styled from "@emotion/styled"
 import AdminCashItem from './AdminCashItem';
-import PointData from '../../../coin/component/PointData';
 import AdminPointItem from './AdminCashItem copy';
 
 

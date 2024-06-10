@@ -1,15 +1,14 @@
 import React, { FC, useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-// import { setOneCode } from '../../../../utils/manager/FireBaseManager.ts';
+// import { setOneCode } from '../../../../utils/manager/FireBaseManager';
 import { useNavigate, useParams } from 'react-router-dom';
-//import { firebaseGetOneFetcher, firebaseSetFetcher, getAllFirebaseData } from '../../../../utils/QueryFetcher.ts';
-import { apiClient } from '../../../api/ApiClient.ts';
-import { createTodayDate } from '../../../utils/DayJsHelper.ts';
+//import { firebaseGetOneFetcher, firebaseSetFetcher, getAllFirebaseData } from '../../../../utils/QueryFetcher';
+import { apiClient } from 'src/api/ApiClient';
 import { toast } from 'react-toastify';
-import { CodeModel } from '../../../data/model/CodeModel.ts';
-import { NotificationEntity } from '../../../data/entity/NotificationEntity.ts';
-import { NotificationType } from '../../../enums/NotificationType.tsx';
+import { CodeModel } from 'src/data/model/CodeModel';
+import { NotificationEntity } from 'src/data/entity/NotificationEntity';
+import { NotificationType } from 'src/enums/NotificationType';
 
 interface Props {
 	children?: React.ReactNode

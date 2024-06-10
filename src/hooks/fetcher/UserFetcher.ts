@@ -1,7 +1,7 @@
-import { apiClient } from "../../api/ApiClient";
+import { apiClient } from "src/api/ApiClient";
 import { useQuery } from "@tanstack/react-query";
-import { REACT_QUERY_KEY } from "../../constants/define";
-import { loginFetcher } from "../../utils/QueryFetchers";
+import { REACT_QUERY_KEY } from "src/constants/define";
+import { loginFetcher } from "src/utils/QueryFetchers";
 
 export function useQueryUserById(userToken: string) {
 	const { isLoading, data, isFetching, error } = useQuery({

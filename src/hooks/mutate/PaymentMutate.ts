@@ -1,9 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiClient } from '../../api/ApiClient.ts';
-import { toast } from 'react-toastify';
-import { createTodayDate } from '../../utils/DayJsHelper.ts';
-import { BootPayPaymentEntity } from '../../data/entity/BootpayPaymentEntity.ts';
-import { PurchaseSaleRequestEntity } from '../../data/entity/PurchaseSaleRequestEntity.ts';
+import { apiClient } from 'src/api/ApiClient';
+import { BootPayPaymentEntity } from 'src/data/entity/BootpayPaymentEntity';
 
 export const useMutateBootPayPaymentRequest = () => {
 	const { mutateAsync } = useMutation({

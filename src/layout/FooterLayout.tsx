@@ -1,8 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { FooterWrapper, HeaderSearch, HeaderTitle, HeaderWrapper, ColorButton } from './styles.ts';
+import { FooterWrapper, HeaderSearch, HeaderTitle, HeaderWrapper, ColorButton } from './styles';
 import { CenterBox , FooterBox} from '../components/styles';
 import { MarginHorizontal } from '../components/styles';
-import { Link } from 'react-router-dom';
 
 interface Props {
     children?: React.ReactNode;

@@ -1,7 +1,6 @@
 import React, { FC } from "react";
-import BaseLayout from "./BaseLayout.tsx";
+import BaseLayout from "./BaseLayout";
 import { Link } from 'react-router-dom';
-import { CenterBox } from "./styles.ts";
 
 interface Props {
     children?: React.ReactNode

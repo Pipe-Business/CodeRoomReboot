@@ -1,9 +1,9 @@
 import React, {FC} from "react";
 import styled from "@emotion/styled"
-import HeaderLayout from "./HeaderLayout.tsx";
-import BaseLayout from "./BaseLayout.tsx";
+import HeaderLayout from "./HeaderLayout";
+import BaseLayout from "./BaseLayout";
 import { Divider } from '@mui/material';
-import FooterLayout from "./FooterLayout.tsx";
+import FooterLayout from "./FooterLayout";
 
 interface Props {
     children?: React.ReactNode

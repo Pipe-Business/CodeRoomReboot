@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import { Divider, List, ListItem, ListItemText } from '@mui/material';
-import AdminCodeRequestItem from './AdminCodeRequestItem.tsx';
+import AdminCodeRequestItem from './AdminCodeRequestItem';
 import { useQuery } from '@tanstack/react-query';
-import { apiClient } from '../../../../api/ApiClient.ts';
+import { apiClient } from 'src/api/ApiClient';
 
 interface Props {
 	children?: React.ReactNode;

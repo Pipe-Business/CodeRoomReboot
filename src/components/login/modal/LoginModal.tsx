@@ -4,11 +4,11 @@ import { User } from '@supabase/supabase-js';
 import React, { FC, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { apiClient } from '../../../api/ApiClient.ts';
-import localApi from '../../../api/local/LocalApi.ts';
-import { EMAIL_EXP, REACT_QUERY_KEY } from '../../../constants/define.ts';
-import useInput from '../../../hooks/useInput.ts';
-import { ColorButton, TextButton } from '../../styles.ts';
+import { apiClient } from 'src/api/ApiClient';
+import localApi from '../../../api/local/LocalApi';
+import { EMAIL_EXP, REACT_QUERY_KEY } from 'src/constants/define';
+import useInput from '../../../hooks/useInput';
+import { ColorButton, TextButton } from '../../styles';
 
 import { useQueryClient } from '@tanstack/react-query';
 
