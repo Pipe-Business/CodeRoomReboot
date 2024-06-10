@@ -7,7 +7,7 @@ import {apiClient} from "../../../../api/ApiClient";
 import styled from '@emotion/styled';
 import AdminLayout from '../../../../layout/AdminLayout';
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
-import useDialogState from '../../../../hooks/UseDialogState.ts';
+import useDialogState from '../../../../hooks/UseDialogState';
 import {reformatTime} from "../../../../utils/DayJsHelper";
 
 interface Props {
