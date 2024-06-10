@@ -102,25 +102,25 @@ const MyPage: FC<Props> = () => {
 
     const handleWriteReviewClick = (purchaseData: PurchaseSaleResponseEntity) => {
         console.log('Review click event received for:', purchaseData);
-        setDialogOpen(true);        
+        setDialogOpen(true);
 		setPurchasePostId(purchaseData.post_id);
     };
 
-	const handleReviewSubmit = async () =>  {	
-		// 리뷰 작성 완료시 이 콜백을 수행	
-		const purchaseData: PurchaseSaleRequestEntity = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!,purchasePostId);
+	const handleReviewSubmit = async () =>  {
+		// 리뷰 작성 완료시 이 콜백을 수행
+		const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!,purchasePostId);
 		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
 
 		let amountUpdateValue;
-		if (purchaseData.pay_type == "point") {
+		if (purchaseData?.pay_type == "point") {
 			// 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
 			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
 		} else {
 			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-			amountUpdateValue = Math.round((purchaseData.price! * 0.05) * 10);
+			amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
 		}
-		 
-		const pointHistoryRequest : PointHistoryRequestEntity = {			
+
+		const pointHistoryRequest : PointHistoryRequestEntity = {
 			description: "리뷰 작성 보상",
 			amount: (currentAmount + amountUpdateValue),
 			user_token: userLogin?.userToken!,
