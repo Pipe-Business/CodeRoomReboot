@@ -106,6 +106,7 @@ class ApiClient implements SupabaseAuthAPI {
                         viewCount: e.view_count,
                         likeCount: likedCount,
                         reviewCount: reviewCount,
+                        is_deleted: e.is_deleted,
                     }
                     lstCodeModel.push(codeModel);
                 }
@@ -1533,7 +1534,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getQueryCode(searchTargetWord: string) {
+    async getQueryCode(searchTargetWord: string):Promise<MainPageCodeListEntity[]> {
         try {
             const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
@@ -1541,35 +1542,42 @@ class ApiClient implements SupabaseAuthAPI {
                 .eq('state', "approve")
                 .order('created_at', {ascending: false});
 
-            let lstCodeModel: CodeModel[] = [];
-            data?.forEach((e) => {
-                let codeModel: CodeModel = {
-                    id: e.id,
-                    title: e.title,
-                    description: e.description,
-                    images: e.images,
-                    price: e.code.cost,
-                    userToken: e.user_token,
-                    category: e.category,
-                    language: e.code.language,
-                    postType: e.post_type,
-                    createdAt: e.created_at,
-                    buyerGuide: e.code.buyer_guide,
-                    githubRepoUrl: e.code.github_repo_url,
-                    buyerCount: e.code.buyer_count,
-                    popularity: e.code.popularity,
-                    hashTag: e.hash_tag,
-                    sellerGithubName: e.code.seller_github_name,
-                    state: e.state,
-                    adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage: e.reject_message,
-                    viewCount: e.view_count,
-                    is_deleted: e.is_deleted,
+            let lstMainPageCode: MainPageCodeListEntity[] = [];
+            if (data) {
+                for (const e of data) {
+                    const likedCount: number = await this.getTargetPostLikedNumber(e.id);
+                    const reviewCount: number = await this.getPurchaseReviewsCount(e.id);
+
+
+                    let mainPageCodeEntity: MainPageCodeListEntity = {
+                        id: e.id,
+                        title: e.title,
+                        description: e.description,
+                        images: e.images,
+                        price: e.code.cost,
+                        userToken: e.user_token,
+                        category: e.category,
+                        language: e.code.language,
+                        postType: e.post_type,
+                        createdAt: e.created_at,
+                        buyerGuide: e.code.buyer_guide,
+                        githubRepoUrl: e.code.github_repo_url,
+                        buyerCount: e.code.buyer_count,
+                        popularity: e.code.popularity,
+                        hashTag: e.hash_tag,
+                        sellerGithubName: e.code.seller_github_name,
+                        state: e.state,
+                        adminGitRepoURL: e.code.admin_git_repo_url,
+                        rejectMessage: e.reject_message,
+                        viewCount: e.view_count,
+                        likeCount: likedCount,
+                        reviewCount: reviewCount,
+                        is_deleted: e.is_deleted,
+                    }
+                    lstMainPageCode.push(mainPageCodeEntity);
                 }
-                lstCodeModel.push(codeModel);
-            });
-            //console.log(data);
-            return lstCodeModel;
+            }
+            return lstMainPageCode;
         } catch (e: any) {
             console.log(e);
             throw new Error('검색 게시글 목록을 가져오는 데 실패했습니다.');

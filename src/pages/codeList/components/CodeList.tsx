@@ -1,8 +1,8 @@
-import React, {FC} from 'react';
-import {Button} from '@mui/material';
-import {Link, useSearchParams} from 'react-router-dom';
+import React, { FC } from 'react';
+import { Button } from '@mui/material';
+import { Link, useSearchParams } from 'react-router-dom';
 import CodeItem from './CodeItem';
-import {MainPageCodeListEntity} from '../../../data/entity/MainPageCodeListEntity';
+import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity';
 
 interface Props {
 	children?: React.ReactNode,
@@ -10,8 +10,7 @@ interface Props {
 	type?: 'code' | 'article'
 }
 
-const CodeList: FC<Props> = ({ type, data }) => {
-
+const CodeList: FC<Props> = ({ type, data }) => { // 인자 타입 선언을 올바르게 수정
 	const [searchParams] = useSearchParams();
 
 	if (!data) {
@@ -40,22 +39,6 @@ const CodeList: FC<Props> = ({ type, data }) => {
 						<CodeItem key={item.id} item={item} />
 					</div>
 				);
-				// if (type) {
-				// 	if (type === item.formType) {
-				// 		return (
-				// 			<div key={item.id}>
-				// 				<CodeItem key={item.id} item={item} />
-				// 			</div>
-				// 		);
-				// 	}
-
-				// } else {
-				// 	return (
-				// 		<div key={item.id}>
-				// 			<CodeItem key={item.id} item={item} />
-				// 		</div>
-				// 	);
-				// }
 			})}
 		</div>
 	);

@@ -21,4 +21,5 @@ export type MainPageCodeListEntity = {
     rejectMessage : string, // 반려사유
     reviewCount: number, // 구매자 후기 갯수
     likeCount: number, // 좋아요 수
+    is_deleted: boolean; // 삭제된 게시물인지 확인
 }

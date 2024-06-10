@@ -3,12 +3,12 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { REACT_QUERY_KEY } from '../../constants/define';
 import { apiClient } from '../../api/ApiClient';
-import { CodeModel } from '../../data/model/CodeModel';
 import { CircularProgress } from '@mui/material';
 import MainLayout from '../../layout/MainLayout';
 import {Button, IconButton} from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import CodeList from '../codeList/components/CodeList';
+import {MainPageCodeListEntity} from "../../data/entity/MainPageCodeListEntity";
 
 
 
@@ -28,7 +28,7 @@ const SearchPage: FC<Props> = () => {
         queryKey: [REACT_QUERY_KEY.code, "query", paramQuery],
         queryFn: async () => {
             const data = await apiClient.getQueryCode(paramQuery!);
-            const newList: CodeModel[] = [];
+            const newList: MainPageCodeListEntity[] = [];
             if (!data) return null
             data.map(item => {
                 if (item.title.includes(paramQuery!)) {
