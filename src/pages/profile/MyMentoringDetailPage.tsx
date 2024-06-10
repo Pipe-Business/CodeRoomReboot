@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import FullLayout from '../../layout/FullLayout';
+import React, {FC} from 'react';
+import {useLocation} from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
-import { Button, Card, CardContent, CardHeader, Divider, Typography, Box } from '@mui/material';
-import { User } from '@supabase/supabase-js';
+import {Box, Card} from '@mui/material';
+import {User} from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 
 

@@ -1,13 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
-import { Box, Typography, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField } from '@mui/material';
-import { NotificationEntity } from '../../data/entity/NotificationEntity';
-import { NotificationType } from '../../enums/NotificationType';
-import { format } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
-import { apiClient } from '../../api/ApiClient.ts';
-import AlertDialog from './components/AlertDialogProps.tsx';
+import {Box, Paper, Typography} from '@mui/material';
+import {NotificationEntity} from '../../data/entity/NotificationEntity';
+import {format} from 'date-fns';
+import {useNavigate} from 'react-router-dom';
+import {apiClient} from '../../api/ApiClient';
+import AlertDialog from './components/AlertDialogProps';
 
 const NotificationContainer = styled(Paper)`
   width: 100%;  

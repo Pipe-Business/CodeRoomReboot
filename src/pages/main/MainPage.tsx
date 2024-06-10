@@ -1,17 +1,15 @@
-import MainLayout from '../../layout/MainLayout.tsx';
-import { CenterBox, SearchBar } from './styles.ts';
-import { useQuery } from '@tanstack/react-query';
-import { Badge, IconButton, InputBase, Paper, Box, Skeleton, Typography } from '@mui/material';
-import useInput from '../../hooks/useInput.ts';
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import MainLayout from '../../layout/MainLayout';
+import {CenterBox, SearchBar} from './styles';
+import {useQuery} from '@tanstack/react-query';
+import {Box, IconButton, InputBase, Paper, Skeleton, Typography} from '@mui/material';
+import useInput from '../../hooks/useInput';
+import React, {FC, useCallback, useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import { MarginHorizontal } from './styles.ts';
-import { CodeModel } from '../../data/model/CodeModel.ts';
-import { apiClient } from '../../api/ApiClient.ts';
-import CodeList from '../codeList/components/CodeList.tsx';
-import Paging from '../../components/paging/Paging.tsx';
-import { MainPageCodeListEntity } from '../../data/entity/MainPageCodeListEntity.ts';
+import {apiClient} from '../../api/ApiClient';
+import CodeList from '../codeList/components/CodeList';
+import Paging from '../../components/paging/Paging';
+import {MainPageCodeListEntity} from '../../data/entity/MainPageCodeListEntity';
 
 const MainPage: FC = () => {
     const { isLoading, data, error } = useQuery({

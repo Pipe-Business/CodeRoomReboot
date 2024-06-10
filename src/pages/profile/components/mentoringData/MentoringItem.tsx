@@ -1,12 +1,10 @@
-import React, { FC, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, {FC, useCallback} from 'react';
+import {useQuery} from '@tanstack/react-query';
 
-import { Divider, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-import { apiClient } from '../../../../api/ApiClient';
-import CodeDownloadButton from '../../../codeInfo/components/CodeDownloadButton';
-import { User } from '@supabase/supabase-js';
-import { reformatTime } from '../../../../utils/DayJsHelper';
+import {Divider, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import {useNavigate, useParams} from 'react-router-dom';
+import {apiClient} from '../../../../api/ApiClient';
+import {User} from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 
 interface Props {

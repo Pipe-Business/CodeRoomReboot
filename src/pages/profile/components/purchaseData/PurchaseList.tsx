@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import PurchaseItem from './PurchaseItem.tsx';
+import PurchaseItem from './PurchaseItem';
 import { List } from '@mui/material';
 
 interface Props {

@@ -1,16 +1,9 @@
-import React, { FC, useCallback, useRef, useState, useEffect } from 'react';
-import useInput from '../../hooks/useInput';
-import styled from '@emotion/styled';
+import React, {FC} from 'react';
 import MainLayout from '../../layout/MainLayout';
-import { CenterBox } from '../main/styles';
-import { Link, useNavigate } from 'react-router-dom';
-import { Dialog, DialogContent, DialogTitle, IconButton, Card, TextField, Box, Button, Divider } from '@mui/material';
-import { EMAIL_EXP } from '../../constants/define';
-import { toast } from 'react-toastify';
-import { ColorButton } from './styles';
-import { MarginHorizontal } from '../../components/styles';
-import { apiClient } from '../../api/ApiClient';
-import { TextButton } from '../main/styles';
+import {TextButton} from '../main/styles';
+import {Link} from 'react-router-dom';
+import {Box, Card} from '@mui/material';
+import {MarginHorizontal} from '../../components/styles';
 
 
 interface Props {

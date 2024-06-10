@@ -1,10 +1,6 @@
-import React, { FC } from 'react';
-import { List } from '@mui/material';
-import { User } from '@supabase/supabase-js';
-
-import {ListItem,ListItemText} from '@mui/material';
+import React, {FC} from 'react';
+import {List, ListItem, ListItemText} from '@mui/material';
 import CashHistoryItem from './CashHistoryItem';
-
 
 
 interface Props {

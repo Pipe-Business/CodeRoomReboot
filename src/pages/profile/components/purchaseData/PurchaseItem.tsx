@@ -1,10 +1,11 @@
-import React, { FC, useCallback } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Divider, ListItem, ListItemAvatar, ListItemButton, ListItemText, Button, Box } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-import { apiClient } from '../../../../api/ApiClient';
+import React, {FC, useCallback} from 'react';
+import {useQuery} from '@tanstack/react-query';
+import {Button, Divider, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import {useNavigate, useParams} from 'react-router-dom';
+import {apiClient} from '../../../../api/ApiClient';
 import CodeDownloadButton from '../../../codeInfo/components/CodeDownloadButton';
-import { REACT_QUERY_KEY } from '../../../../constants/define';
+import {REACT_QUERY_KEY} from '../../../../constants/define';
+
 interface Props {
     children?: React.ReactNode;
     purchaseData: PurchaseSaleResponseEntity;

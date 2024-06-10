@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
-import { CodeModel } from '../../../data/model/CodeModel.ts';
-import { Button } from '@mui/material';
-import { Link, useSearchParams } from 'react-router-dom';
-import CodeItem from './CodeItem.tsx';
-import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity.ts';
+import React, {FC} from 'react';
+import {Button} from '@mui/material';
+import {Link, useSearchParams} from 'react-router-dom';
+import CodeItem from './CodeItem';
+import {MainPageCodeListEntity} from '../../../data/entity/MainPageCodeListEntity';
 
 interface Props {
 	children?: React.ReactNode,

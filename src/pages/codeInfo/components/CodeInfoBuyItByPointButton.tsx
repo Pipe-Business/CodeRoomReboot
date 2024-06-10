@@ -1,8 +1,6 @@
-import React, { FC, useState, useEffect } from 'react';
-import { Button } from '@mui/material';
-import CodeDownloadButton from './CodeDownloadButton';
-import { ColorButton } from '../styles';
-import { Link, useNavigate } from 'react-router-dom';
+import React, {FC} from 'react';
+import {ColorButton} from '../styles';
+import {useNavigate} from 'react-router-dom';
 
 interface Props {
 	postId: number,

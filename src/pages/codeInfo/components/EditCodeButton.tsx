@@ -1,8 +1,7 @@
-import React, { FC, useCallback } from 'react';
-import { Button } from '@mui/material';
-import { ColorButton } from '../styles';
-import { useNavigate } from 'react-router-dom';
-import { CodeModel } from '../../../data/model/CodeModel';
+import React, {FC, useCallback} from 'react';
+import {ColorButton} from '../styles';
+import {useNavigate} from 'react-router-dom';
+import {CodeModel} from '../../../data/model/CodeModel';
 
 interface Props {
     children?: React.ReactNode,

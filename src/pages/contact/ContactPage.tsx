@@ -1,7 +1,8 @@
-import React, { FC, useState } from 'react';
+import React, {FC} from 'react';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
-import { Box } from '@mui/material';
+import {Box} from '@mui/material';
+
 interface Props {
 	children?: React.ReactNode;
 }

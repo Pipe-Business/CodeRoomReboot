@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import FullLayout from '../../layout/FullLayout.tsx';
+import FullLayout from '../../layout/FullLayout';
 import { Divider,Box } from '@mui/material';
 
 interface Props {

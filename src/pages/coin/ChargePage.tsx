@@ -1,6 +1,5 @@
-import React, { FC, useState } from 'react';
-import styled from '@emotion/styled';
-import { Box } from '@mui/material';
+import React, {FC} from 'react';
+import {Box} from '@mui/material';
 import PointData from './component/PointData';
 import FullLayout from '../../layout/FullLayout';
 

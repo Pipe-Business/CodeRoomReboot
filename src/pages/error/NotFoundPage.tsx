@@ -1,8 +1,6 @@
-import React, { FC, useState } from 'react';
-import styled from '@emotion/styled';
-import { CenterBox } from '../main/styles';
-import { Link } from 'react-router-dom';
-import { TextButton } from '../main/styles';
+import React, {FC} from 'react';
+import {CenterBox, TextButton} from '../main/styles';
+import {Link} from 'react-router-dom';
 
 interface Props {
     children?: React.ReactNode;

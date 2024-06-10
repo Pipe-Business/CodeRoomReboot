@@ -1,19 +1,14 @@
-import { useCallback } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { User } from '@supabase/supabase-js';
-import { supabase } from '../../../api/ApiClient';
-import { REACT_QUERY_KEY } from '../../../constants/define';
-import { apiClient } from '../../../api/ApiClient';
-import { createTodayDate } from '../../../utils/DayJsHelper';
-import { toast } from 'react-toastify';
-import { PurchaseSaleRequestEntity } from '../../../data/entity/PurchaseSaleRequestEntity';
-import ReviewDialog from './ReviewDialog';
-import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
-import { NotificationType } from '../../../enums/NotificationType';
-import { NotificationEntity } from '../../../data/entity/NotificationEntity';
+import {useCallback} from 'react';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useNavigate, useParams} from 'react-router-dom';
+import {apiClient} from '../../../api/ApiClient';
+import {REACT_QUERY_KEY} from '../../../constants/define';
+import {createTodayDate} from '../../../utils/DayJsHelper';
+import {toast} from 'react-toastify';
+import {PurchaseSaleRequestEntity} from '../../../data/entity/PurchaseSaleRequestEntity';
+import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
+import {NotificationType} from '../../../enums/NotificationType';
+import {NotificationEntity} from '../../../data/entity/NotificationEntity';
 
 const CashPaymentDialog = (onConfirm) => {
     const { id } = useParams();

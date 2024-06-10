@@ -1,10 +1,7 @@
-import React, { FC } from 'react';
-import { List } from '@mui/material';
-import { User } from '@supabase/supabase-js';
-import SaleItem from './CashConfirmItem';
-import {ListItem,ListItemText} from '@mui/material';
+import React, {FC} from 'react';
+import {List, ListItem, ListItemText} from '@mui/material';
 import CashConfirmItem from './CashConfirmItem';
-import { PurchaseSaleResponseEntity } from '../../../../data/entity/PurchaseSaleResponseEntity';
+import {PurchaseSaleResponseEntity} from '../../../../data/entity/PurchaseSaleResponseEntity';
 
 
 interface Props {

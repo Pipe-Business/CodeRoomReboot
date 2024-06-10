@@ -1,10 +1,9 @@
 // ReviewList.tsx
 import React from 'react';
-import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Box } from '@mui/material';
-import { PurchaseReviewEntity } from '../../../data/entity/PurchaseReviewEntity';
-import SectionTitle from '../../editCode/components/SectionTitle';
+import {Box, List, ListItem, ListItemText, Typography} from '@mui/material';
+import {PurchaseReviewEntity} from '../../../data/entity/PurchaseReviewEntity';
 import Rating from '@mui/lab/Rating';
-import { MarginHorizontal } from '../../adminLogin/styles';
+import {MarginHorizontal} from '../../adminLogin/styles';
 
 interface ReviewListProps {
     reviews: PurchaseReviewEntity[];

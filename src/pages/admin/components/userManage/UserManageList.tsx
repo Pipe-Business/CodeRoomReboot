@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { CircularProgress, List, ListItem, ListItemText } from '@mui/material';
-import UserManageItem from './UserManageItem.tsx';
-import { apiClient } from '../../../../api/ApiClient.ts';
+import React, {FC} from 'react';
+import {useQuery} from '@tanstack/react-query';
+import {CircularProgress, List, ListItem, ListItemText} from '@mui/material';
+import UserManageItem from './UserManageItem';
+import {apiClient} from '../../../../api/ApiClient';
 
 interface Props {
 	children?: React.ReactNode;

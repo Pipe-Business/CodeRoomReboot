@@ -1,15 +1,14 @@
-import React, { ChangeEventHandler, FC, useCallback, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import React, {ChangeEventHandler, FC, useCallback, useState} from 'react';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
 import styled from "@emotion/styled"
 
-import { toast } from 'react-toastify';
-import { createTodayDate } from '../../../../utils/DayJsHelper.ts';
-import { useMutateBootPayPaymentRequest } from '../../../../hooks/mutate/PaymentMutate.ts';
+import {toast} from 'react-toastify';
+import {createTodayDate} from '../../../../utils/DayJsHelper';
 
-import { apiClient } from '../../../../api/ApiClient.ts';
-import { NotificationEntity } from '../../../../data/entity/NotificationEntity.ts';
-import { useMutateSendPoint } from '../../../../hooks/mutate/AdminMutate.ts';
-import { NotificationType } from '../../../../enums/NotificationType.tsx';
+import {apiClient} from '../../../../api/ApiClient';
+import {NotificationEntity} from '../../../../data/entity/NotificationEntity';
+import {useMutateSendPoint} from '../../../../hooks/mutate/AdminMutate';
+import {NotificationType} from '../../../../enums/NotificationType';
 
 interface Props {
 	children?: React.ReactNode;

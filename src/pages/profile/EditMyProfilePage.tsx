@@ -1,31 +1,21 @@
-import React, { FC, useCallback, useRef, useState, useEffect, ChangeEvent } from 'react';
-import FullLayout from '../../layout/FullLayout.tsx';
-import InfoLayout from '../../layout/InfoLayout.tsx';
-import { FormWrapper, TextFieldWrapper, ColorButton } from './styles.ts';
-import { Box, Button, Card, CardHeader, TextField, IconButton } from '@mui/material';
-import { useInputValidate } from '../../hooks/common/useInputValidate.ts';
-import { EMAIL_EXP } from '../../constants/define.ts';
-import { toast } from 'react-toastify';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import MainLayout from '../../layout/MainLayout.tsx';
-import { apiClient } from '../../api/ApiClient.ts';
-import { createTodayDate } from '../../utils/DayJsHelper.ts';
-import { UserEntity } from '../../data/entity/UserEntity.ts';
-import { useMutation } from '@tanstack/react-query';
-import { User } from '@supabase/supabase-js';
-import { API_ERROR } from '../../constants/define.ts';
-import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher.ts';
-import { supabase } from '../../api/ApiClient.ts';
-import { useQuery } from "@tanstack/react-query"
-import SectionTitle from './components/SectionTitle.tsx';
-import UserProfileImage from '../../components/profile/UserProfileImage.tsx';
-import ImageCard from '../../components/ImageCard.tsx';
-import { Avatar } from '@mui/material';
+import React, {ChangeEvent, FC, useCallback, useRef, useState} from 'react';
+import InfoLayout from '../../layout/InfoLayout';
+import {ColorButton, FormWrapper, TextFieldWrapper} from './styles';
+import {Avatar, Box, Card, CardHeader, TextField} from '@mui/material';
+import {useInputValidate} from '../../hooks/common/useInputValidate';
+import {REACT_QUERY_KEY} from '../../constants/define';
+import {toast} from 'react-toastify';
+import {useLocation, useNavigate} from 'react-router-dom';
+import MainLayout from '../../layout/MainLayout';
+import {apiClient} from '../../api/ApiClient';
+import {UserEntity} from '../../data/entity/UserEntity';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
+import SectionTitle from './components/SectionTitle';
+import UserProfileImage from '../../components/profile/UserProfileImage';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import { REACT_QUERY_KEY } from '../../constants/define.ts';
-import { PointHistoryType } from '../../enums/PointHistoryType.tsx';
-import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity.ts';
-import { useQueryClient } from '@tanstack/react-query';
+import {PointHistoryType} from '../../enums/PointHistoryType';
+import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
 
 interface Props {
 	children?: React.ReactNode;

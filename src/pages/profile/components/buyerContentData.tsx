@@ -1,9 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Card, CardContent, CardHeader } from '@mui/material';
-import React, { FC, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CodeModel } from '../../../data/model/CodeModel';
-import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
+import {Box, Button, Card, CardContent, CardHeader} from '@mui/material';
+import React, {FC} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {CodeModel} from '../../../data/model/CodeModel';
+import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import PurchaseList from './purchaseData/PurchaseList';
 import CodePendingOrPendingList from './code/MyCodeList';
 import CashHistoryList from './CashHistoryData/CashHistoryList';

@@ -1,20 +1,19 @@
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LinkIcon from '@mui/icons-material/Link';
-import { Box, Card, IconButton, TextField, Typography, Grid, Button, Divider } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
-import React, { ChangeEvent, FC, useCallback, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { apiClient } from '../../api/ApiClient.ts';
-import ImageCard from '../../components/ImageCard.tsx';
-import { useInputValidate } from '../../hooks/common/useInputValidate.ts';
-import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher.ts';
-import useInput from '../../hooks/useInput.ts';
-import MainLayout from '../../layout/MainLayout.tsx';
-import { MarginHorizontal } from '../adminLogin/styles';
-import SectionTitle from './components/SectionTitle.tsx';
-import SelectCodeCategory from './components/SelectCodeCategory.tsx';
-import SelectCodeLanguage from './components/SelectCodeLanguage.tsx';
+import {Box, Button, Card, Grid, IconButton, TextField, Typography} from '@mui/material';
+import {useMutation} from '@tanstack/react-query';
+import React, {ChangeEvent, FC, useCallback, useRef, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {toast} from 'react-toastify';
+import {apiClient} from '../../api/ApiClient';
+import ImageCard from '../../components/ImageCard';
+import {useInputValidate} from '../../hooks/common/useInputValidate';
+import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
+import useInput from '../../hooks/useInput';
+import MainLayout from '../../layout/MainLayout';
+import SectionTitle from './components/SectionTitle';
+import SelectCodeCategory from './components/SelectCodeCategory';
+import SelectCodeLanguage from './components/SelectCodeLanguage';
 
 interface Props {
   children?: React.ReactNode;

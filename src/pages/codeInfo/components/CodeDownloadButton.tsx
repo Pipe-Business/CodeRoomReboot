@@ -1,8 +1,8 @@
 import DownloadIcon from '@mui/icons-material/Download';
-import { useMutation } from '@tanstack/react-query';
-import React, { FC, useCallback, useMemo } from 'react';
-import { apiClient } from '../../../api/ApiClient';
-import { ColorButton } from '../styles';
+import {useMutation} from '@tanstack/react-query';
+import React, {FC, useCallback, useMemo} from 'react';
+import {apiClient} from '../../../api/ApiClient';
+import {ColorButton} from '../styles';
 
 interface Props {
 	children?: React.ReactNode;

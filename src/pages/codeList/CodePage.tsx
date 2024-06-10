@@ -1,9 +1,5 @@
-import React, { FC } from 'react';
-// import { useQuery } from '@tanstack/react-query';
-// import { firebaseGetAllWithQuery } from '../../utils/QueryFetcher.ts';
-// import { CodeEntity } from '../../data/entity/firebase/realtime/code/CodeEntity.ts';
-// import { orderByChild } from 'firebase/database';
-import { Navigate } from 'react-router-dom';
+import React, {FC} from 'react';
+import {Navigate} from 'react-router-dom';
 
 interface Props {
 	children?: React.ReactNode;

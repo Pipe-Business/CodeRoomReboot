@@ -1,9 +1,6 @@
-import React, { FC, useCallback } from 'react';
-import { Button } from '@mui/material';
-import { ColorButton } from '../styles';
-import { useNavigate } from 'react-router-dom';
-import { CodeModel } from '../../../data/model/CodeModel';
-import { apiClient } from '../../../api/ApiClient';
+import React, {FC} from 'react';
+import {ColorButton} from '../styles';
+import {CodeModel} from '../../../data/model/CodeModel';
 import DeleteModal from './DeleteModal';
 import useDialogState from '../../../hooks/useDialogState';
 

@@ -1,11 +1,8 @@
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Button, Card, CardContent, CardHeader } from '@mui/material';
-import React, { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CodeModel } from '../../../data/model/CodeModel';
-import { useQueryUserLogin } from '../../../hooks/fetcher/UserFetcher';
-import { SectionWrapper } from '../styles';
-import SaleList from './saleData/SaleList';
+import {Box, Button, Card, CardContent, CardHeader} from '@mui/material';
+import React, {FC} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import CashConfirmList from './cashData/CashConfirmList';
 
 

@@ -1,23 +1,21 @@
-import React, { FC, useCallback, useRef, useState, } from 'react';
-import FullLayout from '../../layout/FullLayout.tsx';
+import React, {FC, useCallback, useRef, useState,} from 'react';
 import InfoLayout from '../../layout/InfoLayout';
-import styled from '@emotion/styled';
-import { Box, Button, Card, TextField } from '@mui/material';
-import { useInputValidate } from '../../hooks/common/useInputValidate.ts';
-import { EMAIL_EXP } from '../../constants/define';
-import { toast } from 'react-toastify';
-import { Navigate, useNavigate } from 'react-router-dom';
-import MainLayout from '../../layout/MainLayout.tsx';
-import { ColorButton, FormWrapper, TextFieldWrapper } from './styles.ts';
-import { apiClient } from '../../api/ApiClient.ts';
-import { createTodayDate } from '../../utils/DayJsHelper.ts';
-import { UserEntity } from '../../data/entity/UserEntity.ts';
-import { useMutation } from '@tanstack/react-query';
-import { User } from '@supabase/supabase-js';
-import { API_ERROR } from '../../constants/define';
-import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity.ts';
-import { NotificationEntity } from '../../data/entity/NotificationEntity.ts';
-import { NotificationType } from '../../enums/NotificationType.tsx';
+import {Box, Card, TextField} from '@mui/material';
+import {useInputValidate} from '../../hooks/common/useInputValidate';
+import {API_ERROR, EMAIL_EXP} from '../../constants/define';
+import {toast} from 'react-toastify';
+import {useNavigate} from 'react-router-dom';
+import MainLayout from '../../layout/MainLayout';
+import {ColorButton, FormWrapper, TextFieldWrapper} from './styles';
+import {apiClient} from '../../api/ApiClient';
+import {createTodayDate} from '../../utils/DayJsHelper';
+import {UserEntity} from '../../data/entity/UserEntity';
+import {useMutation} from '@tanstack/react-query';
+import {User} from '@supabase/supabase-js';
+import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
+import {NotificationEntity} from '../../data/entity/NotificationEntity';
+import {NotificationType} from "../../enums/NotificationType";
+
 interface Props {
 	children?: React.ReactNode;
 }

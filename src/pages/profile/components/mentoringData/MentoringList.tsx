@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import MentoringItem from './MentoringItem.tsx';
+import MentoringItem from './MentoringItem';
 import { User } from '@supabase/supabase-js';
 import { Divider, List, ListItem, ListItemText } from '@mui/material';
 

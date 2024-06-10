@@ -1,15 +1,14 @@
 import FullLayout from "../../layout/FullLayout";
 
-import React, { FC, useCallback, useRef, useState, useEffect } from 'react';
-import { User } from '@supabase/supabase-js';
-import { supabase } from '../../api/ApiClient';
-import { Button, Card, CardContent, CardHeader, Divider, Typography, Box, Skeleton } from '@mui/material';
+import React, {FC, useEffect, useState} from 'react';
+import {User} from '@supabase/supabase-js';
+import {apiClient, supabase} from '../../api/ApiClient';
+import {Box, Button, Card, CardContent, CardHeader} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { Link, useNavigate } from 'react-router-dom';
-import { useQuery } from "@tanstack/react-query"
-import { apiClient } from "../../api/ApiClient";
-import { REACT_QUERY_KEY } from '../../constants/define';
-import { SectionWrapper } from "./styles";
+import {useNavigate} from 'react-router-dom';
+import {useQuery} from "@tanstack/react-query"
+import {REACT_QUERY_KEY} from '../../constants/define';
+import {SectionWrapper} from "./styles";
 //*
 //* 안쓰는 화면 
 //* 

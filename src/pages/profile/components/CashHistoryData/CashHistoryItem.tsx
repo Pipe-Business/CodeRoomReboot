@@ -1,9 +1,6 @@
-import React, { FC, useCallback } from 'react';
-import { Divider, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
-import { apiClient } from '../../../../api/ApiClient';
-import { reformatTime } from '../../../../utils/DayJsHelper';
+import React, {FC} from 'react';
+import {Divider, ListItem, ListItemText} from '@mui/material';
+import {reformatTime} from '../../../../utils/DayJsHelper';
 
 interface Props {
     children?: React.ReactNode;

@@ -1,9 +1,9 @@
-import { ListItem, ListItemButton, ListItemText, Typography, Box, Divider } from '@mui/material';
-import React, { FC, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity';
+import {Box, ListItem, ListItemButton, ListItemText, Typography} from '@mui/material';
+import React, {FC, useCallback} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {MainPageCodeListEntity} from '../../../data/entity/MainPageCodeListEntity';
 import styles from '../../../global.module.css';
-import { calcTimeDiff } from '../../../utils/DayJsHelper';
+import {calcTimeDiff} from '../../../utils/DayJsHelper';
 
 interface Props {
   children?: React.ReactNode;

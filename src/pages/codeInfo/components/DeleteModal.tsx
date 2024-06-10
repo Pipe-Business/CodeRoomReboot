@@ -1,15 +1,12 @@
-import React, { FC, useCallback } from 'react';
-import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import React, {FC, useCallback} from 'react';
+import {Button, Dialog, DialogActions, DialogTitle} from '@mui/material';
+import {useMutation} from '@tanstack/react-query';
 // import { setOneCode } from '../../../../utils/manager/FireBaseManager.ts';
-import { useNavigate, useParams } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 //import { firebaseGetOneFetcher, firebaseSetFetcher, getAllFirebaseData } from '../../../../utils/QueryFetcher.ts';
-import { apiClient } from '../../../api/ApiClient.ts';
-import { createTodayDate } from '../../../utils/DayJsHelper.ts';
-import { toast } from 'react-toastify';
-import { CodeModel } from '../../../data/model/CodeModel.ts';
-import { NotificationEntity } from '../../../data/entity/NotificationEntity.ts';
-import { NotificationType } from '../../../enums/NotificationType.tsx';
+import {apiClient} from '../../../api/ApiClient';
+import {toast} from 'react-toastify';
+import {CodeModel} from '../../../data/model/CodeModel';
 
 interface Props {
 	children?: React.ReactNode

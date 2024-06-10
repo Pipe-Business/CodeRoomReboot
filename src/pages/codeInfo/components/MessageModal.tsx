@@ -1,9 +1,9 @@
 // src/components/MessageModal.js
 
-import React, { FC, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import { apiClient } from '../../../api/ApiClient';
-import { toast } from 'react-toastify';
+import React, {FC, useState} from 'react';
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
+import {apiClient} from '../../../api/ApiClient';
+import {toast} from 'react-toastify';
 
 interface MessageModalProps {
   targetUserToken: string;
