@@ -201,7 +201,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async getCurrentLoginUser(): Promise<UserResponse> {
+    async getCurrentLoginUser(): Promise<User> {
         try {
             const { data, error } = await supabase.auth.getUser();
             if (error) {
@@ -210,7 +210,7 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('유저 정보를 가져오는데 실패하였습니다.');
             }
-            return data;
+            return data.user;
         } catch (e: any) {
             console.log(e);
             throw new Error('유저 정보를 가져오는데 실패하였습니다.');
@@ -318,7 +318,11 @@ class ApiClient implements SupabaseAuthAPI {
         // Listen to inserts for notification table
         supabase
             .channel('notification')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notification' }, handleInserts)
+            .on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'notification'
+            }, handleInserts)
             .subscribe()
     }
 
@@ -1004,17 +1008,17 @@ class ApiClient implements SupabaseAuthAPI {
 
     async replyMessageToUser(content: string, targetUserToken: string) {
         try {
-            const userResponse = await this.getCurrentLoginUser();
+            const user: User = await this.getCurrentLoginUser();
             console.log(`${content}`);
             console.log(`${targetUserToken}`);
-            console.log(`${userResponse.user.id}`);
-            const myToken: string = userResponse.user.id;
+            console.log(`${user.id}`);
+            const myToken: string = user.id;
             const userModel = await this.getTargetUser(myToken);                 
             const notificationObj = {
                 "title": `${userModel.name}님이 보낸 메시지`,
                 "content": content,
                 "to_user_token": targetUserToken,
-                "from_user_token": userResponse.user?.id,
+                "from_user_token": user?.id,
                 "notification_type": NotificationType.message_from_user,
             }
             const { data, error } = await supabase.from('notification').insert(notificationObj).select();
@@ -1426,8 +1430,8 @@ async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEnti
 
 
 async setReviewData(review: PurchaseReviewEntity) {
-    const userResponse = await this.getCurrentLoginUser();
-    review.reviewer_user_token = userResponse.user?.id;
+    const user = await this.getCurrentLoginUser();
+    review.reviewer_user_token = user?.id;
     const { data, error } = await supabase.from('purchase_review').insert([review]).select();
 
     if (error) {
@@ -1442,8 +1446,8 @@ async setReviewData(review: PurchaseReviewEntity) {
 
 // 특정 post_id와 reviewer_user_token에 대한 리뷰 조회 함수 추가
 async getReviewByPostAndUser (post_id: number): Promise<PurchaseReviewEntity> {
-    const userResponse = await this.getCurrentLoginUser();            
-    const myToken: string = userResponse.user.id;
+    const user = await this.getCurrentLoginUser();
+    const myToken: string = user.id;
 
     const { data, error } = await supabase
         .from('purchase_review')
@@ -1846,12 +1850,7 @@ async setTrueUserIntroduceRewardStatus(userToken:string) {
             .update({ is_introduce_rewarded: true }).eq('user_token', userToken);
 
         if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
-
+            console.log("error"+ JSON.stringify(error));
             throw new Error('자기소개 설정 보상 상태 저장에 실패했습니다.');
         }
 
@@ -1863,53 +1862,57 @@ async setTrueUserIntroduceRewardStatus(userToken:string) {
 
 
 async getAllUserPointHistory (): Promise<PointHistoryResponseEntity[]> {
-        const { data, error } = await supabase.from('users_point_history')
+    try {
+        const {data, error} = await supabase.from('users_point_history')
             .select('*')
-            .order('created_at', { ascending: false });
+            .order('created_at', {ascending: false});
 
-            let lstPointHistory: PointHistoryResponseEntity[] = [];
-            data?.forEach((e) => {
-                let pointHistory: PointHistoryResponseEntity = {
-                    id: e.id,
-                    user_token : e.user_token,
-                    point : e.point,
-                    amount : e.amount,
-                    description: e.description,
-                    point_history_type : e.point_history_type,
-                    created_at: e.created_at,
-                }
-                lstPointHistory.push(pointHistory);
-            });
+        let lstPointHistory: PointHistoryResponseEntity[] = [];
+        data?.forEach((e) => {
+            let pointHistory: PointHistoryResponseEntity = {
+                id: e.id,
+                user_token: e.user_token,
+                point: e.point,
+                amount: e.amount,
+                description: e.description,
+                point_history_type: e.point_history_type,
+                created_at: e.created_at,
+            }
+            lstPointHistory.push(pointHistory);
+        });
         return lstPointHistory;
 
     } catch (e: any) {
         console.log(e);
         throw new Error('관리자 - 유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
     }
+}
 
     async getAllUserCashHistory (): Promise<CashHistoryResponseEntity[]> {
-        const { data, error } = await supabase.from('users_cash_history')
-            .select('*')
-            .order('created_at', { ascending: false });
+        try {
+            const {data, error} = await supabase.from('users_cash_history')
+                .select('*')
+                .order('created_at', {ascending: false});
 
             let lstCashHistory: CashHistoryResponseEntity[] = [];
             data?.forEach((e) => {
                 let cashHistory: CashHistoryResponseEntity = {
                     id: e.id,
-                    user_token : e.user_token,
-                    cash : e.cash,
-                    amount : e.amount,
+                    user_token: e.user_token,
+                    cash: e.cash,
+                    amount: e.amount,
                     description: e.description,
-                    cash_history_type : e.cash_history_type,
+                    cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
                 }
                 lstCashHistory.push(cashHistory);
             });
-        return lstCashHistory;
+            return lstCashHistory;
 
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('관리자 - 유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('관리자 - 유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
+        }
     }
 
     async messageFromAdminToUser(content: string, targetUserToken: string) {

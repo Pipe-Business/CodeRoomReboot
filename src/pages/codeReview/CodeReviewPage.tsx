@@ -105,15 +105,15 @@ const MentoringPage: FC<Props> = () => {
       valid = false;
     }
 
-    const userResponse = await apiClient.getCurrentLoginUser();
-    console.log('Mentoring user', userResponse.user.id);
+    const user = await apiClient.getCurrentLoginUser();
+    console.log('Mentoring user', user.id);
     
     const codeReviewEntity: CodeReviewRequestEntity = {
       title:title,
       content:content,
       request_date: date!,
       to_user_token: "admin",
-      from_user_token : userResponse.user.id,    
+      from_user_token : user.id,
   }
 
     if (valid) {

@@ -84,8 +84,8 @@ const NotificationPage: FC = () => {
       created_at: payload.new.created_at,
     };
 
-    const userResponse = await apiClient.getCurrentLoginUser();
-    if (notificationData.from_user_token === userResponse.user.id) {
+    const user = await apiClient.getCurrentLoginUser();
+    if (notificationData.from_user_token === user.id) {
       setNotifications((prevNotifications) => {
         const newNotifications = prevNotifications.filter(
           (notification) => notification.id !== notificationData.id
@@ -97,8 +97,8 @@ const NotificationPage: FC = () => {
 
   useEffect(() => {
     const initialize = async () => {
-      const userResponse = await apiClient.getCurrentLoginUser();
-      const lastNotifications: NotificationEntity[] = await apiClient.getLastMyNotifications(userResponse.user.id);
+      const user = await apiClient.getCurrentLoginUser();
+      const lastNotifications: NotificationEntity[] = await apiClient.getLastMyNotifications(user.id);
       setNotifications(lastNotifications);
       await apiClient.subscribeInsertNotification(handleInserts);
     };
