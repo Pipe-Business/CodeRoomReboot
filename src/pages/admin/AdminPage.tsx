@@ -8,7 +8,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import AdminPaymentPendingPage from './AdminPaymentPendingPage';
 import {useLocation, useNavigate, useSearchParams} from 'react-router-dom';
 import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList';
-import {supabase} from "../../api/ApiClient.ts";
+import {supabase} from "../../api/ApiClient";
 import AdminCashPointPage from './AdminCashPointPage';
 import UserManageList from './components/userManage/UserManageList';
 

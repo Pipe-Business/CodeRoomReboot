@@ -1,5 +1,5 @@
 import {SupabaseAuthAPI} from "./supabase/SupabaseAuthAPI";
-import {createClient, User, UserResponse} from '@supabase/supabase-js'
+import {createClient, User} from '@supabase/supabase-js'
 import {supabaseConfig} from "../config/supabaseConfig";
 import {CodeModel} from "../data/model/CodeModel";
 import {UserEntity} from "../data/entity/UserEntity";
@@ -35,11 +35,12 @@ export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.
 class ApiClient implements SupabaseAuthAPI {
     constructor(
         private readonly auth = supabase.auth,
-    ) { }
+    ) {
+    }
 
     async loginWithEmail(email: string, password: string): Promise<User | Boolean> {
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const {data, error} = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password,
             });
@@ -59,7 +60,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async signOut() {
         try {
-            const { error } = await supabase.auth.signOut();
+            const {error} = await supabase.auth.signOut();
         } catch (e: any) {
             console.log(e);
             throw new Error('로그아웃에 실패했습니다.');
@@ -68,52 +69,51 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getAllCode(): Promise<MainPageCodeListEntity[]> {
         try {
-            const { data, error } = await supabase.from('post')
+            const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .eq('state', "approve")
-                .eq('is_deleted',false) // 삭제된 게시글은 메인에서 안보이도록 처리
-                .order('created_at', { ascending: false });
+                .eq('is_deleted', false) // 삭제된 게시글은 메인에서 안보이도록 처리
+                .order('created_at', {ascending: false});
 
 
             let lstCodeModel: MainPageCodeListEntity[] = [];
-            if(data){
-                for(const e of data){
-                   const likedCount: number =  await this.getTargetPostLikedNumber(e.id);
+            if (data) {
+                for (const e of data) {
+                    const likedCount: number = await this.getTargetPostLikedNumber(e.id);
                     const reviewCount: number = await this.getPurchaseReviewsCount(e.id);
-                
-    
-                        let codeModel: MainPageCodeListEntity = {
-                            id: e.id,
-                            title: e.title,
-                            description: e.description,
-                            images: e.images,
-                            price: e.code.cost,
-                            userToken: e.user_token,
-                            category: e.category,
-                            language:e.code.language,
-                            postType: e.post_type,
-                            createdAt: e.created_at,
-                            buyerGuide: e.code.buyer_guide,
-                            githubRepoUrl: e.code.github_repo_url,
-                            buyerCount: e.code.buyer_count,
-                            popularity: e.code.popularity,
-                            hashTag: e.hash_tag,
-                            sellerGithubName: e.code.seller_github_name,
-                            state: e.state,
-                            adminGitRepoURL: e.code.admin_git_repo_url,
-                            rejectMessage: e.reject_message,
-                            viewCount: e.view_count,
-                            likeCount:likedCount,
-                            reviewCount:reviewCount,
-                        }
-                        lstCodeModel.push(codeModel);
+
+
+                    let codeModel: MainPageCodeListEntity = {
+                        id: e.id,
+                        title: e.title,
+                        description: e.description,
+                        images: e.images,
+                        price: e.code.cost,
+                        userToken: e.user_token,
+                        category: e.category,
+                        language: e.code.language,
+                        postType: e.post_type,
+                        createdAt: e.created_at,
+                        buyerGuide: e.code.buyer_guide,
+                        githubRepoUrl: e.code.github_repo_url,
+                        buyerCount: e.code.buyer_count,
+                        popularity: e.code.popularity,
+                        hashTag: e.hash_tag,
+                        sellerGithubName: e.code.seller_github_name,
+                        state: e.state,
+                        adminGitRepoURL: e.code.admin_git_repo_url,
+                        rejectMessage: e.reject_message,
+                        viewCount: e.view_count,
+                        likeCount: likedCount,
+                        reviewCount: reviewCount,
                     }
+                    lstCodeModel.push(codeModel);
+                }
             }
-           
+
             //console.log(data);
             return lstCodeModel;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('게시글 목록을 가져오는 데 실패했습니다.');
         }
@@ -122,11 +122,10 @@ class ApiClient implements SupabaseAuthAPI {
 
     async resetPasswordByEmail(email: string) {
         try {
-            const { data, error } = await supabase.auth
+            const {data, error} = await supabase.auth
                 //.resetPasswordForEmail(email, { redirectTo: 'http://localhost:3000/change-password' });
-                .resetPasswordForEmail(email, { redirectTo: 'https://main--coderoom-io.netlify.app/reset-password' });
-        }
-        catch (e: any) {
+                .resetPasswordForEmail(email, {redirectTo: 'https://main--coderoom-io.netlify.app/reset-password'});
+        } catch (e: any) {
             console.log(e);
             throw new Error('비밀번호 재설정에 실패했습니다.');
         }
@@ -134,7 +133,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async signUpByEmail(email: string, password: string): Promise<User> {
         try {
-            const { data, error } = await supabase.auth.signUp({
+            const {data, error} = await supabase.auth.signUp({
                 email: email,
                 password: password,
             });
@@ -143,8 +142,7 @@ class ApiClient implements SupabaseAuthAPI {
                 throw new Error(API_ERROR.USER_ALREADY_REGISTERED);
             }
             return data.user!;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             if (e) {
                 throw new Error(API_ERROR.USER_ALREADY_REGISTERED);
@@ -165,12 +163,12 @@ class ApiClient implements SupabaseAuthAPI {
                 "profile_url": user.profileUrl,
                 "about_me": user.aboutMe,
                 "is_profile_image_rewarded": user.is_profile_image_rewarded,
-				"is_introduce_rewarded": user.is_introduce_rewarded,
+                "is_introduce_rewarded": user.is_introduce_rewarded,
                 "contacts": user.contacts,
                 "user_token": user.userToken,
             }
 
-            const { data, error } = await supabase.from('users')
+            const {data, error} = await supabase.from('users')
                 .insert(userData).select();
             if (error) {
                 console.log("error" + error.code);
@@ -190,11 +188,10 @@ class ApiClient implements SupabaseAuthAPI {
 
     async updateUserPassword(newPassword: string) {
         try {
-            const { data, error } = await supabase.auth
-                .updateUser({ password: newPassword });
+            const {data, error} = await supabase.auth
+                .updateUser({password: newPassword});
             console.log(data);
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('비밀번호 업데이트에 실패했습니다.');
         }
@@ -203,7 +200,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getCurrentLoginUser(): Promise<User> {
         try {
-            const { data, error } = await supabase.auth.getUser();
+            const {data, error} = await supabase.auth.getUser();
             if (error) {
                 console.log("error" + error.code);
                 console.log("error" + error.message);
@@ -219,9 +216,9 @@ class ApiClient implements SupabaseAuthAPI {
 
 
     async insertMentoringHistory(mentoring: MentoringRequestEntity) {
-        console.log("mentoring: "+ {...mentoring});
+        console.log("mentoring: " + {...mentoring});
         try {
-            const { error } = await supabase.from('mentoring_request_history').insert(mentoring);
+            const {error} = await supabase.from('mentoring_request_history').insert(mentoring);
             if (error) {
                 console.log("error" + error.code);
                 console.log("error" + error.message);
@@ -239,10 +236,10 @@ class ApiClient implements SupabaseAuthAPI {
 
 
     async insertCodeReviewHistory(codeReview: CodeReviewRequestEntity) {
-        console.log("codeReview: " + { ...codeReview });
+        console.log("codeReview: " + {...codeReview});
 
         try {
-            const { error } = await supabase.from('codereview_request_history').insert(codeReview);
+            const {error} = await supabase.from('codereview_request_history').insert(codeReview);
             if (error) {
                 console.log("error" + error.code);
                 console.log("error" + error.message);
@@ -257,10 +254,11 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('코드리뷰 신청내역 저장에 실패하였습니다.');
         }
     }
+
     async insertImgUrl(postId: number, imageUrls: string[]) {
         try {
-            const { error } = await supabase.from('post')
-                .update({ img_urls: imageUrls }).eq('id', postId);
+            const {error} = await supabase.from('post')
+                .update({img_urls: imageUrls}).eq('id', postId);
 
             if (error) {
                 console.log("error" + error.code);
@@ -281,9 +279,9 @@ class ApiClient implements SupabaseAuthAPI {
     async getLastMyNotifications(userToken: string): Promise<NotificationEntity[]> {
         // 현재 로그인한 계정의 마지막까지 저장되어있었던 알림 목록 가져오기
         try {
-            const { data, error } = await supabase.from('notification')
-            .select()
-            .eq('to_user_token', userToken);
+            const {data, error} = await supabase.from('notification')
+                .select()
+                .eq('to_user_token', userToken);
 
             let lstNotifications: NotificationEntity[] = [];
             data?.forEach((e) => {
@@ -316,8 +314,10 @@ class ApiClient implements SupabaseAuthAPI {
 
     async subscribeInsertNotification(handleInserts: Function) {
         // Listen to inserts for notification table
+
         supabase
             .channel('notification')
+            // @ts-ignore
             .on('postgres_changes', {
                 event: 'INSERT',
                 schema: 'public',
@@ -328,7 +328,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getImgPublicUrl(path: string): Promise<string> {
         try {
-            const { data } = supabase
+            const {data} = supabase
                 .storage
                 .from('coderoom')
                 .getPublicUrl(path);
@@ -349,7 +349,7 @@ class ApiClient implements SupabaseAuthAPI {
 
                 const path: string = `boards/code/${userToken}_${postId}_${file.name}`;
 
-                const { data, error } = await supabase
+                const {data, error} = await supabase
                     .storage
                     .from('coderoom')
                     .upload(path, file);
@@ -373,11 +373,11 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async deleteUnselectedImg(lstDeleteImg:string[]) {
+    async deleteUnselectedImg(lstDeleteImg: string[]) {
         try {
-            const lstDeleteImgName:string[] = [];
-            for(const url of lstDeleteImg){
-                console.log("삭제될 이미지 경로: "+JSON.stringify(url));
+            const lstDeleteImgName: string[] = [];
+            for (const url of lstDeleteImg) {
+                console.log("삭제될 이미지 경로: " + JSON.stringify(url));
                 const imageName = url.split('coderoom/'); // https:~~형태로 시작하는 문자열을 split
                 lstDeleteImgName.push(imageName[1]);
             }
@@ -394,7 +394,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async insertPostData(post: PostRequestEntity): Promise<number> {
         try {
-            const { data, error } = await supabase.from('post')
+            const {data, error} = await supabase.from('post')
                 .insert(post).select();
 
             if (error) {
@@ -425,7 +425,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async insertCodeData(post: CodeRequestEntity) {
         try {
-            const { data, error } = await supabase.from('code')
+            const {data, error} = await supabase.from('code')
                 .insert(post).select();
 
             if (error) {
@@ -446,7 +446,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getTargetCode(postId: number): Promise<CodeModel> {
         try {
-            const { data, error } = await supabase.from('post')
+            const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .eq('id', postId);
 
@@ -460,7 +460,7 @@ class ApiClient implements SupabaseAuthAPI {
                     price: e.code.cost,
                     userToken: e.user_token,
                     buyerGuide: e.code.buyer_guide,
-                    language:e.code.language,
+                    language: e.code.language,
                     category: e.category,
                     createdAt: e.created_at,
                     postType: e.post_type,
@@ -489,8 +489,7 @@ class ApiClient implements SupabaseAuthAPI {
             }
 
             return lstCodeModel[0];
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('해당 게시글을 가져오는 데 실패했습니다.');
         }
@@ -499,7 +498,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getTargetUser(targetUserToken: string): Promise<UserModel> { // userModel만들기
         try {
-            const { data, error } = await supabase.from('users')
+            const {data, error} = await supabase.from('users')
                 .select('*')
                 .eq('user_token', targetUserToken);
 
@@ -521,7 +520,7 @@ class ApiClient implements SupabaseAuthAPI {
                 }
                 lstUserModel.push(userModel);
             });
-            console.log("userModel"+JSON.stringify(data));
+            console.log("userModel" + JSON.stringify(data));
 
             if (error) {
                 console.log("error" + error.message);
@@ -533,8 +532,7 @@ class ApiClient implements SupabaseAuthAPI {
             }
 
             return lstUserModel[0];
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('해당 게시글을 가져오는 데 실패했습니다.');
         }
@@ -543,28 +541,28 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getUserTotalCash(myUserToken: string): Promise<number> {
         try {
-            const { data, error } = await supabase.from('users_cash_history')
+            const {data, error} = await supabase.from('users_cash_history')
                 .select('*')
                 .eq('user_token', myUserToken)
-                .order('created_at', { ascending: false });
+                .order('created_at', {ascending: false});
 
             //const stringdata = JSON.stringify(data);
             //console.log("getUserTotalCash: "+stringdata);
 
             if (!data || data.length === 0) {
                 return 0;  // 데이터가 없는 경우 합산 캐시는 0으로 반환
-              }
-              
-                let cashEntity: CashHistoryResponseEntity = {
-                    id: data[0].id,
-                    user_token: data[0].user_token,
-                    cash: data[0].cash,
-                    amount: data[0].amount,
-                    description: data[0].description,
-                    cash_history_type: data[0].cash_history_type,
-                    created_at: data[0].created_at,
-                }
-                const totalCash: number = cashEntity.amount;
+            }
+
+            let cashEntity: CashHistoryResponseEntity = {
+                id: data[0].id,
+                user_token: data[0].user_token,
+                cash: data[0].cash,
+                amount: data[0].amount,
+                description: data[0].description,
+                cash_history_type: data[0].cash_history_type,
+                created_at: data[0].created_at,
+            }
+            const totalCash: number = cashEntity.amount;
             return totalCash;
 
 
@@ -576,7 +574,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async insertUserCashHistory(cashHistoryRequestEntity: CashHistoryRequestEntity) {
         try {
-            const { data, error } = await supabase.from('users_cash_history')
+            const {data, error} = await supabase.from('users_cash_history')
                 .insert(cashHistoryRequestEntity).select();
 
             if (error) {
@@ -599,7 +597,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async insertPurchaseSaleHistory(purchaseSaleRequestEntity: PurchaseSaleRequestEntity) {
         try {
-            const { data, error } = await supabase.from('purchase_sale_history')
+            const {data, error} = await supabase.from('purchase_sale_history')
                 .insert(purchaseSaleRequestEntity).select();
 
             if (error) {
@@ -617,8 +615,8 @@ class ApiClient implements SupabaseAuthAPI {
 
     async updateBuyerCount(buyerCount: number, postId: number) {
         try {
-            const { error } = await supabase.from('code')
-                .update({ buyer_count: buyerCount }).eq('post_id', postId);
+            const {error} = await supabase.from('code')
+                .update({buyer_count: buyerCount}).eq('post_id', postId);
 
             if (error) {
                 console.log("error" + error.code);
@@ -641,8 +639,8 @@ class ApiClient implements SupabaseAuthAPI {
 
             const codeData: CodeModel = await apiClient.getTargetCode(Number(postId!));
 
-            const { error } = await supabase.from('post')
-                .update({ view_count: codeData.viewCount + 1 }).eq('id', postId);
+            const {error} = await supabase.from('post')
+                .update({view_count: codeData.viewCount + 1}).eq('id', postId);
             if (error) {
                 console.log("error" + error.code);
                 console.log("error" + error.message);
@@ -661,7 +659,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getMyPurchaseSaleHistoryByPostID(myUserToken: string, postId: number): Promise<PurchaseSaleRequestEntity | null> {
         try {
-            const { data, error } = await supabase.from('purchase_sale_history')
+            const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('purchase_user_token', myUserToken)
                 .eq('post_id', postId);
@@ -692,8 +690,7 @@ class ApiClient implements SupabaseAuthAPI {
             }
 
             return lstPurchaseSale.length != 0 ? lstPurchaseSale[0] : null;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('구매기록을 가져오는 데 실패했습니다.');
         }
@@ -711,12 +708,11 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
 
-
     }
 
     async insertLikedData(likedData: LikeRequestEntity) { // 좋아요 insert
         try {
-            const { error } = await supabase.from('liked')
+            const {error} = await supabase.from('liked')
                 .insert(likedData).select();
 
             if (error) {
@@ -737,7 +733,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getLikeData(myUserToken: string, postId: number): Promise<LikeResponseEntity | null> {
         try {
-            const { data, error } = await supabase.from('liked')
+            const {data, error} = await supabase.from('liked')
                 .select('*')
                 .eq('user_token', myUserToken)
                 .eq('post_id', postId);
@@ -764,8 +760,7 @@ class ApiClient implements SupabaseAuthAPI {
             //console.log("sdfsdfsdfsdfsdfsdfsdfsdf" + lstLikeResponseEntity.length.toString());
 
             return lstLikeResponseEntity.length != 0 ? lstLikeResponseEntity[0] : null;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('좋아요 데이터를 가져오는데 실패했습니다.');
         }
@@ -773,7 +768,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async deleteLikeData(userToken: string, postId: number) {
         try {
-            const { error } = await supabase
+            const {error} = await supabase
                 .from('liked')
                 .delete()
                 .eq('post_id', postId)
@@ -788,10 +783,10 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getAllPendingCode(type: string): Promise<CodeModel[]> {
         try {
-            const { data, error } = await supabase.from('post')
+            const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .eq('state', type)
-                .order('created_at', { ascending: false });
+                .order('created_at', {ascending: false});
 
             let lstCodeModel: CodeModel[] = [];
             data?.forEach((e) => {
@@ -803,7 +798,7 @@ class ApiClient implements SupabaseAuthAPI {
                     price: e.code.cost,
                     userToken: e.user_token,
                     category: e.category,
-                    language:e.code.language,
+                    language: e.code.language,
                     postType: e.post_type,
                     createdAt: e.created_at,
                     buyerGuide: e.code.buyer_guide,
@@ -822,8 +817,7 @@ class ApiClient implements SupabaseAuthAPI {
             });
             //console.log(data);
             return lstCodeModel;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('승인 대기중인 게시글 목록을 가져오는 데 실패했습니다.');
         }
@@ -855,8 +849,8 @@ class ApiClient implements SupabaseAuthAPI {
 
     async updateCodeRequestState(userToken: string, postId: string, state: string) {
         try {
-            const { error } = await supabase.from('post')
-                .update({ state: state })
+            const {error} = await supabase.from('post')
+                .update({state: state})
                 .eq('id', postId)
                 .eq('user_token', userToken);
 
@@ -878,8 +872,8 @@ class ApiClient implements SupabaseAuthAPI {
 
     async updateCodeRequestRejectMessage(userToken: string, postId: string, rejectMessage: string) {
         try {
-            const { error } = await supabase.from('post')
-                .update({ reject_message: rejectMessage })
+            const {error} = await supabase.from('post')
+                .update({reject_message: rejectMessage})
                 .eq('id', postId)
                 .eq('user_token', userToken);
 
@@ -901,8 +895,8 @@ class ApiClient implements SupabaseAuthAPI {
 
     async updateAdminGithubRepoUrl(postId: string, adminGithubRepoUrl: string) {
         try {
-            const { error } = await supabase.from('code')
-                .update({ admin_git_repo_url: adminGithubRepoUrl })
+            const {error} = await supabase.from('code')
+                .update({admin_git_repo_url: adminGithubRepoUrl})
                 .eq('post_id', postId);
 
             if (error) {
@@ -924,11 +918,11 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getMyCodeByStatus(userToken: string, type: string): Promise<CodeModel[]> {
         try {
-            const { data, error } = await supabase.from('post')
+            const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .eq('state', type)
                 .eq('user_token', userToken)
-                .order('created_at', { ascending: false });
+                .order('created_at', {ascending: false});
 
             let lstCodeModel: CodeModel[] = [];
             data?.forEach((e) => {
@@ -940,7 +934,7 @@ class ApiClient implements SupabaseAuthAPI {
                     price: e.code.cost,
                     userToken: e.user_token,
                     category: e.category,
-                    language:e.code.language,
+                    language: e.code.language,
                     postType: e.post_type,
                     createdAt: e.created_at,
                     buyerGuide: e.code.buyer_guide,
@@ -959,8 +953,7 @@ class ApiClient implements SupabaseAuthAPI {
             });
             //console.log(data);
             return lstCodeModel;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('내 게시글을 타입에 따라 가져오는 데 실패했습니다.');
         }
@@ -969,7 +962,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getMyPurchaseSaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[] | null> {
         try {
-            const { data, error } = await supabase.from('purchase_sale_history')
+            const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('purchase_user_token', myUserToken);
 
@@ -999,8 +992,7 @@ class ApiClient implements SupabaseAuthAPI {
             }
 
             return lstPurchaseSale;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
             throw new Error('구매기록을 가져오는 데 실패했습니다.');
         }
@@ -1013,7 +1005,7 @@ class ApiClient implements SupabaseAuthAPI {
             console.log(`${targetUserToken}`);
             console.log(`${user.id}`);
             const myToken: string = user.id;
-            const userModel = await this.getTargetUser(myToken);                 
+            const userModel = await this.getTargetUser(myToken);
             const notificationObj = {
                 "title": `${userModel.name}님이 보낸 메시지`,
                 "content": content,
@@ -1021,7 +1013,7 @@ class ApiClient implements SupabaseAuthAPI {
                 "from_user_token": user?.id,
                 "notification_type": NotificationType.message_from_user,
             }
-            const { data, error } = await supabase.from('notification').insert(notificationObj).select();
+            const {data, error} = await supabase.from('notification').insert(notificationObj).select();
 
             if (error) {
                 console.log("error" + error.message);
@@ -1041,7 +1033,7 @@ class ApiClient implements SupabaseAuthAPI {
     async getMyMentorings(myUserToken: string): Promise<MentoringResponseEntity[] | null> {
 
         try {
-            const { data, error } = await supabase.from('mentoring_request_history')
+            const {data, error} = await supabase.from('mentoring_request_history')
                 .select('*')
                 .eq('from_user_token', myUserToken);
 
@@ -1080,16 +1072,16 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getUserTotalPoint(myUserToken: string): Promise<number> {
         try {
-            const { data, error } = await supabase.from('users_point_history')
+            const {data, error} = await supabase.from('users_point_history')
                 .select('*')
                 .eq('user_token', myUserToken)
-                .order('created_at', { ascending: false });
+                .order('created_at', {ascending: false});
 
             //let lstPointEntity: PointHistoryResponseEntity[] = [];
             if (!data || data.length === 0) {
                 return 0;  // 데이터가 없는 경우 합산 포인트 0으로 반환
-              }
-              let pointEntity: PointHistoryResponseEntity = {
+            }
+            let pointEntity: PointHistoryResponseEntity = {
                 id: data[0].id,
                 user_token: data[0].user_token,
                 point: data[0].point,
@@ -1098,7 +1090,7 @@ class ApiClient implements SupabaseAuthAPI {
                 point_history_type: data[0].point_history_type,
                 created_at: data[0].created_at,
             }
-            
+
             const totalPoint: number = pointEntity.amount;
             return totalPoint;
 
@@ -1120,7 +1112,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
         try {
-            const { data, error } = await supabase.from("users_point_history").insert(pointHistoryObj).select();
+            const {data, error} = await supabase.from("users_point_history").insert(pointHistoryObj).select();
 
             if (error) {
                 console.log("error" + error.code);
@@ -1152,28 +1144,28 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async uploadProfileImage(userToken: string,file: File): Promise<string> {
+    async uploadProfileImage(userToken: string, file: File): Promise<string> {
         try {
 
-           // const lstPublicUrl: string[] = [];
+            // const lstPublicUrl: string[] = [];
 
 
-                const path: string = `profile/${userToken}`;
+            const path: string = `profile/${userToken}`;
 
-                const { data, error } = await supabase
-                    .storage
-                    .from('coderoom')
-                    .upload(path, file, {upsert: true, cacheControl: '0'});
-                const publicUrl = await this.getImgPublicUrl(path);
-                // lstPublicUrl.push(publicUrl);
+            const {data, error} = await supabase
+                .storage
+                .from('coderoom')
+                .upload(path, file, {upsert: true, cacheControl: '0'});
+            const publicUrl = await this.getImgPublicUrl(path);
+            // lstPublicUrl.push(publicUrl);
 
-                if (error) {
-                    console.log("error" + error.message);
-                    console.log("error" + error.name);
-                    console.log("error" + error.stack);
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.name);
+                console.log("error" + error.stack);
 
-                    throw new Error('이미지 저장에 실패했습니다.');
-                }
+                throw new Error('이미지 저장에 실패했습니다.');
+            }
 
             return publicUrl;
 
@@ -1183,10 +1175,10 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateProfileImgUrl(userToken:string, profileUrl: string) {
+    async updateProfileImgUrl(userToken: string, profileUrl: string) {
         try {
-            const { error } = await supabase.from('users')
-                .update({ profile_url: profileUrl }).eq('user_token', userToken);
+            const {error} = await supabase.from('users')
+                .update({profile_url: profileUrl}).eq('user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);
@@ -1205,10 +1197,10 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async updateAboutMeData(userToken:string, introduceText: string) {
+    async updateAboutMeData(userToken: string, introduceText: string) {
         try {
-            const { error } = await supabase.from('users')
-                .update({ about_me: introduceText }).eq('user_token', userToken);
+            const {error} = await supabase.from('users')
+                .update({about_me: introduceText}).eq('user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);
@@ -1229,36 +1221,36 @@ class ApiClient implements SupabaseAuthAPI {
 
     async insertBootpayPayment(bootpayPayment: BootPayPaymentEntity) {
 
-     try {
-        const { error, data } = await supabase.from('bootpay_payment').insert(bootpayPayment).select();
-        if(data){
-            console.log(JSON.stringify(data));
-        }
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
+        try {
+            const {error, data} = await supabase.from('bootpay_payment').insert(bootpayPayment).select();
+            if (data) {
+                console.log(JSON.stringify(data));
+            }
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
 
+                throw new Error('결제내역 insert에 실패했습니다.');
+            }
+        } catch (e: any) {
+            console.log(e);
             throw new Error('결제내역 insert에 실패했습니다.');
         }
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('결제내역 insert에 실패했습니다.');
     }
-	}
 
     async updatePostData(codeEditRequestEntity: CodeEditRequestEntity) {
         // post table 수정
         try {
-            const { error } = await supabase.from('post')
-                .update({ 
+            const {error} = await supabase.from('post')
+                .update({
                     img_urls: codeEditRequestEntity.img_urls,
-                    title:codeEditRequestEntity.title, 
-                    description:codeEditRequestEntity.description,
-                    category:codeEditRequestEntity.category,
-                 })
+                    title: codeEditRequestEntity.title,
+                    description: codeEditRequestEntity.description,
+                    category: codeEditRequestEntity.category,
+                })
                 .eq('id', codeEditRequestEntity.post_id);
             await this.updateCodeData(codeEditRequestEntity);
 
@@ -1281,11 +1273,11 @@ class ApiClient implements SupabaseAuthAPI {
     async updateCodeData(codeEditRequestEntity: CodeEditRequestEntity) {
         // 코드 테이블 수정
         try {
-            const { error } = await supabase.from('code')
+            const {error} = await supabase.from('code')
                 .update({
                     cost: codeEditRequestEntity.cost,
                     buyer_guide: codeEditRequestEntity.buyer_guide,
-                 })
+                })
                 .eq('post_id', codeEditRequestEntity.post_id);
 
             if (error) {
@@ -1304,14 +1296,14 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-async getMySaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[] | null> {
-    try {
-        const { data, error } = await supabase.from('purchase_sale_history')
-            .select('*')            
-            .eq('sales_user_token', myUserToken,)
-            .order('created_at', { ascending: false });
-          
-            let lstPurchaseSaleData:PurchaseSaleResponseEntity[] = [];
+    async getMySaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[] | null> {
+        try {
+            const {data, error} = await supabase.from('purchase_sale_history')
+                .select('*')
+                .eq('sales_user_token', myUserToken,)
+                .order('created_at', {ascending: false});
+
+            let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
 
             // id를 가져와야됨
             data?.forEach((e) => {
@@ -1320,575 +1312,569 @@ async getMySaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[
             // console.log("판매 기록" +  JSON.stringify(data) );
 
 
-        if (error) {
-            console.log("error" + error.message);
-            console.log("error" + error.code);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
 
+                throw new Error('판매 기록을 가져오는 데 실패했습니다.');
+            }
+
+            return lstPurchaseSaleData;
+        } catch (e: any) {
+            console.log(e);
             throw new Error('판매 기록을 가져오는 데 실패했습니다.');
         }
-
-        return lstPurchaseSaleData;
     }
-    catch (e: any) {
-        console.log(e);
-        throw new Error('판매 기록을 가져오는 데 실패했습니다.');
-    }
-}
 
-async getMySaleConfirmedHistory(myUserToken: string, isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
-    try {
-        const { data, error } = await supabase.from('purchase_sale_history')
-            .select('*')            
-            .eq('sales_user_token', myUserToken,)
-            .eq('is_confirmed', isConfirmed)
-            .eq('pay_type','cash')
-            .order('created_at', { ascending: false });
-          
-            let lstPurchaseSaleData:PurchaseSaleResponseEntity[] = [];
+    async getMySaleConfirmedHistory(myUserToken: string, isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
+        try {
+            const {data, error} = await supabase.from('purchase_sale_history')
+                .select('*')
+                .eq('sales_user_token', myUserToken,)
+                .eq('is_confirmed', isConfirmed)
+                .eq('pay_type', 'cash')
+                .order('created_at', {ascending: false});
+
+            let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
 
             // id를 가져와야됨
             data?.forEach((e) => {
                 lstPurchaseSaleData.push(e);
             });
 
-        if (error) {
-            console.log("error" + error.message);
-            console.log("error" + error.code);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
 
+                throw new Error('정산된 판매 기록을 가져오는 데 실패했습니다.');
+            }
+
+            return lstPurchaseSaleData;
+        } catch (e: any) {
+            console.log(e);
             throw new Error('정산된 판매 기록을 가져오는 데 실패했습니다.');
         }
-
-        return lstPurchaseSaleData;
     }
-    catch (e: any) {
-        console.log(e);
-        throw new Error('정산된 판매 기록을 가져오는 데 실패했습니다.');
-    }
-}
 
-async getUserCashHistory(myUserToken: string): Promise<CashHistoryResponseEntity[]> {
-    try {
-        const { data, error } = await supabase.from('users_cash_history')
-            .select('*')
-            .eq('user_token', myUserToken)
-            .order('created_at', { ascending: false });
+    async getUserCashHistory(myUserToken: string): Promise<CashHistoryResponseEntity[]> {
+        try {
+            const {data, error} = await supabase.from('users_cash_history')
+                .select('*')
+                .eq('user_token', myUserToken)
+                .order('created_at', {ascending: false});
 
             let lstCashHistory: CashHistoryResponseEntity[] = [];
             data?.forEach((e) => {
                 let cashHistory: CashHistoryResponseEntity = {
                     id: e.id,
-                    user_token : e.user_token,
-                    cash : e.cash,
-                    amount : e.amount,
+                    user_token: e.user_token,
+                    cash: e.cash,
+                    amount: e.amount,
                     description: e.description,
-                    cash_history_type : e.cash_history_type,
+                    cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
                 }
                 lstCashHistory.push(cashHistory);
             });
-        return lstCashHistory;
+            return lstCashHistory;
 
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
+        }
     }
-}
 
 
-async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEntity[]> {
-    try {
-        const { data, error } = await supabase.from('users_point_history')
-            .select('*')
-            .eq('user_token', myUserToken)
-            .order('created_at', { ascending: false });
+    async getUserPointHistory(myUserToken: string): Promise<PointHistoryResponseEntity[]> {
+        try {
+            const {data, error} = await supabase.from('users_point_history')
+                .select('*')
+                .eq('user_token', myUserToken)
+                .order('created_at', {ascending: false});
             // let stringi = JSON.stringify(data);
             // console.log('point'+stringi);
             let lstPointHistory: PointHistoryResponseEntity[] = [];
             data?.forEach((e) => {
                 let cashHistory: PointHistoryResponseEntity = {
                     id: e.id,
-                    user_token : e.user_token,
-                    point : e.point,
-                    amount : e.amount,
+                    user_token: e.user_token,
+                    point: e.point,
+                    amount: e.amount,
                     description: e.description,
-                    point_history_type : e.point_history_type,
+                    point_history_type: e.point_history_type,
                     created_at: e.created_at,
                 }
                 lstPointHistory.push(cashHistory);
             });
-        return lstPointHistory;
+            return lstPointHistory;
 
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+        }
     }
-}
 
 
-async setReviewData(review: PurchaseReviewEntity) {
-    const user = await this.getCurrentLoginUser();
-    review.reviewer_user_token = user?.id;
-    const { data, error } = await supabase.from('purchase_review').insert([review]).select();
+    async setReviewData(review: PurchaseReviewEntity) {
+        const user = await this.getCurrentLoginUser();
+        review.reviewer_user_token = user?.id;
+        const {data, error} = await supabase.from('purchase_review').insert([review]).select();
 
-    if (error) {
-        console.log("error" + error.message);
-        console.log("error" + error.code);
-        console.log("error" + error.details);
-        console.log("error" + error.hint);
+        if (error) {
+            console.log("error" + error.message);
+            console.log("error" + error.code);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
 
-        throw new Error('리뷰 작성에 실패했습니다.');
+            throw new Error('리뷰 작성에 실패했습니다.');
+        }
     }
-}
 
 // 특정 post_id와 reviewer_user_token에 대한 리뷰 조회 함수 추가
-async getReviewByPostAndUser (post_id: number): Promise<PurchaseReviewEntity> {
-    const user = await this.getCurrentLoginUser();
-    const myToken: string = user.id;
+    async getReviewByPostAndUser(post_id: number): Promise<PurchaseReviewEntity> {
+        const user = await this.getCurrentLoginUser();
+        const myToken: string = user.id;
 
-    const { data, error } = await supabase
-        .from('purchase_review')
-        .select()
-        .eq('post_id', post_id)
-        .eq('reviewer_user_token', myToken)
-        .single();
+        const {data, error} = await supabase
+            .from('purchase_review')
+            .select()
+            .eq('post_id', post_id)
+            .eq('reviewer_user_token', myToken)
+            .single();
 
-    if (error) {
-        console.log("error" + error.message);
-        console.log("error" + error.code);
-        console.log("error" + error.details);
-        console.log("error" + error.hint);
+        if (error) {
+            console.log("error" + error.message);
+            console.log("error" + error.code);
+            console.log("error" + error.details);
+            console.log("error" + error.hint);
 
-        throw new Error('작성된 리뷰 데이터를 가져오는데에 실패했습니다.');
-    }
+            throw new Error('작성된 리뷰 데이터를 가져오는데에 실패했습니다.');
+        }
 
-    return data;
-};
+        return data;
+    };
 
-async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
-    try {
-        const { data, error } = await supabase.from('purchase_sale_history')
-            .select('*')
-            .eq('is_confirmed', isConfirmed)
-            .eq('pay_type','cash')
-            .order('created_at', { ascending: false });
-          
-            let lstPurchaseSaleData:PurchaseSaleResponseEntity[] = [];
+    async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
+        try {
+            const {data, error} = await supabase.from('purchase_sale_history')
+                .select('*')
+                .eq('is_confirmed', isConfirmed)
+                .eq('pay_type', 'cash')
+                .order('created_at', {ascending: false});
+
+            let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
 
             // id를 가져와야됨
             data?.forEach((e) => {
                 lstPurchaseSaleData.push(e);
             });
 
-        if (error) {
-            console.log("error" + error.message);
-            console.log("error" + error.code);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
 
+                throw new Error('판매 기록을 가져오는 데 실패했습니다.');
+            }
+
+            return lstPurchaseSaleData;
+        } catch (e: any) {
+            console.log(e);
             throw new Error('판매 기록을 가져오는 데 실패했습니다.');
         }
-
-        return lstPurchaseSaleData;
     }
-    catch (e: any) {
-        console.log(e);
-        throw new Error('판매 기록을 가져오는 데 실패했습니다.');
-    }
-}
 
-async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_token: string,postId: number) {
-    try {
-        const { error } = await supabase.from('purchase_sale_history')
-            .update({ is_confirmed: true })
-            .eq('post_id', postId)
-            .eq('purchase_user_token', purchase_user_token)
-            .eq('sales_user_token',sales_user_token);
+    async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_token: string, postId: number) {
+        try {
+            const {error} = await supabase.from('purchase_sale_history')
+                .update({is_confirmed: true})
+                .eq('post_id', postId)
+                .eq('purchase_user_token', purchase_user_token)
+                .eq('sales_user_token', sales_user_token);
 
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
 
-            throw new Error('관리자- 정산에 실패했습니다.');
+                throw new Error('관리자- 정산에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('관리자 - 정산에 실패했습니다.');
         }
-
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('관리자 - 정산에 실패했습니다.');
     }
-}
 
-async insertNotification(notificationObj:NotificationEntity) {
-    try {
-        const { data, error } = await supabase.from('notification').insert(notificationObj).select();
+    async insertNotification(notificationObj: NotificationEntity) {
+        try {
+            const {data, error} = await supabase.from('notification').insert(notificationObj).select();
 
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
 
+                throw new Error('알림 전송에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
             throw new Error('알림 전송에 실패했습니다.');
         }
-
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('알림 전송에 실패했습니다.');
     }
-}
 
-async getQueryCode(searchTargetWord: string){
-    try {
-        const { data, error } = await supabase.from('post')
-            .select('*, code!inner(*)')
-            .or(`title.like.%${searchTargetWord}%,description.like.%${searchTargetWord}%`)
-            .eq('state', "approve")
-            .order('created_at', { ascending: false });
+    async getQueryCode(searchTargetWord: string) {
+        try {
+            const {data, error} = await supabase.from('post')
+                .select('*, code!inner(*)')
+                .or(`title.like.%${searchTargetWord}%,description.like.%${searchTargetWord}%`)
+                .eq('state', "approve")
+                .order('created_at', {ascending: false});
 
-        let lstCodeModel: CodeModel[] = [];
-        data?.forEach((e) => {
-            let codeModel: CodeModel = {
-                id: e.id,
-                title: e.title,
-                description: e.description,
-                images: e.images,
-                price: e.code.cost,
-                userToken: e.user_token,
-                category: e.category,
-                language:e.code.language,
-                postType: e.post_type,
-                createdAt: e.created_at,
-                buyerGuide: e.code.buyer_guide,
-                githubRepoUrl: e.code.github_repo_url,
-                buyerCount: e.code.buyer_count,
-                popularity: e.code.popularity,
-                hashTag: e.hash_tag,
-                sellerGithubName: e.code.seller_github_name,
-                state: e.state,
-                adminGitRepoURL: e.code.admin_git_repo_url,
-                rejectMessage: e.reject_message,
-                viewCount: e.view_count,
-                is_deleted: e.is_deleted,
-            }
-            lstCodeModel.push(codeModel);
-        });
-        //console.log(data);
-        return lstCodeModel;
+            let lstCodeModel: CodeModel[] = [];
+            data?.forEach((e) => {
+                let codeModel: CodeModel = {
+                    id: e.id,
+                    title: e.title,
+                    description: e.description,
+                    images: e.images,
+                    price: e.code.cost,
+                    userToken: e.user_token,
+                    category: e.category,
+                    language: e.code.language,
+                    postType: e.post_type,
+                    createdAt: e.created_at,
+                    buyerGuide: e.code.buyer_guide,
+                    githubRepoUrl: e.code.github_repo_url,
+                    buyerCount: e.code.buyer_count,
+                    popularity: e.code.popularity,
+                    hashTag: e.hash_tag,
+                    sellerGithubName: e.code.seller_github_name,
+                    state: e.state,
+                    adminGitRepoURL: e.code.admin_git_repo_url,
+                    rejectMessage: e.reject_message,
+                    viewCount: e.view_count,
+                    is_deleted: e.is_deleted,
+                }
+                lstCodeModel.push(codeModel);
+            });
+            //console.log(data);
+            return lstCodeModel;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('검색 게시글 목록을 가져오는 데 실패했습니다.');
+        }
     }
-    catch (e: any) {
-        console.log(e);
-        throw new Error('검색 게시글 목록을 가져오는 데 실패했습니다.');
-    }
-}
 
-async getAllUserEarnCashHistory(): Promise<CashHistoryResponseEntity[]> {
-    try {
-        const { data, error } = await supabase.from('users_cash_history')
-            .select('*')
-            .eq('cash_history_type','earn_cash')
-            .order('created_at', { ascending: false });
+    async getAllUserEarnCashHistory(): Promise<CashHistoryResponseEntity[]> {
+        try {
+            const {data, error} = await supabase.from('users_cash_history')
+                .select('*')
+                .eq('cash_history_type', 'earn_cash')
+                .order('created_at', {ascending: false});
 
             let lstCashHistory: CashHistoryResponseEntity[] = [];
             data?.forEach((e) => {
                 let cashHistory: CashHistoryResponseEntity = {
                     id: e.id,
-                    user_token : e.user_token,
-                    cash : e.cash,
-                    amount : e.amount,
+                    user_token: e.user_token,
+                    cash: e.cash,
+                    amount: e.amount,
                     description: e.description,
-                    cash_history_type : e.cash_history_type,
+                    cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
                 }
                 lstCashHistory.push(cashHistory);
             });
-        return lstCashHistory;
+            return lstCashHistory;
 
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('관리자 - 유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
-    }
-}
-
-async getAllUserManage(): Promise<AdminUserManageEntity[]> { 
-    try {
-        const { data, error } = await supabase.from('users')
-            .select('*');
-           
-
-        let lstUserModel: AdminUserManageEntity[] = [];
-        if(!data){
-            return [];
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('관리자 - 유저의 캐시 히스토리를 가져오는 데 실패했습니다.');
         }
-        
-        for(const adminUserManage of data){
-            const point = await this.getUserTotalPoint(adminUserManage.user_token!);
-            const cash = await this.getUserTotalCash(adminUserManage.user_token!);
+    }
 
-            let userManageEntity: AdminUserManageEntity = {
-                id : adminUserManage.id,
-                auth_type: adminUserManage.auth_type,
-                email: adminUserManage.email,
-                name: adminUserManage.name,
-                nickname: adminUserManage.nickname,
-                profile_url: adminUserManage.profile_url,
-                about_me: adminUserManage.about_me,
-                contacts: adminUserManage.contacts,
-                user_token: adminUserManage.user_token,
-                point: point,
-                cash: cash,
-                created_at: adminUserManage.created_at,
+    async getAllUserManage(): Promise<AdminUserManageEntity[]> {
+        try {
+            const {data, error} = await supabase.from('users')
+                .select('*');
 
+
+            let lstUserModel: AdminUserManageEntity[] = [];
+            if (!data) {
+                return [];
             }
-            lstUserModel.push(userManageEntity);
-        }
-        //console.log(data);
 
+            for (const adminUserManage of data) {
+                const point = await this.getUserTotalPoint(adminUserManage.user_token!);
+                const cash = await this.getUserTotalCash(adminUserManage.user_token!);
 
-        return lstUserModel;
-    }
-    catch (e: any) {
-        console.log(e);
-        throw new Error('관리자 : 모든 유저 데이터를 가져오는 데 실패했습니다.');
-    }
+                let userManageEntity: AdminUserManageEntity = {
+                    id: adminUserManage.id,
+                    auth_type: adminUserManage.auth_type,
+                    email: adminUserManage.email,
+                    name: adminUserManage.name,
+                    nickname: adminUserManage.nickname,
+                    profile_url: adminUserManage.profile_url,
+                    about_me: adminUserManage.about_me,
+                    contacts: adminUserManage.contacts,
+                    user_token: adminUserManage.user_token,
+                    point: point,
+                    cash: cash,
+                    created_at: adminUserManage.created_at,
 
-}
-
-async getTargetUserManageData(userToken : string): Promise<AdminUserManageEntity> { 
-    try {
-        const { data, error } = await supabase.from('users')
-            .select('*')
-            .eq('user_token',userToken);
-           
-
-        let lstUserModel: AdminUserManageEntity[] = [];
-        
-        
-        for(const adminUserManage of data!){
-            const point = await this.getUserTotalPoint(adminUserManage.user_token!);
-            const cash = await this.getUserTotalCash(adminUserManage.user_token!);
-
-            let userManageEntity: AdminUserManageEntity = {
-                id : adminUserManage.id,
-                auth_type: adminUserManage.auth_type,
-                email: adminUserManage.email,
-                name: adminUserManage.name,
-                nickname: adminUserManage.nickname,
-                profile_url: adminUserManage.profile_url,
-                about_me: adminUserManage.about_me,
-                contacts: adminUserManage.contacts,
-                user_token: adminUserManage.user_token,
-                point: point,
-                cash: cash,
-                created_at: adminUserManage.created_at,
-
+                }
+                lstUserModel.push(userManageEntity);
             }
-            lstUserModel.push(userManageEntity);
+            //console.log(data);
+
+
+            return lstUserModel;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('관리자 : 모든 유저 데이터를 가져오는 데 실패했습니다.');
         }
-        //console.log(data);
 
-
-        return lstUserModel[0];
-    }
-    catch (e: any) {
-        console.log(e);
-        throw new Error('관리자 : 특정 유저 데이터를 가져오는 데 실패했습니다.');
     }
 
-}
+    async getTargetUserManageData(userToken: string): Promise<AdminUserManageEntity> {
+        try {
+            const {data, error} = await supabase.from('users')
+                .select('*')
+                .eq('user_token', userToken);
 
 
-async getPurchaseReviews(postId: number): Promise<PurchaseReviewEntity[] | null> {
-    try {
-        const { data, error } = await supabase.from('purchase_review')
-            .select()
-            .eq('post_id', postId)
-            .order('created_at', { ascending: false });                        
+            let lstUserModel: AdminUserManageEntity[] = [];
 
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
 
+            for (const adminUserManage of data!) {
+                const point = await this.getUserTotalPoint(adminUserManage.user_token!);
+                const cash = await this.getUserTotalCash(adminUserManage.user_token!);
+
+                let userManageEntity: AdminUserManageEntity = {
+                    id: adminUserManage.id,
+                    auth_type: adminUserManage.auth_type,
+                    email: adminUserManage.email,
+                    name: adminUserManage.name,
+                    nickname: adminUserManage.nickname,
+                    profile_url: adminUserManage.profile_url,
+                    about_me: adminUserManage.about_me,
+                    contacts: adminUserManage.contacts,
+                    user_token: adminUserManage.user_token,
+                    point: point,
+                    cash: cash,
+                    created_at: adminUserManage.created_at,
+
+                }
+                lstUserModel.push(userManageEntity);
+            }
+            //console.log(data);
+
+
+            return lstUserModel[0];
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('관리자 : 특정 유저 데이터를 가져오는 데 실패했습니다.');
+        }
+
+    }
+
+
+    async getPurchaseReviews(postId: number): Promise<PurchaseReviewEntity[] | null> {
+        try {
+            const {data, error} = await supabase.from('purchase_review')
+                .select()
+                .eq('post_id', postId)
+                .order('created_at', {ascending: false});
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('리뷰 리스트 조회에 실패했습니다');
+            }
+            let lstReview: PurchaseReviewEntity[] = [];
+            data?.forEach((e) => {
+                let reviewModel: PurchaseReviewEntity = {
+                    id: e.id,
+                    post_id: e.post_id,
+                    review_title: e.review_title,
+                    review_content: e.review_content,
+                    rating: e.rating,
+                    reviewer_user_token: e.reviewer_user_token,
+                    created_at: e.created_at
+                }
+                lstReview.push(reviewModel);
+            });
+            console.log(data);
+            return lstReview;
+        } catch (e: any) {
+            console.log(e);
             throw new Error('리뷰 리스트 조회에 실패했습니다');
         }
-        let lstReview: PurchaseReviewEntity[] = [];    
-        data?.forEach((e) => {
-            let reviewModel: PurchaseReviewEntity = {
-                id: e.id,
-                post_id: e.post_id,
-                review_title: e.review_title,
-                review_content: e.review_content,
-                rating: e.rating,
-                reviewer_user_token: e.reviewer_user_token,
-                created_at: e.created_at
-            }
-            lstReview.push(reviewModel);
-        });
-        console.log(data);
-        return lstReview;        
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('리뷰 리스트 조회에 실패했습니다');
     }
-}
 
-async getPurchaseReviewsCount(postId: number): Promise<number> {
-    try {
-        const { data, count, error } = await supabase.from('purchase_review')
-            .select('*', {count:'exact'})
-            .eq('post_id', postId);                        
+    async getPurchaseReviewsCount(postId: number): Promise<number> {
+        try {
+            const {data, count, error} = await supabase.from('purchase_review')
+                .select('*', {count: 'exact'})
+                .eq('post_id', postId);
 
             let resultNumber;
-            if(!count){
+            if (!count) {
                 resultNumber = 0
-            }else{
+            } else {
                 resultNumber = count;
             }
-        
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
 
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('리뷰 리스트 갯수 조회에 실패했습니다');
+            }
+            return resultNumber;
+
+        } catch (e: any) {
+            console.log(e);
             throw new Error('리뷰 리스트 갯수 조회에 실패했습니다');
         }
-        return resultNumber;
-       
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('리뷰 리스트 갯수 조회에 실패했습니다');
     }
-}
 
-async getTargetPostLikedNumber(postId: number): Promise<number> {
-    try {
-        const { data, count, error } = await supabase.from('liked')
-            .select('*', {count:'exact'})
-            .eq('post_id', postId);
+    async getTargetPostLikedNumber(postId: number): Promise<number> {
+        try {
+            const {data, count, error} = await supabase.from('liked')
+                .select('*', {count: 'exact'})
+                .eq('post_id', postId);
 
             let resultNumber;
-            if(!count){
+            if (!count) {
                 resultNumber = 0
-            }else{
+            } else {
                 resultNumber = count;
             }
-        
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
 
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('게시글 좋아요 수 조회에 실패했습니다.');
+            }
+
+
+            return resultNumber;
+        } catch (e: any) {
+            console.log(e);
             throw new Error('게시글 좋아요 수 조회에 실패했습니다.');
         }
-       
-       
-        return resultNumber;        
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('게시글 좋아요 수 조회에 실패했습니다.');
     }
-}
 
-async deletePost(postId: number) {
-    try {
-        const { error } = await supabase.from('post')
-            .update({ is_deleted: true }).eq('id', postId);
+    async deletePost(postId: number) {
+        try {
+            const {error} = await supabase.from('post')
+                .update({is_deleted: true}).eq('id', postId);
 
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
 
+                throw new Error('게시글 삭제처리(숨김)에 실패하였습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
             throw new Error('게시글 삭제처리(숨김)에 실패하였습니다.');
         }
-
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('게시글 삭제처리(숨김)에 실패하였습니다.');
     }
-}
 
-async setTrueUserProfileImageRewardStatus(userToken:string) {
-    try {
-        const { error } = await supabase.from('users')
-            .update({ is_profile_image_rewarded: true }).eq('user_token', userToken);
+    async setTrueUserProfileImageRewardStatus(userToken: string) {
+        try {
+            const {error} = await supabase.from('users')
+                .update({is_profile_image_rewarded: true}).eq('user_token', userToken);
 
-        if (error) {
-            console.log("error" + error.code);
-            console.log("error" + error.message);
-            console.log("error" + error.details);
-            console.log("error" + error.hint);
-            console.log("error" + error.details);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
 
+                throw new Error('프로필 이미지 설정 보상 상태 저장에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
             throw new Error('프로필 이미지 설정 보상 상태 저장에 실패했습니다.');
         }
-
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('프로필 이미지 설정 보상 상태 저장에 실패했습니다.');
     }
-}
 
-async setTrueUserIntroduceRewardStatus(userToken:string) {
-    try {
-        const { error } = await supabase.from('users')
-            .update({ is_introduce_rewarded: true }).eq('user_token', userToken);
+    async setTrueUserIntroduceRewardStatus(userToken: string) {
+        try {
+            const {error} = await supabase.from('users')
+                .update({is_introduce_rewarded: true}).eq('user_token', userToken);
 
-        if (error) {
-            console.log("error"+ JSON.stringify(error));
+            if (error) {
+                console.log("error" + JSON.stringify(error));
+                throw new Error('자기소개 설정 보상 상태 저장에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
             throw new Error('자기소개 설정 보상 상태 저장에 실패했습니다.');
         }
-
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('자기소개 설정 보상 상태 저장에 실패했습니다.');
     }
-}
 
 
-async getAllUserPointHistory (): Promise<PointHistoryResponseEntity[]> {
-    try {
-        const {data, error} = await supabase.from('users_point_history')
-            .select('*')
-            .order('created_at', {ascending: false});
+    async getAllUserPointHistory(): Promise<PointHistoryResponseEntity[]> {
+        try {
+            const {data, error} = await supabase.from('users_point_history')
+                .select('*')
+                .order('created_at', {ascending: false});
 
-        let lstPointHistory: PointHistoryResponseEntity[] = [];
-        data?.forEach((e) => {
-            let pointHistory: PointHistoryResponseEntity = {
-                id: e.id,
-                user_token: e.user_token,
-                point: e.point,
-                amount: e.amount,
-                description: e.description,
-                point_history_type: e.point_history_type,
-                created_at: e.created_at,
-            }
-            lstPointHistory.push(pointHistory);
-        });
-        return lstPointHistory;
+            let lstPointHistory: PointHistoryResponseEntity[] = [];
+            data?.forEach((e) => {
+                let pointHistory: PointHistoryResponseEntity = {
+                    id: e.id,
+                    user_token: e.user_token,
+                    point: e.point,
+                    amount: e.amount,
+                    description: e.description,
+                    point_history_type: e.point_history_type,
+                    created_at: e.created_at,
+                }
+                lstPointHistory.push(pointHistory);
+            });
+            return lstPointHistory;
 
-    } catch (e: any) {
-        console.log(e);
-        throw new Error('관리자 - 유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('관리자 - 유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+        }
     }
-}
 
-    async getAllUserCashHistory (): Promise<CashHistoryResponseEntity[]> {
+    async getAllUserCashHistory(): Promise<CashHistoryResponseEntity[]> {
         try {
             const {data, error} = await supabase.from('users_cash_history')
                 .select('*')
@@ -1917,7 +1903,7 @@ async getAllUserPointHistory (): Promise<PointHistoryResponseEntity[]> {
 
     async messageFromAdminToUser(content: string, targetUserToken: string) {
         try {
-           
+
             const notificationObj = {
                 "title": `관리자 메시지`,
                 "content": content,
@@ -1925,7 +1911,7 @@ async getAllUserPointHistory (): Promise<PointHistoryResponseEntity[]> {
                 "from_user_token": 'admin',
                 "notification_type": NotificationType.message_from_admin,
             }
-            const { data, error } = await supabase.from('notification').insert(notificationObj).select();
+            const {data, error} = await supabase.from('notification').insert(notificationObj).select();
 
             if (error) {
                 console.log("error" + error.message);

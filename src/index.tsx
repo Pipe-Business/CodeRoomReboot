@@ -56,7 +56,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-    {/*<App />*/}
     <BrowserRouter>
     <Suspense fallback={
 					<div style={{

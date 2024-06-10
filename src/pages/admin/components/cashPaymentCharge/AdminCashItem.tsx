@@ -1,11 +1,9 @@
-import React, { FC, useEffect } from 'react';
-import { Divider, ListItem, ListItemText } from '@mui/material';
-import {reformatTime} from "../../../../utils/DayJsHelper.ts";
-import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher.ts";
-//import { reformatTime } from 'src/utils/DayJsHelper';
-//import { useQueryUserById } from 'src/hooks/fetcher/UserFetcher';
+import React, {FC} from 'react';
+import {Divider, ListItem, ListItemText} from '@mui/material';
+import {reformatTime} from "../../../../utils/DayJsHelper";
+import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher";
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
-import { CashHistoryType } from '../../../../enums/CashHistoryType';
+import {CashHistoryType} from '../../../../enums/CashHistoryType';
 import {CashHistoryResponseEntity} from "../../../../data/entity/CashHistoryResponseEntity";
 
 interface Props {

@@ -1,5 +1,5 @@
-import React, { FC, useEffect } from 'react';
-import { Divider, ListItem, ListItemText } from '@mui/material';
+import React, {FC} from 'react';
+import {Divider, ListItem, ListItemText} from '@mui/material';
 import {reformatTime} from "../../../../utils/DayJsHelper";
 import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher";
 import UserProfileImage from '../../../../components/profile/UserProfileImage';

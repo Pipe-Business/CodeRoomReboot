@@ -2,11 +2,11 @@ import React, { FC, useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import {apiClient} from "../../../api/ApiClient.ts";
+import {apiClient} from "../../../api/ApiClient";
 import { toast } from 'react-toastify';
-import {CodeModel} from "../../../data/model/CodeModel.ts";
-import {NotificationEntity} from "../../../data/entity/NotificationEntity.ts";
-import {NotificationType} from "../../../enums/NotificationType.tsx"
+import {CodeModel} from "../../../data/model/CodeModel";
+import {NotificationEntity} from "../../../data/entity/NotificationEntity";
+import {NotificationType} from "../../../enums/NotificationType"
 
 interface Props {
 	children?: React.ReactNode

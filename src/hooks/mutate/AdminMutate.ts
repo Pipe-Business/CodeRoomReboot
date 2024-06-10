@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
-import {PointHistoryType} from "../../enums/PointHistoryType.tsx";
+import {PointHistoryType} from "../../enums/PointHistoryType";
 import {apiClient} from "../../api/ApiClient";
 
 export const useMutateSendPoint = () => {

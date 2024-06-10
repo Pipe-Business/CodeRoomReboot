@@ -1,4 +1,4 @@
-import { PointHistoryType } from "src/enums/PointHistoryType";
+import {PointHistoryType} from "../../enums/PointHistoryType";
 
 export interface PointHistoryRequestEntity {
     id?: number;
