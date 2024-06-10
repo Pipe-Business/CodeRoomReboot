@@ -11,7 +11,6 @@ interface Props {
     children?: React.ReactNode;
     purchaseData: PurchaseSaleResponseEntity;
     onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
-    reviewerUserToken: string;
 }
 
 const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
