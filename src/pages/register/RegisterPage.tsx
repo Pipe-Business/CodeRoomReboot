@@ -15,7 +15,6 @@ import {User} from '@supabase/supabase-js';
 import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
 import {NotificationEntity} from '../../data/entity/NotificationEntity';
 import {NotificationType} from "../../enums/NotificationType";
-import {CashHistoryRequestEntity} from "../../data/entity/CashHistoryRequestEntity";
 
 interface Props {
 	children?: React.ReactNode;
@@ -36,16 +35,6 @@ const RegisterPage: FC<Props> = () => {
 			const user:User = await apiClient.signUpByEmail(inputEmail, inputPwd);
 				userEntity.userToken = user.id;
 				await apiClient.insertUserData(userEntity);
-
-				// 초기 캐시기록 내역 생성
-				const cashHistory : CashHistoryRequestEntity = {
-					user_token : user.id,
-					cash : 0,
-					amount : 0,
-					description : "초기 캐시기록 내역 생성",
-				}
-	
-				await apiClient.insertUserCashHistory(cashHistory);
 				
 				// 초기 포인트 기록 내역 생성
 				const pointHistory : PointHistoryRequestEntity = {

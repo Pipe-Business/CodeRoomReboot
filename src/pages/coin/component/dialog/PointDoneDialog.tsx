@@ -9,29 +9,15 @@ interface Props {
 	children?: React.ReactNode,
 	isOpen: boolean;
 	onClose: () => void,
+	nowPurchaseCash:number,
 	cash:number,
 	orderName:string
 }
 
-const PointDoneDialog: FC<Props> = ({ isOpen, onClose,cash,orderName }) => {
+const PointDoneDialog: FC<Props> = ({ isOpen, onClose,nowPurchaseCash,orderName, cash}) => {
 	 const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
-	 const { isLoading : isCashDataLoading, data: cashData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
-	});
-	// const { mutatePointUpdate } = useMutateAdaptToPointForUser(userLogin?.point!, userLogin?.id!);
-	// const { prevPoint, setPrevPoint } = paymentStore();
 
-	// useEffect(() => {
-	// 	setPrevPoint(userLogin?.point!);
-	// }, [userLogin?.point]);
-	// useEffect(() => {
-	// 	if (isOpen) {
-	// 		mutatePointUpdate(point);
-	// 	}
-	// }, [isOpen]);
-
-	if (isLoadingUserLogin || isCashDataLoading) {
+	if (isLoadingUserLogin) {
 		return <></>;
 	}
 	if (!userLogin) {
@@ -44,11 +30,13 @@ const PointDoneDialog: FC<Props> = ({ isOpen, onClose,cash,orderName }) => {
 			</DialogTitle>
 			<DialogContent>
 				<h1>🎉{orderName} 구매!</h1>
-				{cashData && <div>
-					 {userLogin!.nickname} 님의 캐시 : {cashData-cash} + {cash} 
-				</div>}
+
 				<div>
-					결제완료후 캐시 : {cashData}캐시
+					 {userLogin!.nickname} 님의 캐시 : {cash-nowPurchaseCash} + {nowPurchaseCash}
+				</div>
+
+				<div>
+					결제완료후 캐시 : {cash}캐시
 				</div>
 
 			</DialogContent>

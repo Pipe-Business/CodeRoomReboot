@@ -26,11 +26,11 @@ interface Props {
 const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash }) => {
   const [isOpenDialog, handleOpenDialog, handleCloseDialog] = useDialogState();
   const { userLogin } = useQueryUserLogin();
-  const { data: cashData } = useQuery({
+  const { data: cashData, refetch:refetchCash } = useQuery({
     queryKey: [REACT_QUERY_KEY.cash],
     queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
   });
-  const { data: pointData } = useQuery({
+  const { data: pointData, refetch:refetchPoint } = useQuery({
     queryKey: [REACT_QUERY_KEY.point],
     queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
   });
@@ -76,7 +76,8 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
         receipt_id: response.data.receipt_id,
       };
 
-      if (cashData && pointData) {
+      if (cashData !== undefined && pointData !== undefined) {
+
         await mutateBootpayRequest(entity);
 
         // 유저 캐시 증가 -> 캐시 사용기록 insert
@@ -110,6 +111,9 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
           notification_type: NotificationType.get_point,
         };
         await apiClient.insertNotification(notificationEntity);
+
+        await refetchCash();
+        await refetchPoint();
 
         handleOpenDialog();
       }
@@ -164,7 +168,8 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
         </CardActionArea>
       </Card>
       <PointDoneDialog
-        cash={paymentCash}
+        cash={cashData!} // 이전 캐시 + 현재 구매한 캐시
+        nowPurchaseCash={paymentCash} // 현재 구매한 캐시
         orderName={orderName}
         isOpen={isOpenDialog}
         onClose={handleCloseDialog}
