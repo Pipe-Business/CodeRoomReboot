@@ -8,21 +8,19 @@ import PurchaseList from './purchaseData/PurchaseList';
 import CashHistoryList from './CashHistoryData/CashHistoryList';
 import SaleList from './saleData/SaleList';
 import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
-import {PointHistoryResponseEntity} from "../../../data/entity/PointHistoryResponseEntity";
-import {CashHistoryResponseEntity} from "../../../data/entity/CashHistoryResponseEntity";
 import MyCodeList from "./code/MyCodeList";
+import {CashPointHistoryEntity} from "../../../data/model/CashPointHistoryEntity";
 
 interface Props {
     children?: React.ReactNode;
     saleData: PurchaseSaleResponseEntity[];
     purchaseData: PurchaseSaleResponseEntity[];
     codeData: CodeModel[];
-    cashHistoryData: CashHistoryResponseEntity[];
-    pointHistoryData: PointHistoryResponseEntity[];
+    cashPointHistoryData:CashPointHistoryEntity[];
     onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
 }
 
-const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData, cashHistoryData, pointHistoryData, onWriteReviewClick }) => {
+const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPointHistoryData, onWriteReviewClick }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
     const navigate = useNavigate();
 
@@ -88,33 +86,33 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData, cashHist
             <h4>캐시, 포인트</h4>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시 내역</div>}
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시, 포인트 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/cashhistory`, { state: { cashHistoryData: cashHistoryData, title: '캐시 내역' } });
+                            navigate(`/profile/my/cashhistory`, { state: { cashPointHistoryData: cashPointHistoryData, title: '캐시,포인트 내역' } });
                         }}>
                             더보기</Button>
                     }
                 />
                 <CardContent>
-                    <CashHistoryList cashHistoryData={cashHistoryData?.slice(0, 3)} />
+                    <CashHistoryList cashPointHistory={cashPointHistoryData?.slice(0, 3)} />
                 </CardContent>
             </Card>
 
-            <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
-                <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>포인트 내역</div>}
-                    action={
-                        <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/cashhistory`, { state: { pointHistoryData: pointHistoryData, title: '포인트 내역' } });
-                        }}>
-                            더보기</Button>
-                    }
-                />
-                <CardContent>
-                    <CashHistoryList pointHistoryData={pointHistoryData?.slice(0, 3)} />
-                </CardContent>
-            </Card>
+            {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>*/}
+            {/*    <CardHeader*/}
+            {/*        title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>포인트 내역</div>}*/}
+            {/*        action={*/}
+            {/*            <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {*/}
+            {/*                navigate(`/profile/my/cashhistory`, { state: { pointHistoryData: pointHistoryData, title: '포인트 내역' } });*/}
+            {/*            }}>*/}
+            {/*                더보기</Button>*/}
+            {/*        }*/}
+            {/*    />*/}
+            {/*    <CardContent>*/}
+            {/*        <CashHistoryList pointHistoryData={pointHistoryData?.slice(0, 3)} />*/}
+            {/*    </CardContent>*/}
+            {/*</Card>*/}
         </div>
     );
 };

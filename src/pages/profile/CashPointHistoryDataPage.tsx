@@ -13,16 +13,14 @@ const CashPointHistoryDataPage: FC<Props> = () => {
 
 	const { state: {
 		title,
-		cashHistoryData,
-		pointHistoryData,
+		cashPointHistoryData,
 	} } = useLocation();
 
 	return (
 		<FullLayout>
 			<Box height={32} />
 			<h2>{title}</h2>
-			{cashHistoryData && <CashHistoryList cashHistoryData={cashHistoryData}/>}
-			{pointHistoryData && <CashHistoryList pointHistoryData={pointHistoryData}/>}
+			{cashPointHistoryData && <CashHistoryList cashPointHistory={cashPointHistoryData}/>}
 		</FullLayout>
 	);
 };

@@ -30,6 +30,8 @@ import {MentoringResponseEntity} from "../data/entity/MentoringResponseEntity";
 import {PointHistoryResponseEntity} from "../data/entity/PointHistoryResponseEntity";
 import {CodeEditRequestEntity} from "../data/entity/CodeEditRequestEntity";
 import {createTodayDate} from "../utils/DayJsHelper";
+import {CashPointHistoryEntity} from "../data/model/CashPointHistoryEntity";
+import {PayType} from "../enums/PayType";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -1482,6 +1484,54 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
         }
     }
+
+
+    async getUserCashPointHistory(myUserToken: string):Promise<CashPointHistoryEntity[]> {
+        try {
+          const lstCashHistory:CashHistoryResponseEntity[] = await this.getUserCashHistory(myUserToken);
+          const lstPointHistory: PointHistoryResponseEntity[] = await this.getUserPointHistory(myUserToken);
+
+            const cashHistory: CashPointHistoryEntity[] = lstCashHistory.map(cash => ({
+                id: cash.id,
+                user_token: cash.user_token,
+                price: cash.cash,
+                amount: cash.amount,
+                price_history_type: cash.cash_history_type,
+                pay_type: PayType.cash,
+                description: cash.description,
+                created_at: cash.created_at,
+            }));
+
+            const pointHistory: CashPointHistoryEntity[] = lstPointHistory.map(point => ({
+                id: point.id,
+                user_token: point.user_token,
+                price: point.point,
+                amount: point.amount,
+                price_history_type: point.point_history_type,
+                pay_type: PayType.point,
+                description: point.description,
+                created_at: point.created_at,
+            }));
+
+
+            // 두 배열을 병합
+            const lstPointCashHistory:CashPointHistoryEntity[] = [...cashHistory, ...pointHistory];
+
+            // created_at 기준으로 정렬
+            lstPointCashHistory.sort((a, b) => {
+                const dateA : number = new Date(a.created_at || '').getTime();
+                const dateB = new Date(b.created_at || '').getTime();
+                return dateB - dateA;
+            });
+
+            return lstPointCashHistory;
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+        }
+    }
+
 
 
     async setReviewData(review: PurchaseReviewEntity) {

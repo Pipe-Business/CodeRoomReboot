@@ -64,6 +64,12 @@ const MyPage: FC<Props> = () => {
         queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.userToken!],
         queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!,false),
     });
+
+    const { data: cashPointHistory, isLoading: isCashPointHistoryLoading} = useQuery({
+        queryKey: [REACT_QUERY_KEY.cashPointHistory, userLogin?.userToken!],
+        queryFn: () => apiClient.getUserCashPointHistory(userLogin!.userToken!),
+    });
+
     const { data: cashHistoryData, isLoading: cashHistoryLoading, refetch: refetchCashHistoryData } = useQuery({
         queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.userToken!],
         queryFn: () => apiClient.getUserCashHistory(userLogin!.userToken!),
@@ -192,7 +198,7 @@ const MyPage: FC<Props> = () => {
                                 </TabList>
                             </Box>
                             <TabPanel value='1' sx={{ flex: 1 }}>
-                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} codeData={codeData!} cashHistoryData={cashHistoryData!} pointHistoryData={pointHistoryData!} onWriteReviewClick={handleWriteReviewClick} />
+                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} codeData={codeData!} cashPointHistoryData={cashPointHistory!} onWriteReviewClick={handleWriteReviewClick} />
                             </TabPanel>
                             <TabPanel value='2' sx={{ flex: 1 }}>
                                 <SellerContentData cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>

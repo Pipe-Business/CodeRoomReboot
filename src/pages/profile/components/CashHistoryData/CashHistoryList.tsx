@@ -1,14 +1,12 @@
 import React, {FC} from 'react';
 import {List, ListItem, ListItemText} from '@mui/material';
 import CashHistoryItem from './CashHistoryItem';
-import {CashHistoryResponseEntity} from "../../../../data/entity/CashHistoryResponseEntity";
-import {PointHistoryResponseEntity} from "../../../../data/entity/PointHistoryResponseEntity";
+import {CashPointHistoryEntity} from "../../../../data/model/CashPointHistoryEntity";
 
 
 interface Props {
 	children?: React.ReactNode,
-	cashHistoryData? : CashHistoryResponseEntity[],
-	pointHistoryData? : PointHistoryResponseEntity[],
+	cashPointHistory:CashPointHistoryEntity[],
 }
 
 const TableHeader: FC = () => {
@@ -18,30 +16,25 @@ const TableHeader: FC = () => {
                 <div style={{width: '20%', fontWeight: 'bold'}}>시각</div>
                 <div style={{width: '30%', fontWeight: 'bold'}}>내역</div>
                 <div style={{width: '10%', fontWeight: 'bold'}}>구분</div>
+                <div style={{width: '20%', fontWeight: 'bold'}}>포인트/캐시</div>
                 <div style={{width: '20%', fontWeight: 'bold'}}>금액</div>
-                <div style={{width: '20%', fontWeight: 'bold'}}>총 금액</div>
+                <div style={{width: '10%', fontWeight: 'bold'}}>총 금액</div>
             </div>
         </ListItemText>
 
     </ListItem>;
 };
 
-const CashHistoryList: FC<Props> = ({ cashHistoryData, pointHistoryData }) => {
+const CashHistoryList: FC<Props> = ({cashPointHistory}) => {
 	return (
 		<>
-			{cashHistoryData && <List>
+			{cashPointHistory && <List>
                 <TableHeader />
-				{cashHistoryData && cashHistoryData.map((v,i) => {
-					return <CashHistoryItem key={i} cashHistoryData={v}/>;
+				{cashPointHistory && cashPointHistory.map((v,i) => {
+					return <CashHistoryItem key={i} cashPointHistory={v}/>;
 				})}
 			</List>}
 
-			{pointHistoryData && <List>
-                <TableHeader />
-				{pointHistoryData && pointHistoryData.map((v,i) => {
-					return <CashHistoryItem key={i} pointHistoryData={v}/>;
-				})}
-			</List>}
 		</>
 	);
 };

@@ -10,6 +10,7 @@ export const REACT_QUERY_KEY = {
 	cash : '/cash',
 	cashHistory: '/cashHistory',
 	pointistory: '/pointHistory',
+	cashPointHistory: '/cashPointHistory',
 	cashConfirm: '/cashConfirm',
 	cashConfirmPending: '/cashConfirmPending',
 	point : '/point',

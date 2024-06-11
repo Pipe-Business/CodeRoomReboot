@@ -1,45 +1,47 @@
 import React, {FC} from 'react';
 import {Divider, ListItem, ListItemText} from '@mui/material';
 import {reformatTime} from '../../../../utils/DayJsHelper';
-import {CashHistoryResponseEntity} from "../../../../data/entity/CashHistoryResponseEntity";
-import {PointHistoryResponseEntity} from "../../../../data/entity/PointHistoryResponseEntity";
+import {CashPointHistoryEntity} from "../../../../data/model/CashPointHistoryEntity";
+import {CashHistoryType} from "../../../../enums/CashHistoryType";
+import {PointHistoryType} from "../../../../enums/PointHistoryType";
 
 interface Props {
     children?: React.ReactNode;
-    cashHistoryData?: CashHistoryResponseEntity;
-    pointHistoryData?: PointHistoryResponseEntity;
+    cashPointHistory:CashPointHistoryEntity,
 }
 
-const CashHistoryItem: FC<Props> = ({ cashHistoryData, pointHistoryData }) => {
+const CashHistoryItem: FC<Props> = ({ cashPointHistory }) => {
 
     return (
         <>
             {/* { cashHistoryData && <ListItemButton> */}
 
-            { cashHistoryData && 
+            { cashPointHistory &&
 
                 <ListItem>
                     <ListItemText>
                         <div style={{display: 'flex'}}>
                             <div style={{width: '20%'}}>
-                                {reformatTime(cashHistoryData?.created_at!)}
+                                {reformatTime(cashPointHistory?.created_at!)}
                             </div>
                             <div style={{
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 width: '30%'
-                            }}>{cashHistoryData?.description!}</div>
+                            }}>{cashPointHistory?.description!}</div>
 
                             <div style={{width: '10%'}}>
-                                {cashHistoryData!.cash_history_type === 'earn_cash' ? '충전' : '사용'}
-                            </div>
-
-                            <div style={{width: '20%'}}>
-                                {cashHistoryData!.cash}
+                                {cashPointHistory!.price_history_type === CashHistoryType.earn_cash ? '충전' : cashPointHistory!.price_history_type ===  PointHistoryType.earn_point ? '획득': '사용'}
                             </div>
                             <div style={{width: '20%'}}>
-                                {cashHistoryData!.amount}
+                                {cashPointHistory!.pay_type === 'point' ? '포인트'  : '캐시'}
+                            </div>
+                            <div style={{width: '20%'}}>
+                                {cashPointHistory!.price}
+                            </div>
+                            <div style={{width: '10%'}}>
+                                {cashPointHistory!.amount}
                             </div>
 
                         </div>
@@ -48,41 +50,6 @@ const CashHistoryItem: FC<Props> = ({ cashHistoryData, pointHistoryData }) => {
 
                 // </ListItemButton>
             }
-
-
-            {pointHistoryData &&
-                <ListItem>
-                    <ListItemText>
-                        <div style={{display: 'flex'}}>
-
-                            <div style={{width: '20%'}}>
-                                {reformatTime(pointHistoryData?.created_at!)}
-                            </div>
-
-                            <div style={{
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                width: '30%'
-                            }}>{pointHistoryData?.description!}</div>
-
-                            <div style={{width: '10%'}}>
-                                {pointHistoryData!.point_history_type === 'earn_point' ? '획득' : '사용'}
-                            </div>
-
-                            <div style={{width: '20%'}}>
-                                {pointHistoryData!.point}
-                            </div>
-                            <div style={{width: '20%'}}>
-                                {pointHistoryData!.amount}
-                            </div>
-
-
-                        </div>
-                    </ListItemText>
-                </ListItem>
-            }
-
             <Divider/>
         </>
 
