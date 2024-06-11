@@ -32,7 +32,7 @@ const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken, refet
 		const notificationEntity: NotificationEntity ={
 			title : '심사 반려 알림',
 			content: inputText,
-			from_user_token: '045148b1-77db-4dfc-8d76-e11f7f9a4a10', // todo 관리자 토큰으로 수정 필요. 현재 관리자토큰을 입력하면 유저 알림함에서 보이지 않음
+			from_user_token: 'admin',
 			to_user_token: userToken,
 			notification_type: NotificationType.rejected,
 		}

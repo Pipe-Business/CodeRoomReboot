@@ -76,17 +76,15 @@ const CashPaymentDialog = (onConfirm: () => void) => {
 		try {
 			if (postData && userLogin?.userToken) {
 				mutate();
-				const todayDate = createTodayDate();
 				//  판매자에게 판매알림
 				const notificationEntity: NotificationEntity ={
 					title : '코드 판매 알림',
 					content: `'${postData?.title}' 게시글이 판매 되었습니다`,
-					from_user_token: userLogin!.userToken!,// todo 변경 필요
+					from_user_token: 'admin',
 					to_user_token: postData?.userToken!,
 					notification_type: NotificationType.sale,
 				}
-				let notistring=JSON.stringify(notificationEntity);
-				console.log("sdf"+notistring);
+
 				await apiClient.insertNotification(notificationEntity);
 
 				// navigate('/');

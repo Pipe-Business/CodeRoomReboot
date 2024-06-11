@@ -105,7 +105,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
         const notificationEntity: NotificationEntity = {
           title: '포인트 지급 알림',
           content: '캐시 충전 보너스 포인트가 지급되었습니다.',
-          from_user_token: userLogin!.userToken!, // 관리자 토큰으로 수정 필요. 현재 사용자 토큰
+          from_user_token: 'admin',
           to_user_token: userLogin!.userToken!,
           notification_type: NotificationType.get_point,
         };

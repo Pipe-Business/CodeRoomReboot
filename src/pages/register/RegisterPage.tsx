@@ -62,7 +62,7 @@ const RegisterPage: FC<Props> = () => {
 			const notificationEntity: NotificationEntity ={
 				title : '포인트 지급 알림',
 				content: '가입 축하 포인트로 1000 포인트가 지급 되었습니다',
-				from_user_token: userToken, // todo 관리자 토큰으로 수정 필요. 현재 관리자 토큰으로 보내면 안됨
+				from_user_token: 'admin',
 				to_user_token: userToken,
 				notification_type: NotificationType.get_point,
 			}

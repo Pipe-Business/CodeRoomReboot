@@ -60,7 +60,7 @@ const PointSendDialog: FC<Props> = ({ isOpen, onClose, userToken, userNickname, 
         const notificationEntity: NotificationEntity ={
             title : '포인트 지급 알림',
             content:`관리자 지급 : ${reasonPayment}`,
-            from_user_token: userToken, // todo 관리자 토큰으로 수정 필요. 현재 관리자 토큰으로 보내면 안됨
+            from_user_token: 'admin',
             to_user_token: userToken,
             notification_type: NotificationType.get_point,
         }
