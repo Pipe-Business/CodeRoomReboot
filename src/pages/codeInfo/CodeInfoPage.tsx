@@ -96,7 +96,7 @@ const CodeInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getLikeData(userLogin?.userToken!, postData!.id),
 	});
 
-	const { isLoading: isLikedNumberLoading, data: likedNumberData } = useQuery({
+	const { isLoading: isLikedNumberLoading, data: likedNumberData, refetch:likeNumberRefetch } = useQuery({
 		queryKey: [REACT_QUERY_KEY.like, postData?.id],
 		queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
 	});
@@ -114,13 +114,13 @@ const CodeInfo: FC<Props> = () => {
 	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
 	const [isLike, setLike] = useState<boolean>(false);
 	const [onCashClickConfirm] = CashPaymentDialog(() => {
-		console.log("현금 결제가 확인되었습니다!");
+		//console.log("현금 결제가 확인되었습니다!");
 		// 현금 결제 확인 후 추가 로직
 		setDialogOpen(true);
 	});
 
 	const [onPointClickConfirm] = PointPaymentDialog(() => {
-		console.log("포인트 결제가 확인되었습니다!");
+		//console.log("포인트 결제가 확인되었습니다!");
 		// 포인트 결제 확인 후 추가 로직
 		setDialogOpen(true);
 	});
@@ -164,7 +164,7 @@ const CodeInfo: FC<Props> = () => {
 		if (id) {
 			apiClient.updateViewCount(Number(id));
 			fetchReviews();
-			console.log(`reviews is ${reviews}`);
+			//console.log(`reviews is ${reviews}`);
 		}
 	}, []);
 
@@ -191,6 +191,7 @@ const CodeInfo: FC<Props> = () => {
 			}
 			await apiClient.insertLikedData(likedData);
 		}
+		await likeNumberRefetch();
 	}
 
 	const onClickBuyItButton = useCallback(() => {
