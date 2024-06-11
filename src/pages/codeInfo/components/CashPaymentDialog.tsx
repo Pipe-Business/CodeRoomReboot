@@ -86,41 +86,6 @@ const CashPaymentDialog = (onConfirm: () => void) => {
 				}
 
 				await apiClient.insertNotification(notificationEntity);
-
-				// navigate('/');
-				// toast.success('구매가 완료되었습니다.');
-			
-				// 	const notiEntity: UserNotificationEntity = {
-				// 		createdAt: todayDate,
-				// 		content: `🎉축하합니다! ${userLogin?.nickname} 님이 ${codeData.title} 코드를 ${codeData.price}point 에 구매하였습니다.`,
-				// 		sender: 'admin',
-				// 	};
-				// 	await apiClient.sendNotificationByUser(codeData.userId, notiEntity);
-				// 	const purchasePushRef = push(ref(db, `purchaseDataForUser/${userLogin.id}`));
-				// 	const purchasePushKey = purchasePushRef.key;
-				// 	const salesPushRef = push(ref(db, `salesDataForUser/${codeData.userId}`));
-				// 	const salesPushKey = salesPushRef.key;
-				// 	if (purchasePushKey) {
-				// 		const purchaseEntity: PurchaseDataForUser = {
-				// 			codeId: codeData.id,
-				// 			createdAt: todayDate,
-				// 			id: purchasePushKey,
-				// 			sellerId: codeData.userId,
-				// 			point: codeData.price,
-				// 		};
-				// 		await set(purchasePushRef, purchaseEntity);
-				// 	}
-				// 	if (salesPushKey) {
-				// 		const salesEntity: SalesDataForUser = {
-				// 			codeId: codeData.id,
-				// 			createdAt: todayDate,
-				// 			purchaseUserId: userLogin.id,
-				// 			id: salesPushKey,
-				// 			point: codeData.price,
-				// 		};
-				// 		await set(salesPushRef, salesEntity);
-				// 	}
-				
 			}
 		} catch (e) {
 			console.log(e);
