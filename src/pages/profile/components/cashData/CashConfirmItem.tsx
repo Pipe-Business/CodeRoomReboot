@@ -38,30 +38,32 @@ const CashConfirmItem: FC<Props> = ({ cashConfirmData }) => {
             <ListItemButton onClick={onClickListItem}>
                 <ListItem>
                     <ListItemText>
-                        <div style={{ display: 'flex' }}>
+                        <div style={{display: 'flex'}}>
+
+                            <div style={{width: '20%'}}>
+                                {reformatTime(cashConfirmData?.created_at!)}
+                            </div>
 
                             <div style={{
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                width:'50%'
+                                width: '50%'
                             }}>{codeData?.title!}</div>
 
-                            <div style={{  width:'30%'}}>
+                            <div style={{width: '30%'}}>
                                 {cashConfirmData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
                             </div>
                             {/* <div style={{  width:'20%'}}>
                                 {cashConfirmData.is_confirmed == "point" ? "포인트" : "캐시"}
                             </div> */}
-                            <div style={{  width:'20%'}}>
-                                {reformatTime(cashConfirmData?.created_at!)}
-                            </div>
+
                         </div>
                     </ListItemText>
                 </ListItem>
 
             </ListItemButton>
-            <Divider />
+            <Divider/>
         </>
 
     );

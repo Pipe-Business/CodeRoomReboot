@@ -12,10 +12,10 @@ interface Props {
 const TableHeader: FC = () => {
     return <ListItem>
         <ListItemText>
-            <div style={{ display: 'flex', }}>
-                <div style={{ width: '50%' ,fontWeight:'bold'}}>코드제목</div>
-                <div style={{ width: '30%' ,fontWeight:'bold'}}>구매가격</div>
-                <div style={{ width: '20%' ,fontWeight:'bold'}}>판매된 시각</div>
+            <div style={{display: 'flex',}}>
+                <div style={{width: '20%', fontWeight: 'bold'}}>판매된 시각</div>
+                <div style={{width: '50%', fontWeight: 'bold'}}>코드제목</div>
+                <div style={{width: '30%', fontWeight: 'bold'}}>구매가격</div>
             </div>
         </ListItemText>
 

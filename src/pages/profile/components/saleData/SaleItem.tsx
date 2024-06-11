@@ -36,7 +36,11 @@ const SaleItem: FC<Props> = ({ saleData }) => {
             <ListItemButton onClick={onClickListItem}>
                 <ListItem>
                     <ListItemText>
-                        <div style={{ display: 'flex' }}>
+                        <div style={{display: 'flex'}}>
+
+                            <div style={{width: '10%'}}>
+                                {reformatTime(saleData?.created_at!)}
+                            </div>
 
                             <div style={{
                                 whiteSpace: 'nowrap',
@@ -45,24 +49,22 @@ const SaleItem: FC<Props> = ({ saleData }) => {
                                 width: '40%'
                             }}>{codeData?.title!}</div>
 
-                            <div style={{ width: '20%' }}>
+                            <div style={{width: '20%'}}>
                                 {saleData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
                             </div>
-                            <div style={{ width: '15%' }}>
+                            <div style={{width: '15%'}}>
                                 {saleData.pay_type == "point" ? "포인트" : "캐시"}
                             </div>
-                            <div style={{ width: '15%' }}>
+                            <div style={{width: '15%'}}>
                                 {saleData.is_confirmed ? '정산됨' : saleData.pay_type == "point" ? '해당없음' : '미정산'}
                             </div>
-                            <div style={{ width: '10%' }}>
-                                {reformatTime(saleData?.created_at!)}
-                            </div>
+
                         </div>
                     </ListItemText>
                 </ListItem>
 
             </ListItemButton>
-            <Divider />
+            <Divider/>
         </>
 
     );
