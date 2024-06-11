@@ -11,11 +11,8 @@ interface Props {
 	item: CodeModel;
 }
 
-const CodePendingItem: FC<Props> = ({ item }) => {
-	// const { isLoading, data } = useQuery({
-	// 	queryKey: [REACT_QUERY_KEY.code],
-	// 	queryFn: () => apiClient.getTargetCode(item.id),
-	// });
+const CodeItem: FC<Props> = ({ item }) => {
+
 	const navigate = useNavigate();
 	const onClickNavigateRejectForm = () => {}
 	// const onClickNavigateRejectForm = useCallback((codeReqId: string) => {
@@ -38,7 +35,8 @@ const CodePendingItem: FC<Props> = ({ item }) => {
 					<div style={{ width: '25%' }}>
 						{reformatTime(item.createdAt)}
 					</div>
-					<div style={{ width: item.state === 'pending' ? '50%' : '25%' }}>
+
+					<div style={{ width: '40%' }}>
 						<div style={{
 							display: 'flex',
 						}}>
@@ -52,9 +50,9 @@ const CodePendingItem: FC<Props> = ({ item }) => {
 						</div>
 					</div>
 					<div
-						style={{ width: item.state === 'pending' ? '25%' : '20%' }}>{item.state === 'pending' ? '심사중' : item.state ==='approve' ? '승인' : '반려'}</div>
-					<div style={{ width: item.state === 'pending' ? '0%' : '30%' }}>
-						{item.state === 'reject' &&
+						style={{ width: '10%'}}>{item.state === 'pending' ? '심사중' : item.state ==='approve' ? '승인' : '반려'}</div>
+					<div style={{ width: '25%' }}>
+						{item.state === 'rejected' &&
 							<Button onClick={() => onClickNavigateRejectForm()}>
 								수정 및 재심사
 							</Button>}
@@ -65,4 +63,4 @@ const CodePendingItem: FC<Props> = ({ item }) => {
 	);
 };
 
-export default CodePendingItem;
+export default CodeItem;

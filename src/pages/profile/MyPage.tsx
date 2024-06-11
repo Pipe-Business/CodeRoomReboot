@@ -36,18 +36,11 @@ const MyPage: FC<Props> = () => {
     const tab = location.state?.tab;
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const { data: approvedCodeData, refetch: refetchApprovedCodeData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.approvedCode, userLogin?.userToken!, 'state'],
-        queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'approve')
+    const { data: codeData, isLoading:isCodeDataLoading, refetch: refetchCodeData } = useQuery({
+        queryKey: [REACT_QUERY_KEY.code, userLogin?.userToken!],
+        queryFn: () => apiClient.getAllMyCode(userLogin?.userToken!),
     });
-    const { data: pendingCodeData, isLoading: pendingCodeDataLoading, refetch: refetchPendingCodeData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.pendingCode, userLogin?.userToken!],
-        queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'pending')
-    });
-    const { data: rejectedCodeData, isLoading: rejectedCodeDataLoading, refetch: refetchRejectedCodeData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.rejectedCode, userLogin?.userToken!],
-        queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'rejected')
-    });
+
 
     const { data: purchaseData, isLoading: purchaseCodeDataLoading, refetch: refetchPurchaseData } = useQuery({
         queryKey: ['/purchase', userLogin?.userToken!],
@@ -124,9 +117,6 @@ const MyPage: FC<Props> = () => {
 
         setDialogOpen(false);
         refetchPurchaseData();
-        refetchApprovedCodeData();
-        refetchPendingCodeData();
-        refetchRejectedCodeData();
         refetchMentoringData();
         refetchCashConfirmData();
         refetchCashConfirmPendingData();
@@ -135,7 +125,7 @@ const MyPage: FC<Props> = () => {
     };
 
 
-    if (pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading || saleCodeDataLoading) {
+    if (isCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading || saleCodeDataLoading) {
         return (
             <FullLayout>
                 <Skeleton style={{ height: '200px' }} />
@@ -202,7 +192,7 @@ const MyPage: FC<Props> = () => {
                                 </TabList>
                             </Box>
                             <TabPanel value='1' sx={{ flex: 1 }}>
-                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} pendingCodeData={pendingCodeData!} approvedCodeData={approvedCodeData!} rejectedCodeData={rejectedCodeData!}  cashHistoryData={cashHistoryData!} pointHistoryData={pointHistoryData!} onWriteReviewClick={handleWriteReviewClick} />
+                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} codeData={codeData!} cashHistoryData={cashHistoryData!} pointHistoryData={pointHistoryData!} onWriteReviewClick={handleWriteReviewClick} />
                             </TabPanel>
                             <TabPanel value='2' sx={{ flex: 1 }}>
                                 <SellerContentData cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>

@@ -5,26 +5,24 @@ import {useNavigate} from 'react-router-dom';
 import {CodeModel} from '../../../data/model/CodeModel';
 import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import PurchaseList from './purchaseData/PurchaseList';
-import CodePendingOrPendingList from './code/MyCodeList';
 import CashHistoryList from './CashHistoryData/CashHistoryList';
 import SaleList from './saleData/SaleList';
 import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
 import {PointHistoryResponseEntity} from "../../../data/entity/PointHistoryResponseEntity";
 import {CashHistoryResponseEntity} from "../../../data/entity/CashHistoryResponseEntity";
+import MyCodeList from "./code/MyCodeList";
 
 interface Props {
     children?: React.ReactNode;
     saleData: PurchaseSaleResponseEntity[];
     purchaseData: PurchaseSaleResponseEntity[];
-    pendingCodeData: CodeModel[];
-    approvedCodeData: CodeModel[];
-    rejectedCodeData: CodeModel[];
+    codeData: CodeModel[];
     cashHistoryData: CashHistoryResponseEntity[];
     pointHistoryData: PointHistoryResponseEntity[];
     onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
 }
 
-const BuyerContentData: FC<Props> = ({ saleData, purchaseData, pendingCodeData, approvedCodeData, rejectedCodeData, cashHistoryData, pointHistoryData, onWriteReviewClick }) => {
+const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData, cashHistoryData, pointHistoryData, onWriteReviewClick }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
     const navigate = useNavigate();
 
@@ -73,44 +71,16 @@ const BuyerContentData: FC<Props> = ({ saleData, purchaseData, pendingCodeData, 
             <h3>나의 코드</h3>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>승인 대기 내역</div>}
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>코드 심사 진행 단계</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/code-page`, { state: { codeData: pendingCodeData, type: 'pending', maxCount: false } });
+                            navigate(`/profile/my/code-page`, { state: { codeData: codeData, type: 'pending', maxCount: false } });
                         }}>
                             더보기</Button>
                     }
                 />
                 <CardContent>
-                    <CodePendingOrPendingList maxCount={true} data={pendingCodeData?.slice(0, 3)} type={'pending'} />
-                </CardContent>
-            </Card>
-            <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
-                <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>반려 내역</div>}
-                    action={
-                        <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/code-page`, { state: { codeData: rejectedCodeData, type: 'rejected', maxCount: false } });
-                        }}>
-                            더보기</Button>
-                    }
-                />
-                <CardContent>
-                    <CodePendingOrPendingList maxCount={true} data={rejectedCodeData?.slice(0, 3)} type={'rejected'} />
-                </CardContent>
-            </Card>
-            <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
-                <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>승인 내역</div>}
-                    action={
-                        <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/code-page`, { state: { codeData: approvedCodeData, type: 'approve', maxCount: false } });
-                        }}>
-                            더보기</Button>
-                    }
-                />
-                <CardContent>
-                    <CodePendingOrPendingList maxCount={true} data={approvedCodeData?.slice(0, 3)} type={'approve'} />
+                    <MyCodeList maxCount={true} data={codeData?.slice(0, 3)}/>
                 </CardContent>
             </Card>
             <Box height={32} />
