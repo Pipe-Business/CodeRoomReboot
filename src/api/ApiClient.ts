@@ -522,7 +522,7 @@ class ApiClient implements SupabaseAuthAPI {
                 }
                 lstUserModel.push(userModel);
             });
-            console.log("userModel" + JSON.stringify(data));
+            //console.log("userModel" + JSON.stringify(data));
 
             if (error) {
                 console.log("error" + error.message);

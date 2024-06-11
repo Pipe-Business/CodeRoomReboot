@@ -63,7 +63,7 @@ useEffect(() => {
 
 		if(typeof result == "object"){ // 유저 정보가 있으면
 			const user:User = result as User;
-			console.log("user info:"+user.id);
+			//console.log("user info:"+user.id);
 			//localApi.saveUserToken(user.id);
 			//onClose();
 			
