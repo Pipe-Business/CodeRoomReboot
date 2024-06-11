@@ -135,12 +135,6 @@ const EditMyProfilePage: FC<Props> = () => {
 			
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries(
-				{queryKey: [REACT_QUERY_KEY.login],}
-			);
-			queryClient.invalidateQueries(
-				{queryKey: [REACT_QUERY_KEY.user,userLogin?.userToken],}
-			);
 			toast.success('편집이 완료되었습니다.');
 		},
 		onError: (error) => {

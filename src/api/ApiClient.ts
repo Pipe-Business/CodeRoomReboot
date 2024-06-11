@@ -29,6 +29,7 @@ import {LikeResponseEntity} from "../data/entity/LikeResponseEntity";
 import {MentoringResponseEntity} from "../data/entity/MentoringResponseEntity";
 import {PointHistoryResponseEntity} from "../data/entity/PointHistoryResponseEntity";
 import {CodeEditRequestEntity} from "../data/entity/CodeEditRequestEntity";
+import {createTodayDate} from "../utils/DayJsHelper";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -337,7 +338,7 @@ class ApiClient implements SupabaseAuthAPI {
             return data.publicUrl;
         } catch (e: any) {
             console.log(e);
-            throw new Error('이미지 주소 다운에 실패했습니다.');
+            throw new Error('이미지 주소 다운에 실패했습니다.')   ;
         }
     }
 
@@ -1145,13 +1146,33 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
+    async deleteAllProfileImageInFolder(userToken: string){
+        const path:string = `profile/${userToken}/`;
+        const { data,error } = await supabase.storage.from('coderoom').list(path); // 내 토큰 밑의 모든 이미지들을 가져옴
+
+        if(error){
+            console.log("error" + error.message);
+            throw new Error('프로필 이미지 변경 - 기존 이미지 삭제에 실패했습니다.');
+        }
+        const lstDeleteImages : string[] = [];
+
+
+        data?.forEach((e) => {
+            lstDeleteImages.push(`profile/${userToken}/${e.name}`);
+        });
+
+        await supabase.storage.from('coderoom').remove(lstDeleteImages);
+    }
+
     async uploadProfileImage(userToken: string, file: File): Promise<string> {
         try {
 
-            // const lstPublicUrl: string[] = [];
+           // upload 시 기존 사진 삭제
 
+            await this.deleteAllProfileImageInFolder(userToken);
 
-            const path: string = `profile/${userToken}`;
+            const date = createTodayDate();
+            const path: string = `profile/${userToken}/${date}`;
 
             const {data, error} = await supabase
                 .storage

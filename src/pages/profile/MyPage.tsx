@@ -35,20 +35,7 @@ const MyPage: FC<Props> = () => {
     const [value, setValue] = React.useState('1');
     const tab = location.state?.tab;
     const [searchParams, setSearchParams] = useSearchParams();
-    const inputNickNameRef = useRef<HTMLInputElement | null>(null);
-    // const { data: userData, isLoading: userDataLoading, refetch: refetchUserData } = useQuery({
-    //     queryKey: [REACT_QUERY_KEY.user, userLogin?.userToken],
-    //     queryFn: () => apiClient.getTargetUser(userLogin!.userToken!),
-    //     refetchOnMount: "always",
-    // })
-    const { data: userData, isLoading: userDataLoading, error, refetch: refetchUserData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.user, userLogin?.userToken],
-        queryFn: () => {
-            console.log('Fetching user data with token:', userLogin?.userToken);
-            return apiClient.getTargetUser(userLogin!.userToken!);
-        },
-        refetchOnMount: 'always',
-    });
+
     const { data: approvedCodeData, refetch: refetchApprovedCodeData } = useQuery({
         queryKey: [REACT_QUERY_KEY.approvedCode, userLogin?.userToken!, 'state'],
         queryFn: () => apiClient.getMyCodeByStatus(userLogin!.userToken!, 'approve')
@@ -137,7 +124,6 @@ const MyPage: FC<Props> = () => {
 
         setDialogOpen(false);
         refetchPurchaseData();
-        refetchUserData();
         refetchApprovedCodeData();
         refetchPendingCodeData();
         refetchRejectedCodeData();
@@ -149,7 +135,7 @@ const MyPage: FC<Props> = () => {
     };
 
 
-    if (userDataLoading || pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading || saleCodeDataLoading) {
+    if (pendingCodeDataLoading || rejectedCodeDataLoading || purchaseCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading || saleCodeDataLoading) {
         return (
             <FullLayout>
                 <Skeleton style={{ height: '200px' }} />
@@ -188,7 +174,7 @@ const MyPage: FC<Props> = () => {
                             <Card raised elevation={0} style={{ width: 'fit-content', maxWidth: '100%' }}>
                                 <CardHeader
                                     avatar={<UserProfileImage size={60} userId={userLogin.userToken!} />}
-                                    title={userData?.nickname}
+                                    title={userLogin?.nickname}
                                     titleTypographyProps={{
                                         fontSize: 25,
                                     }}
