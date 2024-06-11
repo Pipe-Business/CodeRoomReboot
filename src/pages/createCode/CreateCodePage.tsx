@@ -2,8 +2,8 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LinkIcon from '@mui/icons-material/Link';
 import {Box, Button, Card, Grid, IconButton, TextField, Typography} from '@mui/material';
 import {useMutation} from '@tanstack/react-query';
-import React, {ChangeEvent, FC, useCallback, useRef, useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import React, {ChangeEvent, FC, useCallback, useEffect, useRef, useState} from 'react';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {apiClient} from '../../api/ApiClient';
 import ImageCard from '../../components/ImageCard';
@@ -16,13 +16,18 @@ import SelectCodeCategory from './components/SelectCodeCategory';
 import SelectCodeLanguage from './components/SelectCodeLanguage';
 import {PostRequestEntity} from "../../data/entity/PostRequestEntity";
 import {CodeRequestEntity} from "../../data/entity/CodeRequestEntity";
+import {CodeModel} from "../../data/model/CodeModel";
 
 interface Props {
   children?: React.ReactNode;
 }
 
 const CreateCodePage: FC<Props> = () => {
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const editTargetModel: CodeModel = location.state?.item;
+
   const { userLogin } = useQueryUserLogin();
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputPointRef = useRef<HTMLInputElement | null>(null);
@@ -49,6 +54,23 @@ const CreateCodePage: FC<Props> = () => {
   const [inputGuide, onChangeGuide, errorGuide, errGuideMessage, setGuideMessage, , , ,
     , , , inputGuideCount] =
     useInputValidate({ minLen: 30, maxLen: 3000 });
+
+
+  useEffect(() => {
+    console.log(JSON.stringify(editTargetModel));
+    if(editTargetModel){
+      setTitle(editTargetModel.title);
+      setDescription(editTargetModel.description);
+      setLanguage(editTargetModel.language);
+      setCategory(editTargetModel.category);
+      setPoint(editTargetModel.price);
+      setGuideMessage(editTargetModel.buyerGuide);
+      if(editTargetModel.images){
+        setSrc(editTargetModel.images);
+      }
+      setGithubUrl(editTargetModel.githubRepoUrl);
+    }
+  }, [editTargetModel]);
 
   const onChangePoint = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -179,6 +201,22 @@ const CreateCodePage: FC<Props> = () => {
       <Box sx={{ marginTop: 4, marginBottom: 4 }}>
         <Typography variant="h4" fontWeight="bold" sx={{ color: '#333' }}>코드 올리기</Typography>
       </Box>
+
+      { editTargetModel &&
+        <Card sx={{
+        padding: 4,
+        marginBottom: 4,
+        backgroundColor: '#f9f9f9',
+        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+        borderRadius: '8px',
+        width: {sm: 400, md: 800, lg: 1000,},
+      }}>
+        <Box>
+          <Typography variant="h4" fontWeight="bold" sx={{color: 'red'}}>반려사유</Typography>
+          <Box height={16}></Box>
+          <div style={{fontSize: 18, fontWeight: 'bold'}}>{editTargetModel.rejectMessage}</div>
+        </Box>
+      </Card>}
 
       <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px', width: { sm: 400, md: 800,  lg:1000,}, }}
       >

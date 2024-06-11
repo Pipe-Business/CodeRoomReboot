@@ -1,10 +1,9 @@
-import React, {FC} from 'react';
+import React, {FC, useCallback} from 'react';
 
 import {Button, ListItem, ListItemText} from '@mui/material';
 import {CodeModel} from '../../../../data/model/CodeModel';
 import {useNavigate} from 'react-router-dom';
 import {reformatTime} from '../../../../utils/DayJsHelper';
-
 
 interface Props {
 	children?: React.ReactNode;
@@ -14,20 +13,10 @@ interface Props {
 const CodeItem: FC<Props> = ({ item }) => {
 
 	const navigate = useNavigate();
-	const onClickNavigateRejectForm = () => {}
-	// const onClickNavigateRejectForm = useCallback((codeReqId: string) => {
-	// 	if (data?.formType === 'code') {
-	// 		navigate('/create/code', { state: { codeReqId: codeReqId, rejectMessage: data.rejectMessage } });
-	// 	} else if(data?.formType==='article') {
-	// 		navigate('/create/article', { state: { codeReqId: codeReqId, rejectMessage: data.rejectMessage } });
-	// 	}
-	// }, [data?.formType]);
-	// if (isLoading) {
-	// 	return <>loading</>;
-	// }
-	// if (!data) {
-	// 	return <></>;
-	// }
+	const onClickNavigateRejectForm = useCallback(() => {
+		navigate('/create/code', {state:{item}});
+	},[]);
+
 	return (
 		<ListItem divider sx={{ height: '5vh' }}>
 			<ListItemText>
