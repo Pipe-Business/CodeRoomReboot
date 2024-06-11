@@ -52,9 +52,9 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 		}} disabled={isBlur}>포인트로 구매하기</ColorButton>;
 	}
 	// 게사자일경우
-	// if (userId === codeHostId) {
-	// 	return null;
-	// }
+	if (userId === codeHostId) {
+		return null;
+	}
 
 	// 구매한 내역이 있으면
 	if (purchasedSaleData != null) {

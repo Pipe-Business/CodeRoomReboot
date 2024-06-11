@@ -400,7 +400,10 @@ const CodeInfo: FC<Props> = () => {
 									onOpenPointDialog={onOpenPointDailog}
 								/>
 								<Box my={2}>
-									<MessageModal targetUserToken={postData.userToken} />
+									{
+										(postData.userToken !== userLogin!.userToken) &&
+										<MessageModal targetUserToken={postData.userToken}/>
+									}
 								</Box>
 							</Card>
 						</Box>
