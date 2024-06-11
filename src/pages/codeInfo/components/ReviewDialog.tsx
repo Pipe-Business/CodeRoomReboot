@@ -4,6 +4,7 @@ import Rating from '@mui/lab/Rating';
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
 import {PurchaseReviewEntity} from '../../../data/entity/PurchaseReviewEntity';
 import {apiClient} from '../../../api/ApiClient';
+import {useNavigate} from "react-router-dom";
 
 interface ReviewDialogProps {
     postId: number;
@@ -21,6 +22,7 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
         reviewer_user_token: ''
     });
 
+    const navigate = useNavigate();
     useEffect(() => {
         setReview((prevReview) => ({ ...prevReview, post_id: postId }));
     }, [postId]);
@@ -84,7 +86,10 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
                         />
                     </Box>
                     <DialogActions>
-                        <Button onClick={onClose} color="primary">
+                        <Button onClick={() => {
+                            navigate(0);
+                            onClose();
+                        }} color="primary">
                             나중에
                         </Button>
                         <Button type="submit" color="primary">

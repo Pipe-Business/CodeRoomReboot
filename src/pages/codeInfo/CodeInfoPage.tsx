@@ -62,6 +62,52 @@ function SamplePrevArrow(props: { className?: string, style?: CSSProperties, onC
 
 const CodeInfo: FC<Props> = () => {
 	const [reviews, setReviews] = useState<PurchaseReviewEntity[]>([]);
+
+	const { id } = useParams();
+
+	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.cash],
+		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
+	});
+
+	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.point],
+		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
+	});
+
+
+	const { isLoading, data: postData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.code, id],
+		queryFn: () => apiClient.getTargetCode(Number(id!)),
+	});
+
+	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.user],
+		queryFn: () => apiClient.getTargetUser(postData!.userToken),
+	});
+
+	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
+		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id),
+	});
+
+	const { isLoading: isLikeLoading, data: likeData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.like],
+		queryFn: () => apiClient.getLikeData(userLogin?.userToken!, postData!.id),
+	});
+
+	const { isLoading: isLikedNumberLoading, data: likedNumberData } = useQuery({
+		queryKey: [REACT_QUERY_KEY.like, postData?.id],
+		queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
+	});
+
+	useEffect(() => {
+		if (likeData != null) {
+			console.log("likedata" + { likeData });
+			setLike(true);
+		}
+	}, [likeData]);
+
 	const navigate = useNavigate();
 	const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
@@ -107,6 +153,7 @@ const CodeInfo: FC<Props> = () => {
 		await apiClient.insertUserPointHistory(pointHistoryRequest);
 	
 		setDialogOpen(false);
+		navigate(0);
 	};
 
 	useEffect(() => {
@@ -130,15 +177,7 @@ const CodeInfo: FC<Props> = () => {
 		}
 	}, [userLogin]);
 
-	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
-	});
 
-	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
-	});
 
 	const onClickLike = async () => {
 		if (isLike) {
@@ -165,39 +204,7 @@ const CodeInfo: FC<Props> = () => {
 		navigate(-1);
 	}, []);
 
-	const { id } = useParams();
 
-	const { isLoading, data: postData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.code, id],
-		queryFn: () => apiClient.getTargetCode(Number(id!)),
-	});
-
-	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.user],
-		queryFn: () => apiClient.getTargetUser(postData!.userToken),
-	});
-
-	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
-		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id),
-	});
-
-	const { isLoading: isLikeLoading, data: likeData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.like],
-		queryFn: () => apiClient.getLikeData(userLogin?.userToken!, postData!.id),
-	});
-
-	const { isLoading: isLikedNumberLoading, data: likedNumberData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.like, postData?.id],
-		queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
-	});
-
-	useEffect(() => {
-		if (likeData != null) {
-			console.log("likedata" + { likeData });
-			setLike(true);
-		}
-	}, [likeData]);
 
 	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
