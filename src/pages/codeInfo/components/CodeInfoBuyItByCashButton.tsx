@@ -51,7 +51,7 @@ const CodeInfoBuyItByCashButton: FC<Props> = (
         return <ColorButton sx={{fontSize: '15', width: '210px'}} onClick={() => {
             alert("로그인이 필요한 서비스입니다.")
             onClickLoginRegister();
-        }} disabled={isBlur}>캐시로 구매하기</ColorButton>;
+        }} disabled={isBlur}>{point} 캐시로 구매하기</ColorButton>;
     }
     // 게사자일경우
     if (userId === codeHostId) {
@@ -72,7 +72,7 @@ const CodeInfoBuyItByCashButton: FC<Props> = (
             return <ColorButton sx={{fontSize: '15', width: '210px'}} onClick={() => {
                 alert('캐시가 부족합니다. 캐시를 충전해주세요');
                 navigate('/charge');
-            }} disabled={isBlur} variant='contained'>캐시로 구매하기</ColorButton>;
+            }} disabled={isBlur} variant='contained'>{point} 캐시로 구매하기</ColorButton>;
         }
 
     }
