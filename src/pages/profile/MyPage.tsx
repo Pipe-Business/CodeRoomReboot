@@ -14,7 +14,7 @@ import FullLayout from '../../layout/FullLayout';
 import MainLayout from '../../layout/MainLayout';
 import {TextButton} from '../main/styles';
 import BuyerContentData from './components/BuyerContentData';
-import {SectionWrapper} from './styles';
+import {SectionWrapper, StyledTab, StyledTabList} from './styles';
 import SellerContentData from './components/SellerContentData';
 import ReviewDialog from '../codeInfo/components/ReviewDialog';
 import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
@@ -216,25 +216,29 @@ const MyPage: FC<Props> = () => {
                     </SectionWrapper>
                     <Box height={32}/>
                     <SectionWrapper>
-
                         {tab}
                         <TabContext value={value}>
-                            <Box sx={{borderBottom: 1, borderColor: 'divider', width: '100%', display: 'flex'}}>
-                                <TabList onChange={handleChange} aria-label='lab API tabs example'
-                                         style={{width: '100%', display: 'flex'}} sx={{flexGrow: 1}}>
-                                    <Tab label='나의 활동 내역' value='1' sx={{flex: 1}}/>
-                                    <Tab label='판매 / 수익통계' value='2' sx={{flex: 1}}/>
-                                </TabList>
+                            <Box sx={{ width: '100%'}}>
+                                <StyledTabList onChange={handleChange} aria-label="lab API tabs example">
+                                    <StyledTab label="나의 활동 내역" value="1" />
+                                    <StyledTab label="판매 / 수익통계" value="2" />
+                                </StyledTabList>
                             </Box>
-                            <TabPanel value='1' sx={{flex: 1}}>
-                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} codeData={codeData!}
-                                                  cashPointHistoryData={cashPointHistory!}
-                                                  onWriteReviewClick={handleWriteReviewClick}
-                                                  onReadReviewClick={handleReadReviewClick}/>
+                            <TabPanel value="1" sx={{ flex: 1 }}>
+                                <BuyerContentData
+                                    saleData={saleData!}
+                                    purchaseData={purchaseData!}
+                                    codeData={codeData!}
+                                    cashPointHistoryData={cashPointHistory!}
+                                    onWriteReviewClick={handleWriteReviewClick}
+                                    onReadReviewClick={handleReadReviewClick}
+                                />
                             </TabPanel>
-                            <TabPanel value='2' sx={{flex: 1}}>
-                                <SellerContentData cashConfirmData={cashConfirmData!}
-                                                   cashConfirmPendingData={cashConfirmPendingData!}/>
+                            <TabPanel value="2" sx={{ flex: 1 }}>
+                                <SellerContentData
+                                    cashConfirmData={cashConfirmData!}
+                                    cashConfirmPendingData={cashConfirmPendingData!}
+                                />
                             </TabPanel>
                         </TabContext>
 
