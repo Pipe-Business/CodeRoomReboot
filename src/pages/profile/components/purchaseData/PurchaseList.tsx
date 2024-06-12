@@ -6,15 +6,16 @@ import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleRe
 interface Props {
     children?: React.ReactNode,
     purchaseData?: PurchaseSaleResponseEntity[] | null,
-    onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;    
+    onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
+    onReadReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
 }
 
-const PurchaseList: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
+const PurchaseList: FC<Props> = ({ purchaseData, onWriteReviewClick, onReadReviewClick}) => {
     return (
         <>
             <List>
                 {purchaseData && purchaseData.map((v, i) => {
-                    return <PurchaseItem key={i} purchaseData={v} onWriteReviewClick={onWriteReviewClick} />;
+                    return <PurchaseItem key={i} purchaseData={v} onWriteReviewClick={onWriteReviewClick} onReadReviewClick={onReadReviewClick} />;
                 })}
             </List>
         </>

@@ -1,81 +1,89 @@
-import { TabContext } from '@mui/lab';
+import {TabContext} from '@mui/lab';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Box, Button, Card, CardHeader, Skeleton } from '@mui/material';
+import {Box, Button, Card, CardHeader, Skeleton} from '@mui/material';
 import Tab from '@mui/material/Tab';
-import { useQuery } from "@tanstack/react-query";
-import React, { FC, useEffect, useRef } from 'react';
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { apiClient } from '../../api/ApiClient';
+import {useQuery} from "@tanstack/react-query";
+import React, {FC, useEffect, useRef, useState} from 'react';
+import {Link, useLocation, useNavigate, useSearchParams} from 'react-router-dom';
+import {apiClient} from '../../api/ApiClient';
 import UserProfileImage from '../../components/profile/UserProfileImage';
-import { REACT_QUERY_KEY } from '../../constants/define';
-import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher';
+import {REACT_QUERY_KEY} from '../../constants/define';
+import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import FullLayout from '../../layout/FullLayout';
 import MainLayout from '../../layout/MainLayout';
-import { TextButton } from '../main/styles';
+import {TextButton} from '../main/styles';
 import BuyerContentData from './components/BuyerContentData';
-import { SectionWrapper } from './styles';
+import {SectionWrapper} from './styles';
 import SellerContentData from './components/SellerContentData';
 import ReviewDialog from '../codeInfo/components/ReviewDialog';
-import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity';
-import { PurchaseSaleRequestEntity } from '../../data/entity/PurchaseSaleRequestEntity';
-import { PointHistoryType } from '../../enums/PointHistoryType';
+import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
+import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEntity';
+import {PointHistoryType} from '../../enums/PointHistoryType';
 import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
 
 interface Props {
     children?: React.ReactNode;
 }
 
 const MyPage: FC<Props> = () => {
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-	const [purchasePostId, setPurchasePostId] = React.useState(-1);
-    const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
+    const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+    const [purchasePostId, setPurchasePostId] = useState(-1);
+    const [readonly, setReadonly] = useState(false);
+    const [reviewData, setReviewData] = useState<PurchaseReviewEntity | undefined>(undefined); // reviewData 상태 추가
+
+    const {userLogin, isLoadingUserLogin} = useQueryUserLogin();
     const navigate = useNavigate();
     const location = useLocation();
     const [value, setValue] = React.useState('1');
     const tab = location.state?.tab;
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const { data: codeData, isLoading:isCodeDataLoading, refetch: refetchCodeData } = useQuery({
+    const {data: codeData, isLoading: isCodeDataLoading, refetch: refetchCodeData} = useQuery({
         queryKey: [REACT_QUERY_KEY.code, userLogin?.userToken!],
         queryFn: () => apiClient.getAllMyCode(userLogin?.userToken!),
     });
 
 
-    const { data: purchaseData, isLoading: purchaseCodeDataLoading, refetch: refetchPurchaseData } = useQuery({
+    const {data: purchaseData, isLoading: purchaseCodeDataLoading, refetch: refetchPurchaseData} = useQuery({
         queryKey: ['/purchase', userLogin?.userToken!],
         queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin!.userToken!),
     });
 
-    const { data: saleData, isLoading: saleCodeDataLoading, refetch: refetchSaleData } = useQuery({
+    const {data: saleData, isLoading: saleCodeDataLoading, refetch: refetchSaleData} = useQuery({
         queryKey: ['/sale', userLogin?.userToken!],
         queryFn: () => apiClient.getMySaleHistory(userLogin!.userToken!),
     });
 
-    const { data: mentoringData, isLoading: mentoringDataLoading, refetch: refetchMentoringData } = useQuery({
+    const {data: mentoringData, isLoading: mentoringDataLoading, refetch: refetchMentoringData} = useQuery({
         queryKey: [REACT_QUERY_KEY.mentoring, userLogin?.userToken!],
         queryFn: () => apiClient.getMyMentorings(userLogin!.userToken!),
     });
-    const { data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData } = useQuery({
+    const {data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData} = useQuery({
         queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.userToken!],
-        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!,true),
+        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!, true),
     });
-    const { data: cashConfirmPendingData, isLoading: cashConfirmPendingLoading, refetch: refetchCashConfirmPendingData } = useQuery({
+    const {
+        data: cashConfirmPendingData,
+        isLoading: cashConfirmPendingLoading,
+        refetch: refetchCashConfirmPendingData
+    } = useQuery({
         queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.userToken!],
-        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!,false),
+        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!, false),
     });
 
-    const { data: cashPointHistory, isLoading: isCashPointHistoryLoading} = useQuery({
+    const {data: cashPointHistory, isLoading: isCashPointHistoryLoading} = useQuery({
         queryKey: [REACT_QUERY_KEY.cashPointHistory, userLogin?.userToken!],
         queryFn: () => apiClient.getUserCashPointHistory(userLogin!.userToken!),
     });
 
-    const { data: cashHistoryData, isLoading: cashHistoryLoading, refetch: refetchCashHistoryData } = useQuery({
+    const {data: cashHistoryData, isLoading: cashHistoryLoading, refetch: refetchCashHistoryData} = useQuery({
         queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.userToken!],
         queryFn: () => apiClient.getUserCashHistory(userLogin!.userToken!),
     });
 
-    const { data: pointHistoryData, isLoading: pointHistoryLoading, refetch: refetchPointHistoryData } = useQuery({
+    const {data: pointHistoryData, isLoading: pointHistoryLoading, refetch: refetchPointHistoryData} = useQuery({
         queryKey: [REACT_QUERY_KEY.pointistory, userLogin?.userToken!],
         queryFn: () => apiClient.getUserPointHistory(userLogin!.userToken!),
     });
@@ -93,54 +101,70 @@ const MyPage: FC<Props> = () => {
 
     const handleWriteReviewClick = (purchaseData: PurchaseSaleResponseEntity) => {
         console.log('Review click event received for:', purchaseData);
-        setDialogOpen(true);
-		setPurchasePostId(purchaseData.post_id);
+        setPurchasePostId(purchaseData.post_id);
+        setReadonly(false);
+        setReviewData(undefined); // 리뷰 작성이므로 초기화
+        setReviewDialogOpen(true);
     };
 
-	const handleReviewSubmit = async () =>  {
-		// 리뷰 작성 완료시 이 콜백을 수행
-		const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!,purchasePostId);
-		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
+    const handleReadReviewClick = async (purchaseData: PurchaseSaleResponseEntity) => {
+        console.log('Review click event received for:', purchaseData);
+        setPurchasePostId(purchaseData.post_id);
+        setReadonly(true);
+        try {
+            const review = await apiClient.getReviewData(purchaseData.post_id);
+            setReviewData(review); // 조회한 리뷰 데이터를 설정
+        } catch (error) {
+            console.error('Error fetching review data:', error);
+        }
 
-		let amountUpdateValue;
-		if (purchaseData?.pay_type == "point") {
-			// 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
-		} else {
-			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-			amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
-		}
+        setReviewDialogOpen(true);
+    };
 
-		const pointHistoryRequest : PointHistoryRequestEntity = {
-			description: "리뷰 작성 보상",
-			amount: (currentAmount + amountUpdateValue),
-			user_token: userLogin?.userToken!,
-			point: amountUpdateValue,
-			point_history_type: PointHistoryType.earn_point,
-		}
+    const handleReviewSubmit = async () => {
+        // 리뷰 작성 완료시 이 콜백을 수행
+        const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, purchasePostId);
+        const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
 
-		await apiClient.insertUserPointHistory(pointHistoryRequest);
+        let amountUpdateValue;
+        if (purchaseData?.pay_type == "point") {
+            // 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+            amountUpdateValue = Math.round(purchaseData.price! * 0.05);
+        } else {
+            // 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+            amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
+        }
 
-        setDialogOpen(false);
-        refetchPurchaseData();
-        refetchMentoringData();
-        refetchCashConfirmData();
-        refetchCashConfirmPendingData();
-        refetchCashHistoryData();
-        refetchPointHistoryData();
+        const pointHistoryRequest: PointHistoryRequestEntity = {
+            description: "리뷰 작성 보상",
+            amount: (currentAmount + amountUpdateValue),
+            user_token: userLogin?.userToken!,
+            point: amountUpdateValue,
+            point_history_type: PointHistoryType.earn_point,
+        }
+
+        await apiClient.insertUserPointHistory(pointHistoryRequest);
+
+        setReviewDialogOpen(false);
+        await refetchPurchaseData();
+        await refetchMentoringData();
+        await refetchCashConfirmData();
+        await refetchCashConfirmPendingData();
+        await refetchCashHistoryData();
+        await refetchPointHistoryData();
     };
 
 
     if (isCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading || saleCodeDataLoading) {
         return (
             <FullLayout>
-                <Skeleton style={{ height: '200px' }} />
-                <Skeleton style={{ height: '500px' }} />
-                <Skeleton style={{ height: '30px' }} />
-                <Skeleton style={{ height: '200px' }} />
+                <Skeleton style={{height: '200px'}}/>
+                <Skeleton style={{height: '500px'}}/>
+                <Skeleton style={{height: '30px'}}/>
+                <Skeleton style={{height: '200px'}}/>
             </FullLayout>
         );
-    }    
+    }
 
     if (!userLogin) {
         return <MainLayout>로그인 먼저 해주세요
@@ -154,22 +178,26 @@ const MyPage: FC<Props> = () => {
 
     return (
         <FullLayout>
-            <Box height={64} />
+            <Box height={64}/>
 
-            <ReviewDialog postId={purchasePostId} open={dialogOpen} onClose={() => setDialogOpen(false)} onReviewSubmit={handleReviewSubmit} /> {/* 수정된 부분 */}
+            <ReviewDialog postId={purchasePostId} open={reviewDialogOpen} onClose={() => setReviewDialogOpen(false)}
+                          onReviewSubmit={handleReviewSubmit} readonly={readonly}
+                          reviewData={reviewData}/> {/* 수정된 부분 */}
 
             {userLogin ?
                 <div>
-                    <Box height={8} />
+                    <Box height={8}/>
                     <SectionWrapper>
-                    <div style={{ display: 'flex', flexDirection:'column'}}>
-                    
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <h2>기본 정보</h2> <Box width={16} /> <TextButton onClick={() => { navigate('/profile/my/edit', { state: { userData: userLogin } }) }} style={{ color: '#448FCE', backgroundColor: '#F4F5F8' }}>수정하기</TextButton>
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+
+                            <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                                <h2>기본 정보</h2> <Box width={16}/> <TextButton onClick={() => {
+                                navigate('/profile/my/edit', {state: {userData: userLogin}})
+                            }} style={{color: '#448FCE', backgroundColor: '#F4F5F8'}}>수정하기</TextButton>
                             </div>
-                            <Card raised elevation={0} style={{ width: 'fit-content', maxWidth: '100%' }}>
+                            <Card raised elevation={0} style={{width: 'fit-content', maxWidth: '100%'}}>
                                 <CardHeader
-                                    avatar={<UserProfileImage size={60} userId={userLogin.userToken!} />}
+                                    avatar={<UserProfileImage size={60} userId={userLogin.userToken!}/>}
                                     title={userLogin?.nickname}
                                     titleTypographyProps={{
                                         fontSize: 25,
@@ -184,24 +212,29 @@ const MyPage: FC<Props> = () => {
                             <div>
                                 {userLogin.aboutMe}
                             </div>
-                    </div>
+                        </div>
                     </SectionWrapper>
-                    <Box height={32} />
+                    <Box height={32}/>
                     <SectionWrapper>
 
                         {tab}
                         <TabContext value={value}>
-                            <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%', display: 'flex' }}>
-                                <TabList onChange={handleChange} aria-label='lab API tabs example' style={{ width: '100%', display: 'flex' }} sx={{ flexGrow: 1 }}>
-                                    <Tab label='나의 활동 내역' value='1' sx={{ flex: 1 }} />
-                                    <Tab label='판매 / 수익통계' value='2' sx={{ flex: 1 }} />
+                            <Box sx={{borderBottom: 1, borderColor: 'divider', width: '100%', display: 'flex'}}>
+                                <TabList onChange={handleChange} aria-label='lab API tabs example'
+                                         style={{width: '100%', display: 'flex'}} sx={{flexGrow: 1}}>
+                                    <Tab label='나의 활동 내역' value='1' sx={{flex: 1}}/>
+                                    <Tab label='판매 / 수익통계' value='2' sx={{flex: 1}}/>
                                 </TabList>
                             </Box>
-                            <TabPanel value='1' sx={{ flex: 1 }}>
-                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} codeData={codeData!} cashPointHistoryData={cashPointHistory!} onWriteReviewClick={handleWriteReviewClick} />
+                            <TabPanel value='1' sx={{flex: 1}}>
+                                <BuyerContentData saleData={saleData!} purchaseData={purchaseData!} codeData={codeData!}
+                                                  cashPointHistoryData={cashPointHistory!}
+                                                  onWriteReviewClick={handleWriteReviewClick}
+                                                  onReadReviewClick={handleReadReviewClick}/>
                             </TabPanel>
-                            <TabPanel value='2' sx={{ flex: 1 }}>
-                                <SellerContentData cashConfirmData={cashConfirmData!} cashConfirmPendingData={cashConfirmPendingData!}/>
+                            <TabPanel value='2' sx={{flex: 1}}>
+                                <SellerContentData cashConfirmData={cashConfirmData!}
+                                                   cashConfirmPendingData={cashConfirmPendingData!}/>
                             </TabPanel>
                         </TabContext>
 
@@ -211,7 +244,7 @@ const MyPage: FC<Props> = () => {
                 :
                 <></>
             }
-            <Box height={128} />                
+            <Box height={128}/>
         </FullLayout>
     );
 }

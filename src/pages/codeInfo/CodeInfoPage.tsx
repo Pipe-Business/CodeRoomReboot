@@ -419,7 +419,7 @@ const CodeInfo: FC<Props> = () => {
 					</BlurContainer>
 				</Box>
 			</Box>
-			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)} onReviewSubmit={handleReviewSubmit} />
+			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)} onReviewSubmit={handleReviewSubmit} readonly={false} />
 		</MainLayout>
 	);
 };

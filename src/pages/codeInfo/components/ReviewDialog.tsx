@@ -1,19 +1,21 @@
 // ReviewDialog.tsx
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Rating from '@mui/material/Rating';
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
-import {PurchaseReviewEntity} from '../../../data/entity/PurchaseReviewEntity';
-import {apiClient} from '../../../api/ApiClient';
-import {useNavigate} from "react-router-dom";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { PurchaseReviewEntity } from '../../../data/entity/PurchaseReviewEntity';
+import { apiClient } from '../../../api/ApiClient';
+import { useNavigate } from 'react-router-dom';
 
 interface ReviewDialogProps {
     postId: number;
     open: boolean;
     onClose: () => void;
     onReviewSubmit: () => void;
+    readonly?: boolean;
+    reviewData?: PurchaseReviewEntity; // reviewData prop 추가
 }
 
-const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSubmit }) => { 
+const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSubmit, readonly = false, reviewData }) => {
     const [review, setReview] = useState<PurchaseReviewEntity>({
         post_id: postId,
         review_title: '',
@@ -23,9 +25,24 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
     });
 
     const navigate = useNavigate();
+
     useEffect(() => {
-        setReview((prevReview) => ({ ...prevReview, post_id: postId }));
-    }, [postId]);
+        if (open) {
+            if (readonly && reviewData) {
+                // readonly가 true이고 reviewData가 제공되었을 때 reviewData로 상태 설정
+                setReview(reviewData);
+            } else {
+                // 새로운 리뷰 작성일 때 초기화
+                setReview({
+                    post_id: postId,
+                    review_title: '',
+                    review_content: '',
+                    rating: 0,
+                    reviewer_user_token: ''
+                });
+            }
+        }
+    }, [open, readonly, reviewData, postId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -40,11 +57,12 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {            
+        try {
             await apiClient.setReviewData(review);
             alert('소중한 리뷰 감사드립니다 :)');
             onReviewSubmit();
             onClose();
+            navigate(0);
         } catch (error) {
             console.error('Error submitting review:', error);
         }
@@ -52,7 +70,9 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle>구매해주셔서 감사합니다 리뷰를 남겨주시면 포인트가 적립됩니다!</DialogTitle>
+            <DialogTitle>
+                {readonly ? '리뷰 상세 보기' : '구매해주셔서 감사합니다 리뷰를 남겨주시면 포인트가 적립됩니다!'}
+            </DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>
                     <TextField
@@ -64,6 +84,9 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
                         onChange={handleChange}
                         fullWidth
                         required
+                        InputProps={{
+                            readOnly: readonly,
+                        }}
                     />
                     <TextField
                         margin="dense"
@@ -76,26 +99,31 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
                         multiline
                         rows={4}
                         required
+                        InputProps={{
+                            readOnly: readonly,
+                        }}
                     />
                     <Box component="fieldset" mb={3} borderColor="transparent">
                         <Rating
                             name="rating"
                             value={review.rating}
                             precision={0.5}
-                            onChange={handleRatingChange}
+                            onChange={readonly ? undefined : handleRatingChange}
+                            readOnly={readonly}
                         />
                     </Box>
-                    <DialogActions>
-                        <Button onClick={() => {
-                            navigate(0);
-                            onClose();
-                        }} color="primary">
-                            나중에
-                        </Button>
-                        <Button type="submit" color="primary">
-                            작성 완료
-                        </Button>
-                    </DialogActions>
+                    {!readonly && (
+                        <DialogActions>
+                            <Button onClick={() => {
+                                onClose();
+                            }} color="primary">
+                                나중에
+                            </Button>
+                            <Button type="submit" color="primary">
+                                작성 완료
+                            </Button>
+                        </DialogActions>
+                    )}
                 </form>
             </DialogContent>
         </Dialog>

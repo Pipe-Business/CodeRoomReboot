@@ -1549,6 +1549,27 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async getReviewData(postId: number): Promise<PurchaseReviewEntity> {
+        const user = await this.getCurrentLoginUser();
+
+        const { data, error } = await supabase
+            .from('purchase_review')
+            .select('*')
+            .eq('post_id', postId)
+            .eq('reviewer_user_token', user?.id)
+            .single();
+
+        if (error) {
+            console.error("Error:", error.message);
+            console.error("Code:", error.code);
+            console.error("Details:", error.details);
+            console.error("Hint:", error.hint);
+
+            throw new Error('리뷰 데이터를 불러오는 데 실패했습니다.');
+        }
+        return data;
+    }
+
 // 특정 post_id와 reviewer_user_token에 대한 리뷰 조회 함수 추가
     async getReviewByPostAndUser(post_id: number): Promise<PurchaseReviewEntity|null> {
         const user = await this.getCurrentLoginUser();

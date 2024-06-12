@@ -1,6 +1,6 @@
 import React, {FC, useCallback} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {Button, Divider, ListItem, ListItemButton, ListItemText} from '@mui/material';
+import {Box, Button, Divider, ListItem, ListItemButton, ListItemText} from '@mui/material';
 import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../../api/ApiClient';
 import CodeDownloadButton from '../../../codeInfo/components/CodeDownloadButton';
@@ -11,9 +11,10 @@ interface Props {
     children?: React.ReactNode;
     purchaseData: PurchaseSaleResponseEntity;
     onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
+    onReadReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
 }
 
-const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
+const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick, onReadReviewClick }) => {
     const { userId } = useParams();
     const { data: codeData } = useQuery({ queryKey: ['codeStore', purchaseData.post_id], queryFn: () => apiClient.getTargetCode(purchaseData.post_id) });
     const navigate = useNavigate();
@@ -45,6 +46,11 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
         onWriteReviewClick(purchaseData);    
     }, [onWriteReviewClick, purchaseData]);
 
+    const handleReadReviewClick = useCallback((e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.stopPropagation();
+        console.log('handleReadReviewClick : ' + purchaseData.post_id);
+        onReadReviewClick(purchaseData);
+    }, [])
 
     if (!codeData) {
         return <></>;
@@ -53,16 +59,14 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick }) => {
     return (
         <>
             <ListItemButton onClick={onClickListItem}>
-                <ListItem secondaryAction={
-                    <>
-                        {!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.adminGitRepoURL} />}
-                        {!reviewData && <Button variant="outlined" onClick={handleWriteReviewClick} style={{ height: '53px', width: '200px' }}>리뷰 작성하기</Button>}
-                    </>
-                }>
+                <ListItem>
                     <ListItemText
                         primary={codeData?.title}
                         secondary={postedUser?.nickname}
                     />
+                    {!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.adminGitRepoURL} />}
+                    <Box width={16}/>
+                    {!reviewData ? <Button variant="outlined" onClick={handleWriteReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 작성</Button> : <Button variant="outlined" onClick={handleReadReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 확인</Button>}
                 </ListItem>
             </ListItemButton>
             <Divider />

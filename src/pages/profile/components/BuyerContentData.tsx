@@ -18,9 +18,10 @@ interface Props {
     codeData: CodeModel[];
     cashPointHistoryData:CashPointHistoryEntity[];
     onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
+    onReadReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
 }
 
-const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPointHistoryData, onWriteReviewClick }) => {
+const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPointHistoryData, onWriteReviewClick, onReadReviewClick }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
     const navigate = useNavigate();
 
@@ -39,7 +40,7 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPoint
                     }
                 />
                 <CardContent>
-                    <PurchaseList purchaseData={purchaseData?.slice(0, 3)} onWriteReviewClick={onWriteReviewClick} />
+                    <PurchaseList purchaseData={purchaseData?.slice(0, 3)} onWriteReviewClick={onWriteReviewClick} onReadReviewClick={onReadReviewClick}  />
                 </CardContent>
             </Card>
 
