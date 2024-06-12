@@ -49,7 +49,7 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 		return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => {
 			alert("로그인이 필요한 서비스입니다.")
 			onClickLoginRegister();
-		}} disabled={isBlur}>포인트로 구매하기</ColorButton>;
+		}} disabled={isBlur}>{point} 포인트로 구매하기</ColorButton>;
 	}
 	// 게사자일경우
 	if (userId === codeHostId) {
@@ -69,7 +69,7 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => {
 				alert(`${point - userHavePoint} 커밋 포인트가 부족합니다. 포인트를 모으거나 캐시로 구매해주세요.`);
 				//navigate('/charge');
-			}} disabled={isBlur} variant='contained'>커밋 포인트로 구매하기</ColorButton>;
+			}} disabled={isBlur} variant='contained'>{point} 커밋 포인트로 구매하기</ColorButton>;
 		}
 
 	}

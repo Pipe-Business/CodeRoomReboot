@@ -854,10 +854,11 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async getAllMyCode(type: string): Promise<CodeModel[]> {
+    async getAllMyCode(userToken: string): Promise<CodeModel[]> {
         try {
             const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
+                .eq('user_token',userToken)
                 .order('created_at', {ascending: false});
 
             let lstCodeModel: CodeModel[] = [];
