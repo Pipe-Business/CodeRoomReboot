@@ -31,6 +31,7 @@ import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEn
 import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEntity';
 import {PointHistoryType} from '../../enums/PointHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
+import ReactMarkdown from "react-markdown";
 
 dayjs.locale('ko');
 
@@ -79,6 +80,11 @@ const CodeInfo: FC<Props> = () => {
 	const { isLoading, data: postData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
+	});
+
+	const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
+		queryKey: ['readme',id],
+		queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
 	});
 
 	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
@@ -207,7 +213,7 @@ const CodeInfo: FC<Props> = () => {
 
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading) {
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isReadMeLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -255,52 +261,63 @@ const CodeInfo: FC<Props> = () => {
 									{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} / {postData.language}
 								</Typography>
 							</Box>
-							{postData.images && (
-								<Box mb={3}>
-									<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-										템플릿 결과물 이미지
-									</Typography>
-									<StyledSlider
-										nextArrow={<SampleNextArrow />}
-										prevArrow={<SamplePrevArrow />}
-										dots={true}
-										arrows={false}
-										slidesToShow={1}
-										slidesToScroll={1}
-										speed={500}
-										infinite={false}
-									>
-										{postData.images.map((url, key) => (
-											<img
-												alt={`image-${key}`}
-												key={key}
-												style={{ objectFit: 'contain', maxHeight: 400, width: '100%' }}
-												src={url}
-											/>
-										))}
-									</StyledSlider>
-								</Box>
-							)}
+							{/*{postData.images && (*/}
+							{/*	<Box mb={3}>*/}
+							{/*		<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
+							{/*			템플릿 결과물 이미지*/}
+							{/*		</Typography>*/}
+							{/*		<StyledSlider*/}
+							{/*			nextArrow={<SampleNextArrow />}*/}
+							{/*			prevArrow={<SamplePrevArrow />}*/}
+							{/*			dots={true}*/}
+							{/*			arrows={false}*/}
+							{/*			slidesToShow={1}*/}
+							{/*			slidesToScroll={1}*/}
+							{/*			speed={500}*/}
+							{/*			infinite={false}*/}
+							{/*		>*/}
+							{/*			{postData.images.map((url, key) => (*/}
+							{/*				<img*/}
+							{/*					alt={`image-${key}`}*/}
+							{/*					key={key}*/}
+							{/*					style={{ objectFit: 'contain', maxHeight: 400, width: '100%' }}*/}
+							{/*					src={url}*/}
+							{/*				/>*/}
+							{/*			))}*/}
+							{/*		</StyledSlider>*/}
+							{/*	</Box>*/}
+							{/*)}*/}
+							{/*<Box my={2}>*/}
+							{/*	<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
+							{/*		코드 설명*/}
+							{/*	</Typography>*/}
+							{/*	<Typography variant="body1" color="textPrimary" style={{whiteSpace : 'pre-line'}} >*/}
+							{/*		{postData.description}*/}
+							{/*	</Typography>*/}
+							{/*</Box>*/}
+
 							<Box my={2}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									코드 설명
 								</Typography>
 								<Typography variant="body1" color="textPrimary" style={{whiteSpace : 'pre-line'}} >
-									{postData.description}
+									<ReactMarkdown>
+									{readMeData}
+									</ReactMarkdown>
 								</Typography>
 							</Box>
-							<Box my={2}>
-								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-									구매자 가이드
-								</Typography>
-								<Typography variant="body2" color="textSecondary">
-									판매자가 코드를 작성했을때 당시 환경(버전,에디터 등)정보입니다.
-								</Typography>
-								<Box height={16}/>
-								<Typography variant="body1" color="textPrimary" sx={{ mt: 1 }} style={{whiteSpace : 'pre-line'}}>
-									{postData.buyerGuide}
-								</Typography>
-							</Box>
+							{/*<Box my={2}>*/}
+							{/*	<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
+							{/*		구매자 가이드*/}
+							{/*	</Typography>*/}
+							{/*	<Typography variant="body2" color="textSecondary">*/}
+							{/*		판매자가 코드를 작성했을때 당시 환경(버전,에디터 등)정보입니다.*/}
+							{/*	</Typography>*/}
+							{/*	<Box height={16}/>*/}
+							{/*	<Typography variant="body1" color="textPrimary" sx={{ mt: 1 }} style={{whiteSpace : 'pre-line'}}>*/}
+							{/*		{postData.buyerGuide}*/}
+							{/*	</Typography>*/}
+							{/*</Box>*/}
 							<Box my={3} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
 								<CodeInfoBuyItByCashButton
 									isBlur={isBlur}
@@ -410,7 +427,7 @@ const CodeInfo: FC<Props> = () => {
 								/>
 								<Box my={2}>
 									{
-										(postData.userToken !== userLogin!.userToken) &&
+										(postData.userToken !== userLogin?.userToken) &&
 										<MessageModal targetUserToken={postData.userToken}/>
 									}
 								</Box>

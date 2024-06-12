@@ -714,6 +714,32 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
+    async getReadMe(adminGithubRepoUrl:string):Promise<string> {
+
+        try {
+
+            const split = adminGithubRepoUrl.split('/');
+            const userName = split[split.length - 2];
+            const repoName = split[split.length - 1];
+
+
+            console.log("getReadME : " + userName + repoName);
+            const result = await axios.get<string>(`${serverURL}/readme/${userName}/${repoName}`);
+            console.log(JSON.stringify(result.data.content));
+
+            //const decodeResult = Buffer.from(result.data.content,'base64').toString('utf-8');
+            //return decodeResult;
+
+            //return (decodeURIComponent(atob(result.data.content)));
+            return (atob(result.data.content));
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('get readme error');
+        }
+
+
+    }
+
     async insertLikedData(likedData: LikeRequestEntity) { // 좋아요 insert
         try {
             const {error} = await supabase.from('liked')
