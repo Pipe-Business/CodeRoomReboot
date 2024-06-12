@@ -723,9 +723,9 @@ class ApiClient implements SupabaseAuthAPI {
             const repoName = split[split.length - 1];
 
 
-            console.log("getReadME : " + userName + repoName);
-            const result = await axios.get<string>(`${serverURL}/readme/${userName}/${repoName}`);
-            console.log(JSON.stringify(result.data.content));
+            //console.log("getReadME : " + userName + repoName);
+            const result = await axios.get<any>(`${serverURL}/readme/${userName}/${repoName}`);
+            //console.log(JSON.stringify(result.data.content));
 
             //const decodeResult = Buffer.from(result.data.content,'base64').toString('utf-8');
             //return decodeResult;

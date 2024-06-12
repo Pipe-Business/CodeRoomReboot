@@ -300,12 +300,13 @@ const CodeInfo: FC<Props> = () => {
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									코드 설명
 								</Typography>
-								<Typography variant="body1" color="textPrimary" style={{whiteSpace : 'pre-line'}} >
+								<div>
 									<ReactMarkdown>
 									{readMeData}
 									</ReactMarkdown>
-								</Typography>
+								</div>
 							</Box>
+							<Box height={32}/>
 							{/*<Box my={2}>*/}
 							{/*	<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
 							{/*		구매자 가이드*/}
