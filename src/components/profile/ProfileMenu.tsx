@@ -1,103 +1,125 @@
-import { Avatar, Card, CardHeader, Menu, MenuItem } from '@mui/material';
-import React, { FC, useState } from "react";
-import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
+// ProfileMenu.tsx
+import React, { FC, useState } from 'react';
+import { Avatar, Menu, MenuItem, ListItemIcon, Divider, Typography, Box } from '@mui/material';
+import { useQueryUserLogin } from "../../hooks/fetcher/UserFetcher";
 import UserProfileImage from "./UserProfileImage";
 import localApi from '../../api/local/LocalApi';
 import { useQueryClient } from '@tanstack/react-query';
-import {REACT_QUERY_KEY} from "../../constants/define";
+import { REACT_QUERY_KEY } from "../../constants/define";
 import { apiClient } from "../../api/ApiClient";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
+import { Logout, AccountCircle } from '@mui/icons-material';
 
-interface Props{
+interface Props {
     children?: React.ReactNode,
-    profileUrl:string, 
+    profileUrl: string,
 }
 
-const ProfileMenu: FC<Props> = ({profileUrl}) => {
-  const queryClient = useQueryClient();
-  const location = useLocation();
-  const currentPath = location.pathname;
-
+const ProfileMenu: FC<Props> = ({ profileUrl }) => {
+    const queryClient = useQueryClient();
+    const location = useLocation();
+    const currentPath = location.pathname;
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
     const navigate = useNavigate();
+    const { userLogin } = useQueryUserLogin();
 
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-	const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-};
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
-const handleMenuClose = () => {
-    setAnchorEl(null);
-};
-
-const signOut = async () => {
-  console.log("signout");
-  localApi.removeUserToken();
-queryClient.setQueryData([REACT_QUERY_KEY.login], null);
-  await apiClient.signOut();
-  if(currentPath == '/'){
-      navigate(0);
-  }
-  navigate('/');
-}
+    const signOut = async () => {
+        console.log("signout");
+        localApi.removeUserToken();
+        queryClient.setQueryData([REACT_QUERY_KEY.login], null);
+        await apiClient.signOut();
+        if (currentPath === '/') {
+            navigate(0);
+        }
+        navigate('/');
+    };
 
     return (
-        <div>
-        <Avatar src={profileUrl} sx={{width:26,height:26, border:'1.5px solid', borderColor:'#D1D8DD'}}
-         onMouseEnter={handleMenuOpen}
-         onMouseLeave={handleMenuClose}
-        />
-      <Menu
-        anchorEl={anchorEl}
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Avatar
+                src={profileUrl}
+                sx={{
+                    width: 36,
+                    height: 36,
+                    cursor: 'pointer',
+                    border: '2px solid',
+                    borderColor: '#D1D8DD',
+                }}
+                onClick={handleMenuOpen}
+            />
+            <Menu
+                anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
-                onMouseEnter={handleMenuOpen}
-                onMouseLeave={handleMenuClose}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                sx={{ 
-                  right: {
-                    sx:'65px',
-                    sm:'75px',
-                    md:'80px',
-                    lg:'200px',
-                    xl:'400px',
-                  },
-                  top:'24px' 
+                PaperProps={{
+                    sx: {
+                        mt: 1,
+                        minWidth: 200,
+                        boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                        borderRadius: 2,
+                    },
                 }}
-      >
-
-         
-          <MenuItem key={1} 
-          onClick={() => {navigate('/profile/my')}}
-          disableRipple
-          sx={{borderBottom:'0.5px solid',borderColor:'#D1D8DD', backgroundColor:'white',
-          '&:hover': { backgroundColor: 'transparent', boxShadow: 'none' }
-           }}
-          >
-          <Card raised elevation={0} style={{ width: 'fit-content', maxWidth: '100%' }}>
-								<CardHeader
-									avatar={<UserProfileImage size={60} userId={userLogin?.userToken!} />}
-									title={userLogin?.nickname}
-									titleTypographyProps={{
-										fontSize: 25,
-									}}
-									subheader={userLogin?.email}
-									subheaderTypographyProps={{
-										fontSize: 20,
-									}}
-								/>
-							</Card>
-          </MenuItem>
-          <MenuItem key={0} onClick={signOut} sx={{borderBottom:'0.5px solid',borderColor:'#D1D8DD', height:'86px'}}>
-            로그아웃
-          </MenuItem>
-
-      </Menu>
-      </div>
+            >
+                <MenuItem
+                    onClick={() => { navigate('/profile/my'); handleMenuClose(); }}
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'transparent', // hover 배경색 제거
+                        },
+                        '&:focus': {
+                            backgroundColor: 'transparent', // focus 배경색 제거
+                        },
+                        '& .MuiListItemIcon-root': {
+                            minWidth: 36,
+                        },
+                    }}
+                >
+                    <ListItemIcon>
+                        <UserProfileImage size={32} userId={userLogin?.userToken!} />
+                    </ListItemIcon>
+                    <Box width={8} />
+                    <Box>
+                        <Typography variant="body1" fontWeight="bold">
+                            {userLogin?.nickname}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            {userLogin?.email}
+                        </Typography>
+                    </Box>
+                </MenuItem>
+                <Divider />
+                <MenuItem
+                    onClick={signOut}
+                    sx={{
+                        '&:hover': {
+                            backgroundColor: 'transparent', // hover 배경색 제거
+                        },
+                        '&:focus': {
+                            backgroundColor: 'transparent', // focus 배경색 제거
+                        },
+                        '& .MuiListItemIcon-root': {
+                            minWidth: 36,
+                        },
+                    }}
+                >
+                    <ListItemIcon>
+                        <Logout fontSize="small" />
+                    </ListItemIcon>
+                    <Typography variant="body1">로그아웃</Typography>
+                </MenuItem>
+            </Menu>
+        </Box>
     );
-}
+};
 
 export default ProfileMenu;
