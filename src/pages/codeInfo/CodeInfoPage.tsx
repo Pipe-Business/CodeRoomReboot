@@ -285,7 +285,7 @@ const CodeInfo: FC<Props> = () => {
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									코드 설명
 								</Typography>
-								<Typography variant="body1" color="textPrimary">
+								<Typography variant="body1" color="textPrimary" style={{whiteSpace : 'pre-line'}} >
 									{postData.description}
 								</Typography>
 							</Box>
@@ -296,7 +296,8 @@ const CodeInfo: FC<Props> = () => {
 								<Typography variant="body2" color="textSecondary">
 									판매자가 코드를 작성했을때 당시 환경(버전,에디터 등)정보입니다.
 								</Typography>
-								<Typography variant="body1" color="textPrimary" sx={{ mt: 1 }}>
+								<Box height={16}/>
+								<Typography variant="body1" color="textPrimary" sx={{ mt: 1 }} style={{whiteSpace : 'pre-line'}}>
 									{postData.buyerGuide}
 								</Typography>
 							</Box>
