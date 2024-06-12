@@ -1550,7 +1550,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 // 특정 post_id와 reviewer_user_token에 대한 리뷰 조회 함수 추가
-    async getReviewByPostAndUser(post_id: number): Promise<PurchaseReviewEntity> {
+    async getReviewByPostAndUser(post_id: number): Promise<PurchaseReviewEntity|null> {
         const user = await this.getCurrentLoginUser();
         const myToken: string = user.id;
 
@@ -1559,7 +1559,11 @@ class ApiClient implements SupabaseAuthAPI {
             .select()
             .eq('post_id', post_id)
             .eq('reviewer_user_token', myToken)
-            .single();
+            .maybeSingle()
+
+        if(!data){
+            return null;
+        }
 
         if (error) {
             console.log("error" + error.message);
@@ -1841,7 +1845,7 @@ class ApiClient implements SupabaseAuthAPI {
                 }
                 lstReview.push(reviewModel);
             });
-            console.log(data);
+            // console.log(data);
             return lstReview;
         } catch (e: any) {
             console.log(e);

@@ -1,6 +1,6 @@
 // ReviewDialog.tsx
 import React, {FC, useEffect, useState} from 'react';
-import Rating from '@mui/lab/Rating';
+import Rating from '@mui/material/Rating';
 import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from '@mui/material';
 import {PurchaseReviewEntity} from '../../../data/entity/PurchaseReviewEntity';
 import {apiClient} from '../../../api/ApiClient';

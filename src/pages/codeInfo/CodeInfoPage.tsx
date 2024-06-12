@@ -103,7 +103,7 @@ const CodeInfo: FC<Props> = () => {
 
 	useEffect(() => {
 		if (likeData != null) {
-			console.log("likedata" + { likeData });
+			//console.log("likedata" + { likeData });
 			setLike(true);
 		}
 	}, [likeData]);

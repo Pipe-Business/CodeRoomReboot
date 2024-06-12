@@ -2,7 +2,7 @@
 import React from 'react';
 import {Box, List, ListItem, ListItemText, Typography} from '@mui/material';
 import {PurchaseReviewEntity} from '../../../data/entity/PurchaseReviewEntity';
-import Rating from '@mui/lab/Rating';
+import Rating from '@mui/material/Rating';
 import {MarginHorizontal} from '../../adminLogin/styles';
 
 interface ReviewListProps {
