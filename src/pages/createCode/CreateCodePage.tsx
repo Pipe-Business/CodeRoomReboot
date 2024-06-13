@@ -146,7 +146,7 @@ const CreateCodePage: FC<Props> = () => {
     const postReqEntity: PostRequestEntity = {
       title: inputTitle,
       description: inputDescription,
-      user_token: userLogin?.userToken!,
+      user_token: userLogin?.user_token!,
       category: inputCategory,
       state: 'pending',
       post_type: 'code',
@@ -164,7 +164,7 @@ const CreateCodePage: FC<Props> = () => {
       //setUpload(true);
       postId = await apiClient.insertPostData(postRequest);
       if (files) {
-        const urls = await apiClient.uploadImages(userLogin?.userToken!, postId, files);
+        const urls = await apiClient.uploadImages(userLogin?.user_token!, postId, files);
         await apiClient.insertImgUrl(postId, urls);
       }
       const urlParser = inputGithubUrl.split('/');

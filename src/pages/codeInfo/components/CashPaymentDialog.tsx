@@ -19,7 +19,7 @@ const CashPaymentDialog = (onConfirm: () => void) => {
 
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin!.userToken!),
+		queryFn: () => apiClient.getUserTotalCash(userLogin!.user_token!),
 	});
 
 	const { data: postData } = useQuery({
@@ -32,7 +32,7 @@ const CashPaymentDialog = (onConfirm: () => void) => {
 
      	// 유저 캐시 차감 -> 캐시 사용기록 insert
 			const cashHistory: CashHistoryRequestEntity = {
-				user_token: userLogin!.userToken!,
+				user_token: userLogin!.user_token!,
 				cash: postData?.price!,
 				amount: cashData == undefined ? 0 : cashData - postData?.price!,
 				description: "코드 구매",
@@ -47,7 +47,7 @@ const CashPaymentDialog = (onConfirm: () => void) => {
 					post_id: postData!.id,
 					price: postData!.price,
 					is_confirmed: false,
-					purchase_user_token: userLogin!.userToken!,
+					purchase_user_token: userLogin!.user_token!,
 					sales_user_token: postData!.userToken,
 					pay_type: "cash"
 				}
@@ -74,7 +74,7 @@ const CashPaymentDialog = (onConfirm: () => void) => {
 
 	const onClickConfirm = useCallback(async () => {
 		try {
-			if (postData && userLogin?.userToken) {
+			if (postData && userLogin?.user_token) {
 				mutate();
 				//  판매자에게 판매알림
 				const notificationEntity: NotificationEntity ={

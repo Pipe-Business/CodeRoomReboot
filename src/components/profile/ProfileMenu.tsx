@@ -85,7 +85,7 @@ const ProfileMenu: FC<Props> = ({ profileUrl }) => {
                     }}
                 >
                     <ListItemIcon>
-                        <UserProfileImage size={32} userId={userLogin?.userToken!} />
+                        <UserProfileImage size={32} userId={userLogin?.user_token!} />
                     </ListItemIcon>
                     <Box width={8} />
                     <Box>

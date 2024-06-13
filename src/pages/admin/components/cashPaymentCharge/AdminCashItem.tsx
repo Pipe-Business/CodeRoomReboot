@@ -26,7 +26,7 @@ const AdminCashItem: FC<Props> = ({ item }) => {
 					<div style={{ width: '15%' }}>{reformatTime(item?.created_at!)}</div>
 					<div style={{ width: '25%' }}>
 						<div style={{ display: 'flex' }}>
-							<UserProfileImage userId={userById.userToken!} />
+							<UserProfileImage userId={userById.user_token!} />
 							<div>
 								<div>{userById.nickname}</div>
 								<div>{userById.email}</div>

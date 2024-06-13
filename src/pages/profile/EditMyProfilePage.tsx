@@ -37,7 +37,7 @@ const EditMyProfilePage: FC<Props> = () => {
 
 	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin!.userToken!),
+		queryFn: () => apiClient.getUserTotalPoint(userLogin!.user_token!),
 	});
 
 	const [inputIntroduce, onChangeInputIntroduce, , ,
@@ -53,7 +53,7 @@ const EditMyProfilePage: FC<Props> = () => {
 			// 프로필 보상 포인트 지급
 			if (pointData) {
 				const pointHistory: PointHistoryRequestEntity = {
-					user_token: userLogin!.userToken!,
+					user_token: userLogin!.user_token!,
 					point: 100,
 					amount: pointData + 100,
 					description: "프로필 사진 설정 보상",
@@ -65,7 +65,7 @@ const EditMyProfilePage: FC<Props> = () => {
 			}
 		},
 		onSuccess: async () => {
-			await apiClient.setTrueUserProfileImageRewardStatus(userLogin?.userToken!);
+			await apiClient.setTrueUserProfileImageRewardStatus(userLogin?.user_token!);
 			toast.success('프로필 사진 설정 보상 포인트 100p가 지급되었습니다.');
 		},
 		onError: () => {
@@ -78,7 +78,7 @@ const EditMyProfilePage: FC<Props> = () => {
 			// 자기소개 보상 포인트 지급
 			if (pointData) {
 				const pointHistory: PointHistoryRequestEntity = {
-					user_token: userLogin!.userToken!,
+					user_token: userLogin!.user_token!,
 					point: 500,
 					amount: pointData + 500,
 					description: "프로필 자기소개 작성 보상",
@@ -90,7 +90,7 @@ const EditMyProfilePage: FC<Props> = () => {
 			}
 		},
 		onSuccess: async () => {
-			await apiClient.setTrueUserIntroduceRewardStatus(userLogin?.userToken!);
+			await apiClient.setTrueUserIntroduceRewardStatus(userLogin?.user_token!);
 			toast.success('프로필 자기소개 작성 보상 포인트 500p가 지급되었습니다.');
 		},
 		onError: () => {
@@ -101,8 +101,8 @@ const EditMyProfilePage: FC<Props> = () => {
 	const { mutateAsync: mutate } = useMutation({
 		mutationFn: async () => {
 			if (file != null) { // 프로필 이미지 처리
-				const profileUrl = await apiClient.uploadProfileImage(userLogin?.userToken!, file); // 이미지 스토리지 업로드
-				await apiClient.updateProfileImgUrl(userLogin?.userToken!, profileUrl);    // db update
+				const profileUrl = await apiClient.uploadProfileImage(userLogin?.user_token!, file); // 이미지 스토리지 업로드
+				await apiClient.updateProfileImgUrl(userLogin?.user_token!, profileUrl);    // db update
 
 				if (!userLogin?.is_profile_image_rewarded) {
 					mutateSetProfilePoint();
@@ -110,7 +110,7 @@ const EditMyProfilePage: FC<Props> = () => {
 			}
 
 			// db업데이트
-			await apiClient.updateAboutMeData(userLogin?.userToken!, inputIntroduce);
+			await apiClient.updateAboutMeData(userLogin?.user_token!, inputIntroduce);
 
 			// 포인트 지급
 			if (inputIntroduce.length > 100 && !userLogin?.is_introduce_rewarded) {
@@ -157,7 +157,7 @@ const EditMyProfilePage: FC<Props> = () => {
 								<SectionTitle title='프로필 이미지' helpText='프로필 이미지를 설정하면 100 커밋 포인트 증정' />
 								<Box display="flex" alignItems="center" mt={2}>
 									<Box>
-										{userLogin && <UserProfileImage size={60} userId={userLogin.userToken!} />}
+										{userLogin && <UserProfileImage size={60} userId={userLogin.user_token!} />}
 										<input type="file" onChange={handleChangeImage} accept="image/*" style={{ marginTop: '8px' }} />
 									</Box>
 									{src && (

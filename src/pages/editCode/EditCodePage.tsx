@@ -178,7 +178,7 @@ const EditCodePage: FC<Props> = () => {
             let resultImgUrl:string[] = [];
 
            if(files){
-            const urls = await apiClient.uploadImages(userLogin?.userToken!, postData!.id, files);
+            const urls = await apiClient.uploadImages(userLogin?.user_token!, postData!.id, files);
             if(lstImgStorageUrl){
                 resultImgUrl = [...urls, ...lstImgStorageUrl]
             }else{

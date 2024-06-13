@@ -68,12 +68,12 @@ const CodeInfo: FC<Props> = () => {
 
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
+		queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
 	});
 
 	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
+		queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
 	});
 
 
@@ -94,12 +94,12 @@ const CodeInfo: FC<Props> = () => {
 
 	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
-		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id),
+		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id),
 	});
 
 	const { isLoading: isLikeLoading, data: likeData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.like],
-		queryFn: () => apiClient.getLikeData(userLogin?.userToken!, postData!.id),
+		queryFn: () => apiClient.getLikeData(userLogin?.user_token!, postData!.id),
 	});
 
 	const { isLoading: isLikedNumberLoading, data: likedNumberData, refetch:likeNumberRefetch } = useQuery({
@@ -136,8 +136,8 @@ const CodeInfo: FC<Props> = () => {
 
 	const handleReviewSubmit = async () =>  {	
 		// 리뷰 작성 완료시 이 콜백을 수행	
-		const purchaseData: PurchaseSaleRequestEntity|null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, postData!.id);
-		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
+		const purchaseData: PurchaseSaleRequestEntity|null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
+		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
 	
 		let amountUpdateValue;
 		if (purchaseData?.pay_type === "point") {
@@ -151,7 +151,7 @@ const CodeInfo: FC<Props> = () => {
 		const pointHistoryRequest : PointHistoryRequestEntity = {			
 			description: "리뷰 작성 보상",
 			amount: (currentAmount + amountUpdateValue),
-			user_token: userLogin?.userToken!,
+			user_token: userLogin?.user_token!,
 			point: amountUpdateValue,
 			point_history_type: PointHistoryType.earn_point,
 		}
@@ -188,11 +188,11 @@ const CodeInfo: FC<Props> = () => {
 	const onClickLike = async () => {
 		if (isLike) {
 			setLike(false);
-			await apiClient.deleteLikeData(userLogin?.userToken!, postData!.id);
+			await apiClient.deleteLikeData(userLogin?.user_token!, postData!.id);
 		} else {
 			setLike(true);
 			const likedData: LikeRequestEntity = {
-				user_token: userLogin?.userToken!,
+				user_token: userLogin?.user_token!,
 				post_id: postData!.id,
 			}
 			await apiClient.insertLikedData(likedData);
@@ -324,7 +324,7 @@ const CodeInfo: FC<Props> = () => {
 									isBlur={isBlur}
 									point={postData.price}
 									codeHostId={postData.userToken}
-									userId={userLogin?.userToken!}
+									userId={userLogin?.user_token!}
 									userHavePoint={cashData ?? 0}
 									githubRepoUrl={postData.adminGitRepoURL}
 									purchasedSaleData={purchaseSaleData}
@@ -337,7 +337,7 @@ const CodeInfo: FC<Props> = () => {
 									isBlur={isBlur}
 									point={postData.price * 5}
 									codeHostId={postData.userToken}
-									userId={userLogin?.userToken!}
+									userId={userLogin?.user_token!}
 									userHavePoint={pointData ?? 0}
 									githubRepoUrl={postData.adminGitRepoURL}
 									purchasedSaleData={purchaseSaleData}
@@ -394,16 +394,16 @@ const CodeInfo: FC<Props> = () => {
 									이 템플릿은 {postData.buyerCount * postData.price}의 인기도를 가지고 있습니다 🔥
 								</Typography>
 								<Box my={1}>
-									{userLogin?.userToken === postData.userToken && <EditCodeButton codePost={postData} />}
+									{userLogin?.user_token === postData.userToken && <EditCodeButton codePost={postData} />}
 								</Box>
 								<Box my={1}>
-									{userLogin?.userToken === postData.userToken && <DeleteCodeButton codePost={postData} />}
+									{userLogin?.user_token === postData.userToken && <DeleteCodeButton codePost={postData} />}
 								</Box>
 								<CodeInfoBuyItByCashButton
 									isBlur={isBlur}
 									point={postData.price}
 									codeHostId={postData.userToken}
-									userId={userLogin?.userToken!}
+									userId={userLogin?.user_token!}
 									userHavePoint={cashData ?? 0}
 									githubRepoUrl={postData.githubRepoUrl}
 									purchasedSaleData={purchaseSaleData}
@@ -417,7 +417,7 @@ const CodeInfo: FC<Props> = () => {
 									isBlur={isBlur}
 									point={postData.price * 5}
 									codeHostId={postData.userToken}
-									userId={userLogin?.userToken!}
+									userId={userLogin?.user_token!}
 									userHavePoint={pointData ?? 0}
 									githubRepoUrl={postData.githubRepoUrl}
 									purchasedSaleData={purchaseSaleData}
@@ -428,7 +428,7 @@ const CodeInfo: FC<Props> = () => {
 								/>
 								<Box my={2}>
 									{
-										(postData.userToken !== userLogin?.userToken) &&
+										(postData.userToken !== userLogin?.user_token) &&
 										<MessageModal targetUserToken={postData.userToken}/>
 									}
 								</Box>

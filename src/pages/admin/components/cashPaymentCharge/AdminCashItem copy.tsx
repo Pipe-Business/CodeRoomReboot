@@ -27,7 +27,7 @@ const AdminPointItem: FC<Props> = ({ item }) => {
 					{/* <div style={{ width: '5%' }}>{item?.cash_history_type === 'earn_cash' ? '결제' : '사용'}</div> */}
 					<div style={{ width: '25%' }}>
 						<div style={{ display: 'flex' }}>
-							<UserProfileImage userId={userById.userToken!} />
+							<UserProfileImage userId={userById.user_token!} />
 							<div>
 								<div>{userById.nickname}</div>
 								<div>{userById.email}</div>

@@ -41,51 +41,51 @@ const MyPage: FC<Props> = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const {data: codeData, isLoading: isCodeDataLoading, refetch: refetchCodeData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.code, userLogin?.userToken!],
-        queryFn: () => apiClient.getAllMyCode(userLogin?.userToken!),
+        queryKey: [REACT_QUERY_KEY.code, userLogin?.user_token!],
+        queryFn: () => apiClient.getAllMyCode(userLogin?.user_token!),
     });
 
 
     const {data: purchaseData, isLoading: purchaseCodeDataLoading, refetch: refetchPurchaseData} = useQuery({
-        queryKey: ['/purchase', userLogin?.userToken!],
-        queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin!.userToken!),
+        queryKey: ['/purchase', userLogin?.user_token!],
+        queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin!.user_token!),
     });
 
     const {data: saleData, isLoading: saleCodeDataLoading, refetch: refetchSaleData} = useQuery({
-        queryKey: ['/sale', userLogin?.userToken!],
-        queryFn: () => apiClient.getMySaleHistory(userLogin!.userToken!),
+        queryKey: ['/sale', userLogin?.user_token!],
+        queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
     });
 
     const {data: mentoringData, isLoading: mentoringDataLoading, refetch: refetchMentoringData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.mentoring, userLogin?.userToken!],
-        queryFn: () => apiClient.getMyMentorings(userLogin!.userToken!),
+        queryKey: [REACT_QUERY_KEY.mentoring, userLogin?.user_token!],
+        queryFn: () => apiClient.getMyMentorings(userLogin!.user_token!),
     });
     const {data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.userToken!],
-        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!, true),
+        queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.user_token!],
+        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.user_token!, true),
     });
     const {
         data: cashConfirmPendingData,
         isLoading: cashConfirmPendingLoading,
         refetch: refetchCashConfirmPendingData
     } = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.userToken!],
-        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.userToken!, false),
+        queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.user_token!],
+        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.user_token!, false),
     });
 
     const {data: cashPointHistory, isLoading: isCashPointHistoryLoading} = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashPointHistory, userLogin?.userToken!],
-        queryFn: () => apiClient.getUserCashPointHistory(userLogin!.userToken!),
+        queryKey: [REACT_QUERY_KEY.cashPointHistory, userLogin?.user_token!],
+        queryFn: () => apiClient.getUserCashPointHistory(userLogin!.user_token!),
     });
 
     const {data: cashHistoryData, isLoading: cashHistoryLoading, refetch: refetchCashHistoryData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.userToken!],
-        queryFn: () => apiClient.getUserCashHistory(userLogin!.userToken!),
+        queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.user_token!],
+        queryFn: () => apiClient.getUserCashHistory(userLogin!.user_token!),
     });
 
     const {data: pointHistoryData, isLoading: pointHistoryLoading, refetch: refetchPointHistoryData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.pointistory, userLogin?.userToken!],
-        queryFn: () => apiClient.getUserPointHistory(userLogin!.userToken!),
+        queryKey: [REACT_QUERY_KEY.pointistory, userLogin?.user_token!],
+        queryFn: () => apiClient.getUserPointHistory(userLogin!.user_token!),
     });
 
     useEffect(() => {
@@ -123,8 +123,8 @@ const MyPage: FC<Props> = () => {
 
     const handleReviewSubmit = async () => {
         // 리뷰 작성 완료시 이 콜백을 수행
-        const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, purchasePostId);
-        const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
+        const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
+        const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
 
         let amountUpdateValue;
         if (purchaseData?.pay_type == "point") {
@@ -138,7 +138,7 @@ const MyPage: FC<Props> = () => {
         const pointHistoryRequest: PointHistoryRequestEntity = {
             description: "리뷰 작성 보상",
             amount: (currentAmount + amountUpdateValue),
-            user_token: userLogin?.userToken!,
+            user_token: userLogin?.user_token!,
             point: amountUpdateValue,
             point_history_type: PointHistoryType.earn_point,
         }
@@ -197,7 +197,7 @@ const MyPage: FC<Props> = () => {
                             </div>
                             <Card raised elevation={0} style={{width: 'fit-content', maxWidth: '100%'}}>
                                 <CardHeader
-                                    avatar={<UserProfileImage size={60} userId={userLogin.userToken!}/>}
+                                    avatar={<UserProfileImage size={60} userId={userLogin.user_token!}/>}
                                     title={userLogin?.nickname}
                                     titleTypographyProps={{
                                         fontSize: 25,
@@ -210,7 +210,7 @@ const MyPage: FC<Props> = () => {
                             </Card>
                             <h2>자기소개</h2>
                             <div>
-                                {userLogin.aboutMe}
+                                {userLogin.about_me}
                             </div>
                         </div>
                     </SectionWrapper>

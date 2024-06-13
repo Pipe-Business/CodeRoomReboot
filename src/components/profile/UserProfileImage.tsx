@@ -15,9 +15,9 @@ const UserProfileImage: FC<Props> = ({userId,size}) => {
     if(!userData){
         return <Skeleton variant={"circular"}/>
     }
-    if(userData?.profileUrl){
+    if(userData?.profile_url){
         return (
-            <Avatar src={userData.profileUrl} sx={{width:size?size:45,height:size?size:45}}/>
+            <Avatar src={userData.profile_url} sx={{width:size?size:45,height:size?size:45}}/>
         )
     }
     else{

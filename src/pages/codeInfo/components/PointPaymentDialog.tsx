@@ -22,7 +22,7 @@ const PointPaymentDialog = (onConfirm:() => void) => {
 
 	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin!.userToken!),
+		queryFn: () => apiClient.getUserTotalPoint(userLogin!.user_token!),
 	});
 
 	const { data: postData } = useQuery({
@@ -37,7 +37,7 @@ const PointPaymentDialog = (onConfirm:() => void) => {
 			// 유저 포인트 차감 -> 포인트 사용기록 insert
 			if (postData) {
 			const pointHistory: PointHistoryRequestEntity = {
-				user_token: userLogin!.userToken!,
+				user_token: userLogin!.user_token!,
 				point: postData!.price! * 5,
 				amount: pointData == undefined ? 0 : pointData - postData!.price! * 5,
 				description: "코드 구매",
@@ -53,7 +53,7 @@ const PointPaymentDialog = (onConfirm:() => void) => {
 					post_id: postData!.id,
 					price: postData!.price * 5, // 포인트는 캐시의 5배
 					is_confirmed: false,
-					purchase_user_token: userLogin!.userToken!,
+					purchase_user_token: userLogin!.user_token!,
 					sales_user_token: postData!.userToken,
 					pay_type: "point"
 				}
@@ -77,13 +77,13 @@ const PointPaymentDialog = (onConfirm:() => void) => {
 
 	const onClickConfirm = useCallback(async () => {
 		try {
-			if (postData && userLogin?.userToken) {
+			if (postData && userLogin?.user_token) {
 				mutate();
 				//  판매자에게 판매알림
 				const notificationEntity: NotificationEntity ={
 					title : '코드 판매 알림',
 					content: `'${postData?.title}' 게시글이 판매 되었습니다`,
-					from_user_token: userLogin.userToken,
+					from_user_token: userLogin.user_token,
 					to_user_token: postData?.userToken!,
 					notification_type: NotificationType.sale,
 				}

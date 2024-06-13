@@ -30,7 +30,7 @@ const HeaderLayout: FC<Props> = () => {
      */
     const { isLoading: isCashDataLoading, data: cashData } = useQuery({
         queryKey: [REACT_QUERY_KEY.cash],
-        queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
+        queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
     });
 
     /*
@@ -38,7 +38,7 @@ const HeaderLayout: FC<Props> = () => {
    */
     const { isLoading: isPointDataLoading, data: pointData } = useQuery({
         queryKey: [REACT_QUERY_KEY.point],
-        queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
+        queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
     });
 
 
@@ -169,7 +169,7 @@ const HeaderLayout: FC<Props> = () => {
                             </MarginHorizontal> */}
 
                         <MarginHorizontal size={8}>
-                            <ProfileMenu profileUrl={userLogin.profileUrl!} />
+                            <ProfileMenu profileUrl={userLogin.profile_url!} />
                         </MarginHorizontal>
 
                         {/* <MarginHorizontal size={8}>

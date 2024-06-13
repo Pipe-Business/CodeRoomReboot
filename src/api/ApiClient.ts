@@ -510,17 +510,17 @@ class ApiClient implements SupabaseAuthAPI {
             data?.forEach((e) => {
                 let userModel: UserModel = {
                     id: e.id,
-                    authType: e.auth_type,
+                    auth_type: e.auth_type,
                     email: e.email,
                     name: e.name,
                     nickname: e.nickname,
-                    profileUrl: e.profile_url,
-                    aboutMe: e.about_me,
+                    profile_url: e.profile_url,
+                    about_me: e.about_me,
                     contacts: e.contacts,
-                    userToken: e.user_token,
+                    user_token: e.user_token,
                     is_introduce_rewarded: e.is_introduce_rewarded,
                     is_profile_image_rewarded: e.is_profile_image_rewarded,
-                    createdAt: e.created_at,
+                    created_at: e.created_at,
                 }
                 lstUserModel.push(userModel);
             });
@@ -2100,6 +2100,20 @@ class ApiClient implements SupabaseAuthAPI {
             console.log(e);
             throw new Error('답장 전송을 하는 도중 실패했습니다.');
         }
+    }
+
+    async getUsersByTokens(tokens: string[]): Promise<UserModel[]> {
+        // Supabase의 `in` 쿼리 사용하여 사용자 정보 조회
+        const {data , error} = await supabase
+            .from('users')
+            .select('*')
+            .in('user_token', tokens);
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
     }
 }
 

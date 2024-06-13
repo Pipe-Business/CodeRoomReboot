@@ -28,11 +28,11 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
   const { userLogin } = useQueryUserLogin();
   const { data: cashData, refetch:refetchCash } = useQuery({
     queryKey: [REACT_QUERY_KEY.cash],
-    queryFn: () => apiClient.getUserTotalCash(userLogin?.userToken!),
+    queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
   });
   const { data: pointData, refetch:refetchPoint } = useQuery({
     queryKey: [REACT_QUERY_KEY.point],
-    queryFn: () => apiClient.getUserTotalPoint(userLogin?.userToken!),
+    queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
   });
   const { mutateBootpayRequest } = useMutateBootPayPaymentRequest();
 
@@ -45,7 +45,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
       pg: 'kcp',
       tax_free: 0,
       user: {
-        id: userLogin?.userToken!,
+        id: userLogin?.user_token!,
         username: userLogin?.nickname,
         email: userLogin?.email,
       },
@@ -66,7 +66,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
 
     if (response.event === 'done') {
       const entity: BootPayPaymentEntity = {
-        user_token: userLogin?.userToken!,
+        user_token: userLogin?.user_token!,
         cash: paymentCash, // 코드룸 캐시
         price: paymentPrice, // 원화
         purchase_at: response.data.purchased_at,
@@ -82,7 +82,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
 
         // 유저 캐시 증가 -> 캐시 사용기록 insert
         const cashHistory: CashHistoryRequestEntity = {
-          user_token: userLogin!.userToken!,
+          user_token: userLogin!.user_token!,
           cash: paymentCash,
           amount: cashData + paymentCash,
           description: '캐시 충전',
@@ -93,7 +93,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
 
         // 포인트 증가
         const pointHistory: PointHistoryRequestEntity = {
-          user_token: userLogin!.userToken!,
+          user_token: userLogin!.user_token!,
           point: bonusPoint!,
           amount: pointData + bonusPoint!,
           description: '캐시 충전 보너스 포인트',
@@ -107,7 +107,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
           title: '포인트 지급 알림',
           content: '캐시 충전 보너스 포인트가 지급되었습니다.',
           from_user_token: 'admin',
-          to_user_token: userLogin!.userToken!,
+          to_user_token: userLogin!.user_token!,
           notification_type: NotificationType.get_point,
         };
         await apiClient.insertNotification(notificationEntity);
