@@ -62,14 +62,6 @@ useEffect(() => {
 		const currentPath = location.pathname;
 
 		if(typeof result == "object"){ // 유저 정보가 있으면
-			const user:User = result as User;
-			//console.log("user info:"+user.id);
-			//localApi.saveUserToken(user.id);
-			//onClose();
-			
-			// if(currentPath == '/login'){
-			// 	navigate(0);
-			// }
 			navigate('/admin');
 
 		}else{

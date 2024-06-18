@@ -131,7 +131,6 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 					 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
 				}
 			}) : filterData?.map(item => {
-                // return <div>{item.purchase_user_token}</div>
 				 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
 			})}
 		</>

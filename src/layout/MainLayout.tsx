@@ -29,7 +29,6 @@ const MainLayout: FC<Props> = ({ children }) => {
 				<BaseLayout>
 					<HeaderLayout />
 				</BaseLayout>
-				{/* <Divider /> */}
 			</Box>
 			<Box sx={{ flex: 1 }}>
 				<BaseLayout>

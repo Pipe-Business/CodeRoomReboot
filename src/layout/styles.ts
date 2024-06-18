@@ -9,7 +9,6 @@ export const HeaderWrapper = styled.div`
 	margin-bottom: 0;
 	padding-top: 0;
 	padding-bottom: 0;
-	//background-color : #FFB6C1;
 `
 
 export const HeaderTitle = styled.div`
@@ -28,10 +27,6 @@ export const HeaderIconButton = styled.div`
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: '#000000',
     backgroundColor: '#FFFFFF',
-	// '&:hover': {
-	// 	backgroundColor: '#FFFFFF',
-	// 	boxShadow: 'none',
-	//   },
   }));
 
   export const FooterWrapper = styled.div`
@@ -42,7 +37,6 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   margin-bottom: 16px;
   padding-top: 16px;
   padding-bottom: 0;
-  //background-color : #FFB6C1;
 `
 
 export const CenterBox = styled.div`

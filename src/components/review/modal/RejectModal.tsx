@@ -13,15 +13,17 @@ interface Props {
 	userToken: string,
 	title: string,
 	postId: string,
+	refetch: () => void,
 }
 
-const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken }) => {
+const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken,refetch }) => {
 	const [inputText, onChangeInputText] = useInput('');
 	const onClickConfirm = useCallback(async () => {
 		if(!inputText || inputText.trim()===''){
 			toast.error("반려사유를 입력해주세요")
 			return
 		}
+
 	
 		await apiClient.updateCodeRequestState(userToken, postId, 'rejected');
 		await apiClient.updateCodeRequestRejectMessage(userToken, postId, inputText);
@@ -37,6 +39,7 @@ const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken }) => 
 
 		toast.info('반려처리가 완료되었습니다.');
 
+		refetch();
 		onClose();
 
 	}, [inputText]);

@@ -78,10 +78,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 							{reformatTime(item.created_at!)}
 						</div>
 						}
-						
-						{/* <div style={{ width: '10%' }}>
-							{reformatTime(item.paymentDate)}
-						</div> */}
+
 						<div style={{ display: 'flex', alignItems: 'center', width: '15%' }}>
 							<div>
 								<div style={{ fontSize: 15, fontWeight: 'bold' }}>{codeData?.title!}</div>

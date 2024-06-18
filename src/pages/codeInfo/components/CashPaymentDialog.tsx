@@ -13,9 +13,7 @@ import {CashHistoryRequestEntity} from "../../../data/entity/CashHistoryRequestE
 
 const CashPaymentDialog = (onConfirm: () => void) => {
     const { id } = useParams();
-    const queryClient = useQueryClient();
     const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
-    const navigate = useNavigate();
 
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
@@ -63,7 +61,6 @@ const CashPaymentDialog = (onConfirm: () => void) => {
 				await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
 			}			
 
-			// navigate('/');
 			toast.success('구매가 완료되었습니다.');
             if (onConfirm) {
                 onConfirm();
