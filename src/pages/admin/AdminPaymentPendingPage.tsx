@@ -65,7 +65,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
                 let cashHistoryRequestEntity : CashHistoryResponseEntity = {
                     user_token : item.sales_user_token,
                     cash : item.price!,
-                    //amount: item.price! + sellerPrevTotalCash,
+                    amount: item.price! + sellerPrevTotalCash,
                     description : `[${codeData.title}] 코드 캐시 정산`,
                     cash_history_type : 'earn_cash',
                 }

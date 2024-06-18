@@ -17,8 +17,7 @@ const CashPaymentDialog = (onConfirm: () => void, userLogin: UserModel, cashData
             const cashHistory: CashHistoryRequestEntity = {
                 user_token: userLogin!.user_token!,
                 cash: postData?.price!,
-                amount: 0,
-                //amount: cashData == undefined ? 0 : cashData - postData?.price!,
+                amount: cashData == undefined ? 0 : cashData - postData?.price!,
                 description: "코드 구매",
                 cash_history_type: "use_cash"
             }

@@ -25,6 +25,8 @@ const PointPaymentDialog = (onConfirm: () => void, userLogin: UserModel, pointDa
                 }
 
                 await apiClient.insertUserPointHistory(pointHistory);
+                const amount= pointData === undefined ? 0 : pointData - postData!.price! * 5;
+                await apiClient.updateTotalPoint(userLogin?.user_token!, amount);
             }
 
             // purchase sale history insert(코드 거래내역 insert) 로직

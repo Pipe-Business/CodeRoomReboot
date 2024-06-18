@@ -1195,20 +1195,6 @@ class ApiClient implements SupabaseAuthAPI {
                         }
              return userAmountEntity.point_amount;
 
-
-            // let pointEntity: PointHistoryResponseEntity = {
-            //     id: data[0].id,
-            //     user_token: data[0].user_token,
-            //     point: data[0].point,
-            //     amount: data[0].amount,
-            //     description: data[0].description,
-            //     point_history_type: data[0].point_history_type,
-            //     created_at: data[0].created_at,
-            // }
-
-            // const totalPoint: number = pointEntity.amount;
-            // return totalPoint;
-
         } catch (e: any) {
             console.log(e);
             throw new Error('유저의 합산 커밋 포인트를 가져오는 데 실패했습니다.');
@@ -1219,7 +1205,7 @@ class ApiClient implements SupabaseAuthAPI {
         console.log(pointHistoryRequestEntity);
         const pointHistoryObj = {
             "point": pointHistoryRequestEntity.point,
-            "amount": 0, //TODO db에서 컬럼 제거 후 여기서도 제거 필요
+            "amount": pointHistoryRequestEntity.amount,
             "user_token": pointHistoryRequestEntity.user_token,
             "description": pointHistoryRequestEntity.description,
             "from_user_token": pointHistoryRequestEntity.from_user_token,
@@ -1497,7 +1483,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     user_token: e.user_token,
                     cash: e.cash,
-                    //amount: e.amount,
+                    amount: e.amount,
                     description: e.description,
                     cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
@@ -1552,7 +1538,7 @@ class ApiClient implements SupabaseAuthAPI {
                 id: cash.id,
                 user_token: cash.user_token,
                 price: cash.cash,
-                //amount: cash.amount,
+                amount: cash.amount,
                 price_history_type: cash.cash_history_type,
                 pay_type: PayType.cash,
                 description: cash.description,
@@ -1793,7 +1779,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     user_token: e.user_token,
                     cash: e.cash,
-                    //amount: e.amount,
+                    amount: e.amount,
                     description: e.description,
                     cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
@@ -2090,7 +2076,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     user_token: e.user_token,
                     cash: e.cash,
-                    //amount: e.amount,
+                    amount: e.amount,
                     description: e.description,
                     cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
@@ -2166,10 +2152,9 @@ class ApiClient implements SupabaseAuthAPI {
 
     async updateTotalPoint(userToken: string, point: number) {
         try {
-            const prevPoint = await this.getUserTotalPoint(userToken);
-            const pointAmount: number = prevPoint + point;
+
             const {error} = await supabase.from('users_amount')
-                .update({point_amount: pointAmount}).eq('user_token', userToken);
+                .update({point_amount: point}).eq('user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);
