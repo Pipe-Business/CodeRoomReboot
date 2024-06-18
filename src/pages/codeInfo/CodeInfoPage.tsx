@@ -101,7 +101,7 @@ const CodeInfo: FC<Props> = () => {
 		//console.log("포인트 결제가 확인되었습니다!");
 		// 포인트 결제 확인 후 추가 로직
 		setDialogOpen(true);
-	});
+	},userLogin!, pointData!, postData!);
 
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
