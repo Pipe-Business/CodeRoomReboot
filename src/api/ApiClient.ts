@@ -1227,6 +1227,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
         try {
+            console.log("insert userPoint history");
             const {data, error} = await supabase.from("users_point_history").insert(pointHistoryObj).select();
 
             if (error) {
@@ -2160,6 +2161,51 @@ class ApiClient implements SupabaseAuthAPI {
         } catch (e: any) {
             console.log(e);
             throw new Error('user amount insert 에 실패했습니다.');
+        }
+    }
+
+    async updateTotalPoint(userToken: string, point: number) {
+        try {
+            const prevPoint = await this.getUserTotalPoint(userToken);
+            const pointAmount: number = prevPoint + point;
+            const {error} = await supabase.from('users_amount')
+                .update({point_amount: pointAmount}).eq('user_token', userToken);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('total point 업데이트에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('total point 업데이트에 실패했습니다.');
+        }
+    }
+
+    async updateTotalCash(userToken: string, cash: number) {
+        try {
+
+            const {error} = await supabase.from('users_amount')
+                .update({cash_amount: cash}).eq('user_token', userToken);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('total cash 업데이트에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('total cash 업데이트에 실패했습니다.');
         }
     }
 }

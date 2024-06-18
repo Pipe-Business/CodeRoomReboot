@@ -23,8 +23,10 @@ export const useMutateBootPayPaymentRequest = () => {
  */
 export const useMutateSettleCashBySeller = () => {
 	const { mutateAsync } = useMutation({
-		mutationFn: async (cashHistoryRequestEntity : CashHistoryRequestEntity) => {
+		mutationFn: async (data:{cashHistoryRequestEntity : CashHistoryRequestEntity, cashAmount: number}) => {
+			const {cashHistoryRequestEntity,cashAmount } = data;
 			await apiClient.insertUserCashHistory(cashHistoryRequestEntity); // 판매자에게 캐시 정산 insert
+			await apiClient.updateTotalCash(cashHistoryRequestEntity.user_token,cashAmount);
 		},
 	});
 	return {

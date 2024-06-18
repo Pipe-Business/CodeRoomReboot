@@ -137,13 +137,15 @@ const MyPage: FC<Props> = () => {
 
         const pointHistoryRequest: PointHistoryRequestEntity = {
             description: "리뷰 작성 보상",
-            amount: (currentAmount + amountUpdateValue),
+            //amount: (currentAmount + amountUpdateValue),
             user_token: userLogin?.user_token!,
             point: amountUpdateValue,
             point_history_type: PointHistoryType.earn_point,
         }
 
         await apiClient.insertUserPointHistory(pointHistoryRequest);
+        await apiClient.updateTotalPoint(userLogin?.user_token!, amountUpdateValue);  // total point update
+
 
         setReviewDialogOpen(false);
         await refetchPurchaseData();

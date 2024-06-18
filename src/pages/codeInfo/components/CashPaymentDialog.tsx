@@ -17,12 +17,14 @@ const CashPaymentDialog = (onConfirm: () => void, userLogin: UserModel, cashData
             const cashHistory: CashHistoryRequestEntity = {
                 user_token: userLogin!.user_token!,
                 cash: postData?.price!,
-                amount: cashData == undefined ? 0 : cashData - postData?.price!,
+                amount: 0,
+                //amount: cashData == undefined ? 0 : cashData - postData?.price!,
                 description: "코드 구매",
                 cash_history_type: "use_cash"
             }
 
             await apiClient.insertUserCashHistory(cashHistory);
+            await apiClient.updateTotalCash( userLogin.user_token!,cashData == undefined ? 0 : cashData - postData?.price!);
 
             // purchase sale history insert(코드 거래내역 insert) 로직
             if (postData) {

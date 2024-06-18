@@ -47,9 +47,10 @@ const MyPurchaseDataPage: FC<Props> = () => {
 	};
 
 	const handleReviewSubmit = async () => {
+		console.log("handleReviewSubmit");
 		// 리뷰 작성 완료 시 이 콜백을 수행
 		const purchaseData = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, purchasePostId);
-		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
+		//const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
 
 		let amountUpdateValue;
 		if (purchaseData?.pay_type === "point") {
@@ -60,13 +61,15 @@ const MyPurchaseDataPage: FC<Props> = () => {
 
 		const pointHistoryRequest: PointHistoryRequestEntity = {
 			description: "리뷰 작성 보상",
-			amount: currentAmount + amountUpdateValue,
+			//amount: 0,
 			user_token: userLogin?.userToken!,
 			point: amountUpdateValue,
-			point_history_type: PointHistoryType.earn_point, // 수정된 부분
+			point_history_type: PointHistoryType.earn_point,
 		};
 
-		await apiClient.insertUserPointHistory(pointHistoryRequest);
+		console.log("** 리뷰 작성 포인트 지급중");
+		await apiClient.insertUserPointHistory(pointHistoryRequest); // point history insert
+		await apiClient.updateTotalPoint(userLogin.userToken!, amountUpdateValue);  // total point update
 
 		setReviewDialogOpen(false);
 	};

@@ -62,14 +62,15 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
                 const sellerPrevTotalCash = await apiClient.getUserTotalCash(item.sales_user_token); // 판매자 정산 전 캐시
                 const codeData = await apiClient.getTargetCode(item.post_id); // 코드 정보
 	
-                let settlementCashHistoryRequestEntity : CashHistoryResponseEntity = {
+                let cashHistoryRequestEntity : CashHistoryResponseEntity = {
                     user_token : item.sales_user_token,
                     cash : item.price!,
-                    amount: item.price! + sellerPrevTotalCash, 
+                    //amount: item.price! + sellerPrevTotalCash,
                     description : `[${codeData.title}] 코드 캐시 정산`,
                     cash_history_type : 'earn_cash',
                 }
-				await settleCashMutate(settlementCashHistoryRequestEntity); // 판매자 캐시 증액
+				const cashAmount = item.price! + sellerPrevTotalCash;
+				await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
                 await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id});  // 정산 status 처리
                 
 			});

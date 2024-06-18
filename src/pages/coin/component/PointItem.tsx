@@ -84,23 +84,25 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
         const cashHistory: CashHistoryRequestEntity = {
           user_token: userLogin!.user_token!,
           cash: paymentCash,
-          amount: cashData + paymentCash,
+          //amount: cashData + paymentCash, //todo 제거 필요
           description: '캐시 충전',
           cash_history_type: 'earn_cash',
         };
 
         await apiClient.insertUserCashHistory(cashHistory);
+        await apiClient.updateTotalCash(userLogin?.user_token!,cashData + paymentCash,);
 
         // 포인트 증가
         const pointHistory: PointHistoryRequestEntity = {
           user_token: userLogin!.user_token!,
           point: bonusPoint!,
-          amount: pointData + bonusPoint!,
+          //amount: pointData + bonusPoint!,
           description: '캐시 충전 보너스 포인트',
           point_history_type: PointHistoryType.earn_point,
         };
 
         await apiClient.insertUserPointHistory(pointHistory);
+        await apiClient.updateTotalPoint(userLogin?.user_token!,pointData + bonusPoint!);
 
         // 포인트 지급 알림
         const notificationEntity: NotificationEntity = {
