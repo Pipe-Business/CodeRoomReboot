@@ -32,6 +32,8 @@ import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEn
 import {PointHistoryType} from '../../enums/PointHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 
 dayjs.locale('ko');
 
@@ -47,7 +49,6 @@ const CodeInfo: FC<Props> = () => {
 	const [reviews, setReviews] = useState<PurchaseReviewEntity[]>([]);
 	const [isLike, setLike] = useState<boolean>(false);
 
-
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
 		queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
@@ -61,7 +62,7 @@ const CodeInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
 	const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
-		queryKey: ['readme',id],
+		queryKey: ['readme', id],
 		queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
 	});
 	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
@@ -76,7 +77,7 @@ const CodeInfo: FC<Props> = () => {
 		queryKey: [REACT_QUERY_KEY.like],
 		queryFn: () => apiClient.getLikeData(userLogin?.user_token!, postData!.id),
 	});
-	const { isLoading: isLikedNumberLoading, data: likedNumberData, refetch:likeNumberRefetch } = useQuery({
+	const { isLoading: isLikedNumberLoading, data: likedNumberData, refetch: likeNumberRefetch } = useQuery({
 		queryKey: [REACT_QUERY_KEY.like, postData?.id],
 		queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
 	});
@@ -101,17 +102,17 @@ const CodeInfo: FC<Props> = () => {
 		//console.log("포인트 결제가 확인되었습니다!");
 		// 포인트 결제 확인 후 추가 로직
 		setDialogOpen(true);
-	},userLogin!, pointData!, postData!);
+	}, userLogin!, pointData!, postData!);
 
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 	const [dialogOpen, setDialogOpen] = useState(false);
 
-	const handleReviewSubmit = async () =>  {	
-		// 리뷰 작성 완료시 이 콜백을 수행	
-		const purchaseData: PurchaseSaleRequestEntity|null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
+	const handleReviewSubmit = async () => {
+		// 리뷰 작성 완료시 이 콜백을 수행
+		const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
 		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
-	
+
 		let amountUpdateValue;
 		if (purchaseData?.pay_type === "point") {
 			// 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
@@ -120,24 +121,24 @@ const CodeInfo: FC<Props> = () => {
 			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
 			amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
 		}
-		 
-		const pointHistoryRequest : PointHistoryRequestEntity = {			
+
+		const pointHistoryRequest: PointHistoryRequestEntity = {
 			description: "리뷰 작성 보상",
 			amount: (currentAmount + amountUpdateValue),
 			user_token: userLogin?.user_token!,
 			point: amountUpdateValue,
 			point_history_type: PointHistoryType.earn_point,
 		}
-	
+
 		await apiClient.insertUserPointHistory(pointHistoryRequest);
-	
+
 		setDialogOpen(false);
 		navigate(0);
 	};
 
 	useEffect(() => {
 		async function fetchReviews() {
-			const reviews: PurchaseReviewEntity[]|null = await apiClient.getPurchaseReviews(Number(id));
+			const reviews: PurchaseReviewEntity[] | null = await apiClient.getPurchaseReviews(Number(id));
 			setReviews(reviews!);
 		}
 		if (id) {
@@ -182,7 +183,6 @@ const CodeInfo: FC<Props> = () => {
 	const onClickBackButton = useCallback(() => {
 		navigate(-1);
 	}, []);
-
 
 
 	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isReadMeLoading || isCashDataLoading) {
@@ -233,64 +233,39 @@ const CodeInfo: FC<Props> = () => {
 									{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} / {postData.language}
 								</Typography>
 							</Box>
-							{/*{postData.images && (*/}
-							{/*	<Box mb={3}>*/}
-							{/*		<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
-							{/*			템플릿 결과물 이미지*/}
-							{/*		</Typography>*/}
-							{/*		<StyledSlider*/}
-							{/*			nextArrow={<SampleNextArrow />}*/}
-							{/*			prevArrow={<SamplePrevArrow />}*/}
-							{/*			dots={true}*/}
-							{/*			arrows={false}*/}
-							{/*			slidesToShow={1}*/}
-							{/*			slidesToScroll={1}*/}
-							{/*			speed={500}*/}
-							{/*			infinite={false}*/}
-							{/*		>*/}
-							{/*			{postData.images.map((url, key) => (*/}
-							{/*				<img*/}
-							{/*					alt={`image-${key}`}*/}
-							{/*					key={key}*/}
-							{/*					style={{ objectFit: 'contain', maxHeight: 400, width: '100%' }}*/}
-							{/*					src={url}*/}
-							{/*				/>*/}
-							{/*			))}*/}
-							{/*		</StyledSlider>*/}
-							{/*	</Box>*/}
-							{/*)}*/}
-							{/*<Box my={2}>*/}
-							{/*	<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
-							{/*		코드 설명*/}
-							{/*	</Typography>*/}
-							{/*	<Typography variant="body1" color="textPrimary" style={{whiteSpace : 'pre-line'}} >*/}
-							{/*		{postData.description}*/}
-							{/*	</Typography>*/}
-							{/*</Box>*/}
-
 							<Box my={2}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									코드 설명
 								</Typography>
 								<div>
-									<ReactMarkdown>
-									{readMeData}
+									<ReactMarkdown
+										remarkPlugins={[remarkGfm]}
+										rehypePlugins={[rehypeRaw]}
+										components={{
+											code({node, className, children, ...props}) {
+												const match = /language-(\w+)/.exec(className || '');
+												return match ? (
+													<pre className={className}>
+														<code className={className} {...props}>
+															{String(children).replace(/\n$/, '')}
+														</code>
+													</pre>
+												) : (
+													<code className={className} {...props}>
+														{children}
+													</code>
+												);
+											},
+											img({node, ...props}) {
+												return <img style={{maxWidth: '100%'}} {...props} />;
+											},
+										}}
+									>
+										{readMeData}
 									</ReactMarkdown>
 								</div>
 							</Box>
-							<Box height={32}/>
-							{/*<Box my={2}>*/}
-							{/*	<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
-							{/*		구매자 가이드*/}
-							{/*	</Typography>*/}
-							{/*	<Typography variant="body2" color="textSecondary">*/}
-							{/*		판매자가 코드를 작성했을때 당시 환경(버전,에디터 등)정보입니다.*/}
-							{/*	</Typography>*/}
-							{/*	<Box height={16}/>*/}
-							{/*	<Typography variant="body1" color="textPrimary" sx={{ mt: 1 }} style={{whiteSpace : 'pre-line'}}>*/}
-							{/*		{postData.buyerGuide}*/}
-							{/*	</Typography>*/}
-							{/*</Box>*/}
+							<Box height={32} />
 							<Box my={3} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
 								<CodeInfoBuyItByCashButton
 									isBlur={isBlur}
@@ -401,7 +376,7 @@ const CodeInfo: FC<Props> = () => {
 								<Box my={2}>
 									{
 										(postData.userToken !== userLogin?.user_token) &&
-										<MessageModal targetUserToken={postData.userToken}/>
+										<MessageModal targetUserToken={postData.userToken} />
 									}
 								</Box>
 							</Card>

@@ -218,7 +218,7 @@ const CreateCodePage: FC<Props> = () => {
         </Box>
       </Card>}
 
-      <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px', width: { sm: 400, md: 800,  lg:1000,}, }}
+      <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px'}}
       >
         <Typography variant="h6" color="textSecondary" fontWeight="bold" sx={{ marginBottom: 2 }}>코드에 대한 설명을 작성해주세요</Typography>
 
