@@ -4,7 +4,7 @@ import {Box, Card, CardContent, CardHeader, CircularProgress, IconButton, Typogr
 import {useQuery} from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import React, {CSSProperties, FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../api/ApiClient';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal';
@@ -18,7 +18,7 @@ import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton';
 import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton';
 import CashPaymentDialog from './components/CashPaymentDialog';
 import PointPaymentDialog from './components/PointPaymentDialog';
-import {BlurContainer, StyledSlider} from './styles';
+import {BlurContainer} from './styles';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import EditCodeButton from './components/EditCodeButton';
@@ -39,69 +39,43 @@ interface Props {
 	children?: React.ReactNode;
 }
 
-function SampleNextArrow(props: { className?: string, style?: CSSProperties, onClick?: () => void }) {
-	const { className, style, onClick } = props;
-	return (
-		<div
-			className={className}
-			style={{ ...style }}
-			onClick={onClick}
-		/>
-	);
-}
-
-function SamplePrevArrow(props: { className?: string, style?: CSSProperties, onClick?: () => void }) {
-	const { className, style, onClick } = props;
-	return (
-		<div
-			className={className}
-			style={{ ...style }}
-			onClick={onClick}
-		/>
-	);
-}
-
 const CodeInfo: FC<Props> = () => {
-	const [reviews, setReviews] = useState<PurchaseReviewEntity[]>([]);
 
 	const { id } = useParams();
+	const navigate = useNavigate();
+	const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
+	const [reviews, setReviews] = useState<PurchaseReviewEntity[]>([]);
+	const [isLike, setLike] = useState<boolean>(false);
+
 
 	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.cash],
 		queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
 	});
-
 	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.point],
 		queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
 	});
-
-
 	const { isLoading, data: postData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
-
 	const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
 		queryKey: ['readme',id],
 		queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
 	});
-
 	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.user],
 		queryFn: () => apiClient.getTargetUser(postData!.userToken),
 	});
-
 	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
 		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id),
 	});
-
 	const { isLoading: isLikeLoading, data: likeData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.like],
 		queryFn: () => apiClient.getLikeData(userLogin?.user_token!, postData!.id),
 	});
-
 	const { isLoading: isLikedNumberLoading, data: likedNumberData, refetch:likeNumberRefetch } = useQuery({
 		queryKey: [REACT_QUERY_KEY.like, postData?.id],
 		queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
@@ -114,22 +88,21 @@ const CodeInfo: FC<Props> = () => {
 		}
 	}, [likeData]);
 
-	const navigate = useNavigate();
-	const { isLoadingUserLogin, userLogin } = useQueryUserLogin();
+
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
 	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
-	const [isLike, setLike] = useState<boolean>(false);
 	const [onCashClickConfirm] = CashPaymentDialog(() => {
 		//console.log("현금 결제가 확인되었습니다!");
 		// 현금 결제 확인 후 추가 로직
 		setDialogOpen(true);
-	});
+	}, userLogin!, cashData!, postData!);
 
 	const [onPointClickConfirm] = PointPaymentDialog(() => {
 		//console.log("포인트 결제가 확인되었습니다!");
 		// 포인트 결제 확인 후 추가 로직
 		setDialogOpen(true);
 	});
+
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -184,7 +157,6 @@ const CodeInfo: FC<Props> = () => {
 	}, [userLogin]);
 
 
-
 	const onClickLike = async () => {
 		if (isLike) {
 			setLike(false);
@@ -213,7 +185,7 @@ const CodeInfo: FC<Props> = () => {
 
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isReadMeLoading) {
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isReadMeLoading || isCashDataLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
