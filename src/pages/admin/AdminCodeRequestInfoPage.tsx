@@ -192,7 +192,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 									 open={openRejectModal}
 									 onClose={onCloseRejectModal} refetch={() => {
 										navigate('/admin');
-									 }} /> {/*refetch */}
+									 }} />
 					</div>
 				}
 

@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
 import {PointHistoryType} from "../../enums/PointHistoryType";
 import {apiClient} from "../../api/ApiClient";

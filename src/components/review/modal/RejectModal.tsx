@@ -2,7 +2,6 @@ import React, { FC, useCallback } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import useInput from '../../../hooks/UseInput';
 import {apiClient} from "../../../api/ApiClient";
-import {createTodayDate} from "../../../utils/DayJsHelper";
 import { toast } from 'react-toastify';
 import {NotificationEntity} from "../../../data/entity/NotificationEntity";
 import {NotificationType} from "../../../enums/NotificationType";
@@ -14,17 +13,15 @@ interface Props {
 	userToken: string,
 	title: string,
 	postId: string,
-	refetch: () => void
 }
 
-const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken, refetch }) => {
+const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken }) => {
 	const [inputText, onChangeInputText] = useInput('');
 	const onClickConfirm = useCallback(async () => {
 		if(!inputText || inputText.trim()===''){
 			toast.error("반려사유를 입력해주세요")
 			return
 		}
-		const todayDate = createTodayDate();
 	
 		await apiClient.updateCodeRequestState(userToken, postId, 'rejected');
 		await apiClient.updateCodeRequestRejectMessage(userToken, postId, inputText);
@@ -39,17 +36,6 @@ const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken, refet
 		await apiClient.insertNotification(notificationEntity);
 
 		toast.info('반려처리가 완료되었습니다.');
-
-		//await apiClient.updateTypeForCodeRequestByUser(userId, reqId, 'reject');
-		//await firebaseSetFetcher(['codeRequest',reqId,'createdAt'],createTodayDate())
-		// await firebaseSetFetcher(['codeRequest',reqId,'rejectMessage'],inputText)
-		// await apiClient.sendNotificationByUser(userId, {
-		// 	id: todayDate,
-		// 	sender: 'admin',
-		// 	content: `회원님의 ${title} 요청이 반려되었습니다. 반려 사유 :${inputText}`,
-		// 	createdAt: todayDate,
-		// });
-		refetch();
 
 		onClose();
 

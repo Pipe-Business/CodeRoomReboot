@@ -1,8 +1,3 @@
-
-type Config = { // type 
-
-}
-
 export const supabaseConfig = {
     supabaseUrl : 'https://xhgyefkaxzfqnvcnjijy.supabase.co',
  //   supabaseKey : process.env.REACT_APP_SUPABASE_KEY // todo env

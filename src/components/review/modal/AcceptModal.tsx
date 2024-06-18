@@ -24,11 +24,9 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 	});
 	 const { mutate } = useMutation({
 		mutationFn: async (data: CodeModel) => {
-			
-	 		//if(data.formType==='code'){
-				const forkUrl = await apiClient.forkForSellerGitRepo(data.sellerGithubName, data.githubRepoUrl);
-				console.log(""+ forkUrl);
-	 		//}
+
+			const forkUrl = await apiClient.forkForSellerGitRepo(data.sellerGithubName, data.githubRepoUrl);
+			// console.log(""+ forkUrl);
 		
 			// fork한 데이터 update
 			await apiClient.updateAdminGithubRepoUrl(data.id.toString(),forkUrl);
@@ -55,9 +53,6 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 	 	},
 	 });
 
-
-
-
 	const onClickConfirm = useCallback(() => {
 			if (!userId || !codeId) {
 		return <>404 NotFound Error</>;
@@ -77,7 +72,6 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 	return (
 		<Dialog open={open} onClose={onClose}>
 			<DialogTitle>승인하시겠습니까?</DialogTitle>
-			{/*<TextField sx={{width:'400px'}} value={data.forkUrl} onChange={onChangeGithubRepoUrl} placeholder={"관리자가 포크뜬 레포주소"}/>*/}
 			<DialogActions>
 				<Button variant={'outlined'} onClick={onClickConfirm}>예</Button>
 				<Button variant={'outlined'} onClick={onClose}>아니오</Button>
