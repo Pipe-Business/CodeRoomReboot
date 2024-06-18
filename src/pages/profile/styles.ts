@@ -4,14 +4,14 @@ import Tab from "@mui/material/Tab";
 import TabList from "@mui/lab/TabList";
 
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-    color: '#000000',
-    backgroundColor: '#50C1FF',
-    height : '52px',
+  color: '#ffffff',
+  backgroundColor: '#0275c2',
+  height : '52px',
   '&:hover': {
-    backgroundColor: '#569CD6',
+    backgroundColor: '#128ada',
     boxShadow: 'none',
-    },
-  }));
+  },
+}));
 
   export const CashColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: '#000000',

@@ -79,7 +79,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'xs'}>
 			<DialogTitle  >
 				<div style={{display:'flex', justifyContent:"space-between", alignItems:'center'}}>
-					<h2>로그인</h2>
+					<h3>코드룸에 로그인 하세요</h3>
 					<IconButton onClick={onClose}>
 						<CloseIcon/>
 					</IconButton>
@@ -111,17 +111,17 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 							placeholder='비밀번호 입력' />
 					</div>
 					<Box height={32} />
-					<ColorButton type={'submit'} sx={{fontSize:'15', width: '100%' }}>로그인</ColorButton>
+					<ColorButton type={'submit'} sx={{fontSize:'15px', width: '100%' }}>로그인</ColorButton>
 						</form>
 			
 				<Box height={16} />
 
 				<div style={{display:'flex', justifyContent:'space-between', width: '100%', alignItems:'end' }}>
 				<Link to={'/reset-password'}>
-						<TextButton type={'submit'} sx={{fontSize:'15',}}>비밀번호 찾기</TextButton>
+						<TextButton type={'submit'} sx={{fontSize:'16px'}}>비밀번호 찾기</TextButton>
 						</Link>
 					<Link to={'/register'}>
-						<TextButton type={'submit'} sx={{fontSize:'15',}}>회원가입</TextButton>
+						<TextButton type={'submit'} sx={{fontSize:'16px'}}>회원가입</TextButton>
 						</Link>
 				</div>
 				<Box height={64} />

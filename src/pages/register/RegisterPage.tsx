@@ -230,7 +230,7 @@ const RegisterPage: FC<Props> = () => {
 	return (
 		<MainLayout>
 			<Card>
-				<InfoLayout header={'일반회원 회원가입'}>
+				<InfoLayout header={'코드룸 회원가입'}>
 					<FormWrapper onSubmit={onSubmitRegisterForm}>
 						<TextFieldWrapper>
 							<div>이메일</div>
@@ -302,7 +302,7 @@ const RegisterPage: FC<Props> = () => {
 							/>
 						</TextFieldWrapper>
 						<div>
-							<ColorButton type={'submit'} sx={{ fontSize: '18px', width: '100%', fontWeight: 'bold' }}>회원가입</ColorButton>
+							<ColorButton type={'submit'} sx={{ fontSize: '18px', width: '100%', fontWeight: 'bold' }}>가입 완료</ColorButton>
 						</div>
 					</FormWrapper>
 

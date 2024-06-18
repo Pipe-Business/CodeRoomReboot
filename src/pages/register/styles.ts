@@ -2,14 +2,14 @@ import styled from "@emotion/styled"
 import Button, { ButtonProps } from '@mui/material/Button';
 
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-    color: '#000000',
-    backgroundColor: '#50C1FF',
+    color: '#ffffff',
+    backgroundColor: '#0275c2',
     height : '52px',
-  '&:hover': {
-    backgroundColor: '#569CD6',
-    boxShadow: 'none',
+    '&:hover': {
+        backgroundColor: '#128ada',
+        boxShadow: 'none',
     },
-  }));
+}));
 
 export const FormWrapper = styled.form`
     & > div {
