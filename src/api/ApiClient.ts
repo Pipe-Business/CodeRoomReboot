@@ -720,31 +720,38 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async getReadMe(adminGithubRepoUrl:string):Promise<string> {
-
+    async getReadMe(adminGithubRepoUrl: string): Promise<string> {
         try {
-
             const split = adminGithubRepoUrl.split('/');
             const userName = split[split.length - 2];
             const repoName = split[split.length - 1];
 
-
-            //console.log("getReadME : " + userName + repoName);
             const result = await axios.get<any>(`${serverURL}/readme/${userName}/${repoName}`);
-            //console.log(JSON.stringify(result.data.content));
 
-            //const decodeResult = Buffer.from(result.data.content,'base64').toString('utf-8');
-            //return decodeResult;
+            // Base64로 인코딩된 데이터를 가져옵니다.
+            const base64Content = result.data.content;
 
-            //return (decodeURIComponent(atob(result.data.content)));
-            return (atob(result.data.content));
+            // Base64 문자열을 디코딩합니다.
+            const binaryString = atob(base64Content);
+
+            // binary string을 Uint8Array로 변환합니다.
+            const bytes = new Uint8Array(binaryString.length);
+            for (let i = 0; i < binaryString.length; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+
+            // TextDecoder를 사용하여 UTF-8로 디코딩합니다.
+            const decoder = new TextDecoder('utf-8');
+            const decodedString = decoder.decode(bytes);
+            console.log(`result markdown string : ${decodedString}`)
+
+            return decodedString;
         } catch (e: any) {
             console.log(e);
             throw new Error('get readme error');
         }
-
-
     }
+
 
     async insertLikedData(likedData: LikeRequestEntity) { // 좋아요 insert
         try {

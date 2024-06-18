@@ -47,7 +47,7 @@ const SearchPage: FC<Props> = () => {
 	}
     if (!codeSearchData) {
 		return <MainLayout>
-			<h3>{paramQuery} 의 검색결과</h3>
+			<h3>'{paramQuery}' 의 검색결과</h3>
 			존재하지않아요<br />
 			<Link to={'/'}>
 				<Button variant={'outlined'}>
@@ -65,7 +65,7 @@ const SearchPage: FC<Props> = () => {
                 <IconButton onClick={onClickPreviousButton}>
                     <ArrowBack/>
                 </IconButton>
-				<h3>{paramQuery} 의 검색결과</h3>
+				<h3>'{paramQuery}' 의 검색결과</h3>
 			</div>
 			{codeSearchData.length === 0 ?
 				<>해당검색어에대한 결과가 없습니다.</> :

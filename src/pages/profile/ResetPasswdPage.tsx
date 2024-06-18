@@ -81,7 +81,7 @@ setInputEmail('');
 							placeholder='이메일 입력' />
 					</div>
 					<Box height={64} />
-					<ColorButton type={'submit'} sx={{fontSize:'15', width: '100%' }}>비밀번호 초기화</ColorButton>
+					<ColorButton type={'submit'} sx={{fontSize:'18px', width: '100%' }}>비밀번호 초기화</ColorButton>
 						</form>
 			
 				<Box height={16} />

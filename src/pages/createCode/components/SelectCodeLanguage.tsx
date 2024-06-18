@@ -1,64 +1,60 @@
-import React, { FC, useCallback, useState } from 'react';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import { LANGUAGE_FILTER } from '../../../constants/define';
+import React, {FC, useCallback, useState} from 'react';
+import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from '@mui/material';
+import {LANGUAGE_FILTER} from '../../../constants/define';
 
 interface Props {
-	children?: React.ReactNode;
-	inputCategory: string;
-	setCategory:React.Dispatch<React.SetStateAction<string>>
+    children?: React.ReactNode;
+    inputCategory: string;
+    setCategory: React.Dispatch<React.SetStateAction<string>>
 }
 
 
-const SelectCodeLanguage: FC<Props> = ({ inputCategory, setCategory }) => {
-	const [labelMsg,setLabelMsg] = useState('사용언어를 선택해주세요.')
-	const onChangeSelectCategory = useCallback((e: SelectChangeEvent) => {
-		const updateValue = e.target.value as string
-		console.log(updateValue);
-		if(!updateValue){
-			setLabelMsg('사용언어를 선택해주세요')
-		}
-		else{
-			setLabelMsg('')
-		}
-		setCategory(updateValue);
+const SelectCodeLanguage: FC<Props> = ({inputCategory, setCategory}) => {
+    const [labelMsg, setLabelMsg] = useState('사용언어를 선택해주세요.')
+    const onChangeSelectCategory = useCallback((e: SelectChangeEvent) => {
+        const updateValue = e.target.value as string
+        console.log(updateValue);
+        if (!updateValue) {
+            setLabelMsg('사용언어를 선택해주세요')
+        } else {
+            setLabelMsg('')
+        }
+        setCategory(updateValue);
 
-	}, [inputCategory]);
-
-
-	return (
-		<FormControl sx={{ minWidth: '20vw' }}>
-			<InputLabel id='demo-simple-select-label'>{labelMsg}</InputLabel>
-			<Select
+    }, [inputCategory]);
 
 
-				labelId='demo-simple-select-label'
-				id='demo-simple-select'
-				value={inputCategory}
+    return (
+        <FormControl sx={{minWidth: '20vw'}}>
+            <InputLabel id='demo-simple-select-label'>{labelMsg}</InputLabel>
+            <Select
+                sx={{backgroundColor: '#fff'}}
+                labelId='demo-simple-select-label'
+                id='demo-simple-select'
+                value={inputCategory}
+                onChange={onChangeSelectCategory}>
+                {LANGUAGE_FILTER.map((value, index) => {
+                    return (
+                        <MenuItem key={index} value={value}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                width: '100%',
+                                paddingBottom: '4px',
+                                marginTop: '4px',
+                            }}>
+                                {/* <PictogramImage size={30} formType={'code'} category={value} /> */}
+                                <div style={{marginLeft: '4px'}}>{value}</div>
+                            </div>
+                        </MenuItem>
 
-				onChange={onChangeSelectCategory}
-			>
-				{LANGUAGE_FILTER.map((value, index) => {
-					return (
-						<MenuItem key={index} value={value}>
-							<div style={{
-								display: 'flex',
-								alignItems: 'center',
-								width: '100%',
-								paddingBottom: '4px',
-								marginTop: '4px',
-							}}>
-								{/* <PictogramImage size={30} formType={'code'} category={value} /> */}
-								<div style={{ marginLeft: '4px' }}>{value}</div>
-							</div>
-						</MenuItem>
+                    );
 
-					);
+                })}
+            </Select>
 
-				})}
-			</Select>
-
-		</FormControl>
-	);
+        </FormControl>
+    );
 };
 
 export default SelectCodeLanguage;

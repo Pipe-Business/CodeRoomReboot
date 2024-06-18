@@ -27,6 +27,7 @@ const SelectCodeCategory: FC<Props> = ({value,setValue}) => {
 				labelId='demo-simple-select-label'
 				id='demo-simple-select'
 				value={value}
+				sx={{backgroundColor: '#fff'}}
 				onChange={onChangeSelectCategory}>
 				<MenuItem value={'frontend'}>프론트엔드</MenuItem>
 				<MenuItem value={'webPublishing'}>웹 퍼블리싱</MenuItem>
