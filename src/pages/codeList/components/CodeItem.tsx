@@ -86,11 +86,11 @@ const CodeItem: FC<Props> = ({ item }) => {
               }}
             >
               <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>
-                💵 {parseInt(item.price.toString()).toLocaleString()}
+                💵 {item.price.toLocaleString()}
               </Typography>
               <Box width={8} />
               <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>
-                🌱 {parseInt((item.price * 5).toLocaleString())}
+                🌱 {(item.price * 5).toLocaleString()}
               </Typography>
             </Box>
 

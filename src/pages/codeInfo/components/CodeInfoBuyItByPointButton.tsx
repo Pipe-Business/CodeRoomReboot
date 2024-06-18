@@ -69,7 +69,7 @@ const CodeInfoBuyItByPointButton: FC<Props> = (
 			return <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => {
 				alert(`${point - userHavePoint} 커밋 포인트가 부족합니다. 포인트를 모으거나 캐시로 구매해주세요.`);
 				//navigate('/charge');
-			}} disabled={isBlur} variant='contained'>{point} 커밋 포인트로 구매하기</ColorButton>;
+			}} disabled={isBlur} variant='contained'>{point.toLocaleString()} 커밋 포인트로 구매하기</ColorButton>;
 		}
 
 	}

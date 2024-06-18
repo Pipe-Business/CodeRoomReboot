@@ -66,13 +66,13 @@ const CodeInfoBuyItByCashButton: FC<Props> = (
 
         if (userHavePoint >= point) { // 캐시가 충분하면
             return <ColorButton sx={{fontSize: '15', width: '210px'}} onClick={() => onClickPurchase()}
-                                disabled={isBlur} variant='contained'>{point} 캐시로 구매</ColorButton>
+                                disabled={isBlur} variant='contained'>{point.toLocaleString()} 캐시로 구매</ColorButton>
 
         } else {						// 캐시가 충분하지 않으면
             return <ColorButton sx={{fontSize: '15', width: '210px'}} onClick={() => {
                 alert('캐시가 부족합니다. 캐시를 충전해주세요');
                 navigate('/charge');
-            }} disabled={isBlur} variant='contained'>{point} 캐시로 구매하기</ColorButton>;
+            }} disabled={isBlur} variant='contained'>{point.toLocaleString()} 캐시로 구매하기</ColorButton>;
         }
 
     }
