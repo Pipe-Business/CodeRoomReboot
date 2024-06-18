@@ -36,6 +36,18 @@ import {UsersAmountEntity} from "../data/entity/UsersAmountEntity";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
+const updateImageUrls = (readmeContent: string, owner: string, repo: string, token: string) => {
+    const imageUrlPattern = /!\[.*?\]\((.*?)\)/g;
+    return readmeContent.replace(imageUrlPattern, (match, p1) => {
+        // const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${p1}`;
+        // const authenticatedUrl = `${apiUrl}?access_token=${token}`;
+        const apiUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${p1}`;
+        const authenticatedUrl = `${apiUrl}?token=${token}`;
+        return match.replace(p1, authenticatedUrl);
+    });
+};
+
+
 class ApiClient implements SupabaseAuthAPI {
     constructor(
         private readonly auth = supabase.auth,
@@ -727,30 +739,41 @@ class ApiClient implements SupabaseAuthAPI {
             const repoName = split[split.length - 1];
 
             const result = await axios.get<any>(`${serverURL}/readme/${userName}/${repoName}`);
-
+            console.log(`readme result : ${result.data}`)
             // Base64로 인코딩된 데이터를 가져옵니다.
-            const base64Content = result.data.content;
+            // const base64Content = result.data.content;
 
             // Base64 문자열을 디코딩합니다.
-            const binaryString = atob(base64Content);
+            // const binaryString = atob(base64Content);
 
             // binary string을 Uint8Array로 변환합니다.
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
+            // const bytes = new Uint8Array(binaryString.length);
+            // for (let i = 0; i < binaryString.length; i++) {
+            //     bytes[i] = binaryString.charCodeAt(i);
+            // }
 
             // TextDecoder를 사용하여 UTF-8로 디코딩합니다.
-            const decoder = new TextDecoder('utf-8');
-            const decodedString = decoder.decode(bytes);
-            console.log(`result markdown string : ${decodedString}`)
-
-            return decodedString;
+            // const decoder = new TextDecoder('utf-8');
+            // const decodedString = decoder.decode(bytes);
+            // // console.log(`result markdown string : ${decodedString}`)
+            // const updatedReadme = updateImageUrls(result.data, userName, repoName, process.env.REACT_APP_GITHUB_TOKEN!);
+            // console.log(`result markdown string : ${updatedReadme}`)
+            return result.data;
         } catch (e: any) {
             console.log(e);
             throw new Error('get readme error');
         }
     }
+
+    updateImageUrls = (readmeContent: string, owner: string, repo: string, token: string) => {
+        const imageUrlPattern = /!\[.*?\]\((.*?)\)/g;
+        return readmeContent.replace(imageUrlPattern, (match, p1) => {
+            const absoluteUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${p1}`;
+            const authenticatedUrl = `${absoluteUrl}?access_token=${token}`;
+            return match.replace(p1, authenticatedUrl);
+        });
+    };
+
 
 
     async insertLikedData(likedData: LikeRequestEntity) { // 좋아요 insert
