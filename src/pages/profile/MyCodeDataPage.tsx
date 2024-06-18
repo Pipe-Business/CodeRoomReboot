@@ -19,7 +19,7 @@ const MyCodeDataPage: FC<Props> = () => {
 		<FullLayout>
 			<Box height={32} />
 			<h2></h2>
-			<CodePendingOrPendingList  maxCount={false} data={codeData} type={type}/>
+			<CodePendingOrPendingList  maxCount={false} data={codeData}/>
 		</FullLayout>
 	);
 };

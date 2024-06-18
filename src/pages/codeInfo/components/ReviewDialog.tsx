@@ -62,7 +62,7 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
             alert('소중한 리뷰 감사드립니다 :)');
             onReviewSubmit();
             onClose();
-            navigate(0);
+            // navigate(0);
         } catch (error) {
             console.error('Error submitting review:', error);
         }

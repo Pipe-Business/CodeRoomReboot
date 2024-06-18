@@ -125,7 +125,6 @@ const MyPage: FC<Props> = () => {
         // 리뷰 작성 완료시 이 콜백을 수행
         const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
         const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
-
         let amountUpdateValue;
         if (purchaseData?.pay_type == "point") {
             // 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
@@ -137,17 +136,18 @@ const MyPage: FC<Props> = () => {
 
         const pointHistoryRequest: PointHistoryRequestEntity = {
             description: "리뷰 작성 보상",
-            //amount: (currentAmount + amountUpdateValue),
+            amount: (currentAmount + amountUpdateValue),
             user_token: userLogin?.user_token!,
             point: amountUpdateValue,
             point_history_type: PointHistoryType.earn_point,
         }
 
         await apiClient.insertUserPointHistory(pointHistoryRequest);
-        await apiClient.updateTotalPoint(userLogin?.user_token!, amountUpdateValue);  // total point update
+        await apiClient.updateTotalPoint(userLogin?.user_token!, (currentAmount + amountUpdateValue));  // total point update
 
 
         setReviewDialogOpen(false);
+        navigate(0);
         await refetchPurchaseData();
         await refetchMentoringData();
         await refetchCashConfirmData();

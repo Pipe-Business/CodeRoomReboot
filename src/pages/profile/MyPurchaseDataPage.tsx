@@ -1,6 +1,6 @@
 // MyPurchaseDataPage.tsx
 import React, {FC, useState} from 'react';
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import FullLayout from '../../layout/FullLayout';
 import PurchaseList from './components/purchaseData/PurchaseList';
 import {Box} from '@mui/material';
@@ -21,7 +21,9 @@ const MyPurchaseDataPage: FC<Props> = () => {
 	const [readonly, setReadonly] = useState(false);
 	const [reviewData, setReviewData] = useState<PurchaseReviewEntity | undefined>(undefined); // reviewData 상태 추가
 
+	const navigate = useNavigate();
 	const { state: { userLogin, purchaseData } } = useLocation();
+	console.log("user model"+JSON.stringify(userLogin));
 
 	const handleWriteReviewClick = (purchaseData: PurchaseSaleResponseEntity) => {
 		console.log('Review click event received for:', purchaseData);
@@ -49,10 +51,14 @@ const MyPurchaseDataPage: FC<Props> = () => {
 	const handleReviewSubmit = async () => {
 		console.log("handleReviewSubmit");
 		// 리뷰 작성 완료 시 이 콜백을 수행
-		const purchaseData = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.userToken!, purchasePostId);
-		//const currentAmount = await apiClient.getUserTotalPoint(userLogin?.userToken!);
 
-		let amountUpdateValue;
+		//console.log(`hongchul good: ${userLogin?.user_token!} , ${purchasePostId}`);
+		const purchaseData = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
+		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
+
+
+		console.log("purchaseData: "+JSON.stringify(purchaseData));
+		let amountUpdateValue: number ;
 		if (purchaseData?.pay_type === "point") {
 			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
 		} else {
@@ -61,17 +67,19 @@ const MyPurchaseDataPage: FC<Props> = () => {
 
 		const pointHistoryRequest: PointHistoryRequestEntity = {
 			description: "리뷰 작성 보상",
-			//amount: 0,
-			user_token: userLogin?.userToken!,
+			amount: currentAmount + amountUpdateValue,
+			user_token: userLogin?.user_token!,
 			point: amountUpdateValue,
 			point_history_type: PointHistoryType.earn_point,
 		};
 
 		console.log("** 리뷰 작성 포인트 지급중");
 		await apiClient.insertUserPointHistory(pointHistoryRequest); // point history insert
-		await apiClient.updateTotalPoint(userLogin.userToken!, amountUpdateValue);  // total point update
+		await apiClient.updateTotalPoint(userLogin.user_token!,  currentAmount + amountUpdateValue);  // total point update
 
 		setReviewDialogOpen(false);
+		navigate(0);
+
 	};
 
 	return (

@@ -131,7 +131,7 @@ const CodeInfo: FC<Props> = () => {
 		}
 
 		await apiClient.insertUserPointHistory(pointHistoryRequest);
-		await apiClient.updateTotalPoint(userLogin?.user_token!, amountUpdateValue);  // total point update
+		await apiClient.updateTotalPoint(userLogin?.user_token!, (currentAmount + amountUpdateValue));  // total point update
 
 		setDialogOpen(false);
 		navigate(0);
