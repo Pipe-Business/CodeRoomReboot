@@ -2,7 +2,7 @@ import React, {FC, useCallback, useRef, useState,} from 'react';
 import InfoLayout from '../../layout/InfoLayout';
 import {Box, Card, TextField} from '@mui/material';
 import {useInputValidate} from '../../hooks/common/UseInputValidate';
-import {API_ERROR, EMAIL_EXP} from '../../constants/define';
+import {API_ERROR, EMAIL_EXP, REWARD_POINTS} from '../../constants/define';
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
@@ -15,6 +15,7 @@ import {User} from '@supabase/supabase-js';
 import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
 import {NotificationEntity} from '../../data/entity/NotificationEntity';
 import {NotificationType} from "../../enums/NotificationType";
+import {UsersAmountEntity} from "../../data/entity/UsersAmountEntity";
 
 interface Props {
 	children?: React.ReactNode;
@@ -32,20 +33,28 @@ const RegisterPage: FC<Props> = () => {
 
 	const { mutateAsync: mutate } = useMutation({
 		mutationFn: async (userEntity: UserEntity) => {
-			const user:User = await apiClient.signUpByEmail(inputEmail, inputPwd);
-				userEntity.userToken = user.id;
-				await apiClient.insertUserData(userEntity);
-				
-				// 초기 포인트 기록 내역 생성
-				const pointHistory : PointHistoryRequestEntity = {
-					user_token : user.id,
-					point : 1000,
-					amount : 1000,
-					description : "가입 축하 포인트",
-				}
-	
-				await apiClient.insertUserPointHistory(pointHistory);
-				return user.id;
+			const user: User = await apiClient.signUpByEmail(inputEmail, inputPwd);
+			userEntity.userToken = user.id;
+			await apiClient.insertUserData(userEntity);
+
+			// 초기 포인트 기록 내역 생성
+			const pointHistory: PointHistoryRequestEntity = {
+				user_token: user.id,
+				point: REWARD_POINTS.SIGNUP_BONUS_POINTS,
+				description: "가입 축하 포인트",
+			}
+
+			await apiClient.insertUserPointHistory(pointHistory);
+
+			// user_amount table 기록
+			const userAmount: UsersAmountEntity = {
+				user_token: user.id,
+				cash_amount: 0,
+				point_amount: REWARD_POINTS.SIGNUP_BONUS_POINTS,
+			}
+			await apiClient.insertUserAmountHistory(userAmount);
+
+			return user.id;
 		},
 		onSuccess: async (userToken:string) => {
 			const notificationEntity: NotificationEntity ={

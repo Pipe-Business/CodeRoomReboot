@@ -32,6 +32,7 @@ import {CodeEditRequestEntity} from "../data/entity/CodeEditRequestEntity";
 import {createTodayDate} from "../utils/DayJsHelper";
 import {CashPointHistoryEntity} from "../data/model/CashPointHistoryEntity";
 import {PayType} from "../enums/PayType";
+import {UsersAmountEntity} from "../data/entity/UsersAmountEntity";
 
 export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
 
@@ -545,29 +546,34 @@ class ApiClient implements SupabaseAuthAPI {
 
     async getUserTotalCash(myUserToken: string): Promise<number> {
         try {
-            const {data, error} = await supabase.from('users_cash_history')
+            const {data, error} = await supabase.from('users_amount')
                 .select('*')
-                .eq('user_token', myUserToken)
-                .order('created_at', {ascending: false});
+                .eq('user_token', myUserToken);
 
-            //const stringdata = JSON.stringify(data);
-            //console.log("getUserTotalCash: "+stringdata);
+            const stringdata = JSON.stringify(data);
+            console.log("getUserTotalCash: "+stringdata);
 
             if (!data || data.length === 0) {
                 return 0;  // 데이터가 없는 경우 합산 캐시는 0으로 반환
             }
 
-            let cashEntity: CashHistoryResponseEntity = {
+            let userAmountEntity: UsersAmountEntity = {
                 id: data[0].id,
                 user_token: data[0].user_token,
-                cash: data[0].cash,
-                amount: data[0].amount,
-                description: data[0].description,
-                cash_history_type: data[0].cash_history_type,
-                created_at: data[0].created_at,
+                cash_amount: data[0].cash_amount,
+                point_amount: data[0].point_amount
             }
-            const totalCash: number = cashEntity.amount;
-            return totalCash;
+            // let cashEntity: CashHistoryResponseEntity = {
+            //     id: data[0].id,
+            //     user_token: data[0].user_token,
+            //     cash: data[0].cash,
+            //     amount: data[0].amount,
+            //     description: data[0].description,
+            //     cash_history_type: data[0].cash_history_type,
+            //     created_at: data[0].created_at,
+            // }
+            // const totalCash: number = cashEntity.amount;
+            return userAmountEntity.cash_amount;
 
 
         } catch (e: any) {
@@ -1143,30 +1149,65 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
         }
     }
+    async getUserTotalPointCash(myUserToken: string): Promise<UsersAmountEntity> {
+        try {
+            const {data, error} = await supabase.from('users_amount')
+                .select('*')
+                .eq('user_token', myUserToken);
+            console.log("sdf"+JSON.stringify(data));
 
+            let lstUserAmountEntity: UsersAmountEntity[] = [];
+
+            if(data?.length === 0 || !data){
+                throw new Error('유저의 합산 캐시를 가져오는 데 실패했습니다.');
+            }
+                let userAmountEntity: UsersAmountEntity = {
+                    id: data[0].id,
+                    user_token: data[0].user_token,
+                    cash_amount: data[0].cash_amount,
+                    point_amount: data[0].point_amount
+                }
+                lstUserAmountEntity.push(userAmountEntity);
+
+
+            return lstUserAmountEntity[0];
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 합산 캐시를 가져오는 데 실패했습니다.');
+        }
+    }
     async getUserTotalPoint(myUserToken: string): Promise<number> {
         try {
-            const {data, error} = await supabase.from('users_point_history')
+            const {data, error} = await supabase.from('users_amount')
                 .select('*')
-                .eq('user_token', myUserToken)
-                .order('created_at', {ascending: false});
+                .eq('user_token', myUserToken);
 
-            //let lstPointEntity: PointHistoryResponseEntity[] = [];
             if (!data || data.length === 0) {
                 return 0;  // 데이터가 없는 경우 합산 포인트 0으로 반환
             }
-            let pointEntity: PointHistoryResponseEntity = {
-                id: data[0].id,
-                user_token: data[0].user_token,
-                point: data[0].point,
-                amount: data[0].amount,
-                description: data[0].description,
-                point_history_type: data[0].point_history_type,
-                created_at: data[0].created_at,
-            }
 
-            const totalPoint: number = pointEntity.amount;
-            return totalPoint;
+            let userAmountEntity: UsersAmountEntity = {
+                            id: data[0].id,
+                            user_token: data[0].user_token,
+                            cash_amount: data[0].cash_amount,
+                            point_amount: data[0].point_amount
+                        }
+             return userAmountEntity.point_amount;
+
+
+            // let pointEntity: PointHistoryResponseEntity = {
+            //     id: data[0].id,
+            //     user_token: data[0].user_token,
+            //     point: data[0].point,
+            //     amount: data[0].amount,
+            //     description: data[0].description,
+            //     point_history_type: data[0].point_history_type,
+            //     created_at: data[0].created_at,
+            // }
+
+            // const totalPoint: number = pointEntity.amount;
+            // return totalPoint;
 
         } catch (e: any) {
             console.log(e);
@@ -1178,7 +1219,7 @@ class ApiClient implements SupabaseAuthAPI {
         console.log(pointHistoryRequestEntity);
         const pointHistoryObj = {
             "point": pointHistoryRequestEntity.point,
-            "amount": pointHistoryRequestEntity.amount,
+            "amount": 0, //TODO db에서 컬럼 제거 후 여기서도 제거 필요
             "user_token": pointHistoryRequestEntity.user_token,
             "description": pointHistoryRequestEntity.description,
             "from_user_token": pointHistoryRequestEntity.from_user_token,
@@ -1197,18 +1238,6 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
             }
-            // const { data, error } = await supabase.from('users_point_history')
-            //     .insert(pointHistoryRequestEntity).select();
-
-            // if (error) {
-            //     console.log("error" + error.code);
-            //     console.log("error" + error.message);
-            //     console.log("error" + error.details);
-            //     console.log("error" + error.hint);
-            //     console.log("error" + error.details);
-
-            //     throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
-            // }
 
 
         } catch (e: any) {
@@ -1467,7 +1496,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     user_token: e.user_token,
                     cash: e.cash,
-                    amount: e.amount,
+                    //amount: e.amount,
                     description: e.description,
                     cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
@@ -1522,7 +1551,7 @@ class ApiClient implements SupabaseAuthAPI {
                 id: cash.id,
                 user_token: cash.user_token,
                 price: cash.cash,
-                amount: cash.amount,
+                //amount: cash.amount,
                 price_history_type: cash.cash_history_type,
                 pay_type: PayType.cash,
                 description: cash.description,
@@ -1763,7 +1792,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     user_token: e.user_token,
                     cash: e.cash,
-                    amount: e.amount,
+                    //amount: e.amount,
                     description: e.description,
                     cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
@@ -2060,7 +2089,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     user_token: e.user_token,
                     cash: e.cash,
-                    amount: e.amount,
+                    //amount: e.amount,
                     description: e.description,
                     cash_history_type: e.cash_history_type,
                     created_at: e.created_at,
@@ -2114,6 +2143,24 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
         return data;
+    }
+
+    async insertUserAmountHistory(userAmount:UsersAmountEntity) {
+        try {
+            const {error} = await supabase.from('users_amount').insert(userAmount);
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('user amount insert 에 실패했습니다.');
+            }
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('user amount insert 에 실패했습니다.');
+        }
     }
 }
 

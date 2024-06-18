@@ -10,6 +10,7 @@ export const REACT_QUERY_KEY = {
 	cash : '/cash',
 	cashHistory: '/cashHistory',
 	pointistory: '/pointHistory',
+	totalCashPoint: '/totalCashPoint',
 	cashPointHistory: '/cashPointHistory',
 	cashConfirm: '/cashConfirm',
 	cashConfirmPending: '/cashConfirmPending',
@@ -54,3 +55,7 @@ export const CATEGORY_TO_KOR = {
 	dataAnalysis: '데이터분석',
 	other: '기타',
 };
+
+export const REWARD_POINTS = {
+	SIGNUP_BONUS_POINTS: 1000,
+}

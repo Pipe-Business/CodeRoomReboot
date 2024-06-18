@@ -1,5 +1,5 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import {Badge, CircularProgress} from '@mui/material';
+import {Badge, Skeleton} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
 import React, {FC, useState} from 'react';
 import {Link} from 'react-router-dom';
@@ -21,20 +21,16 @@ const HeaderLayout: FC<Props> = () => {
 
     const {userLogin, isLoadingUserLogin} = useQueryUserLogin();
 
-    const {isLoading: isCashDataLoading, data: cashData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.cash],
-        queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
-    });
-    const {isLoading: isPointDataLoading, data: pointData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.point],
-        queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
+    const {isLoading: isTotalCashPointLading, data: totalCashPointData} = useQuery({
+        queryKey: [REACT_QUERY_KEY.totalCashPoint],
+        queryFn: () => apiClient.getUserTotalPointCash(userLogin?.user_token!),
     });
 
     const [notiCount, setNotiCount] = useState<number>(0);
     const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
 
-    if (isLoadingUserLogin) {
-        return <CenterBox><CircularProgress/></CenterBox>;
+    if (isLoadingUserLogin || isTotalCashPointLading) {
+        return <CenterBox><Skeleton width={'80%'} height={'64px'}/></CenterBox>;
     }
 
     return (
@@ -73,14 +69,14 @@ const HeaderLayout: FC<Props> = () => {
                                 color: '#000000',
                                 fontSize: '14px',
                                 fontWeight: 'bold'
-                            }}>{isCashDataLoading ? '' : cashData + ' 💵'}</span>
+                            }}>{totalCashPointData?.cash_amount + ' 💵'}</span>
                         </MarginHorizontal>
                         <MarginHorizontal size={8}>
                             <span style={{
                                 color: '#000000',
                                 fontSize: '14px',
                                 fontWeight: 'bold'
-                            }}>{isPointDataLoading ? '' : pointData + ' 🌱'}</span>
+                            }}>{totalCashPointData?.point_amount + ' 🌱'}</span>
                         </MarginHorizontal>
 
                         <MarginHorizontal size={8}>
