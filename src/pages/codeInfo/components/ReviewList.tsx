@@ -13,7 +13,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await fetchReviewsWithNicknames(reviews);
-            console.log(`review with nicknames : ${data[0].nickname}`);
+            // console.log(`review with nicknames : ${data[0].nickname}`);
             setReviewsWithNicknames(data);
         };
 
