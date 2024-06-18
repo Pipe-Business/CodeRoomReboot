@@ -27,11 +27,11 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
   const [isOpenDialog, handleOpenDialog, handleCloseDialog] = useDialogState();
   const { userLogin } = useQueryUserLogin();
   const { data: cashData, refetch:refetchCash } = useQuery({
-    queryKey: [REACT_QUERY_KEY.cash],
+    queryKey: [REACT_QUERY_KEY.cash,userLogin?.user_token!],
     queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
   });
   const { data: pointData, refetch:refetchPoint } = useQuery({
-    queryKey: [REACT_QUERY_KEY.point],
+    queryKey: [REACT_QUERY_KEY.point,userLogin?.user_token!],
     queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
   });
   const { mutateBootpayRequest } = useMutateBootPayPaymentRequest();
@@ -84,7 +84,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
         const cashHistory: CashHistoryRequestEntity = {
           user_token: userLogin!.user_token!,
           cash: paymentCash,
-          //amount: cashData + paymentCash, //todo 제거 필요
+          amount: cashData + paymentCash,
           description: '캐시 충전',
           cash_history_type: 'earn_cash',
         };
@@ -96,7 +96,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
         const pointHistory: PointHistoryRequestEntity = {
           user_token: userLogin!.user_token!,
           point: bonusPoint!,
-          //amount: pointData + bonusPoint!,
+          amount: pointData + bonusPoint!,
           description: '캐시 충전 보너스 포인트',
           point_history_type: PointHistoryType.earn_point,
         };
