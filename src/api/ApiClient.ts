@@ -32,6 +32,7 @@ import {createTodayDate} from "../utils/DayJsHelper";
 import {CashPointHistoryEntity} from "../data/model/CashPointHistoryEntity";
 import {PayType} from "../enums/PayType";
 import {UsersAmountEntity} from "../data/entity/UsersAmountEntity";
+import {PostStateType} from "../enums/PostStateType";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 
@@ -86,7 +87,7 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
-                .eq('state', "approve")
+                .eq('state', PostStateType.approve)
                 .eq('is_deleted', false) // 삭제된 게시글은 메인에서 안보이도록 처리
                 .order('created_at', {ascending: false});
 
@@ -1750,7 +1751,7 @@ class ApiClient implements SupabaseAuthAPI {
             const {data, error} = await supabase.from('post')
                 .select('*, code!inner(*)')
                 .or(`title.like.%${searchTargetWord}%,description.like.%${searchTargetWord}%`)
-                .eq('state', "approve")
+                .eq('state', PostStateType.approve)
                 .order('created_at', {ascending: false});
 
             let lstMainPageCode: MainPageCodeListEntity[] = [];

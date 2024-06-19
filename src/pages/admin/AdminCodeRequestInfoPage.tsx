@@ -14,6 +14,7 @@ import {CATEGORY_TO_KOR} from "../../constants/define";
 import {apiClient} from "../../api/ApiClient";
 import ImageCard from './components/codeRequest/ImageCard';
 import MainLayout from '../../layout/MainLayout';
+import {PostStateType} from "../../enums/PostStateType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -82,8 +83,8 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					</IconButton>
 					<h1>{userById.nickname} 님의 {data.title}</h1>
 				</div>
-				<h2 style={{ marginBottom: 64 }}>{data.state === 'pending' ? '요청 대기' : data.state === 'rejected' ? '요청 반려' : '승인'}</h2>
-				{data.state === 'rejected' &&
+				<h2 style={{ marginBottom: 64 }}>{data.state === PostStateType.pending ? '요청 대기' : data.state === PostStateType.rejected ? '요청 반려' : '승인'}</h2>
+				{data.state === PostStateType.rejected &&
 				
 					<ContentWrapper>
 						<div>반려사유</div>
@@ -143,7 +144,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					</>
 				
 				<ContentWrapper>
-					<div>{data.state === 'pending' ? '요청' : data.state === 'rejected' ? '반려' : '승인'}시간</div>
+					<div>{data.state === PostStateType.pending ? '요청' : data.state === PostStateType.rejected ? '반려' : '승인'}시간</div>
 					<span>
 					{reformatTime(data.createdAt)}
 				</span>
@@ -168,7 +169,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 							</Link>
 						</ContentWrapper>
 				
-				{data.state === 'pending' &&
+				{data.state === PostStateType.pending &&
 					<div>
 						<div style={{
 							position: 'sticky',

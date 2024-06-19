@@ -4,6 +4,7 @@ import {reformatTime} from "../../../../utils/DayJsHelper";
 import { useNavigate } from 'react-router-dom';
 import {CodeModel} from "../../../../data/model/CodeModel";
 import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher";
+import {PostStateType} from "../../../../enums/PostStateType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -48,7 +49,7 @@ const AdminCodeRequestItem: FC<Props> = ({ item }) => {
 						</div> 
 						<div style={{ width: '15%' }}>{item.price.toLocaleString()}p</div>
 						<div
-							style={{ width: '5%' }}>{item.state === 'pending' ? '요청' : item.state === 'rejected' ? '반려' : '승인'}</div>
+							style={{ width: '5%' }}>{item.state === PostStateType.pending ? '요청' : item.state === PostStateType.rejected ? '반려' : '승인'}</div>
 					</div>
 				</ListItemText>
 			</ListItem>

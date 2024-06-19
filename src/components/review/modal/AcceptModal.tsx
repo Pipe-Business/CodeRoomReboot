@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import {CodeModel} from "../../../data/model/CodeModel";
 import {NotificationEntity} from "../../../data/entity/NotificationEntity";
 import {NotificationType} from "../../../enums/NotificationType"
+import {PostStateType} from "../../../enums/PostStateType";
 
 interface Props {
 	children?: React.ReactNode
@@ -44,7 +45,7 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 			},
 		onSuccess: async (result) => {
 			if (result) {
-				await apiClient.updateCodeRequestState(data?.userToken!, data!.id!.toString(), 'approve');
+				await apiClient.updateCodeRequestState(data?.userToken!, data!.id!.toString(), PostStateType.approve);
 			}
 		},
 		onError: (e) => {

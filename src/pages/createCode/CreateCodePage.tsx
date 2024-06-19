@@ -17,6 +17,7 @@ import SelectCodeLanguage from './components/SelectCodeLanguage';
 import {PostRequestEntity} from "../../data/entity/PostRequestEntity";
 import {CodeRequestEntity} from "../../data/entity/CodeRequestEntity";
 import {CodeModel} from "../../data/model/CodeModel";
+import {PostStateType} from "../../enums/PostStateType";
 
 interface Props {
   children?: React.ReactNode;
@@ -148,7 +149,7 @@ const CreateCodePage: FC<Props> = () => {
       description: inputDescription,
       user_token: userLogin?.user_token!,
       category: inputCategory,
-      state: 'pending',
+      state: PostStateType.pending,
       post_type: 'code',
       hash_tag: [""],
       view_count: 0,

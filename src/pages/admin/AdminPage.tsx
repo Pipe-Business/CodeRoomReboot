@@ -11,6 +11,7 @@ import AdminCodeRequestList from './components/codeRequest/AdminCodeRequestList'
 import {supabase} from "../../api/ApiClient";
 import AdminCashPointPage from './AdminCashPointPage';
 import UserManageList from './components/userManage/UserManageList';
+import {PostStateType} from "../../enums/PostStateType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -72,13 +73,13 @@ const AdminPage: FC<Props> = () => {
 					</TabList>
 				</Box>
 				<TabPanel value='1'>
-					<AdminCodeRequestList type={'pending'} />
+					<AdminCodeRequestList type={PostStateType.pending} />
 				</TabPanel>
 				<TabPanel value='2'>
-					<AdminCodeRequestList type={'rejected'} />
+					<AdminCodeRequestList type={PostStateType.rejected} />
 				</TabPanel>
 				<TabPanel value='3'>
-					<AdminCodeRequestList type={'approve'} />
+					<AdminCodeRequestList type={PostStateType.approve} />
 				</TabPanel>
 				<TabPanel value='4'>
 					<AdminCashPointPage type={'cash'}/>

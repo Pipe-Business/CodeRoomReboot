@@ -5,6 +5,7 @@ import {apiClient} from "../../../api/ApiClient";
 import { toast } from 'react-toastify';
 import {NotificationEntity} from "../../../data/entity/NotificationEntity";
 import {NotificationType} from "../../../enums/NotificationType";
+import {PostStateType} from "../../../enums/PostStateType";
 
 interface Props {
 	children?: React.ReactNode,
@@ -25,7 +26,7 @@ const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken,refetc
 		}
 
 	
-		await apiClient.updateCodeRequestState(userToken, postId, 'rejected');
+		await apiClient.updateCodeRequestState(userToken, postId, PostStateType.rejected);
 		await apiClient.updateCodeRequestRejectMessage(userToken, postId, inputText);
 
 		const notificationEntity: NotificationEntity ={

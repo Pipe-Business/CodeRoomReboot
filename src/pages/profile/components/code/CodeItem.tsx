@@ -4,6 +4,7 @@ import {Button, ListItem, ListItemText} from '@mui/material';
 import {CodeModel} from '../../../../data/model/CodeModel';
 import {useNavigate} from 'react-router-dom';
 import {reformatTime} from '../../../../utils/DayJsHelper';
+import {PostStateType} from "../../../../enums/PostStateType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -39,7 +40,7 @@ const CodeItem: FC<Props> = ({ item }) => {
 						</div>
 					</div>
 					<div
-						style={{ width: '10%'}}>{item.state === 'pending' ? '심사중' : item.state ==='approve' ? '승인' : '반려'}</div>
+						style={{ width: '10%'}}>{item.state === PostStateType.pending ? '심사중' : item.state ===PostStateType.approve ? '승인' : '반려'}</div>
 					<div style={{ width: '25%' }}>
 						{item.state === 'rejected' &&
 							<Button onClick={() => onClickNavigateRejectForm()}>

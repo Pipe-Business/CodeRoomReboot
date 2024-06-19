@@ -10,6 +10,7 @@ import SaleList from './saleData/SaleList';
 import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
 import MyCodeList from "./code/MyCodeList";
 import {CashPointHistoryEntity} from "../../../data/model/CashPointHistoryEntity";
+import {PostStateType} from "../../../enums/PostStateType";
 
 interface Props {
     children?: React.ReactNode;
@@ -73,7 +74,7 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPoint
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>코드 심사 진행 단계</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/code-page`, { state: { codeData: codeData, type: 'pending', maxCount: false } });
+                            navigate(`/profile/my/code-page`, { state: { codeData: codeData, type: PostStateType.pending, maxCount: false } });
                         }}>
                             더보기</Button>
                     }
