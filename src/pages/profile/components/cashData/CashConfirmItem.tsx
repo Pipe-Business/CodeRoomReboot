@@ -52,10 +52,10 @@ const CashConfirmItem: FC<Props> = ({ cashConfirmData }) => {
                             }}>{codeData?.title!}</div>
 
                             <div style={{width: '30%'}}>
-                                {cashConfirmData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
+                                {codeData?.price!}
                             </div>
                             {/* <div style={{  width:'20%'}}>
-                                {cashConfirmData.is_confirmed == "point" ? "포인트" : "캐시"}
+                                {cashConfirmData.is_confirmed == "point" ? "코인" : "캐시"}
                             </div> */}
 
                         </div>

@@ -34,7 +34,6 @@ const CashPointHistoryDataPage = React.lazy(() => import('./pages/profile/CashPo
 const ChargePage = React.lazy(() => import('./pages/coin/ChargePage'));
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage'));
 const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage'));
-const CoinPage = React.lazy(() => import('./pages/coin/CoinPage'));
 const AdminPage = React.lazy(() => import ('./pages/admin/AdminPage'));
 const AdminLoginPage = React.lazy(() => import('./pages/adminLogin/AdminLoginPage'));
 const AdminCodeRequestInfo = React.lazy(() => import('./pages/admin/AdminCodeRequestInfoPage'));
@@ -94,7 +93,6 @@ root.render(
       <Route path='/help' element={<HelpPage />} />
       <Route path='/code/:id' element={<CodeInfo/>} />
       <Route path='/code/edit/:id' element={<EditCodePage/>} />
-      <Route path='/coin' element={<CoinPage/>}/>
       <Route path='/admin' element={<AdminPage/>}/>
       <Route path='/admin/login' element={<AdminLoginPage/>}/>
       <Route path='/admin/user/:userId' element={<AdminUserInfo />} />

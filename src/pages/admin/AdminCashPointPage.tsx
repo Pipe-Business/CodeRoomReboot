@@ -6,7 +6,7 @@ interface Props {
 	type: 'cash' | 'point';
 }
 
-// 캐시/ 포인트
+// 캐시/코인
 const AdminCashPointPage: FC<Props> = ({type}) => {
 	return (
 		<AdminCashPointList type={type}/>

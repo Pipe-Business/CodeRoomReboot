@@ -59,11 +59,12 @@ const MyPurchaseDataPage: FC<Props> = () => {
 
 		console.log("purchaseData: "+JSON.stringify(purchaseData));
 		let amountUpdateValue: number ;
-		if (purchaseData?.pay_type === "point") {
-			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
-		} else {
-			amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
-		}
+		amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
+
+		// if (purchaseData?.pay_type === "point") {
+		// 	amountUpdateValue = Math.round(purchaseData.price! * 0.05);
+		// } else {
+		// }
 
 		const pointHistoryRequest: PointHistoryRequestEntity = {
 			description: "리뷰 작성 보상",
@@ -73,7 +74,7 @@ const MyPurchaseDataPage: FC<Props> = () => {
 			point_history_type: PointHistoryType.earn_point,
 		};
 
-		console.log("** 리뷰 작성 포인트 지급중");
+		console.log("** 리뷰 작성 코인 지급중");
 		await apiClient.insertUserPointHistory(pointHistoryRequest); // point history insert
 		await apiClient.updateTotalPoint(userLogin.user_token!,  currentAmount + amountUpdateValue);  // total point update
 

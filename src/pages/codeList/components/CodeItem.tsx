@@ -88,10 +88,10 @@ const CodeItem: FC<Props> = ({ item }) => {
               <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>
                 💵 {item.price.toLocaleString()}
               </Typography>
-              <Box width={8} />
-              <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>
-                🌱 {(item.price * 5).toLocaleString()}
-              </Typography>
+              {/*<Box width={8} />*/}
+              {/*<Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>*/}
+              {/*  🌱 {(item.price * 5).toLocaleString()}*/}
+              {/*</Typography>*/}
             </Box>
 
             {/* item.createdAt을 좌측 하단으로 이동 */}

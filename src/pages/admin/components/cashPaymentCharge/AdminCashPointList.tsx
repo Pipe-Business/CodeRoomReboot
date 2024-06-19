@@ -41,7 +41,7 @@ const Header: FC<{ type: 'cash' | 'point' }> = ({ type }) => {
 						<div style={{ width: '15%' }}>날짜</div>
 						<div style={{ width: '25%' }}>유저</div>
 						<div style={{ width: '40%' }}>설명</div>
-						<div style={{ width: '10%' }}>포인트</div>
+						<div style={{ width: '10%' }}>코인</div>
 						<div style={{ width: '10%' }}>구분</div>
 					</div>
 				</ListItemText>

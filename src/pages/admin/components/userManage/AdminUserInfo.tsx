@@ -60,7 +60,7 @@ const AdminUserInfo: FC<Props> = () => {
                         </InfoWrapper>
                         <Divider/>
                         <InfoWrapper>
-                            <div>포인트</div>
+                            <div>코인</div>
                             <div>{userManageData.point.toLocaleString()}p</div>
                         </InfoWrapper>
                         <Divider/>

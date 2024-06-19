@@ -92,22 +92,22 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
         await apiClient.insertUserCashHistory(cashHistory);
         await apiClient.updateTotalCash(userLogin?.user_token!,cashData + paymentCash,);
 
-        // 포인트 증가
+        // 코인 증가
         const pointHistory: PointHistoryRequestEntity = {
           user_token: userLogin!.user_token!,
           point: bonusPoint!,
           amount: pointData + bonusPoint!,
-          description: '캐시 충전 보너스 포인트',
+          description: '캐시 충전 보너스 코인',
           point_history_type: PointHistoryType.earn_point,
         };
 
         await apiClient.insertUserPointHistory(pointHistory);
         await apiClient.updateTotalPoint(userLogin?.user_token!,pointData + bonusPoint!);
 
-        // 포인트 지급 알림
+        // 코인 지급 알림
         const notificationEntity: NotificationEntity = {
-          title: '포인트 지급 알림',
-          content: '캐시 충전 보너스 포인트가 지급되었습니다.',
+          title: '코인 지급 알림',
+          content: '캐시 충전 보너스 코인이 지급되었습니다.',
           from_user_token: 'admin',
           to_user_token: userLogin!.user_token!,
           notification_type: NotificationType.get_point,
@@ -145,7 +145,7 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
               </Typography>
               {bonusPoint !== undefined ? (
                 <Typography variant="body2" color="textSecondary" sx={{ marginTop: 1 }}>
-                  <span style={{ color: '#f00', fontSize: '16px', fontWeight: 'bold' }}>+{bonusPoint}</span> 보너스 포인트
+                  <span style={{ color: '#f00', fontSize: '16px', fontWeight: 'bold' }}>+{bonusPoint}</span> 보너스 코인
                 </Typography>
               ) : (
                 <Typography variant="body2" color="textSecondary" sx={{ marginTop: 1 }}>

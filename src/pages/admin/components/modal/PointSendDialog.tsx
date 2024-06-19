@@ -56,9 +56,9 @@ const PointSendDialog: FC<Props> = ({ isOpen, onClose, userToken, userNickname, 
 			const date = createTodayDate();
 
 		
-		// 포인트 지급 알림
+		// 코인 지급 알림
         const notificationEntity: NotificationEntity ={
-            title : '포인트 지급 알림',
+            title : '코인 지급 알림',
             content:`관리자 지급 : ${reasonPayment}`,
             from_user_token: 'admin',
             to_user_token: userToken,
@@ -76,7 +76,7 @@ const PointSendDialog: FC<Props> = ({ isOpen, onClose, userToken, userNickname, 
 	}, [inputPoint,reasonPayment]);
 	return (
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'lg'}>
-			<DialogTitle>포인트 지급</DialogTitle>
+			<DialogTitle>코인 지급</DialogTitle>
 			<form onSubmit={onClickConfirmButton}>
 				<DialogContent>
 					<TextFieldWrapper>

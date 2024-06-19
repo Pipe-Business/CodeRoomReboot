@@ -99,8 +99,8 @@ const CodeInfo: FC<Props> = () => {
 	}, userLogin!, cashData!, postData!);
 
 	const [onPointClickConfirm] = PointPaymentDialog(() => {
-		//console.log("포인트 결제가 확인되었습니다!");
-		// 포인트 결제 확인 후 추가 로직
+		//console.log("코인 결제가 확인되었습니다!");
+		// 코인 결제 확인 후 추가 로직
 		setDialogOpen(true);
 	}, userLogin!, pointData!, postData!);
 
@@ -114,13 +114,13 @@ const CodeInfo: FC<Props> = () => {
 		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
 
 		let amountUpdateValue;
-		if (purchaseData?.pay_type === "point") {
-			// 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-			amountUpdateValue = Math.round(purchaseData.price! * 0.05);
-		} else {
+		// if (purchaseData?.pay_type === "point") {
+		// 	// 구매를 코인으로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+		// 	amountUpdateValue = Math.round(purchaseData.price! * 0.05);
+		// } else {
 			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
 			amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
-		}
+		//}
 
 		const pointHistoryRequest: PointHistoryRequestEntity = {
 			description: "리뷰 작성 보상",
@@ -239,31 +239,31 @@ const CodeInfo: FC<Props> = () => {
 									코드 설명
 								</Typography>
 								<div>
-									<ReactMarkdown
-										remarkPlugins={[remarkGfm]}
-										rehypePlugins={[rehypeRaw]}
-										components={{
-											code({node, className, children, ...props}) {
-												const match = /language-(\w+)/.exec(className || '');
-												return match ? (
-													<pre className={className}>
-														<code className={className} {...props}>
-															{String(children).replace(/\n$/, '')}
-														</code>
-													</pre>
-												) : (
-													<code className={className} {...props}>
-														{children}
-													</code>
-												);
-											},
-											img({node, ...props}) {
-												return <img style={{maxWidth: '100%'}} {...props} />;
-											},
-										}}
-									>
-										{readMeData}
-									</ReactMarkdown>
+									{/*<ReactMarkdown*/}
+									{/*	remarkPlugins={[remarkGfm]}*/}
+									{/*	rehypePlugins={[rehypeRaw]}*/}
+									{/*	components={{*/}
+									{/*		code({node, className, children, ...props}) {*/}
+									{/*			const match = /language-(\w+)/.exec(className || '');*/}
+									{/*			return match ? (*/}
+									{/*				<pre className={className}>*/}
+									{/*					<code className={className} {...props}>*/}
+									{/*						{String(children).replace(/\n$/, '')}*/}
+									{/*					</code>*/}
+									{/*				</pre>*/}
+									{/*			) : (*/}
+									{/*				<code className={className} {...props}>*/}
+									{/*					{children}*/}
+									{/*				</code>*/}
+									{/*			);*/}
+									{/*		},*/}
+									{/*		img({node, ...props}) {*/}
+									{/*			return <img style={{maxWidth: '100%'}} {...props} />;*/}
+									{/*		},*/}
+									{/*	}}*/}
+									{/*>*/}
+									{/*	{readMeData}*/}
+									{/*</ReactMarkdown>*/}
 								</div>
 							</Box>
 							<Box height={32} />
@@ -283,7 +283,7 @@ const CodeInfo: FC<Props> = () => {
 								/>
 								<CodeInfoBuyItByPointButton
 									isBlur={isBlur}
-									point={postData.price * 5}
+									point={postData.price}
 									codeHostId={postData.userToken}
 									userId={userLogin?.user_token!}
 									userHavePoint={pointData ?? 0}
@@ -363,7 +363,7 @@ const CodeInfo: FC<Props> = () => {
 								<Box my={1} />
 								<CodeInfoBuyItByPointButton
 									isBlur={isBlur}
-									point={postData.price * 5}
+									point={postData.price}
 									codeHostId={postData.userToken}
 									userId={userLogin?.user_token!}
 									userHavePoint={pointData ?? 0}

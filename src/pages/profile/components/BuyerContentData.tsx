@@ -84,13 +84,13 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPoint
             </Card>
             <Box height={32} />
 
-            <h4>캐시, 포인트</h4>
+            <h4>캐시, 코인</h4>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시, 포인트 내역</div>}
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시, 코인 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/cashhistory`, { state: { cashPointHistoryData: cashPointHistoryData, title: '캐시,포인트 내역' } });
+                            navigate(`/profile/my/cashhistory`, { state: { cashPointHistoryData: cashPointHistoryData, title: '캐시,코인 내역' } });
                         }}>
                             더보기</Button>
                     }
@@ -102,10 +102,10 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPoint
 
             {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>*/}
             {/*    <CardHeader*/}
-            {/*        title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>포인트 내역</div>}*/}
+            {/*        title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>코인 내역</div>}*/}
             {/*        action={*/}
             {/*            <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {*/}
-            {/*                navigate(`/profile/my/cashhistory`, { state: { pointHistoryData: pointHistoryData, title: '포인트 내역' } });*/}
+            {/*                navigate(`/profile/my/cashhistory`, { state: { pointHistoryData: pointHistoryData, title: '코인 내역' } });*/}
             {/*            }}>*/}
             {/*                더보기</Button>*/}
             {/*        }*/}

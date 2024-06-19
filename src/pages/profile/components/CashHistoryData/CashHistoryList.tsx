@@ -16,7 +16,7 @@ const TableHeader: FC = () => {
                 <div style={{width: '20%', fontWeight: 'bold'}}>시각</div>
                 <div style={{width: '30%', fontWeight: 'bold'}}>내역</div>
                 {/*<div style={{width: '10%', fontWeight: 'bold'}}>구분</div>*/}
-                {/*<div style={{width: '20%', fontWeight: 'bold'}}>포인트/캐시</div>*/}
+                {/*<div style={{width: '20%', fontWeight: 'bold'}}>코인/캐시</div>*/}
                 <div style={{width: '20%', fontWeight: 'bold'}}>금액</div>
                 <div style={{width: '10%', fontWeight: 'bold'}}>총 금액</div>
             </div>

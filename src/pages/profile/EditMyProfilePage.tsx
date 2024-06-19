@@ -50,7 +50,7 @@ const EditMyProfilePage: FC<Props> = () => {
 
 	const { mutateAsync: mutateSetProfilePoint } = useMutation({
 		mutationFn: async () => {
-			// 프로필 보상 포인트 지급
+			// 프로필 보상 코인 지급
 			if (pointData) {
 				const pointHistory: PointHistoryRequestEntity = {
 					user_token: userLogin!.user_token!,
@@ -66,16 +66,16 @@ const EditMyProfilePage: FC<Props> = () => {
 		},
 		onSuccess: async () => {
 			await apiClient.setTrueUserProfileImageRewardStatus(userLogin?.user_token!);
-			toast.success('프로필 사진 설정 보상 포인트 100p가 지급되었습니다.');
+			toast.success('프로필 사진 설정 보상 코인 100p가 지급되었습니다.');
 		},
 		onError: () => {
-			toast.error('프로필 사진 설정 보상 포인트 지급에 실패했습니다.');
+			toast.error('프로필 사진 설정 보상 코인 지급에 실패했습니다.');
 		}
 	});
 
 	const { mutateAsync: mutateSetIntroducePoint } = useMutation({
 		mutationFn: async () => {
-			// 자기소개 보상 포인트 지급
+			// 자기소개 보상 코인 지급
 			if (pointData) {
 				const pointHistory: PointHistoryRequestEntity = {
 					user_token: userLogin!.user_token!,
@@ -91,10 +91,10 @@ const EditMyProfilePage: FC<Props> = () => {
 		},
 		onSuccess: async () => {
 			await apiClient.setTrueUserIntroduceRewardStatus(userLogin?.user_token!);
-			toast.success('프로필 자기소개 작성 보상 포인트 500p가 지급되었습니다.');
+			toast.success('프로필 자기소개 작성 보상 코인 500p가 지급되었습니다.');
 		},
 		onError: () => {
-			toast.error('프로필 자기소개 작성 보상 포인트 지급에 실패했습니다.');
+			toast.error('프로필 자기소개 작성 보상 코인 지급에 실패했습니다.');
 		}
 	});
 
@@ -112,7 +112,7 @@ const EditMyProfilePage: FC<Props> = () => {
 			// db업데이트
 			await apiClient.updateAboutMeData(userLogin?.user_token!, inputIntroduce);
 
-			// 포인트 지급
+			// 코인 지급
 			if (inputIntroduce.length > 100 && !userLogin?.is_introduce_rewarded) {
 				mutateSetIntroducePoint();
 			}
@@ -154,7 +154,7 @@ const EditMyProfilePage: FC<Props> = () => {
 					<FormWrapper onSubmit={onSubmitRegisterForm} style={{ marginTop: '24px' }}>
 						<Stack spacing={4}>
 							<Box>
-								<SectionTitle title='프로필 이미지' helpText='프로필 이미지를 설정하면 100 커밋 포인트 증정' />
+								<SectionTitle title='프로필 이미지' helpText='프로필 이미지를 설정하면 100 커밋 코인 증정' />
 								<Box display="flex" alignItems="center" mt={2}>
 									<Box>
 										{userLogin && <UserProfileImage size={60} userId={userLogin.user_token!} />}
@@ -180,7 +180,7 @@ const EditMyProfilePage: FC<Props> = () => {
 							</Box>
 							<Divider />
 							<Box>
-								<SectionTitle title='자기소개' helpText='구매자들에게 자신을 소개해보세요. 소개 작성 시 500 커밋 포인트 증정' />
+								<SectionTitle title='자기소개' helpText='구매자들에게 자신을 소개해보세요. 소개 작성 시 500 커밋 코인 증정' />
 								<TextField
 									value={inputIntroduce}
 									onChange={onChangeInputIntroduce}

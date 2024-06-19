@@ -37,11 +37,12 @@ const RegisterPage: FC<Props> = () => {
 			userEntity.userToken = user.id;
 			await apiClient.insertUserData(userEntity);
 
-			// 초기 포인트 기록 내역 생성
+			// 초기 코인 기록 내역 생성
 			const pointHistory: PointHistoryRequestEntity = {
 				user_token: user.id,
 				point: REWARD_POINTS.SIGNUP_BONUS_POINTS,
-				description: "가입 축하 포인트",
+				amount: REWARD_POINTS.SIGNUP_BONUS_POINTS,
+				description: "가입 축하 코인",
 			}
 
 			await apiClient.insertUserPointHistory(pointHistory);
@@ -58,8 +59,8 @@ const RegisterPage: FC<Props> = () => {
 		},
 		onSuccess: async (userToken:string) => {
 			const notificationEntity: NotificationEntity ={
-				title : '포인트 지급 알림',
-				content: '가입 축하 포인트로 1000 포인트가 지급 되었습니다',
+				title : '코인 지급 알림',
+				content: '가입 축하 코인으로 1000 코인으로 지급 되었습니다',
 				from_user_token: 'admin',
 				to_user_token: userToken,
 				notification_type: NotificationType.get_point,
@@ -67,7 +68,7 @@ const RegisterPage: FC<Props> = () => {
 			await apiClient.insertNotification(notificationEntity);
 
 			toast.success('회원가입에 성공하였습니다. 로그인 해주세요.');
-			toast.success('가입 축하 포인트 1000p가 지급되었습니다.');
+			toast.success('가입 축하 코인 1000p가 지급되었습니다.');
 		},
 		onError: (error) => {
 			if (error.message == API_ERROR.USER_ALREADY_REGISTERED) {

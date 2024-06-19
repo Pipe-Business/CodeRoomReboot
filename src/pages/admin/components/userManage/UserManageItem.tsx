@@ -34,7 +34,7 @@ const UserManageItem: FC<Props> = ({ item }) => {
 						<div style={{ width: '40%' }}>{item.email}</div>
 						<div style={{ width: '5%' }}>{item.cash?.toLocaleString()}</div>
 						<div style={{ width: '5%' }}>{item.point?.toLocaleString()}</div>
-						<div style={{ width: '15%' }}><Button onClick={(e:any)=>{e.stopPropagation();handleOpenDialog()}}>포인트 지급</Button></div>
+						<div style={{ width: '15%' }}><Button onClick={(e:any)=>{e.stopPropagation();handleOpenDialog()}}>코인 지급</Button></div>
 						<div style={{ width: '10%' }}><Button onClick={(e:any) => {e.stopPropagation();setMsgDialogOpen(true)}}>쪽지 전송</Button></div>
 					</div>
 				</ListItemText>

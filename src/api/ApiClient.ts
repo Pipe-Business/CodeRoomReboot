@@ -1214,7 +1214,7 @@ class ApiClient implements SupabaseAuthAPI {
                 .eq('user_token', myUserToken);
 
             if (!data || data.length === 0) {
-                return 0;  // 데이터가 없는 경우 합산 포인트 0으로 반환
+                return 0;  // 데이터가 없는 경우 합산 코인 0으로 반환
             }
 
             let userAmountEntity: UsersAmountEntity = {
@@ -1227,7 +1227,7 @@ class ApiClient implements SupabaseAuthAPI {
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 합산 커밋 포인트를 가져오는 데 실패했습니다.');
+            throw new Error('유저의 합산 커밋 코인을 가져오는 데 실패했습니다.');
         }
     }
 
@@ -1253,13 +1253,14 @@ class ApiClient implements SupabaseAuthAPI {
                 console.log("error" + error.hint);
                 console.log("error" + error.details);
 
-                throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
+                throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니다.');
             }
 
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 포인트 히스토리를 insert 하는데 실패했습니다.');
+            throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니다.');
+            throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니다.');
         }
 
     }
@@ -1554,7 +1555,7 @@ class ApiClient implements SupabaseAuthAPI {
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+            throw new Error('유저의 코인 히스토리를 가져오는 데 실패했습니다.');
         }
     }
 
@@ -1601,7 +1602,7 @@ class ApiClient implements SupabaseAuthAPI {
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+            throw new Error('유저의 코인 히스토리를 가져오는 데 실패했습니다.');
         }
     }
 
@@ -2090,7 +2091,7 @@ class ApiClient implements SupabaseAuthAPI {
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('관리자 - 유저의 포인트 히스토리를 가져오는 데 실패했습니다.');
+            throw new Error('관리자 - 유저의 코인 히스토리를 가져오는 데 실패했습니다.');
         }
     }
 

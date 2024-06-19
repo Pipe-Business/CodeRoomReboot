@@ -71,7 +71,7 @@ const ReviewDialog: FC<ReviewDialogProps> = ({ postId, open, onClose, onReviewSu
     return (
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>
-                {readonly ? '리뷰 상세 보기' : '구매해주셔서 감사합니다 리뷰를 남겨주시면 포인트가 적립됩니다!'}
+                {readonly ? '리뷰 상세 보기' : '구매해주셔서 감사합니다 리뷰를 남겨주시면 코인이 적립됩니다!'}
             </DialogTitle>
             <DialogContent>
                 <form onSubmit={handleSubmit}>

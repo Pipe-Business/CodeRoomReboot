@@ -5,6 +5,6 @@ export interface PurchaseSaleEntity {
 	isConfirmed: boolean; //  정산여부
 	purchaseUserToken: string; // 구매자 유저 토큰
 	salesUserToken: string; // 판매자 유저 토큰
-    payType: string; // 구매방식 (포인트, 토큰)
+    payType: string; // 구매방식 (캐시,코인)
 	createdAt: number; //코드 생성일
 }

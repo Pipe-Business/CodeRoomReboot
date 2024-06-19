@@ -126,13 +126,13 @@ const MyPage: FC<Props> = () => {
         const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
         const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
         let amountUpdateValue;
-        if (purchaseData?.pay_type == "point") {
-            // 구매를 포인트로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-            amountUpdateValue = Math.round(purchaseData.price! * 0.05);
-        } else {
+        // if (purchaseData?.pay_type == "point") {
+        //     // 구매를 코인으로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
+        //     amountUpdateValue = Math.round(purchaseData.price! * 0.05);
+        // } else {
             // 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
             amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
-        }
+     //}
 
         const pointHistoryRequest: PointHistoryRequestEntity = {
             description: "리뷰 작성 보상",

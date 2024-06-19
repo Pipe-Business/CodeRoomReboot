@@ -50,7 +50,7 @@ const SaleItem: FC<Props> = ({ saleData }) => {
                             }}>{codeData?.title!}</div>
 
                             <div style={{width: '15%'}}>
-                                {saleData.pay_type == "point" ? "포인트" : "캐시"}
+                                {saleData.pay_type == "point" ? "코인" : "캐시"}
                             </div>
 
                             <div style={{width: '15%'}}>
@@ -58,7 +58,7 @@ const SaleItem: FC<Props> = ({ saleData }) => {
                             </div>
 
                             <div style={{width: '20%'}}>
-                                {saleData.pay_type == "point" ? codeData?.price! * 5 : codeData?.price!}
+                                {codeData?.price!}
                             </div>
                         </div>
                     </ListItemText>

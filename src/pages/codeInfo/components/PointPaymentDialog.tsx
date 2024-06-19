@@ -14,18 +14,18 @@ const PointPaymentDialog = (onConfirm: () => void, userLogin: UserModel, pointDa
     const {mutate} = useMutation({
         mutationFn: async () => {
 
-            // 유저 포인트 차감 -> 포인트 사용기록 insert
+            // 유저 코인 차감 -> 코인 사용기록 insert
             if (postData) {
                 const pointHistory: PointHistoryRequestEntity = {
                     user_token: userLogin!.user_token!,
-                    point: postData!.price! * 5,
-                    amount: pointData == undefined ? 0 : pointData - postData!.price! * 5,
+                    point: postData!.price!,
+                    amount: pointData == undefined ? 0 : pointData - postData!.price!,
                     description: "코드 구매",
                     point_history_type: PointHistoryType.use_point,
                 }
 
                 await apiClient.insertUserPointHistory(pointHistory);
-                const amount= pointData === undefined ? 0 : pointData - postData!.price! * 5;
+                const amount= pointData === undefined ? 0 : pointData - postData!.price!;
                 await apiClient.updateTotalPoint(userLogin?.user_token!, amount);
             }
 
@@ -33,7 +33,7 @@ const PointPaymentDialog = (onConfirm: () => void, userLogin: UserModel, pointDa
             if (postData) {
                 const purchaseSaleHistory: PurchaseSaleRequestEntity = {
                     post_id: postData!.id,
-                    price: postData!.price * 5, // 포인트는 캐시의 5배
+                    price: postData!.price,
                     is_confirmed: false,
                     purchase_user_token: userLogin!.user_token!,
                     sales_user_token: postData!.userToken,
