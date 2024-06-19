@@ -1,6 +1,5 @@
 import {SupabaseAuthAPI} from "./supabase/SupabaseAuthAPI";
 import {createClient, User} from '@supabase/supabase-js'
-import {supabaseConfig} from "../config/supabaseConfig";
 import {CodeModel} from "../data/model/CodeModel";
 import {UserEntity} from "../data/entity/UserEntity";
 import {API_ERROR} from "../constants/define";
@@ -34,7 +33,7 @@ import {CashPointHistoryEntity} from "../data/model/CashPointHistoryEntity";
 import {PayType} from "../enums/PayType";
 import {UsersAmountEntity} from "../data/entity/UsersAmountEntity";
 
-export const supabase = createClient(supabaseConfig.supabaseUrl, supabaseConfig.supabaseKey);
+export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 
 const updateImageUrls = (readmeContent: string, owner: string, repo: string, token: string) => {
     const imageUrlPattern = /!\[.*?\]\((.*?)\)/g;
