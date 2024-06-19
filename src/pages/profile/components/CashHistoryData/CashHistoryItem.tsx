@@ -31,17 +31,24 @@ const CashHistoryItem: FC<Props> = ({ cashPointHistory }) => {
                                 width: '30%'
                             }}>{cashPointHistory?.description!}</div>
 
-                            <div style={{width: '10%'}}>
-                                {cashPointHistory!.price_history_type === CashHistoryType.earn_cash ? '충전' : cashPointHistory!.price_history_type ===  PointHistoryType.earn_point ? '획득': '사용'}
-                            </div>
+                            {/*<div style={{width: '10%'}}>*/}
+                            {/*    {cashPointHistory!.price_history_type === CashHistoryType.earn_cash ? '충전' : cashPointHistory!.price_history_type ===  PointHistoryType.earn_point ? '획득': '사용'}*/}
+                            {/*</div>*/}
+                            {/*<div style={{width: '20%'}}>*/}
+                            {/*    {cashPointHistory!.pay_type === 'point' ? '포인트'  : '캐시'}*/}
+                            {/*</div>*/}
                             <div style={{width: '20%'}}>
-                                {cashPointHistory!.pay_type === 'point' ? '포인트'  : '캐시'}
-                            </div>
-                            <div style={{width: '20%'}}>
-                                {cashPointHistory!.price}
+                                {
+                                    `${cashPointHistory!.price_history_type === CashHistoryType.earn_cash ? '+' : cashPointHistory!.price_history_type ===  PointHistoryType.earn_point ? '+': '-'}
+                                     ${cashPointHistory!.price}
+                                     ${cashPointHistory!.pay_type === 'point' ? '포인트'  : '캐시'}`
+                                }
                             </div>
                             <div style={{width: '10%'}}>
-                                {cashPointHistory!.amount}
+                                {`
+                                ${cashPointHistory!.amount}
+                                ${cashPointHistory!.pay_type === 'point' ? '포인트' : '캐시'}
+                                `}
                             </div>
 
                         </div>
