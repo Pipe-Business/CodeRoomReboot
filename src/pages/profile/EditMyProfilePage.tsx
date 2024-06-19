@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback, useRef, useState } from 'react';
+import React, {ChangeEvent, FC, useCallback, useEffect, useRef, useState} from 'react';
 import InfoLayout from '../../layout/InfoLayout';
 import { ColorButton, FormWrapper, TextFieldWrapper } from './styles';
 import { Avatar, Box, Card, CardHeader, TextField, Typography, Divider, Stack, Button } from '@mui/material';
@@ -8,7 +8,6 @@ import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
 import { apiClient } from '../../api/ApiClient';
-import { UserEntity } from '../../data/entity/UserEntity';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useQueryUserLogin } from '../../hooks/fetcher/UserFetcher';
 import SectionTitle from './components/SectionTitle';
@@ -16,6 +15,7 @@ import UserProfileImage from '../../components/profile/UserProfileImage';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { PointHistoryType } from '../../enums/PointHistoryType';
 import { PointHistoryRequestEntity } from '../../data/entity/PointHistoryRequestEntity';
+import {UserModel} from "../../data/model/UserModel";
 
 interface Props {
 	children?: React.ReactNode;
@@ -23,12 +23,11 @@ interface Props {
 
 interface RouteState {
 	state: {
-		userData: UserEntity;
+		userData: UserModel;
 	}
 }
 
 const EditMyProfilePage: FC<Props> = () => {
-
 	const queryClient = useQueryClient();
 	const { state } = useLocation() as RouteState;
 	const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
@@ -45,7 +44,7 @@ const EditMyProfilePage: FC<Props> = () => {
 		setErrIntroduce, setErrIntroduceMsg,
 		, , inputIntroduceCount
 	] = useInputValidate({
-		defaultValue: state.userData.aboutMe == null ? "" : state.userData.aboutMe,
+		defaultValue: state.userData?.about_me!
 	});
 
 	const { mutateAsync: mutateSetProfilePoint } = useMutation({
