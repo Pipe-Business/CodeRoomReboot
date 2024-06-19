@@ -1,7 +1,7 @@
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import {Badge, Skeleton} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
-import React, {FC, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import {apiClient} from '../api/ApiClient';
 import LoginModal from "../components/login/modal/LoginModal";
@@ -26,10 +26,20 @@ const HeaderLayout: FC<Props> = () => {
         queryFn: () => apiClient.getUserTotalPointCash(userLogin?.user_token!),
     });
 
+    const {isLoading: isNotiLoading, data: notiData} = useQuery({
+        queryKey: [REACT_QUERY_KEY.notification],
+        queryFn: () =>apiClient.getMyNotReadNotification(userLogin?.user_token!),
+    });
+
+    useEffect(() => {
+        setNotiCount(notiData?.length ?? 0);
+    }, [notiData]);
+
+
     const [notiCount, setNotiCount] = useState<number>(0);
     const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
 
-    if (isLoadingUserLogin || isTotalCashPointLading) {
+    if (isLoadingUserLogin || isTotalCashPointLading || isNotiLoading) {
         return <CenterBox><Skeleton width={'80%'} height={'64px'}/></CenterBox>;
     }
 

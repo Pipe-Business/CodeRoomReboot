@@ -102,6 +102,7 @@ const NotificationPage: FC = () => {
       const lastNotifications: NotificationEntity[] = await apiClient.getLastMyNotifications(user.id);
       setNotifications(lastNotifications);
       await apiClient.subscribeInsertNotification(handleInserts);
+      await apiClient.updateNotificationIsRead(user.id);
     };
 
     initialize();

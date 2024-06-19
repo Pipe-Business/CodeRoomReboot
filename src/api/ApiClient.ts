@@ -2224,6 +2224,53 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('total cash 업데이트에 실패했습니다.');
         }
     }
+
+    async getMyNotReadNotification(userToken: string): Promise<NotificationEntity[]> {
+        try {
+            const {data, error} = await supabase.from('notification')
+                .select('*')
+                .eq('to_user_token', userToken)
+                .eq('is_read',false)
+                .order('created_at', {ascending: false});
+
+            let lstNotificationEntity: NotificationEntity[] = [];
+            data?.forEach((e) => {
+               let notiEntity : NotificationEntity = {
+                   id: e.id,
+                   title: e.title,
+                   content: e.content,
+                   to_user_token: e.to_user_token,
+                   from_user_token: e.from_user_token,
+                   notification_type: e.notification_type,
+                   created_at: e.created_at,
+               }
+                lstNotificationEntity.push(notiEntity);
+            });
+
+            return lstNotificationEntity;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('읽지않은 알림을 가져오는데 실패했습니다.');
+        }
+
+    }
+
+    async updateNotificationIsRead(userToken: string){
+        try{
+            const lstNotReadNoti: NotificationEntity[] =  await this.getMyNotReadNotification(userToken);
+            const lstNotReadNotiId:number[] = lstNotReadNoti.map((e: any) => {return e.id});
+
+            for(const id of lstNotReadNotiId){
+                const {data, error} = await supabase.from('notification')
+                    .update({is_read: true})
+                    .eq('id',id);
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('알림을 읽음 처리하는데 실패했습니다.s');
+        }
+    }
 }
 
 
