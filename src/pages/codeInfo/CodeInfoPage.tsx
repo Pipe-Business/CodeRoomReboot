@@ -240,30 +240,25 @@ const CodeInfo: FC<Props> = () => {
 								</Typography>
 								<div>
 									<ReactMarkdown
-										remarkPlugins={[remarkGfm]}
-										rehypePlugins={[rehypeRaw]}
+                                        children={readMeData}
+                                        remarkPlugins={[remarkGfm]}
 										components={{
-											code({node, className, children, ...props}) {
-												const match = /language-(\w+)/.exec(className || '');
-												return match ? (
-													<pre className={className}>
-														<code className={className} {...props}>
-															{String(children).replace(/\n$/, '')}
-														</code>
-													</pre>
-												) : (
-													<code className={className} {...props}>
-														{children}
-													</code>
-												);
-											},
-											img({node, ...props}) {
-												return <img style={{maxWidth: '100%'}} {...props} />;
-											},
-										}}
-									>
-										{readMeData}
-									</ReactMarkdown>
+                                            img: ({node, ...props}) => <img style={{maxWidth: '100%'}} {...props} alt=""/>
+                                            // code({node, className, children, ...props}) {
+											// 	const match = /language-(\w+)/.exec(className || '');
+											// 	return match ? (
+											// 		<pre className={className}>
+											// 			<code className={className} {...props}>
+											// 				{String(children).replace(/\n$/, '')}
+											// 			</code>
+											// 		</pre>
+											// 	) : (
+											// 		<code className={className} {...props}>
+											// 			{children}
+											// 		</code>
+											// 	);
+											// },
+										}}/>
 								</div>
 							</Box>
 							<Box height={32} />
