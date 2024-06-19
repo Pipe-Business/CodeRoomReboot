@@ -91,7 +91,15 @@ const NotificationPage: FC = () => {
         const newNotifications = prevNotifications.filter(
           (notification) => notification.id !== notificationData.id
         );
-        return [...newNotifications, notificationData];
+
+        const notiList: NotificationEntity[] = [...newNotifications, notificationData];
+        notiList.sort((a, b) => {
+          if (!a.created_at || !b.created_at) {
+            return 0; // created_at이 없는 경우 정렬하지 않음
+          }
+          return b.created_at.getTime() - a.created_at.getTime();
+        });
+        return notiList;
       });
     }
   };

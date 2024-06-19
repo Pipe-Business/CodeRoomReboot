@@ -298,7 +298,8 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const {data, error} = await supabase.from('notification')
                 .select()
-                .eq('to_user_token', userToken);
+                .eq('to_user_token', userToken)
+                .order('created_at', {ascending: false});
 
             let lstNotifications: NotificationEntity[] = [];
             data?.forEach((e) => {
