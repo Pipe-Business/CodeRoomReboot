@@ -3,12 +3,12 @@ import InfoLayout from '../../layout/InfoLayout';
 import {FormWrapper} from './styles';
 import {Avatar, Box, Button, Card, Divider, Stack, TextField, Typography} from '@mui/material';
 import {useInputValidate} from '../../hooks/common/UseInputValidate';
-import {REACT_QUERY_KEY, REWARD_COIN} from '../../constants/define';
+import {REWARD_COIN} from '../../constants/define';
 import {toast} from 'react-toastify';
 import {useLocation, useNavigate} from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
 import {apiClient} from '../../api/ApiClient';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import SectionTitle from './components/SectionTitle';
 import UserProfileImage from '../../components/profile/UserProfileImage';
@@ -28,16 +28,10 @@ interface RouteState {
 }
 
 const EditMyProfilePage: FC<Props> = () => {
-    const queryClient = useQueryClient();
     const {state} = useLocation() as RouteState;
     const {userLogin, isLoadingUserLogin} = useQueryUserLogin();
     const navigate = useNavigate();
     const inputEmailRef = useRef<HTMLInputElement | null>(null);
-
-    const {isLoading: isPointDataLoading, data: pointData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.point],
-        queryFn: () => apiClient.getUserTotalPoint(userLogin!.user_token!),
-    });
 
     const [inputIntroduce, onChangeInputIntroduce, , ,
         , successIntroduce, successIntroduceMsg,
@@ -50,8 +44,9 @@ const EditMyProfilePage: FC<Props> = () => {
     const {mutateAsync: mutateSetProfilePoint} = useMutation({
         mutationFn: async () => {
             // 프로필 보상 코인 지급
-            if (pointData) {
-                const totalAmount = pointData + REWARD_COIN.PROFILE_IMG_BONUS_COIN;
+            const totalPoint = await apiClient.getUserTotalPoint(userLogin?.user_token!);
+            if (totalPoint) {
+                const totalAmount = totalPoint + REWARD_COIN.PROFILE_IMG_BONUS_COIN;
                 const pointHistory: PointHistoryRequestEntity = {
                     user_token: userLogin!.user_token!,
                     point: REWARD_COIN.PROFILE_IMG_BONUS_COIN,
@@ -78,8 +73,10 @@ const EditMyProfilePage: FC<Props> = () => {
     const {mutateAsync: mutateSetIntroducePoint} = useMutation({
         mutationFn: async () => {
             // 자기소개 보상 코인 지급
-            if (pointData) {
-                const totalAmount = pointData + REWARD_COIN.INTRODUCTION_BONUS_COIN;
+
+            const totalPoint = await apiClient.getUserTotalPoint(userLogin?.user_token!);
+            if (totalPoint) {
+                const totalAmount = totalPoint + REWARD_COIN.INTRODUCTION_BONUS_COIN;
                 const pointHistory: PointHistoryRequestEntity = {
                     user_token: userLogin!.user_token!,
                     point: REWARD_COIN.INTRODUCTION_BONUS_COIN,
