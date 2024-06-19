@@ -1184,7 +1184,6 @@ class ApiClient implements SupabaseAuthAPI {
             const {data, error} = await supabase.from('users_amount')
                 .select('*')
                 .eq('user_token', myUserToken);
-            console.log("sdf"+JSON.stringify(data));
 
             let lstUserAmountEntity: UsersAmountEntity[] = [];
 

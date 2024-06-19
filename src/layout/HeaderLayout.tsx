@@ -22,8 +22,9 @@ const HeaderLayout: FC<Props> = () => {
     const {userLogin, isLoadingUserLogin} = useQueryUserLogin();
 
     const {isLoading: isTotalCashPointLading, data: totalCashPointData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.totalCashPoint],
+        queryKey: [REACT_QUERY_KEY.totalCashPoint,userLogin?.user_token],
         queryFn: () => apiClient.getUserTotalPointCash(userLogin?.user_token!),
+        enabled: userLogin?.user_token ? true : false,
     });
 
     const {isLoading: isNotiLoading, data: notiData} = useQuery({
