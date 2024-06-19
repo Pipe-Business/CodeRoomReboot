@@ -10,6 +10,7 @@ import ReviewDialog from "../codeInfo/components/ReviewDialog";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
 import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
 import {PointHistoryType} from "../../enums/PointHistoryType";
+import {CodeModel} from "../../data/model/CodeModel";
 
 interface Props {
 	children?: React.ReactNode,
@@ -25,12 +26,19 @@ const MyPurchaseDataPage: FC<Props> = () => {
 	const { state: { userLogin, purchaseData } } = useLocation();
 	console.log("user model"+JSON.stringify(userLogin));
 
-	const handleWriteReviewClick = (purchaseData: PurchaseSaleResponseEntity) => {
+	const handleWriteReviewClick = async (purchaseData: PurchaseSaleResponseEntity) =>  {
 		console.log('Review click event received for:', purchaseData);
-		setPurchasePostId(purchaseData.post_id);
-		setReadonly(false);
-		setReviewData(undefined); // 리뷰 작성이므로 초기화
-		setReviewDialogOpen(true);
+
+		const targetCode:CodeModel	= await apiClient.getTargetCode(purchaseData.post_id);
+		if(targetCode.is_deleted){
+			console.log("targetCode");
+			window.alert('삭제된 게시글입니다.');
+		}else{
+			setPurchasePostId(purchaseData.post_id);
+			setReadonly(false);
+			setReviewData(undefined); // 리뷰 작성이므로 초기화
+			setReviewDialogOpen(true);
+		}
 	};
 
 	const handleReadReviewClick = async (purchaseData: PurchaseSaleResponseEntity) => {
