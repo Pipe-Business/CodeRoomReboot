@@ -2,7 +2,7 @@ import React, {FC, useCallback, useRef, useState,} from 'react';
 import InfoLayout from '../../layout/InfoLayout';
 import {Box, Card, TextField} from '@mui/material';
 import {useInputValidate} from '../../hooks/common/UseInputValidate';
-import {API_ERROR, EMAIL_EXP, REWARD_POINTS} from '../../constants/define';
+import {API_ERROR, EMAIL_EXP, REWARD_COIN} from '../../constants/define';
 import {toast} from 'react-toastify';
 import {useNavigate} from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
@@ -40,8 +40,8 @@ const RegisterPage: FC<Props> = () => {
 			// 초기 코인 기록 내역 생성
 			const pointHistory: PointHistoryRequestEntity = {
 				user_token: user.id,
-				point: REWARD_POINTS.SIGNUP_BONUS_POINTS,
-				amount: REWARD_POINTS.SIGNUP_BONUS_POINTS,
+				point: REWARD_COIN.SIGNUP_BONUS_COIN,
+				amount: REWARD_COIN.SIGNUP_BONUS_COIN,
 				description: "가입 축하 코인",
 			}
 
@@ -51,7 +51,7 @@ const RegisterPage: FC<Props> = () => {
 			const userAmount: UsersAmountEntity = {
 				user_token: user.id,
 				cash_amount: 0,
-				point_amount: REWARD_POINTS.SIGNUP_BONUS_POINTS,
+				point_amount: REWARD_COIN.SIGNUP_BONUS_COIN,
 			}
 			await apiClient.insertUserAmountHistory(userAmount);
 

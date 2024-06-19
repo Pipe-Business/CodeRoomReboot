@@ -57,6 +57,8 @@ export const CATEGORY_TO_KOR = {
 	other: '기타',
 };
 
-export const REWARD_POINTS = {
-	SIGNUP_BONUS_POINTS: 1000,
+export const REWARD_COIN = {
+	SIGNUP_BONUS_COIN: 1000,
+	INTRODUCTION_BONUS_COIN: 500,
+	PROFILE_IMG_BONUS_COIN: 100,
 }
