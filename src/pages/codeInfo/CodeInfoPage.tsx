@@ -239,31 +239,31 @@ const CodeInfo: FC<Props> = () => {
 									코드 설명
 								</Typography>
 								<div>
-									{/*<ReactMarkdown*/}
-									{/*	remarkPlugins={[remarkGfm]}*/}
-									{/*	rehypePlugins={[rehypeRaw]}*/}
-									{/*	components={{*/}
-									{/*		code({node, className, children, ...props}) {*/}
-									{/*			const match = /language-(\w+)/.exec(className || '');*/}
-									{/*			return match ? (*/}
-									{/*				<pre className={className}>*/}
-									{/*					<code className={className} {...props}>*/}
-									{/*						{String(children).replace(/\n$/, '')}*/}
-									{/*					</code>*/}
-									{/*				</pre>*/}
-									{/*			) : (*/}
-									{/*				<code className={className} {...props}>*/}
-									{/*					{children}*/}
-									{/*				</code>*/}
-									{/*			);*/}
-									{/*		},*/}
-									{/*		img({node, ...props}) {*/}
-									{/*			return <img style={{maxWidth: '100%'}} {...props} />;*/}
-									{/*		},*/}
-									{/*	}}*/}
-									{/*>*/}
-									{/*	{readMeData}*/}
-									{/*</ReactMarkdown>*/}
+									<ReactMarkdown
+										remarkPlugins={[remarkGfm]}
+										rehypePlugins={[rehypeRaw]}
+										components={{
+											code({node, className, children, ...props}) {
+												const match = /language-(\w+)/.exec(className || '');
+												return match ? (
+													<pre className={className}>
+														<code className={className} {...props}>
+															{String(children).replace(/\n$/, '')}
+														</code>
+													</pre>
+												) : (
+													<code className={className} {...props}>
+														{children}
+													</code>
+												);
+											},
+											img({node, ...props}) {
+												return <img style={{maxWidth: '100%'}} {...props} />;
+											},
+										}}
+									>
+										{readMeData}
+									</ReactMarkdown>
 								</div>
 							</Box>
 							<Box height={32} />
