@@ -14,6 +14,7 @@ import { PointHistoryType } from '../../../enums/PointHistoryType';
 import { NotificationEntity } from '../../../data/entity/NotificationEntity';
 import { NotificationType } from '../../../enums/NotificationType';
 import {CashHistoryRequestEntity} from "../../../data/entity/CashHistoryRequestEntity";
+import {toast} from "react-toastify";
 
 interface Props {
   children?: React.ReactNode;
@@ -37,88 +38,95 @@ const PointItem: FC<Props> = ({ bonusPoint, orderName, paymentPrice, paymentCash
   const { mutateBootpayRequest } = useMutateBootPayPaymentRequest();
 
   const payHandler = useCallback(async () => {
-    const response = await Bootpay.requestPayment({
-      application_id: '656db24ee57a7e001a59ff03',
-      price: paymentPrice,
-      order_name: orderName,
-      order_id: orderName,
-      pg: 'kcp',
-      tax_free: 0,
-      user: {
-        id: userLogin?.user_token!,
-        username: userLogin?.nickname,
-        email: userLogin?.email,
-      },
-      items: [
-        {
-          id: 'item_id',
-          name: orderName,
-          qty: 1,
-          price: paymentPrice,
+    try{
+      const response = await Bootpay.requestPayment({
+        application_id: '656db24ee57a7e001a59ff03',
+        price: paymentPrice,
+        order_name: orderName,
+        order_id: orderName,
+        pg: 'kcp',
+        tax_free: 0,
+        user: {
+          id: userLogin?.user_token!,
+          username: userLogin?.nickname,
+          email: userLogin?.email,
         },
-      ],
-      extra: {
-        open_type: 'iframe',
-        card_quota: '0,2,3',
-        escrow: false,
-      },
-    });
+        items: [
+          {
+            id: 'item_id',
+            name: orderName,
+            qty: 1,
+            price: paymentPrice,
+          },
+        ],
+        extra: {
+          open_type: 'iframe',
+          card_quota: '0,2,3',
+          escrow: false,
+        },
+      });
 
-    if (response.event === 'done') {
-      const entity: BootPayPaymentEntity = {
-        user_token: userLogin?.user_token!,
-        cash: paymentCash, // 코드룸 캐시
-        price: paymentPrice, // 원화
-        purchase_at: response.data.purchased_at,
-        order_name: response.data.order_name,
-        method_origin: response.data.method_origin,
-        company_name: response.data.company_name,
-        receipt_id: response.data.receipt_id,
-      };
-
-      if (cashData !== undefined && pointData !== undefined) {
-
-        await mutateBootpayRequest(entity);
-
-        // 유저 캐시 증가 -> 캐시 사용기록 insert
-        const cashHistory: CashHistoryRequestEntity = {
-          user_token: userLogin!.user_token!,
-          cash: paymentCash,
-          amount: cashData + paymentCash,
-          description: '캐시 충전',
-          cash_history_type: 'earn_cash',
+      if (response.event === 'done') {
+        const entity: BootPayPaymentEntity = {
+          user_token: userLogin?.user_token!,
+          cash: paymentCash, // 코드룸 캐시
+          price: paymentPrice, // 원화
+          purchase_at: response.data.purchased_at,
+          order_name: response.data.order_name,
+          method_origin: response.data.method_origin,
+          company_name: response.data.company_name,
+          receipt_id: response.data.receipt_id,
         };
 
-        await apiClient.insertUserCashHistory(cashHistory);
-        await apiClient.updateTotalCash(userLogin?.user_token!,cashData + paymentCash,);
+        if (cashData !== undefined && pointData !== undefined) {
 
-        // 코인 증가
-        const pointHistory: PointHistoryRequestEntity = {
-          user_token: userLogin!.user_token!,
-          point: bonusPoint!,
-          amount: pointData + bonusPoint!,
-          description: '캐시 충전 보너스 코인',
-          point_history_type: PointHistoryType.earn_point,
-        };
+          await mutateBootpayRequest(entity);
 
-        await apiClient.insertUserPointHistory(pointHistory);
-        await apiClient.updateTotalPoint(userLogin?.user_token!,pointData + bonusPoint!);
+          // 유저 캐시 증가 -> 캐시 사용기록 insert
+          const cashHistory: CashHistoryRequestEntity = {
+            user_token: userLogin!.user_token!,
+            cash: paymentCash,
+            amount: cashData + paymentCash,
+            description: '캐시 충전',
+            cash_history_type: 'earn_cash',
+          };
 
-        // 코인 지급 알림
-        const notificationEntity: NotificationEntity = {
-          title: '코인 지급 알림',
-          content: '캐시 충전 보너스 코인이 지급되었습니다.',
-          from_user_token: 'admin',
-          to_user_token: userLogin!.user_token!,
-          notification_type: NotificationType.get_point,
-        };
-        await apiClient.insertNotification(notificationEntity);
+          await apiClient.insertUserCashHistory(cashHistory);
+          await apiClient.updateTotalCash(userLogin?.user_token!,cashData + paymentCash,);
 
-        await refetchCash();
-        await refetchPoint();
+          // 코인 증가
+          const pointHistory: PointHistoryRequestEntity = {
+            user_token: userLogin!.user_token!,
+            point: bonusPoint!,
+            amount: pointData + bonusPoint!,
+            description: '캐시 충전 보너스 코인',
+            point_history_type: PointHistoryType.earn_point,
+          };
 
-        handleOpenDialog();
+          await apiClient.insertUserPointHistory(pointHistory);
+          await apiClient.updateTotalPoint(userLogin?.user_token!,pointData + bonusPoint!);
+
+          // 코인 지급 알림
+          const notificationEntity: NotificationEntity = {
+            title: '코인 지급 알림',
+            content: '캐시 충전 보너스 코인이 지급되었습니다.',
+            from_user_token: 'admin',
+            to_user_token: userLogin!.user_token!,
+            notification_type: NotificationType.get_point,
+          };
+          await apiClient.insertNotification(notificationEntity);
+
+          await refetchCash();
+          await refetchPoint();
+
+          handleOpenDialog();
+        }
       }
+
+    }catch (e: any){
+      console.log(e);
+      toast.error("결제가 중단되었습니다");
+      //throw new Error('결제 취소');
     }
   }, [paymentCash, paymentPrice, orderName, userLogin, bonusPoint, cashData, pointData, mutateBootpayRequest]);
 

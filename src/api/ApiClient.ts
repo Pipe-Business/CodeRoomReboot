@@ -564,7 +564,7 @@ class ApiClient implements SupabaseAuthAPI {
                 .eq('user_token', myUserToken);
 
             const stringdata = JSON.stringify(data);
-            console.log("getUserTotalCash: "+stringdata);
+            //console.log("getUserTotalCash: "+stringdata);
 
             if (!data || data.length === 0) {
                 return 0;  // 데이터가 없는 경우 합산 캐시는 0으로 반환
@@ -1232,7 +1232,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async insertUserPointHistory(pointHistoryRequestEntity: PointHistoryRequestEntity) {
-        console.log(pointHistoryRequestEntity);
+        //console.log(pointHistoryRequestEntity);
         const pointHistoryObj = {
             "point": pointHistoryRequestEntity.point,
             "amount": pointHistoryRequestEntity.amount,
@@ -1243,7 +1243,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
         try {
-            console.log("insert userPoint history");
+           // console.log("insert userPoint history");
             const {data, error} = await supabase.from("users_point_history").insert(pointHistoryObj).select();
 
             if (error) {
@@ -1259,7 +1259,6 @@ class ApiClient implements SupabaseAuthAPI {
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니다.');
             throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니다.');
         }
 
