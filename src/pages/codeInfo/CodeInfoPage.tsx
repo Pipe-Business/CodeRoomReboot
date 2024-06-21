@@ -31,9 +31,7 @@ import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEn
 import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEntity';
 import {PointHistoryType} from '../../enums/PointHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
+import ReadMeHtml from "./components/ReadMeHtml";
 
 dayjs.locale('ko');
 
@@ -239,26 +237,7 @@ const CodeInfo: FC<Props> = () => {
 									코드 설명
 								</Typography>
 								<div>
-									<ReactMarkdown
-                                        children={readMeData}
-                                        remarkPlugins={[remarkGfm]}
-										components={{
-                                            img: ({node, ...props}) => <img style={{maxWidth: '100%'}} {...props} alt=""/>
-                                            // code({node, className, children, ...props}) {
-											// 	const match = /language-(\w+)/.exec(className || '');
-											// 	return match ? (
-											// 		<pre className={className}>
-											// 			<code className={className} {...props}>
-											// 				{String(children).replace(/\n$/, '')}
-											// 			</code>
-											// 		</pre>
-											// 	) : (
-											// 		<code className={className} {...props}>
-											// 			{children}
-											// 		</code>
-											// 	);
-											// },
-										}}/>
+									<ReadMeHtml htmlText={readMeData!}/>
 								</div>
 							</Box>
 							<Box height={32} />
