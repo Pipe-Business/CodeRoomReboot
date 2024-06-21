@@ -8,7 +8,6 @@ import {useNavigate} from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
 import {ColorButton, FormWrapper, TextFieldWrapper} from './styles';
 import {apiClient} from '../../api/ApiClient';
-import {createTodayDate} from '../../utils/DayJsHelper';
 import {UserEntity} from '../../data/entity/UserEntity';
 import {useMutation} from '@tanstack/react-query';
 import {User} from '@supabase/supabase-js';
@@ -60,7 +59,7 @@ const RegisterPage: FC<Props> = () => {
 		onSuccess: async (userToken:string) => {
 			const notificationEntity: NotificationEntity ={
 				title : '코인 지급 알림',
-				content: '가입 축하 코인으로 1000 코인으로 지급 되었습니다',
+				content: `가입 축하 코인으로 ${REWARD_COIN.SIGNUP_BONUS_COIN}이 지급 되었습니다`,
 				from_user_token: 'admin',
 				to_user_token: userToken,
 				notification_type: NotificationType.get_point,
@@ -68,10 +67,10 @@ const RegisterPage: FC<Props> = () => {
 			await apiClient.insertNotification(notificationEntity);
 
 			toast.success('회원가입에 성공하였습니다. 로그인 해주세요.');
-			toast.success('가입 축하 코인 1000p가 지급되었습니다.');
+			toast.success(`가입 축하 코인 ${REWARD_COIN.SIGNUP_BONUS_COIN}코인이 지급되었습니다.`);
 		},
 		onError: (error) => {
-			if (error.message == API_ERROR.USER_ALREADY_REGISTERED) {
+			if (error.message === API_ERROR.USER_ALREADY_REGISTERED) {
 				toast.error('이미 사용중인 이메일입니다');
 				setErrEmail(true);
 				setErrEmailMsg('이미 사용중인 이메일입니다.');
@@ -181,40 +180,7 @@ const RegisterPage: FC<Props> = () => {
 				toast.error(errNickNameMsg);
 				return;
 			}
-			const date = createTodayDate();
-			// await mutate({
-			// 	id: '',
-			// 	birth: '',
-			// 	nickname: inputNickName,
-			// 	email: inputEmail!,
-			// 	point: 200,
-			// 	createdAt: date,
-			// 	gender: 'male',
-			// 	registerType: 'codeRoom',
-			// });
-			// const entity: BootPayPaymentEntity = {
-			// 	userId: userUid,
-			// 	point: 200,
-			// 	price: 0,
-			// 	purchaseAt: date,
-			// 	orderName: '가입축하 캐시',
-			// 	methodOrigin: 'admin',
-			// 	companyName: '파이프빌더',
-			// 	type: 'supply',
-			// };
-			// const pushKey = await mutateBootpayRequest(entity);
-			// const userBootPayEntity: BootpayPaymentForUser = {
-			// 	id: pushKey,
-			// 	userId: userUid,
-			// 	createdAt: date,
-			// };
-			// await firebaseSetFetcher(['bootpayPaymentForUser', userUid, pushKey], userBootPayEntity);
-			// const notiEntity: UserNotificationEntity = {
-			// 	createdAt: date,
-			// 	content: `🎉가입축하 캐시 200p 를 받았습니다.`,
-			// 	sender: 'admin',
-			// };
-			// await apiClient.sendNotificationByUser(userUid, notiEntity);
+
 		  const user : UserEntity = {
 				authType : 'CODEROOM',
 				email : inputEmail,
