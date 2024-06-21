@@ -41,6 +41,7 @@ const AdminUserInfo = React.lazy(() => import('./pages/admin/components/userMana
 const NotificationPage = React.lazy(() => import('./pages/notification/NotificationPage'));
 const EditCodePage = React.lazy(() => import('./pages/editCode/EditCodePage'));
 const SearchPage = React.lazy(() => import('./pages/search/SearchPage'));
+const PaymentPage = React.lazy(() => import('./pages/payment/PaymentPage'));
 
 const queryClient = new QueryClient();
 
@@ -98,6 +99,7 @@ root.render(
       <Route path='/admin/user/:userId' element={<AdminUserInfo />} />
       <Route path='/notification' element={<NotificationPage/>}/>
       <Route path='/code/search' element={<SearchPage />} />
+      <Route path='/payment' element={<PaymentPage/>} />
 
 
       <Route path='/*' element={<NotFoundPage/>}/>

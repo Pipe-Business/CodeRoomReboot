@@ -33,7 +33,7 @@ const CashPaymentDialog = (onConfirm: () => void, userLogin: UserModel, cashData
                     is_confirmed: false,
                     purchase_user_token: userLogin!.user_token!,
                     sales_user_token: postData!.userToken,
-                    pay_type: "cash"
+                    pay_type: "cash" // TODO 결제화면으로 대체될 예정
                 }
 
                 await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);

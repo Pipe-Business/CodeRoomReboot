@@ -82,7 +82,6 @@ const MyPurchaseDataPage: FC<Props> = () => {
 			point_history_type: PointHistoryType.earn_point,
 		};
 
-		console.log("** 리뷰 작성 코인 지급중");
 		await apiClient.insertUserPointHistory(pointHistoryRequest); // point history insert
 		await apiClient.updateTotalPoint(userLogin.user_token!,  currentAmount + amountUpdateValue);  // total point update
 

@@ -18,7 +18,7 @@ import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton';
 import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton';
 import CashPaymentDialog from './components/CashPaymentDialog';
 import PointPaymentDialog from './components/PointPaymentDialog';
-import {BlurContainer} from './styles';
+import {BlurContainer, ColorButton} from './styles';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import EditCodeButton from './components/EditCodeButton';
@@ -33,7 +33,6 @@ import {PointHistoryType} from '../../enums/PointHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
 
 dayjs.locale('ko');
 
@@ -369,6 +368,8 @@ const CodeInfo: FC<Props> = () => {
 									onClickLoginRegister={onOpenLoginDialog}
 									onOpenPointDialog={onOpenPointDailog}
 								/>
+								<Box my={1} />
+								<ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment')}  variant='contained'>구매하기</ColorButton>
 								<Box my={2}>
 									{
 										(postData.userToken !== userLogin?.user_token) &&

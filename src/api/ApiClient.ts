@@ -1474,7 +1474,8 @@ class ApiClient implements SupabaseAuthAPI {
                 .select('*')
                 .eq('sales_user_token', myUserToken,)
                 .eq('is_confirmed', isConfirmed)
-                .eq('pay_type', 'cash')
+                //.eq('pay_type', 'cash')
+                .contains('pay_type',['cash'])
                 .order('created_at', {ascending: false});
 
             let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
