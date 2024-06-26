@@ -349,7 +349,7 @@ const CodeInfo: FC<Props> = () => {
 									onOpenPointDialog={onOpenPointDailog}
 								/>
 								<Box my={1} />
-								<ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment')}  variant='contained'>구매하기</ColorButton>
+								<ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment', {state:{postData}})}  variant='contained'>구매하기</ColorButton>
 								<Box my={2}>
 									{
 										(postData.userToken !== userLogin?.user_token) &&
