@@ -33,6 +33,7 @@ import {CashPointHistoryEntity} from "../data/model/CashPointHistoryEntity";
 import {PayType} from "../enums/PayType";
 import {UsersAmountEntity} from "../data/entity/UsersAmountEntity";
 import {PostStateType} from "../enums/PostStateType";
+import {CashHistoryType} from "../enums/CashHistoryType";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 
@@ -692,7 +693,9 @@ class ApiClient implements SupabaseAuthAPI {
                 let purchaseSale: PurchaseSaleResponseEntity = {
                     id: e.id,
                     post_id: e.post_id,
-                    price: e.price,
+                    sell_price: e.sell_price,
+                    use_cash: e.use_cash,
+                    use_coin: e.use_coin,
                     is_confirmed: e.is_confirmed,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
@@ -1082,7 +1085,9 @@ class ApiClient implements SupabaseAuthAPI {
                 let purchaseSale: PurchaseSaleResponseEntity = {
                     id: e.id,
                     post_id: e.post_id,
-                    price: e.price,
+                    sell_price: e.sell_price,
+                    use_cash: e.use_cash,
+                    use_coin: e.use_coin,
                     is_confirmed: e.is_confirmed,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
@@ -1677,7 +1682,7 @@ class ApiClient implements SupabaseAuthAPI {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('is_confirmed', isConfirmed)
-                .eq('pay_type', 'cash')
+                .contains('pay_type', ['cash'])
                 .order('created_at', {ascending: false});
 
             let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
@@ -1801,7 +1806,7 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const {data, error} = await supabase.from('users_cash_history')
                 .select('*')
-                .eq('cash_history_type', 'earn_cash')
+                .eq('cash_history_type', CashHistoryType.earn_cash)
                 .order('created_at', {ascending: false});
 
             let lstCashHistory: CashHistoryResponseEntity[] = [];
