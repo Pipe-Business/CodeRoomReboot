@@ -8,6 +8,7 @@ import { CircularProgress } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { QueryClient } from '@tanstack/react-query';
 import { Octokit } from '@octokit/core';
+import {RecoilRoot} from "recoil";
 
 
 const MainPage = React.lazy(() => import('./pages/main/MainPage'));
@@ -54,7 +55,8 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
     <BrowserRouter>
     <Suspense fallback={
 					<div style={{
@@ -112,6 +114,7 @@ root.render(
           />
     </BrowserRouter>
     </QueryClientProvider>
+          </RecoilRoot>
   </React.StrictMode>
 );
 

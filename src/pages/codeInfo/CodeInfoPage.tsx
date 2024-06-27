@@ -32,7 +32,8 @@ import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import ReadMeHtml from "./components/ReadMeHtml";
 import PurchaseButton from "./components/Purchasebutton";
 import CodeDownloadButton from "./components/CodeDownloadButton";
-import PaymentDialog from "./components/PaymentDialog";
+import {paymentDialogState} from "../payment/atom";
+import {useRecoilState} from "recoil";
 
 dayjs.locale('ko');
 
@@ -94,28 +95,30 @@ const CodeInfo: FC<Props> = () => {
 	const [onCashClickConfirm] = CashPaymentDialog(() => {
 		//console.log("현금 결제가 확인되었습니다!");
 		// 현금 결제 확인 후 추가 로직
-		setDialogOpen(true);
+		setPaymentDialogOpen(true);
 	}, userLogin!, cashData!, postData!);
 
 	const [onPointClickConfirm] = PointPaymentDialog(() => {
 		//console.log("코인 결제가 확인되었습니다!");
 		// 코인 결제 확인 후 추가 로직
-		setDialogOpen(true);
+		setPaymentDialogOpen(true);
 	}, userLogin!, pointData!, postData!);
 
 	const onCompletePaymentDialog = () => {
-		setDialogOpen(true);
+		setPaymentDialogOpen(true);
 	}
 	//console.log(`userlogin : ${JSON.stringify(userLogin)}`)
 	//console.log(`cashData : ${JSON.stringify(cashData!)}`)
 	//console.log(`pointData : ${JSON.stringify(pointData!)}`)
 	//console.log(`postData : ${JSON.stringify(postData!)}`)
-	const onPaymentConfirm = PaymentDialog(onCompletePaymentDialog, userLogin!, cashData!, pointData!, postData!);
+	//todo paymentConfirm
+
+	//const onPaymentConfirm: () => void = PaymentDialog(onCompletePaymentDialog, userLogin!, cashData!, pointData!, postData!);
 
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
-	const [dialogOpen, setDialogOpen] = useState(false);
-
+	//const [dialogOpen, setDialogOpen] = useState(false);
+	const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState);
 	const handleReviewSubmit = async () => {
 		// 리뷰 작성 완료시 이 콜백을 수행
 		const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
@@ -141,7 +144,7 @@ const CodeInfo: FC<Props> = () => {
 		await apiClient.insertUserPointHistory(pointHistoryRequest);
 		await apiClient.updateTotalPoint(userLogin?.user_token!, (currentAmount + amountUpdateValue));  // total point update
 
-		setDialogOpen(false);
+		setPaymentDialogOpen(false);
 		navigate(0);
 	};
 
@@ -359,8 +362,7 @@ const CodeInfo: FC<Props> = () => {
 								{/*	onOpenPointDialog={onOpenPointDailog}*/}
 								{/*/>*/}
 								<Box my={1} />
-								{/*Todo onpaymentconfirm 함수를 포인트, 캐시로 통합하여 구현 필요*/}
-								<PurchaseButton onClickLoginRegister={onOpenLoginDialog} onPaymentConfirm={onPaymentConfirm} postData={postData} purchasedSaleData={purchaseSaleData}/>
+								<PurchaseButton postData={postData} purchasedSaleData={purchaseSaleData}/>
 								{	purchaseSaleData &&
 									<CodeDownloadButton repoURL={postData.githubRepoUrl}></CodeDownloadButton>
 								}
@@ -375,7 +377,7 @@ const CodeInfo: FC<Props> = () => {
 					</BlurContainer>
 				</Box>
 			</Box>
-			<ReviewDialog postId={postData.id} open={dialogOpen} onClose={() => setDialogOpen(false)} onReviewSubmit={handleReviewSubmit} readonly={false} />
+			<ReviewDialog postId={postData.id} open={paymentDialogOpen} onClose={() => setPaymentDialogOpen(false)} onReviewSubmit={handleReviewSubmit} readonly={false} />
 		</MainLayout>
 	);
 };

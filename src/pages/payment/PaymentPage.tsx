@@ -12,6 +12,9 @@ import ReadMeHtml from "../codeInfo/components/ReadMeHtml";
 import {useQuery} from "@tanstack/react-query";
 import {apiClient} from "../../api/ApiClient";
 import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
+import PaymentDialog from "../codeInfo/components/PaymentDialog";
+import {useRecoilState} from "recoil";
+import {paymentDialogState} from "./atom";
 
 interface Props {
     children?: React.ReactNode;
@@ -21,9 +24,25 @@ const PaymentPage: FC<Props> = () => {
     const { userLogin } = useQueryUserLogin();
 
     const navigate = useNavigate();
-    const location = useLocation();
-    const postData: CodeModel = location.state.postData;
-    const onPaymentConfirm: () => {} = location.state.onPaymentConfirm;
+    const {state:{postData}} = useLocation();
+    const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState)
+
+    const { isLoading: isCashDataLoading, data: cashData } = useQuery({
+        queryKey: [REACT_QUERY_KEY.cash],
+        queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
+    });
+    const { isLoading: isPointDataLoading, data: pointData } = useQuery({
+        queryKey: [REACT_QUERY_KEY.point],
+        queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
+    });
+
+    const onCompletePaymentDialog = () => {
+        setPaymentDialogOpen(true);
+    }
+    const onPaymentConfirm: () => void = PaymentDialog(onCompletePaymentDialog, userLogin!, cashData!, pointData!, postData!);
+
+    // const postData: CodeModel = location.state.postData;
+    // const onPaymentConfirm: () => {} = location.state.onPaymentConfirm;
     //console.log("&&&&&&"+onPaymentConfirm);
 
     const inputCashRef = useRef<HTMLInputElement | null>(null);
@@ -32,23 +51,21 @@ const PaymentPage: FC<Props> = () => {
     const [inputCoin, , setCoin] = useInput<number>(0);
     const [coinError, setCoinError] = useState(false);
     const inputCoinRef = useRef<HTMLInputElement | null>(null);
-    const [paymentRequiredAmount, setPaymentRequiredAmount] = useState<number>(postData?.price ?? 0);
+    const [paymentRequiredAmount, setPaymentRequiredAmount] = useState<number>(postData!.price ?? 0);
+
 
     const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
         queryKey: ['readme',postData?.id],
         queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
     });
-    const { isLoading: isCashDataLoading, data: cashData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.cash],
-        queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
-    });
+
     const { isLoading: isCoinDataLoading, data: coinData } = useQuery({
         queryKey: [REACT_QUERY_KEY.point],
         queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
     });
 
     const onSetPaymentRequiredAmount = useCallback((cash:number, coin:number) => {
-        let totalAmount: number = postData.price! - cash - coin;
+        let totalAmount: number = postData!.price! - cash - coin;
         if(totalAmount < 0) resetInput();
         setPaymentRequiredAmount(totalAmount);
     }, [inputCash, inputCoin]);
@@ -66,8 +83,8 @@ const PaymentPage: FC<Props> = () => {
 
         if(otherInput === 0){ // 다른 입력필드를 입력하지 않은 경우
             total  = 0;
-            if(currentMoney! > postData.price){ // 보유긍맥 > 게시글 가격
-                total = postData.price; // 금액 = 게시글 가격
+            if(currentMoney! > postData!.price){ // 보유긍맥 > 게시글 가격
+                total = postData!.price; // 금액 = 게시글 가격
             }else{ // 보유금액 < 가격
                 total =  currentMoney!; // 금액 = 보유금액
             }
@@ -98,9 +115,9 @@ const PaymentPage: FC<Props> = () => {
         let value: number = parseInt(e.target.value);
         if(value > cashData!) value = cashData!;
         if(value < 0) value = 0;
-        if(value > postData.price!) value = postData.price!;
+        if(value > postData!.price!) value = postData!.price!;
         if(inputCoin){
-            let remainPrice = postData.price - inputCoin;
+            let remainPrice = postData!.price - inputCoin;
             if(value > remainPrice) value = remainPrice;
         }
 
@@ -120,11 +137,11 @@ const PaymentPage: FC<Props> = () => {
     const onChangeCoin = useCallback((e: any) => {
         let value = parseInt(e.target.value);
         if(value > coinData!) value = coinData!; // 입력값 > 보유금액 -> 입력값 = 보유금액
-        if(value > postData.price!) value = postData.price!;
+        if(value > postData!.price!) value = postData!.price!;
         if(value < 0) value = 0;
 
         if(inputCash){
-            let remainPrice = postData.price - inputCash;
+            let remainPrice = postData!.price - inputCash;
             if(value > remainPrice) value = remainPrice;
         }
 
@@ -193,17 +210,17 @@ const PaymentPage: FC<Props> = () => {
                 />
                 <CardContent sx={{ p: 3 }}>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                    {calcTimeDiff(postData.createdAt)}
+                    {calcTimeDiff(postData!.createdAt)}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                    조회수: {postData.viewCount}
+                    조회수: {postData!.viewCount}
                 </Typography>
                 <Box my = {2}>
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
                         제목
                     </Typography>
                     <Typography variant="body1" color="textPrimary">
-                        {postData.title}
+                        {postData!.title}
                     </Typography>
                 </Box>
                 <Box my={2}>
@@ -211,7 +228,7 @@ const PaymentPage: FC<Props> = () => {
                         카테고리
                     </Typography>
                     <Typography variant="body1" color="textPrimary">
-                        {postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} / {postData.language}
+                        {postData!.postType} / {CATEGORY_TO_KOR[postData!.category as keyof typeof CATEGORY_TO_KOR]} / {postData!.language}
                     </Typography>
                 </Box>
                 <Box my={2}>
@@ -382,7 +399,7 @@ const PaymentPage: FC<Props> = () => {
                                 </Typography>
 
                                 <Typography variant="body1" component="div" sx={{color: '#333'}}>
-                                    {postData.price}
+                                    {postData!.price}
                                 </Typography>
 
                             </div>
