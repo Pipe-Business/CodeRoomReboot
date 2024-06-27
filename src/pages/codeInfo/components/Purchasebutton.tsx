@@ -7,14 +7,13 @@ import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleRespo
 
 interface Props {
     children? : React.ReactNode;
-    isBlur: boolean,
     onPaymentConfirm: () => void;
     onClickLoginRegister: () => void;
     postData: CodeModel;
     purchasedSaleData?: PurchaseSaleResponseEntity | null,
 }
 
-const PurchaseButton: FC<Props> = ({isBlur,onPaymentConfirm,onClickLoginRegister,purchasedSaleData,postData}) => {
+const PurchaseButton: FC<Props> = ({onPaymentConfirm,onClickLoginRegister,purchasedSaleData,postData}) => {
     const { userLogin } = useQueryUserLogin();
 
     const navigate = useNavigate();
@@ -35,7 +34,7 @@ const PurchaseButton: FC<Props> = ({isBlur,onPaymentConfirm,onClickLoginRegister
     }
 
     return (
-        <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment', {state:{postData}})}  variant='contained'>구매하기</ColorButton>
+        <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment', {state:{postData, onPaymentConfirm}})}  variant='contained'>구매하기</ColorButton>
     );
 }
 export default PurchaseButton;

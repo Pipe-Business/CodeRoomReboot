@@ -14,8 +14,6 @@ import useDialogState from '../../hooks/UseDialogState';
 import MainLayout from '../../layout/MainLayout';
 import {calcTimeDiff} from '../../utils/DayJsHelper';
 import {CenterBox} from '../main/styles';
-import CodeInfoBuyItByCashButton from './components/CodeInfoBuyItByCashButton';
-import CodeInfoBuyItByPointButton from './components/CodeInfoBuyItByPointButton';
 import CashPaymentDialog from './components/CashPaymentDialog';
 import PointPaymentDialog from './components/PointPaymentDialog';
 import {BlurContainer, ColorButton} from './styles';
@@ -34,16 +32,15 @@ import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import ReadMeHtml from "./components/ReadMeHtml";
 import PurchaseButton from "./components/Purchasebutton";
 import CodeDownloadButton from "./components/CodeDownloadButton";
+import PaymentDialog from "./components/PaymentDialog";
 
 dayjs.locale('ko');
 
 interface Props {
 	children?: React.ReactNode,
-	onClickLoginRegister: () => void,
-	onPaymentConfirm: () => void
 }
 
-const CodeInfo: FC<Props> = ({ onClickLoginRegister, onPaymentConfirm }) => {
+const CodeInfo: FC<Props> = () => {
 
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -105,6 +102,15 @@ const CodeInfo: FC<Props> = ({ onClickLoginRegister, onPaymentConfirm }) => {
 		// 코인 결제 확인 후 추가 로직
 		setDialogOpen(true);
 	}, userLogin!, pointData!, postData!);
+
+	const onCompletePaymentDialog = () => {
+		setDialogOpen(true);
+	}
+	//console.log(`userlogin : ${JSON.stringify(userLogin)}`)
+	//console.log(`cashData : ${JSON.stringify(cashData!)}`)
+	//console.log(`pointData : ${JSON.stringify(pointData!)}`)
+	//console.log(`postData : ${JSON.stringify(postData!)}`)
+	const onPaymentConfirm = PaymentDialog(onCompletePaymentDialog, userLogin!, cashData!, pointData!, postData!);
 
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
@@ -354,7 +360,7 @@ const CodeInfo: FC<Props> = ({ onClickLoginRegister, onPaymentConfirm }) => {
 								{/*/>*/}
 								<Box my={1} />
 								{/*Todo onpaymentconfirm 함수를 포인트, 캐시로 통합하여 구현 필요*/}
-								<PurchaseButton  isBlur={isBlur} onClickLoginRegister={onOpenLoginDialog} onPaymentConfirm={onPointClickConfirm} postData={postData} purchasedSaleData={purchaseSaleData}/>
+								<PurchaseButton onClickLoginRegister={onOpenLoginDialog} onPaymentConfirm={onPaymentConfirm} postData={postData} purchasedSaleData={purchaseSaleData}/>
 								{	purchaseSaleData &&
 									<CodeDownloadButton repoURL={postData.githubRepoUrl}></CodeDownloadButton>
 								}

@@ -15,15 +15,16 @@ import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
 
 interface Props {
     children?: React.ReactNode;
-    onPaymentConfirm: () => void
 }
 
-const PaymentPage: FC<Props> = ({onPaymentConfirm}) => {
+const PaymentPage: FC<Props> = () => {
     const { userLogin } = useQueryUserLogin();
 
     const navigate = useNavigate();
     const location = useLocation();
-    const postData: CodeModel = location.state?.postData;
+    const postData: CodeModel = location.state.postData;
+    const onPaymentConfirm: () => {} = location.state.onPaymentConfirm;
+    //console.log("&&&&&&"+onPaymentConfirm);
 
     const inputCashRef = useRef<HTMLInputElement | null>(null);
     const [inputCash, , setCash] = useInput<number>(0);
