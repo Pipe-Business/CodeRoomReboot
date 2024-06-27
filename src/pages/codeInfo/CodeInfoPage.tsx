@@ -32,14 +32,18 @@ import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEn
 import {PointHistoryType} from '../../enums/PointHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import ReadMeHtml from "./components/ReadMeHtml";
+import PurchaseButton from "./components/Purchasebutton";
+import CodeDownloadButton from "./components/CodeDownloadButton";
 
 dayjs.locale('ko');
 
 interface Props {
-	children?: React.ReactNode;
+	children?: React.ReactNode,
+	onClickLoginRegister: () => void,
+	onPaymentConfirm: () => void
 }
 
-const CodeInfo: FC<Props> = () => {
+const CodeInfo: FC<Props> = ({ onClickLoginRegister, onPaymentConfirm }) => {
 
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -241,34 +245,34 @@ const CodeInfo: FC<Props> = () => {
 								</div>
 							</Box>
 							<Box height={32} />
-							<Box my={3} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
-								<CodeInfoBuyItByCashButton
-									isBlur={isBlur}
-									point={postData.price}
-									codeHostId={postData.userToken}
-									userId={userLogin?.user_token!}
-									userHavePoint={cashData ?? 0}
-									githubRepoUrl={postData.adminGitRepoURL}
-									purchasedSaleData={purchaseSaleData}
-									onClickBuyItButton={onClickBuyItButton}
-									onPaymentConfirm={onCashClickConfirm}
-									onClickLoginRegister={onOpenLoginDialog}
-									onOpenPointDialog={onOpenPointDailog}
-								/>
-								<CodeInfoBuyItByPointButton
-									isBlur={isBlur}
-									point={postData.price}
-									codeHostId={postData.userToken}
-									userId={userLogin?.user_token!}
-									userHavePoint={pointData ?? 0}
-									githubRepoUrl={postData.adminGitRepoURL}
-									purchasedSaleData={purchaseSaleData}
-									onClickBuyItButton={onClickBuyItButton}
-									onPaymentConfirm={onPointClickConfirm}
-									onClickLoginRegister={onOpenLoginDialog}
-									onOpenPointDialog={onOpenPointDailog}
-								/>
-							</Box>
+							{/*<Box my={3} sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>*/}
+							{/*	<CodeInfoBuyItByCashButton*/}
+							{/*		isBlur={isBlur}*/}
+							{/*		point={postData.price}*/}
+							{/*		codeHostId={postData.userToken}*/}
+							{/*		userId={userLogin?.user_token!}*/}
+							{/*		userHavePoint={cashData ?? 0}*/}
+							{/*		githubRepoUrl={postData.adminGitRepoURL}*/}
+							{/*		purchasedSaleData={purchaseSaleData}*/}
+							{/*		onClickBuyItButton={onClickBuyItButton}*/}
+							{/*		onPaymentConfirm={onCashClickConfirm}*/}
+							{/*		onClickLoginRegister={onOpenLoginDialog}*/}
+							{/*		onOpenPointDialog={onOpenPointDailog}*/}
+							{/*	/>*/}
+							{/*	<CodeInfoBuyItByPointButton*/}
+							{/*		isBlur={isBlur}*/}
+							{/*		point={postData.price}*/}
+							{/*		codeHostId={postData.userToken}*/}
+							{/*		userId={userLogin?.user_token!}*/}
+							{/*		userHavePoint={pointData ?? 0}*/}
+							{/*		githubRepoUrl={postData.adminGitRepoURL}*/}
+							{/*		purchasedSaleData={purchaseSaleData}*/}
+							{/*		onClickBuyItButton={onClickBuyItButton}*/}
+							{/*		onPaymentConfirm={onPointClickConfirm}*/}
+							{/*		onClickLoginRegister={onOpenLoginDialog}*/}
+							{/*		onOpenPointDialog={onOpenPointDailog}*/}
+							{/*	/>*/}
+							{/*</Box>*/}
 							<Box my={3} sx={{ textAlign: 'center' }}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									이 코드 템플릿이 좋아요
@@ -321,35 +325,39 @@ const CodeInfo: FC<Props> = () => {
 								<Box my={1}>
 									{userLogin?.user_token === postData.userToken && <DeleteCodeButton codePost={postData} />}
 								</Box>
-								<CodeInfoBuyItByCashButton
-									isBlur={isBlur}
-									point={postData.price}
-									codeHostId={postData.userToken}
-									userId={userLogin?.user_token!}
-									userHavePoint={cashData ?? 0}
-									githubRepoUrl={postData.githubRepoUrl}
-									purchasedSaleData={purchaseSaleData}
-									onClickBuyItButton={onClickBuyItButton}
-									onPaymentConfirm={onCashClickConfirm}
-									onClickLoginRegister={onOpenLoginDialog}
-									onOpenPointDialog={onOpenPointDailog}
-								/>
+								{/*<CodeInfoBuyItByCashButton*/}
+								{/*	isBlur={isBlur}*/}
+								{/*	point={postData.price}*/}
+								{/*	codeHostId={postData.userToken}*/}
+								{/*	userId={userLogin?.user_token!}*/}
+								{/*	userHavePoint={cashData ?? 0}*/}
+								{/*	githubRepoUrl={postData.githubRepoUrl}*/}
+								{/*	purchasedSaleData={purchaseSaleData}*/}
+								{/*	onClickBuyItButton={onClickBuyItButton}*/}
+								{/*	onPaymentConfirm={onCashClickConfirm}*/}
+								{/*	onClickLoginRegister={onOpenLoginDialog}*/}
+								{/*	onOpenPointDialog={onOpenPointDailog}*/}
+								{/*/>*/}
+								{/*<Box my={1} />*/}
+								{/*<F*/}
+								{/*	isBlur={isBlur}*/}
+								{/*	point={postData.price}*/}
+								{/*	codeHostId={postData.userToken}*/}
+								{/*	userId={userLogin?.user_token!}*/}
+								{/*	userHavePoint={pointData ?? 0}*/}
+								{/*	githubRepoUrl={postData.githubRepoUrl}*/}
+								{/*	purchasedSaleData={purchaseSaleData}*/}
+								{/*	onClickBuyItButton={onClickBuyItButton}*/}
+								{/*	onPaymentConfirm={onPointClickConfirm}*/}
+								{/*	onClickLoginRegister={onOpenLoginDialog}*/}
+								{/*	onOpenPointDialog={onOpenPointDailog}*/}
+								{/*/>*/}
 								<Box my={1} />
-								<CodeInfoBuyItByPointButton
-									isBlur={isBlur}
-									point={postData.price}
-									codeHostId={postData.userToken}
-									userId={userLogin?.user_token!}
-									userHavePoint={pointData ?? 0}
-									githubRepoUrl={postData.githubRepoUrl}
-									purchasedSaleData={purchaseSaleData}
-									onClickBuyItButton={onClickBuyItButton}
-									onPaymentConfirm={onPointClickConfirm}
-									onClickLoginRegister={onOpenLoginDialog}
-									onOpenPointDialog={onOpenPointDailog}
-								/>
-								<Box my={1} />
-								<ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment', {state:{postData}})}  variant='contained'>구매하기</ColorButton>
+								{/*Todo onpaymentconfirm 함수를 포인트, 캐시로 통합하여 구현 필요*/}
+								<PurchaseButton  isBlur={isBlur} onClickLoginRegister={onOpenLoginDialog} onPaymentConfirm={onPointClickConfirm} postData={postData} purchasedSaleData={purchaseSaleData}/>
+								{	purchaseSaleData &&
+									<CodeDownloadButton repoURL={postData.githubRepoUrl}></CodeDownloadButton>
+								}
 								<Box my={2}>
 									{
 										(postData.userToken !== userLogin?.user_token) &&

@@ -15,8 +15,10 @@ import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
 
 interface Props {
     children?: React.ReactNode;
+    onPaymentConfirm: () => void
 }
-const PaymentPage: FC<Props> = () => {
+
+const PaymentPage: FC<Props> = ({onPaymentConfirm}) => {
     const { userLogin } = useQueryUserLogin();
 
     const navigate = useNavigate();
@@ -141,6 +143,13 @@ const PaymentPage: FC<Props> = () => {
     const onClickBackButton = useCallback(() => {
         navigate(-1);
     }, []);
+
+    const onClickPurchase = () => {
+        const result = window.confirm(`결제하시겠습니까?\n${inputCash} 캐시 사용\n${inputCoin} 코인 사용\n추가결제 : ${paymentRequiredAmount}`);
+        if (result) {
+            onPaymentConfirm();
+        }
+    }
 
     if(isCashDataLoading || isCoinDataLoading){
         return (
@@ -414,7 +423,7 @@ const PaymentPage: FC<Props> = () => {
                             </div>
 
                             <Box height={32}/>
-                            <ColorButton onClick={() => {}} variant={'contained'} style={{width:"100%"}}>결제하기</ColorButton>
+                            <ColorButton onClick={onClickPurchase} variant={'contained'} style={{width:"100%"}}>결제하기</ColorButton>
 
                         </CardContent>
 
