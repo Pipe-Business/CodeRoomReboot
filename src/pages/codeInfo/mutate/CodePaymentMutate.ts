@@ -32,22 +32,14 @@ export const useMutateCodePayment = () => {
             const { inputCash,inputCoin, paymentRequiredAmount, userLogin, cashData, coinData, postData} = data;
             const lstPayType = [];
 
-            // 남은금액 충전
-            if(paymentRequiredAmount !== 0){
-                await chargePaymentRequired(paymentRequiredAmount, userLogin, cashData, coinData, postData);
-            }
-
-            // cash, coin amount 값 set
-            const cashAmount = cashData === undefined ? 0 : cashData - inputCash;
-            const coinAmount = coinData === undefined ? 0 : coinData - inputCoin;
-
-
-            if(inputCash !== 0) {
+            if( inputCash !== 0 || paymentRequiredAmount !== 0 ) {
+                console.log("*****cash insert");
                 lstPayType.push(PayType.cash);
             }
-            if(inputCoin !== 0) {
+            if( inputCoin !== 0 ) {
                 lstPayType.push(PayType.point);
             }
+
 
             // purchase sale history insert (구매기록)
 
@@ -62,6 +54,34 @@ export const useMutateCodePayment = () => {
                 pay_type: lstPayType
             }
             const purchaseSaleHistoryId:number = await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
+
+
+            // 충전 필요금액 처리
+            if(paymentRequiredAmount !== 0){
+                await chargePaymentRequired(paymentRequiredAmount, userLogin, cashData, coinData, postData); // 충전
+                const currentCash= await apiClient.getUserTotalCash(userLogin!.user_token!);
+
+                // 유저 캐시 차감 -> 캐시 사용기록 insert
+                const cashHistory: CashHistoryRequestEntity = {
+                    user_token: userLogin!.user_token!,
+                    cash: paymentRequiredAmount,
+                    amount: currentCash - paymentRequiredAmount,
+                    description: "코드 구매",
+                    cash_history_type: CashHistoryType.use_cash,
+                    purchase_id: purchaseSaleHistoryId,
+                }
+
+                await apiClient.insertUserCashHistory(cashHistory);
+                await apiClient.updateTotalCash(userLogin?.user_token!,currentCash - paymentRequiredAmount);
+            }
+
+            const currentCash= await apiClient.getUserTotalCash(userLogin!.user_token!);
+            const currentCoin = await apiClient.getUserTotalPoint(userLogin!.user_token!);
+
+            // cash, coin amount 값 set
+            const cashAmount = currentCash - inputCash;
+            const coinAmount = currentCoin - inputCoin;
+
 
             // 캐시결제
             if(inputCash !== 0){
