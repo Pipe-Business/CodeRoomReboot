@@ -18,6 +18,7 @@ import {REACT_QUERY_KEY} from '../../../../constants/define';
 import {CashHistoryResponseEntity} from "../../../../data/entity/CashHistoryResponseEntity";
 import {PointHistoryRequestEntity} from "../../../../data/entity/PointHistoryRequestEntity";
 import {PointHistoryType} from "../../../../enums/PointHistoryType";
+import {CashHistoryType} from "../../../../enums/CashHistoryType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -52,32 +53,37 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 		if(!result) return
 
         const sellerPrevTotalCash = await apiClient.getUserTotalCash(item.sales_user_token); // 판매자 정산 전 캐시
+		const sellerPrevTotalPoint = await apiClient.getUserTotalPoint(item.sales_user_token); // 판매자 정산 전 코인
+
         const codeData = await apiClient.getTargetCode(item.post_id); // 코드 정보
         console.log(codeData, purchaseUserData, item);
 
 
-		if (codeData?.price !== undefined && sellerPrevTotalCash !== undefined && item.id) {
-           
-            let cashHistoryRequestEntity : CashHistoryResponseEntity = {
-                user_token : item.sales_user_token,
-                cash : item.use_cash! - (item.use_cash! * 0.2),
-                amount: item.use_cash! - (item.use_cash! * 0.2) + sellerPrevTotalCash,
-                description : `[${codeData.title}] 코드 캐시 정산`,
-                cash_history_type : 'earn_cash',
-            }
-			const cashAmount = (item.use_cash! * 0.2) + sellerPrevTotalCash;
-            await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
+		if (codeData?.price !== undefined && sellerPrevTotalCash !== undefined && sellerPrevTotalPoint !== undefined && item.id) {
 
-			let coinHistoryRequestEntity : PointHistoryRequestEntity = {
-				user_token : item.sales_user_token,
-				point : item.use_coin! - (item.use_coin! * 0.1),
-				amount: item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalCash,
-				description : `[${codeData.title}] 코드 코인 정산`,
-				point_history_type : PointHistoryType.use_point,
+			if (item.use_cash != null && item.use_cash > 0) {
+				let cashHistoryRequestEntity : CashHistoryResponseEntity = {
+					user_token : item.sales_user_token,
+					cash : Math.floor(item.use_cash! - (item.use_cash! * 0.2)),
+					amount: Math.floor(item.use_cash! - (item.use_cash! * 0.2) + sellerPrevTotalCash),
+					description : `[${codeData.title}] 코드 캐시 정산`,
+					cash_history_type : CashHistoryType.earn_cash,
+				}
+				const cashAmount = Math.floor(item.use_cash! + sellerPrevTotalCash);
+				await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
 			}
-			const coinAmount = (item.use_coin! * 0.1) + sellerPrevTotalCash;
-			await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 캐시 증액
-			await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 코인 증액
+
+			if (item.use_coin != null && item.use_coin > 0) {
+				let coinHistoryRequestEntity : PointHistoryRequestEntity = {
+					user_token : item.sales_user_token,
+					point : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
+					amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
+					description : `[${codeData.title}] 코드 코인 정산`,
+					point_history_type : PointHistoryType.use_point,
+				}
+				const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
+				await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액
+			}
 
 			// 정산시각
 			const date = createTodayDate();
@@ -93,7 +99,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 		<>
 			<ListItem>
 				<ListItemText>
-					<div style={{ display: 'flex', width: '100%' }}>
+					<div style={{display: 'flex', width: '100%'}}>
 						{
 							item.is_confirmed && 
 							<div style={{ width: '15%' }}>
@@ -101,14 +107,14 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 						</div>
 						}
 
-						<div style={{ display: 'flex', alignItems: 'center', width: '15%' }}>
+						<div style={{display: 'flex', alignItems: 'center', width: '15%'}}>
 							<div>
-								<div style={{ fontSize: 15, fontWeight: 'bold' }}>{codeData?.title!}</div>
-								<div style={{ fontSize: 12 }}>{purchaseUserData!.nickname}</div>
+								<div style={{fontSize: 15, fontWeight: 'bold'}}>{codeData?.title!}</div>
+								<div style={{fontSize: 12}}>{purchaseUserData!.nickname}</div>
 							</div>
 						</div>
-						<div style={{ width: '25%' }}>
-							<div style={{display:'flex'}}>
+						<div style={{width: '25%'}}>
+							<div style={{display: 'flex'}}>
 								<UserProfileImage userId={item.sales_user_token!}/>
 								<div>
 									<div>{salesUserData?.nickname}</div>
@@ -116,8 +122,8 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 								</div>
 							</div>
 						</div>
-						<div style={{ width: '25%' }}>
-							<div style={{display:'flex'}}>
+						<div style={{width: '25%'}}>
+							<div style={{display: 'flex'}}>
 								<UserProfileImage userId={item.purchase_user_token!}/>
 								<div>
 									<div>{purchaseUserData?.nickname}</div>
@@ -125,10 +131,16 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 								</div>
 							</div>
 						</div>
-						<div style={{ width: '5%' }}>
+						<div style={{width: '10%'}}>
+							{item.sell_price! != null ? item.sell_price!.toLocaleString() : 0} 캐시
+						</div>
+						<div style={{width: '10%'}}>
 							{item.use_cash! != null ? item.use_cash!.toLocaleString() : 0} 캐시
 						</div>
-						<div style={{ width: '5%' }}>
+						<div style={{width: '10%'}}>
+							{item.use_coin! != null ? item.use_coin!.toLocaleString() : 0} 코인
+						</div>
+						<div style={{width: '10%'}}>
 							{item.is_confirmed ?
 								<Button variant={'text'}>정산됨 </Button> :
 								<Button onClick={onClickSettleButton}>정산하기</Button>

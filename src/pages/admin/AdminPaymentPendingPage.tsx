@@ -5,11 +5,17 @@ import dayjs from 'dayjs';
 import {compareDates, createTodayDate, DATE_FORMAT} from "../../utils/DayJsHelper";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {apiClient} from "../../api/ApiClient";
-import {useMutateSettleCashBySeller, useMutateUpdateConfirmedStatus} from "../../hooks/mutate/PaymentMutate";
+import {
+	useMutateSettleCashBySeller,
+	useMutateSettleCoinBySeller,
+	useMutateUpdateConfirmedStatus
+} from "../../hooks/mutate/PaymentMutate";
 import PaymentPending from './components/paymentPending/PaymentPending';
 import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
 import {CashHistoryResponseEntity} from "../../data/entity/CashHistoryResponseEntity";
 import {CashHistoryType} from "../../enums/CashHistoryType";
+import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
+import {PointHistoryType} from "../../enums/PointHistoryType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -53,6 +59,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 		setDate('');
 	}, []);
 	const { settleCashMutate } = useMutateSettleCashBySeller();
+	const { settleCoinMutate } = useMutateSettleCoinBySeller();
 	const { updatePayConfirmedMutate } = useMutateUpdateConfirmedStatus();
 	const onClickAllSettlement = useCallback(() => {
 		if (paymentPendingData && filterData) {
@@ -61,17 +68,33 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			filterData.map(async (item) => {
 
                 const sellerPrevTotalCash = await apiClient.getUserTotalCash(item.sales_user_token); // 판매자 정산 전 캐시
+				const sellerPrevTotalPoint = await apiClient.getUserTotalPoint(item.sales_user_token); // 판매자 정산 전 코인
                 const codeData = await apiClient.getTargetCode(item.post_id); // 코드 정보
 
-				let cashHistoryRequestEntity : CashHistoryResponseEntity = {
-					user_token : item.sales_user_token,
-					cash : item.use_cash! - (item.use_cash! * 0.2),
-					amount: item.use_cash! - (item.use_cash! * 0.2) + sellerPrevTotalCash,
-					description : `[${codeData.title}] 코드 캐시 정산`,
-					cash_history_type : CashHistoryType.earn_cash,
+				if (item.use_cash != null && item.use_cash > 0) {
+					let cashHistoryRequestEntity : CashHistoryResponseEntity = {
+						user_token : item.sales_user_token,
+						cash : Math.floor(item.use_cash! - (item.use_cash! * 0.2)),
+						amount: Math.floor(item.use_cash! - (item.use_cash! * 0.2) + sellerPrevTotalCash),
+						description : `[${codeData.title}] 코드 캐시 정산`,
+						cash_history_type : CashHistoryType.earn_cash,
+					}
+					const cashAmount = Math.floor(item.use_cash! + sellerPrevTotalCash);
+					await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
 				}
-				const cashAmount = item.use_cash! + sellerPrevTotalCash;
-				await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
+
+				if (item.use_coin != null && item.use_coin > 0) {
+					let coinHistoryRequestEntity : PointHistoryRequestEntity = {
+						user_token : item.sales_user_token,
+						point : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
+						amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
+						description : `[${codeData.title}] 코드 코인 정산`,
+						point_history_type : PointHistoryType.use_point,
+					}
+					const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
+					await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액
+				}
+
 
 				// 정산시각
 				const date = createTodayDate();
@@ -108,24 +131,30 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			}
 			<ListItem>
 				<ListItemText>
-					<div style={{ display: 'flex', width: '100%' }}>
-					{isSettlement &&
-						<div style={{ width: '15%' }}>
-							정산시간
-						</div>}
-						<div style={{ display: 'flex', width: '15%' }}>
+					<div style={{display: 'flex', width: '100%'}}>
+						{isSettlement &&
+							<div style={{width: '15%'}}>
+								정산시간
+							</div>}
+						<div style={{display: 'flex', width: '15%'}}>
 							구매한 상품
 						</div>
-						<div style={{ width: '25%' }}>
+						<div style={{width: '25%'}}>
 							판매한 유저
 						</div>
-						<div style={{ width: '25%' }}>
+						<div style={{width: '25%'}}>
 							구매한 유저
 						</div>
-						<div style={{ width: '5%' }}>
-							결제한 캐시
+						<div style={{width: '5%'}}>
+							판매가
 						</div>
-						<div style={{ width: '5%' }}>
+						<div style={{width: '10%'}}>
+							결제 캐시
+						</div>
+						<div style={{width: '10%'}}>
+							결제 코인
+						</div>
+						<div style={{width: '10%'}}>
 							정산
 						</div>
 					</div>
