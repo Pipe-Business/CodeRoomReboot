@@ -90,7 +90,7 @@ const PointSendDialog: FC<Props> = ({ isOpen, onClose, userToken, userNickname, 
 							지급 사유를 입력해주세요
 						</div>
 							<TextField value={reasonPayment} onChange={onChangeReasonPayment}
-									   placeholder={'ex) 이벤트 캐시 지급'} required />
+									   placeholder={'ex) 이벤트 코인 지급'} required />
 					</TextFieldWrapper>
 				</DialogContent>
 				<DialogActions>

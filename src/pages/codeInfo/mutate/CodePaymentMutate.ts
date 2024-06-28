@@ -33,7 +33,6 @@ export const useMutateCodePayment = () => {
             const lstPayType = [];
 
             if( inputCash !== 0 || paymentRequiredAmount !== 0 ) {
-                console.log("*****cash insert");
                 lstPayType.push(PayType.cash);
             }
             if( inputCoin !== 0 ) {

@@ -9,17 +9,21 @@ export const useMutateSendPoint = () => {
 	const { mutateAsync } = useMutation({
 		mutationFn: async (data: { userToken: string, point: number ,prevPoint: number, description:string}) => {
 
+
+            const coinAmount = data.point + data.prevPoint!;
 				// 코인 증가
                 const pointHistory: PointHistoryRequestEntity = {
                     user_token: data.userToken!,
                     point: data.point!,
-                    amount: data.point + data.prevPoint!,
+                    amount: coinAmount,
                     description: data.description,
                     point_history_type: PointHistoryType.earn_point,
                 }
         
                 await apiClient.insertUserPointHistory(pointHistory);
-		},
+                await apiClient.updateTotalPoint(data.userToken,coinAmount);
+
+        },
 		onSuccess: () => {
 
 		},
