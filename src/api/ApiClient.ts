@@ -681,7 +681,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMyPurchaseSaleHistoryByPostID(myUserToken: string, postId: number): Promise<PurchaseSaleRequestEntity | null> {
+    async getMyPurchaseSaleHistoryByPostID(myUserToken: string, postId: number): Promise<PurchaseSaleResponseEntity | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
@@ -715,7 +715,7 @@ class ApiClient implements SupabaseAuthAPI {
                 throw new Error('구매기록을 가져오는 데 실패했습니다.');
             }
 
-            return lstPurchaseSale.length != 0 ? lstPurchaseSale[0] : null;
+            return lstPurchaseSale.length !== 0 ? lstPurchaseSale[0] : null;
         } catch (e: any) {
             console.log(e);
             throw new Error('구매기록을 가져오는 데 실패했습니다.');

@@ -14,9 +14,7 @@ import useDialogState from '../../hooks/UseDialogState';
 import MainLayout from '../../layout/MainLayout';
 import {calcTimeDiff} from '../../utils/DayJsHelper';
 import {CenterBox} from '../main/styles';
-import CashPaymentDialog from './components/CashPaymentDialog';
-import PointPaymentDialog from './components/PointPaymentDialog';
-import {BlurContainer, ColorButton} from './styles';
+import {BlurContainer} from './styles';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
 import EditCodeButton from './components/EditCodeButton';
@@ -26,7 +24,6 @@ import {PurchaseReviewEntity} from '../../data/entity/PurchaseReviewEntity';
 import ReviewList from './components/ReviewList';
 import DeleteCodeButton from './components/DeleteCodeButton';
 import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
-import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEntity';
 import {PointHistoryType} from '../../enums/PointHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import ReadMeHtml from "./components/ReadMeHtml";
@@ -34,6 +31,7 @@ import PurchaseButton from "./components/Purchasebutton";
 import CodeDownloadButton from "./components/CodeDownloadButton";
 import {paymentDialogState} from "../payment/atom";
 import {useRecoilState} from "recoil";
+import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
 
 dayjs.locale('ko');
 
@@ -91,37 +89,13 @@ const CodeInfo: FC<Props> = () => {
 
 
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
-	const [isOpenPointDialog, onOpenPointDailog, onClosePointDialog] = useDialogState();
-	const [onCashClickConfirm] = CashPaymentDialog(() => {
-		//console.log("현금 결제가 확인되었습니다!");
-		// 현금 결제 확인 후 추가 로직
-		setPaymentDialogOpen(true);
-	}, userLogin!, cashData!, postData!);
-
-	const [onPointClickConfirm] = PointPaymentDialog(() => {
-		//console.log("코인 결제가 확인되었습니다!");
-		// 코인 결제 확인 후 추가 로직
-		setPaymentDialogOpen(true);
-	}, userLogin!, pointData!, postData!);
-
-	const onCompletePaymentDialog = () => {
-		setPaymentDialogOpen(true);
-	}
-	//console.log(`userlogin : ${JSON.stringify(userLogin)}`)
-	//console.log(`cashData : ${JSON.stringify(cashData!)}`)
-	//console.log(`pointData : ${JSON.stringify(pointData!)}`)
-	//console.log(`postData : ${JSON.stringify(postData!)}`)
-	//todo paymentConfirm
-
-	//const onPaymentConfirm: () => void = PaymentDialog(onCompletePaymentDialog, userLogin!, cashData!, pointData!, postData!);
 
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
-	//const [dialogOpen, setDialogOpen] = useState(false);
 	const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState);
 	const handleReviewSubmit = async () => {
 		// 리뷰 작성 완료시 이 콜백을 수행
-		const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
+		const purchaseData: PurchaseSaleResponseEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
 		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
 
 		let amountUpdateValue;
@@ -130,7 +104,7 @@ const CodeInfo: FC<Props> = () => {
 		// 	amountUpdateValue = Math.round(purchaseData.price! * 0.05);
 		// } else {
 			// 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-			amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
+			amountUpdateValue = Math.round((purchaseData?.sell_price! * 0.05) * 10);
 		//}
 
 		const pointHistoryRequest: PointHistoryRequestEntity = {
@@ -184,13 +158,6 @@ const CodeInfo: FC<Props> = () => {
 		}
 		await likeNumberRefetch();
 	}
-
-	const onClickBuyItButton = useCallback(() => {
-		if (!userLogin?.id) {
-			onOpenLoginDialog();
-			return;
-		}
-	}, [userLogin?.id]);
 
 	const onClickBackButton = useCallback(() => {
 		navigate(-1);

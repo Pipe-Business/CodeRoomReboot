@@ -10,7 +10,6 @@ import {apiClient} from "../../../api/ApiClient";
 import {PointHistoryRequestEntity} from "../../../data/entity/PointHistoryRequestEntity";
 import {PointHistoryType} from "../../../enums/PointHistoryType";
 import {PurchaseSaleRequestEntity} from "../../../data/entity/PurchaseSaleRequestEntity";
-import {useMutateBootPayPaymentRequest} from "../../../hooks/mutate/PaymentMutate";
 import {Bootpay} from "@bootpay/client-js";
 import {BootPayPaymentEntity} from "../../../data/entity/BootpayPaymentEntity";
 import {CashHistoryType} from "../../../enums/CashHistoryType";
@@ -93,7 +92,7 @@ export const useMutateCodePayment = () => {
                 sales_user_token: postData!.userToken,
                 pay_type: lstPayType
             }
-            await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory); // todo 변경된 구매기록에 맞춰 변경 필요
+            await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 
             // todo 구매번호 update
             // user_cash_history에서 구매번호 purchase_sale_hisotry의 id입력

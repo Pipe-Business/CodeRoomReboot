@@ -67,7 +67,7 @@ const MyPurchaseDataPage: FC<Props> = () => {
 
 		console.log("purchaseData: "+JSON.stringify(purchaseData));
 		let amountUpdateValue: number ;
-		amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
+		amountUpdateValue = Math.round((purchaseData?.sell_price! * 0.05) * 10);
 
 		// if (purchaseData?.pay_type === "point") {
 		// 	amountUpdateValue = Math.round(purchaseData.price! * 0.05);
