@@ -41,44 +41,13 @@ export const useMutateCodePayment = () => {
             const cashAmount = cashData === undefined ? 0 : cashData - inputCash;
             const coinAmount = coinData === undefined ? 0 : coinData - inputCoin;
 
-            // 캐시결제
-            if(inputCash !== 0){
+
+            if(inputCash !== 0) {
                 lstPayType.push(PayType.cash);
-
-                // 유저 캐시 차감 -> 캐시 사용기록 insert
-                const cashHistory: CashHistoryRequestEntity = {
-                    user_token: userLogin!.user_token!,
-                    cash: inputCash,
-                    amount: cashAmount,
-                    description: "코드 구매",
-                    cash_history_type: CashHistoryType.use_cash,
-                }
-
-                await apiClient.insertUserCashHistory(cashHistory);
             }
-
-
-            // 코인결제
-            if(inputCoin !== 0){
+            if(inputCoin !== 0) {
                 lstPayType.push(PayType.point);
-
-                // 유저 코인 차감 -> 코인 사용기록 insert
-                const pointHistory: PointHistoryRequestEntity = {
-                    user_token: userLogin!.user_token!,
-                    point: inputCoin,
-                    amount: coinAmount,
-                    description: "코드 구매",
-                    point_history_type: PointHistoryType.use_point,
-                }
-
-                await apiClient.insertUserPointHistory(pointHistory);
             }
-
-
-            // point cash amount update
-
-            await apiClient.updateTotalCash(userLogin!.user_token!,cashAmount);
-            await apiClient.updateTotalPoint(userLogin!.user_token!,coinAmount);
 
             // purchase sale history insert (구매기록)
 
@@ -92,10 +61,47 @@ export const useMutateCodePayment = () => {
                 sales_user_token: postData!.userToken,
                 pay_type: lstPayType
             }
-            await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
+            const purchaseSaleHistoryId:number = await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 
-            // todo 구매번호 update
-            // user_cash_history에서 구매번호 purchase_sale_hisotry의 id입력
+            // 캐시결제
+            if(inputCash !== 0){
+
+                // 유저 캐시 차감 -> 캐시 사용기록 insert
+                const cashHistory: CashHistoryRequestEntity = {
+                    user_token: userLogin!.user_token!,
+                    cash: inputCash,
+                    amount: cashAmount,
+                    description: "코드 구매",
+                    cash_history_type: CashHistoryType.use_cash,
+                    purchase_id: purchaseSaleHistoryId,
+                }
+
+                await apiClient.insertUserCashHistory(cashHistory);
+            }
+
+
+            // 코인결제
+            if(inputCoin !== 0){
+
+                // 유저 코인 차감 -> 코인 사용기록 insert
+                const pointHistory: PointHistoryRequestEntity = {
+                    user_token: userLogin!.user_token!,
+                    point: inputCoin,
+                    amount: coinAmount,
+                    description: "코드 구매",
+                    point_history_type: PointHistoryType.use_point,
+                    purchase_id: purchaseSaleHistoryId,
+                }
+
+                await apiClient.insertUserPointHistory(pointHistory);
+            }
+
+
+            // point cash amount update
+
+            await apiClient.updateTotalCash(userLogin!.user_token!,cashAmount);
+            await apiClient.updateTotalPoint(userLogin!.user_token!,coinAmount);
+
 
         return postData;
         },
@@ -103,7 +109,6 @@ export const useMutateCodePayment = () => {
             //console.log("OnSuccess in purchase: "+JSON.stringify(postData));
             // 구매자수 update
             await apiClient.updateBuyerCount(postData.buyerCount + 1, postData.id);
-            console.log("**********"+JSON.stringify(navigate));
             navigate(`/code/${postData.id}`);
             //navigate(-1);
 

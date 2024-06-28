@@ -4,4 +4,5 @@ export interface CashHistoryRequestEntity {
     amount?: number; // 총 금액
     cash_history_type?: string // 획득 또는 소비
     description : string; // 설명
+    purchase_id? : number; // 구매기록 id
 }

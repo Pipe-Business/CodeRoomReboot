@@ -619,17 +619,18 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async insertPurchaseSaleHistory(purchaseSaleRequestEntity: PurchaseSaleRequestEntity) {
+    async insertPurchaseSaleHistory(purchaseSaleRequestEntity: PurchaseSaleRequestEntity) : Promise<number> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .insert(purchaseSaleRequestEntity).select();
-
             if (error) {
                 console.log("error" + error.hint);
                 console.log("error" + error.details);
 
                 throw new Error('코드 거래 기록을 insert 하는데 실패했습니다.');
             }
+
+            return data[0].id;
             //console.log(...data);
         } catch (e: any) {
             console.log(e);
@@ -1245,6 +1246,7 @@ class ApiClient implements SupabaseAuthAPI {
             "description": pointHistoryRequestEntity.description,
             "from_user_token": pointHistoryRequestEntity.from_user_token,
             "point_history_type": pointHistoryRequestEntity.point_history_type,
+            "purchase_id" : pointHistoryRequestEntity.purchase_id,
         }
 
         try {

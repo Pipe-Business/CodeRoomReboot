@@ -8,5 +8,6 @@ export interface PointHistoryRequestEntity {
     point_history_type?: PointHistoryType // 획득 또는 소비
     description: string;
     from_user_token?: string;
+    purchase_id? : number; // 구매기록 id
     created_at?: string;
 }

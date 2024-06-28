@@ -137,19 +137,6 @@ const EditCodePage: FC<Props> = () => {
             inputPointRef.current?.focus();
             return;
         }
-        // if (!inputGithubUrl) {
-        // 	toast.error('깃허브 레포지토리 url 을 입력해주세요');
-        // 	inputUrlRef.current?.focus()
-        // 	return;
-        // }
-        // // TODO : github nickname 넘겨주는 로직 관리자가 포크떠오는 로직 검토
-        // const urlParser = inputGithubUrl.split('/');
-        // console.log(urlParser);
-        // if (urlParser.length < 5 || !inputGithubUrl.startsWith('https://') || inputGithubUrl.endsWith('.git')) {
-        // 	toast.error('url 이 올바르지 않습니다.');
-        // 	inputUrlRef.current?.focus()
-        // 	return;
-        // }
         if (!inputTitle || errorTitle) {
             toast.error('제목 양식에맞게 입력해주세요');
             inputTitleRef.current?.focus()
