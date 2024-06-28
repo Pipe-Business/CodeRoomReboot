@@ -32,7 +32,7 @@ const PurchaseButton: FC<Props> = ({purchasedSaleData,postData}) => {
     }
 
     return (
-        <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment', {state:{postData}})}  variant='contained'>구매하기</ColorButton>
+        <ColorButton sx={{ fontSize: '15', width: '210px' }} onClick={() => navigate('/payment', {state:{postData}})}  variant='contained'> 💵{postData.price} 구매하기</ColorButton>
     );
 }
 export default PurchaseButton;

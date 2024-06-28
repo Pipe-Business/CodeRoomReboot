@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {ColorButton} from '../styles';
 import {useNavigate} from 'react-router-dom';
 import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
-
+// 미사용 코드
 interface Props {
 	children?: React.ReactNode,
 	codeHostId: string,

@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {ColorButton} from '../styles';
 import CodeDownloadButton from './CodeDownloadButton';
 import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
-
+// 미사용 코드
 
 interface Props {
     children?: React.ReactNode,
