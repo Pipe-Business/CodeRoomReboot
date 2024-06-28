@@ -5,7 +5,6 @@ import {ArrowBack} from "@mui/icons-material";
 import {useLocation, useNavigate} from "react-router-dom";
 import useInput from "../../hooks/UseInput";
 import {ColorButton} from "./styles";
-import {CodeModel} from "../../data/model/CodeModel";
 import {calcTimeDiff} from "../../utils/DayJsHelper";
 import {CATEGORY_TO_KOR, REACT_QUERY_KEY} from "../../constants/define";
 import ReadMeHtml from "../codeInfo/components/ReadMeHtml";
@@ -13,8 +12,6 @@ import {useQuery} from "@tanstack/react-query";
 import {apiClient} from "../../api/ApiClient";
 import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
 import PaymentDialog from "../codeInfo/components/PaymentDialog";
-import {useRecoilState} from "recoil";
-import {paymentDialogState} from "./atom";
 
 interface Props {
     children?: React.ReactNode;
@@ -25,7 +22,6 @@ const PaymentPage: FC<Props> = () => {
 
     const navigate = useNavigate();
     const {state:{postData}} = useLocation();
-    const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState)
 
     const { isLoading: isCashDataLoading, data: cashData } = useQuery({
         queryKey: [REACT_QUERY_KEY.cash],
@@ -36,24 +32,6 @@ const PaymentPage: FC<Props> = () => {
         queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
     });
 
-    const onCompletePaymentDialog = () => {
-        setPaymentDialogOpen(true);
-    }
-    const onPaymentConfirm: () => void = PaymentDialog(onCompletePaymentDialog, userLogin!, cashData!, pointData!, postData!);
-
-    // const postData: CodeModel = location.state.postData;
-    // const onPaymentConfirm: () => {} = location.state.onPaymentConfirm;
-    //console.log("&&&&&&"+onPaymentConfirm);
-
-    const inputCashRef = useRef<HTMLInputElement | null>(null);
-    const [inputCash, , setCash] = useInput<number>(0);
-    const [cashError, setCashError] = useState(false);
-    const [inputCoin, , setCoin] = useInput<number>(0);
-    const [coinError, setCoinError] = useState(false);
-    const inputCoinRef = useRef<HTMLInputElement | null>(null);
-    const [paymentRequiredAmount, setPaymentRequiredAmount] = useState<number>(postData!.price ?? 0);
-
-
     const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
         queryKey: ['readme',postData?.id],
         queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
@@ -63,6 +41,19 @@ const PaymentPage: FC<Props> = () => {
         queryKey: [REACT_QUERY_KEY.point],
         queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
     });
+
+
+    const inputCashRef = useRef<HTMLInputElement | null>(null);
+    const [inputCash, , setCash] = useInput<number>(0);
+    const [cashError, setCashError] = useState(false);
+    const [inputCoin, , setCoin] = useInput<number>(0);
+    const [coinError, setCoinError] = useState(false);
+    const inputCoinRef = useRef<HTMLInputElement | null>(null);
+    const [paymentRequiredAmount, setPaymentRequiredAmount] = useState<number>(postData!.price ?? 0);
+
+    const onPaymentConfirm: () => void = PaymentDialog(inputCash,inputCoin, paymentRequiredAmount , userLogin!, cashData!, pointData!, postData!);
+
+
 
     const onSetPaymentRequiredAmount = useCallback((cash:number, coin:number) => {
         let totalAmount: number = postData!.price! - cash - coin;

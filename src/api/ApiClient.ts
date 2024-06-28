@@ -743,7 +743,7 @@ class ApiClient implements SupabaseAuthAPI {
             const repoName = split[split.length - 1];
 
             const result = await axios.get<any>(`${serverURL}/readme/${userName}/${repoName}`);
-            console.log(`readme result : ${result.data}`)
+            //console.log(`readme result : ${result.data}`)
             // Base64로 인코딩된 데이터를 가져옵니다.
             // const base64Content = result.data.content;
 
