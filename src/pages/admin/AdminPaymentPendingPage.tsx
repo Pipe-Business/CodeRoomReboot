@@ -2,7 +2,7 @@ import React, {FC, useCallback, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import {Button, IconButton, ListItem, ListItemText, TextField} from '@mui/material';
 import dayjs from 'dayjs';
-import {compareDates, DATE_FORMAT} from "../../utils/DayJsHelper";
+import {compareDates, createTodayDate, DATE_FORMAT} from "../../utils/DayJsHelper";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {apiClient} from "../../api/ApiClient";
 import {useMutateSettleCashBySeller, useMutateUpdateConfirmedStatus} from "../../hooks/mutate/PaymentMutate";
@@ -72,7 +72,10 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 				}
 				const cashAmount = item.use_cash! + sellerPrevTotalCash;
 				await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
-                await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id});  // 정산 status 처리
+
+				// 정산시각
+				const date = createTodayDate();
+                await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id, date:date});  // 정산 status 처리
                 
 			});
 			setFilterData(null);

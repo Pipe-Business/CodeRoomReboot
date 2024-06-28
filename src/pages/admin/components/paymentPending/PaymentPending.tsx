@@ -9,7 +9,7 @@ import {
 	useMutateSettleCoinBySeller,
 	useMutateUpdateConfirmedStatus
 } from '../../../../hooks/mutate/PaymentMutate';
-import {reformatTime} from '../../../../utils/DayJsHelper';
+import {createTodayDate, reformatTime} from '../../../../utils/DayJsHelper';
 import {useQuery} from '@tanstack/react-query';
 import {apiClient} from '../../../../api/ApiClient';
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
@@ -79,7 +79,9 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 			await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 캐시 증액
 			await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 코인 증액
 
-            await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id});  // 정산 status 처리
+			// 정산시각
+			const date = createTodayDate();
+            await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id,date:date});  // 정산 status 처리
 			refetch();
 		} else {
 			toast.error('정산오류 : 개발팀에 문의해주세요');
@@ -95,7 +97,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 						{
 							item.is_confirmed && 
 							<div style={{ width: '15%' }}>
-							{reformatTime(item.created_at!)}
+							{reformatTime(item.confirmed_time!)}
 						</div>
 						}
 

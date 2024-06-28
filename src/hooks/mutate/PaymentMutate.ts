@@ -56,9 +56,9 @@ export const useMutateSettleCoinBySeller = () => {
  */
 export const useMutateUpdateConfirmedStatus = () => {
 	const {mutateAsync} = useMutation({
-		mutationFn : async (data: {purchase_user_token: string, sales_user_token: string,postId: number}) => {
-			const {purchase_user_token, sales_user_token, postId} = data;
-			await apiClient.updatePurchaseSaleIsConfirmed(purchase_user_token, sales_user_token, postId);
+		mutationFn : async (data: {purchase_user_token: string, sales_user_token: string,postId: number, date:string}) => {
+			const {purchase_user_token, sales_user_token, postId,date} = data;
+			await apiClient.updatePurchaseSaleIsConfirmed(purchase_user_token, sales_user_token, postId, date);
 		}
 	})
 

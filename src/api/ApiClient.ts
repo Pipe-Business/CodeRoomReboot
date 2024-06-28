@@ -1710,10 +1710,10 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_token: string, postId: number) {
+    async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_token: string, postId: number,date:string) {
         try {
             const {error} = await supabase.from('purchase_sale_history')
-                .update({is_confirmed: true})
+                .update({is_confirmed: true,confirmed_time:date})
                 .eq('post_id', postId)
                 .eq('purchase_user_token', purchase_user_token)
                 .eq('sales_user_token', sales_user_token);
