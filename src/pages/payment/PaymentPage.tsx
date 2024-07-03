@@ -385,23 +385,23 @@ const PaymentPage: FC<Props> = () => {
                         <CardContent>
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <Typography variant="body1" component="div" sx={{color: '#C2C6C9'}}
-                                            style={{fontWeight: 'bold',}}>
+                                            style={{fontWeight: 'bold',fontSize:'20px'}}>
                                     선택 상품 금액
                                 </Typography>
 
-                                <Typography variant="body1" component="div" sx={{color: '#333'}}>
+                                <Typography variant="body1" component="div" sx={{color: '#333',fontSize:'20px'}}>
                                     {postData!.price}
                                 </Typography>
 
                             </div>
 
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <Typography variant="body1" component="div" sx={{color: '#E96B5A'}}
+                                <Typography variant="body1" component="div" sx={{color: '#E96B5A',fontSize:'20px'}}
                                             style={{fontWeight: 'bold',}}>
                                     캐시
                                 </Typography>
 
-                                <Typography variant="body1" component="div" sx={{color: '#333'}}>
+                                <Typography variant="body1" component="div" sx={{color: '#333',fontSize:'20px'}}>
                                     - {inputCash}
                                 </Typography>
 
@@ -409,11 +409,11 @@ const PaymentPage: FC<Props> = () => {
 
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <Typography variant="body1" component="div" sx={{color: '#E96B5A'}}
-                                            style={{fontWeight: 'bold',}}>
+                                            style={{fontWeight: 'bold',fontSize:'20px'}}>
                                     코인
                                 </Typography>
 
-                                <Typography variant="body1" component="div" sx={{color: '#333'}}>
+                                <Typography variant="body1" component="div" sx={{color: '#333'}} style={{fontSize:'20px'}}>
                                     - {inputCoin}
                                 </Typography>
 
@@ -421,18 +421,18 @@ const PaymentPage: FC<Props> = () => {
 
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <Typography variant="body1" component="div" sx={{color: '#3C3F41'}}
-                                            style={{fontWeight: 'bold',}}>
+                                            style={{fontWeight: 'bold',fontSize:'20px'}}>
                                     차액 결제 필요 금액
                                 </Typography>
 
-                                <Typography variant="body1" component="div" sx={{color: '#333'}}>
+                                <Typography variant="body1" component="div" sx={{color: '#333'}} style={{fontSize:'20px'}}>
                                     {paymentRequiredAmount}
                                 </Typography>
 
                             </div>
 
                             <Box height={32}/>
-                            <ColorButton onClick={onClickPurchase} variant={'contained'} style={{width:"100%"}}>결제하기</ColorButton>
+                            <ColorButton onClick={onClickPurchase} variant={'contained'} style={{width:"100%",fontSize:'20px'}}>결제하기</ColorButton>
 
                         </CardContent>
 
