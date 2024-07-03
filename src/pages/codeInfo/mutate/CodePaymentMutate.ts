@@ -52,12 +52,12 @@ export const useMutateCodePayment = () => {
                 sales_user_token: postData!.userToken,
                 pay_type: lstPayType
             }
-            const purchaseSaleHistoryId:number = await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 
+            let purchaseSaleHistoryId:number;
 
             // 충전 필요금액 처리
             if(paymentRequiredAmount !== 0){
-                await chargePaymentRequired(paymentRequiredAmount, userLogin, cashData, coinData, postData); // 충전
+                purchaseSaleHistoryId = await chargePaymentRequired(paymentRequiredAmount, userLogin, cashData, coinData, postData, purchaseSaleHistory); // 충전
                 const currentCash= await apiClient.getUserTotalCash(userLogin!.user_token!);
 
                 // 유저 캐시 차감 -> 캐시 사용기록 insert
@@ -72,6 +72,10 @@ export const useMutateCodePayment = () => {
 
                 await apiClient.insertUserCashHistory(cashHistory);
                 await apiClient.updateTotalCash(userLogin?.user_token!,currentCash - paymentRequiredAmount);
+            }else{
+
+                purchaseSaleHistoryId = await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
+
             }
 
             const currentCash= await apiClient.getUserTotalCash(userLogin!.user_token!);
@@ -147,7 +151,8 @@ export const useMutateCodePayment = () => {
                                           userLogin: UserModel,
                                           cashData: number,
                                           coinData: number,
-                                          postData: CodeModel) => {
+                                          postData: CodeModel,
+                                          purchaseSaleHistory: PurchaseSaleRequestEntity):Promise<number> => {
         const orderName: string = '[CODEROOM] 코드 결제'
         try{
             const response = await Bootpay.requestPayment({
@@ -207,8 +212,8 @@ export const useMutateCodePayment = () => {
 
                     Bootpay.destroy();
                 }
-
             }
+            return await apiClient.insertPurchaseSaleHistory(purchaseSaleHistory);
 
         }catch (e: any){
             console.log(e);
