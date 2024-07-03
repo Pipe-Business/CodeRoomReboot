@@ -295,9 +295,9 @@ const PaymentPage: FC<Props> = () => {
                             mb: {xs: 2, md: 0},
                         }}
                     >
-                        <div style={{display: 'flex', justifyContent: 'end', padding: '16px'}}>
-                        <ColorButton onClick={resetInput} variant={'contained'} style={{width:'100%'}}>입력 값 초기화</ColorButton>
-                        </div>
+                        {/*<div style={{display: 'flex', justifyContent: 'end', padding: '16px'}}>*/}
+                        {/*<ColorButton onClick={resetInput} variant={'contained'} style={{width:'100%'}}>입력 값 초기화</ColorButton>*/}
+                        {/*</div>*/}
 
                         <Box height={16}/>
                         <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft:'16px', marginRight:'8px'}}>
