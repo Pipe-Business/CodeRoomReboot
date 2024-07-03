@@ -130,7 +130,7 @@ const MyPage: FC<Props> = () => {
 
     const handleReviewSubmit = async () => {
         // 리뷰 작성 완료시 이 콜백을 수행
-        const purchaseData: PurchaseSaleRequestEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
+        const purchaseData: PurchaseSaleResponseEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
         const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
         let amountUpdateValue;
         // if (purchaseData?.pay_type == "point") {
@@ -138,7 +138,7 @@ const MyPage: FC<Props> = () => {
         //     amountUpdateValue = Math.round(purchaseData.price! * 0.05);
         // } else {
             // 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-            amountUpdateValue = Math.round((purchaseData?.price! * 0.05) * 10);
+            amountUpdateValue = Math.round((purchaseData?.sell_price! * 0.05) * 10);
      //}
 
         const pointHistoryRequest: PointHistoryRequestEntity = {
