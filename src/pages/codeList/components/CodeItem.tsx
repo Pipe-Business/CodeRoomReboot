@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import {MainPageCodeListEntity} from '../../../data/entity/MainPageCodeListEntity';
 import styles from '../../../global.module.css';
 import {calcTimeDiff} from '../../../utils/DayJsHelper';
+import ReadMeHtml from "../../codeInfo/components/ReadMeHtml";
 
 interface Props {
   children?: React.ReactNode;
@@ -71,7 +72,7 @@ const CodeItem: FC<Props> = ({ item }) => {
                 lineClamp: { xs: 2, sm: 1 },
               }}
             >
-              {item.description}
+                <ReadMeHtml htmlText={item.description!}/>
             </Typography>
 
             {/* 캐시, 닉네임, 시간 */}

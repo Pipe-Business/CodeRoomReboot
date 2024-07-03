@@ -15,6 +15,7 @@ import {apiClient} from "../../api/ApiClient";
 import ImageCard from './components/codeRequest/ImageCard';
 import MainLayout from '../../layout/MainLayout';
 import {PostStateType} from "../../enums/PostStateType";
+import ReadMeHtml from "../codeInfo/components/ReadMeHtml";
 
 interface Props {
 	children?: React.ReactNode;
@@ -97,30 +98,21 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					<div>제목</div>
 					<span>{data.title}</span>
 				</ContentWrapper>
-				<div style={{ marginBottom: '30px' }}>
+				<div style={{marginBottom: '30px'}}>
 					<div style={{
 						whiteSpace: 'pre-wrap',
 						fontSize: '30px',
 						marginBottom: '10px',
 						marginTop: '10px',
-					}}>내용
+					}}>코드 설명
 					</div>
 
-					<div style={{ marginTop: 16, }}>
-								<span style={{ color: '#000000', fontSize: '16px', }}>{data.description} </span>
+					<div>
+						<ReadMeHtml htmlText={data.description!}/>
 					</div>
 
-					{/* <div style={{
-						fontSize: '24px',
-						whiteSpace: 'pre-line',
-						wordWrap: 'break-word',
-					}}>
-						<Viewer
-							initialValue={data.description}
-						/>
-					</div> */}
 				</div>
-				<Divider />
+				<Divider/>
 				<ContentWrapper>
 					<div>
 						<div style={{ whiteSpace: 'pre-wrap' }}>카테고리</div>

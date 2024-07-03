@@ -32,10 +32,10 @@ const PaymentPage: FC<Props> = () => {
         queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
     });
 
-    const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
-        queryKey: ['readme',postData?.id],
-        queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
-    });
+    // const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
+    //     queryKey: ['readme',postData?.id],
+    //     queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
+    // });
 
     const { isLoading: isCoinDataLoading, data: coinData } = useQuery({
         queryKey: [REACT_QUERY_KEY.point],
@@ -227,7 +227,7 @@ const PaymentPage: FC<Props> = () => {
                         코드 설명
                     </Typography>
                     <div>
-                        <ReadMeHtml htmlText={readMeData!}/>
+                        <ReadMeHtml htmlText={postData!.description!}/>
                     </div>
                 </Box>
 

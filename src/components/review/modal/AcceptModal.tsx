@@ -32,6 +32,10 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 			// fork한 데이터 update
 			await apiClient.updateAdminGithubRepoUrl(data.id.toString(),forkUrl);
 
+			// readme insert
+			 const readMe: string = await apiClient.getReadMe(forkUrl);
+			 await apiClient.insertReadme(data.id.toString(), readMe);
+
 			// 알림보내기
 			const notificationEntity: NotificationEntity ={
 				title : '심사 승인 알림',

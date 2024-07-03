@@ -779,6 +779,30 @@ class ApiClient implements SupabaseAuthAPI {
         });
     };
 
+    async insertReadme(postId: string, readme: string) {
+        try {
+
+            const {error} = await supabase.from('post')
+                .update({description: readme})
+                .eq('id', postId);
+
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('readme insert에 실패했습니다.');
+            }
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('readme insert에 실패했습니다.');
+        }
+    }
+
 
 
     async insertLikedData(likedData: LikeRequestEntity) { // 좋아요 insert
@@ -1008,9 +1032,9 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateAdminGithubRepoUrl(postId: string, adminGithubRepoUrl: string) {
+    async updateAdminGithubRepoUrl(postId: string, adminGithubRepoUrl: string):Promise<string> {
         try {
-            const {error} = await supabase.from('code')
+            const {data, error} = await supabase.from('code')
                 .update({admin_git_repo_url: adminGithubRepoUrl})
                 .eq('post_id', postId);
 
@@ -1023,6 +1047,8 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('포크된 레포지토리 링크 저장에 실패했습니다.');
             }
+
+            return data!;
 
         } catch (e: any) {
             console.log(e);
