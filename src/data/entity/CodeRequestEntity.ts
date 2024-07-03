@@ -10,6 +10,6 @@ export interface CodeRequestEntity {
 	admin_git_repo_url?: string; // 관리자의 포크한 깃헙 URL
 	fork_url?: string; // 포크된 깃헙 URL
     popularity: number; // 코드평점
-    buyer_guide: string; // 구매자 가이드
+    buyer_guide?: string; // 구매자 가이드
     buyer_count: number; // 구매자수
 }

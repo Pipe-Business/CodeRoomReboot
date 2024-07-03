@@ -32,9 +32,9 @@ const CreateCodePage: FC<Props> = () => {
   const { userLogin } = useQueryUserLogin();
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputPointRef = useRef<HTMLInputElement | null>(null);
-  const inputContentRef = useRef<HTMLInputElement | null>(null);
+  //const inputContentRef = useRef<HTMLInputElement | null>(null);
   const inputUrlRef = useRef<HTMLInputElement | null>(null);
-  const inputGuideRef = useRef<HTMLInputElement | null>(null);
+  //const inputGuideRef = useRef<HTMLInputElement | null>(null);
 
   const [inputCategory, setCategory] = useState('');
   const [inputLanguage, setLanguage] = useState('');
@@ -42,33 +42,33 @@ const CreateCodePage: FC<Props> = () => {
   const [inputGithubUrl, setGithubUrl] = useState('');
   let postId: number;
 
-  const [src, setSrc] = useState<string[] | null>(null);
-  const [files, setFiles] = useState<File[] | null>(null);
+  //const [src, setSrc] = useState<string[] | null>(null);
+  //const [files, setFiles] = useState<File[] | null>(null);
 
   const [pointError, setPointError] = useState(false);
 
   const [inputTitle, onChangeTitle, errorTitle, errorMessage, setTitle] =
     useInputValidate({ minLen: 10, maxLen: 30 });
-  const [inputDescription, onChangeDescription, errorDesc, errDescMessage, setDescription, , , ,
-    , , , inputDescriptionCount] =
-    useInputValidate({ minLen: 30, maxLen: 3000 });
-  const [inputGuide, onChangeGuide, errorGuide, errGuideMessage, setGuideMessage, , , ,
-    , , , inputGuideCount] =
-    useInputValidate({ minLen: 30, maxLen: 3000 });
+  // const [inputDescription, onChangeDescription, errorDesc, errDescMessage, setDescription, , , ,
+  //   , , , inputDescriptionCount] =
+  //   useInputValidate({ minLen: 30, maxLen: 3000 });
+  // const [inputGuide, onChangeGuide, errorGuide, errGuideMessage, setGuideMessage, , , ,
+  //   , , , inputGuideCount] =
+  //   useInputValidate({ minLen: 30, maxLen: 3000 });
 
 
   useEffect(() => {
     console.log(JSON.stringify(editTargetModel));
     if(editTargetModel){
       setTitle(editTargetModel.title);
-      setDescription(editTargetModel.description);
+      //setDescription(editTargetModel.description);
       setLanguage(editTargetModel.language);
       setCategory(editTargetModel.category);
       setPoint(editTargetModel.price);
-      setGuideMessage(editTargetModel.buyerGuide);
-      if(editTargetModel.images){
-        setSrc(editTargetModel.images);
-      }
+      //setGuideMessage(editTargetModel.buyerGuide);
+      // if(editTargetModel.images){
+      //   setSrc(editTargetModel.images);
+      // }
       setGithubUrl(editTargetModel.githubRepoUrl);
     }
   }, [editTargetModel]);
@@ -79,24 +79,24 @@ const CreateCodePage: FC<Props> = () => {
     setPointError(Number(value) < 0);
   }, [setPoint]);
 
-  const handleDeleteImage = (index: number) => {
-    const newImages = src!.filter((_, i) => i !== index);
-    setSrc(newImages);
-  };
+  // const handleDeleteImage = (index: number) => {
+  //   const newImages = src!.filter((_, i) => i !== index);
+  //   setSrc(newImages);
+  // };
 
   const onChangeGithubUrl = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setGithubUrl(e.target.value);
   }, []);
 
-  const handleChangeImage = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    const urlList: string[] = [];
-    const fileList = Array.from(e.target.files ?? []);
-    fileList.forEach(file => {
-      urlList.push(URL.createObjectURL(file));
-    });
-    setFiles(fileList);
-    setSrc(urlList);
-  }, []);
+  // const handleChangeImage = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  //   const urlList: string[] = [];
+  //   const fileList = Array.from(e.target.files ?? []);
+  //   fileList.forEach(file => {
+  //     urlList.push(URL.createObjectURL(file));
+  //   });
+  //   setFiles(fileList);
+  //   setSrc(urlList);
+  // }, []);
 
   const onSubmitCodeRequest = useCallback(async () => {
     if (!inputCategory || inputCategory.trim() === "") {
@@ -133,20 +133,20 @@ const CreateCodePage: FC<Props> = () => {
       inputTitleRef.current?.focus();
       return;
     }
-    if (!inputDescription || errorDesc || inputDescription.trim() === '') {
-      toast.error('설명 양식에 맞게 입력해주세요');
-      inputContentRef.current?.focus();
-      return;
-    }
-    if (!inputGuide || errorGuide || inputGuide.trim() === '') {
-      toast.error('구매자 가이드 양식에 맞게 입력해주세요.');
-      inputGuideRef.current?.focus();
-      return;
-    }
+    // if (!inputDescription || errorDesc || inputDescription.trim() === '') {
+    //   toast.error('설명 양식에 맞게 입력해주세요');
+    //   inputContentRef.current?.focus();
+    //   return;
+    // }
+    // if (!inputGuide || errorGuide || inputGuide.trim() === '') {
+    //   toast.error('구매자 가이드 양식에 맞게 입력해주세요.');
+    //   inputGuideRef.current?.focus();
+    //   return;
+    // }
 
     const postReqEntity: PostRequestEntity = {
       title: inputTitle,
-      description: inputDescription,
+      //description: inputDescription,
       user_token: userLogin?.user_token!,
       category: inputCategory,
       state: PostStateType.pending,
@@ -158,16 +158,16 @@ const CreateCodePage: FC<Props> = () => {
     if (!pointError) {
       mutate(postReqEntity);
     }
-  }, [inputCategory, inputTitle, inputDescription, inputLanguage, inputPoint, inputGithubUrl, inputGuide, files, userLogin, errorTitle, errorDesc, errorGuide, pointError]);
+  }, [inputCategory, inputTitle, inputLanguage, inputPoint, inputGithubUrl, userLogin, errorTitle, pointError]);
 
   const { mutate } = useMutation({
     mutationFn: async (postRequest: PostRequestEntity) => {
       //setUpload(true);
       postId = await apiClient.insertPostData(postRequest);
-      if (files) {
-        const urls = await apiClient.uploadImages(userLogin?.user_token!, postId, files);
-        await apiClient.insertImgUrl(postId, urls);
-      }
+      // if (files) {
+      //   const urls = await apiClient.uploadImages(userLogin?.user_token!, postId, files);
+      //   await apiClient.insertImgUrl(postId, urls);
+      // }
       const urlParser = inputGithubUrl.split('/');
       const codeRequest: CodeRequestEntity = {
         post_id: postId,
@@ -176,17 +176,17 @@ const CreateCodePage: FC<Props> = () => {
         language: inputLanguage,
         seller_github_name: urlParser[urlParser.length - 2],
         popularity: 0,
-        buyer_guide: inputGuide,
+        //buyer_guide: inputGuide,
         buyer_count: 0,
       };
       await apiClient.insertCodeData(codeRequest);
     },
     onSuccess: () => {
-      setFiles(null);
-      setSrc(null);
+      //setFiles(null);
+      //setSrc(null);
       setGithubUrl('');
       setTitle('');
-      setDescription('');
+      //setDescription('');
       setLanguage('');
       setPoint('');
       toast.success('회원님의 코드가 관리자에게 전달되었습니다!');
@@ -268,19 +268,19 @@ const CreateCodePage: FC<Props> = () => {
         />
       </Card>
 
-      <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
-        <SectionTitle title='완성본, 참고할 이미지를 업로드 (선택)' helpText='결과물의 사진 업로드를 하면 구매자들에게 도움이 됩니다.' />                
-        {src && <ImageCard src={src} handleDeleteImage={handleDeleteImage} />}
-        <IconButton component='label'>
-          <AddPhotoAlternateIcon sx={{ fontSize: '40px', color: '#555' }} />
-          <input
-            onChange={handleChangeImage}
-            type='file'
-            multiple
-            hidden
-          />
-        </IconButton>
-      </Card>
+      {/*<Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>*/}
+      {/*  <SectionTitle title='완성본, 참고할 이미지를 업로드 (선택)' helpText='결과물의 사진 업로드를 하면 구매자들에게 도움이 됩니다.' />                */}
+      {/*  {src && <ImageCard src={src} handleDeleteImage={handleDeleteImage} />}*/}
+      {/*  <IconButton component='label'>*/}
+      {/*    <AddPhotoAlternateIcon sx={{ fontSize: '40px', color: '#555' }} />*/}
+      {/*    <input*/}
+      {/*      onChange={handleChangeImage}*/}
+      {/*      type='file'*/}
+      {/*      multiple*/}
+      {/*      hidden*/}
+      {/*    />*/}
+      {/*  </IconButton>*/}
+      {/*</Card>*/}
 
       <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
         <Link to={'/help'} target={"_blank"} style={{ display: 'flex', alignItems: 'center', color: '#555', textDecoration: 'none', marginBottom: 3 }}>
@@ -301,49 +301,27 @@ const CreateCodePage: FC<Props> = () => {
         />
       </Card>
 
-      <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
-        <SectionTitle title='구매자 가이드' helpText={`구매자가 코드를 구매 후 실행 시 원활한 작동을 위해 개발환경을 알려주세요\n예시)\n사용언어:Node.js\n버전:20.1.0LTS\n프레임워크 및 라이브러리\n-React (v18)\n운영체제:Windows10Home\n개발일시:2022년 5월 9일`} />
-        <TextField
-          value={inputGuide}
-          sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}
-          onChange={onChangeGuide}
-          type='text'
-          color={inputGuide ? errorGuide ? 'error' : 'success' : 'info'}
-          placeholder='예시)\n사용언어:Node.js\n버전:20.1.0LTS\n프레임워크 및 라이브러리\n-React (v18)\n운영체제:Windows10Home\n개발일시:2022년 5월 9일'
-          inputRef={inputGuideRef}
-          error={errorGuide}
-          autoComplete='off'
-          helperText={errGuideMessage}
-          fullWidth
-          multiline
-          rows={10}
-        />
-        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'right', marginTop: 1 }}>
-          ({inputGuideCount}/3,000)
-        </Typography>
-      </Card>
-
-      <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
-        <SectionTitle title='코드 설명' helpText='코드에서 사용되는 기술에 대한 개념, 왜 이러한 기술은 선택했는지 등 코드에 대한 설명을 자유롭게 적어주세요.' />
-        <TextField
-          value={inputDescription}
-          sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}
-          onChange={onChangeDescription}
-          type='text'
-          inputRef={inputContentRef}
-          color={inputDescription ? errorDesc ? 'error' : 'success' : 'info'}
-          placeholder='최소 30자 이상 작성'
-          error={errorDesc}
-          autoComplete='off'
-          helperText={errDescMessage}
-          fullWidth
-          multiline
-          rows={10}
-        />
-        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'right', marginTop: 1 }}>
-          ({inputDescriptionCount}/3,000)
-        </Typography>
-      </Card>
+      {/*<Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>*/}
+      {/*  <SectionTitle title='코드 설명' helpText='코드에서 사용되는 기술에 대한 개념, 왜 이러한 기술은 선택했는지 등 코드에 대한 설명을 자유롭게 적어주세요.' />*/}
+      {/*  <TextField*/}
+      {/*    value={inputDescription}*/}
+      {/*    sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}*/}
+      {/*    onChange={onChangeDescription}*/}
+      {/*    type='text'*/}
+      {/*    inputRef={inputContentRef}*/}
+      {/*    color={inputDescription ? errorDesc ? 'error' : 'success' : 'info'}*/}
+      {/*    placeholder='최소 30자 이상 작성'*/}
+      {/*    error={errorDesc}*/}
+      {/*    autoComplete='off'*/}
+      {/*    helperText={errDescMessage}*/}
+      {/*    fullWidth*/}
+      {/*    multiline*/}
+      {/*    rows={10}*/}
+      {/*  />*/}
+      {/*  <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'right', marginTop: 1 }}>*/}
+      {/*    ({inputDescriptionCount}/3,000)*/}
+      {/*  </Typography>*/}
+      {/*</Card>*/}
 
       <Box sx={{ marginTop: 6, display: 'flex', justifyContent: 'end' }}>
         <Button variant="contained" sx={{ backgroundColor: '#333', color: '#fff', fontSize: 15, width: 194 }} onClick={onSubmitCodeRequest}>

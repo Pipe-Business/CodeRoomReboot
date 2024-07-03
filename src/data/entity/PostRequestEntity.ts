@@ -3,7 +3,7 @@ import {PostStateType} from "../../enums/PostStateType";
 export interface PostRequestEntity {
 	id?: number;
 	title: string; // 제목 
-	description: string; // 설명
+	description?: string; // 설명
 	img_urls?: string[]; // (코드 결과물) 이미지
 	user_token: string; //  사용자의 UserEntity id
 	category: string; //  코드 카테고리 (프론트엔드, 웹 퍼블리싱 등...)
