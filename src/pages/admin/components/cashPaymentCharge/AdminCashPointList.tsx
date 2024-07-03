@@ -71,7 +71,7 @@ const AdminCashPointList: FC<Props> = ({ type }) => {
 				<Header type={type} />
 				{ type ==='cash' && 
 				cashData.map(item => {
-					return <AdminCashItem item={item}/>
+					return <AdminCashItem item={item} key={item.id}/>
 				})}
 			</List>
 		);
@@ -81,7 +81,7 @@ const AdminCashPointList: FC<Props> = ({ type }) => {
 				<Header type={type} />
 				{ type ==='point' && 
 				pointData.map(item => {
-					return <AdminPointItem item={item}/>
+					return <AdminPointItem item={item} key={item.id}/>
 				})}
 			
 			</List>

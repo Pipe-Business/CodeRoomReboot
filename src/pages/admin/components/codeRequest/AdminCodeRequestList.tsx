@@ -42,10 +42,10 @@ const AdminCodeRequestList: FC<Props> = ({ type }) => {
 			<Divider/>
 			{data.map(item=>{
 				if(item.state===type){
-					return <>
-					<AdminCodeRequestItem key={item.id} item={item}/>
+					return <div key={item.id} >
+					<AdminCodeRequestItem item={item}/>
 						<Divider/>
-					</>
+					</div>
 				}
 			})}
 		</List>
