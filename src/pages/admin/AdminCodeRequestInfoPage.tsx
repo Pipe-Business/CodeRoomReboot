@@ -98,7 +98,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					<div>제목</div>
 					<span>{data.title}</span>
 				</ContentWrapper>
-				<div style={{marginBottom: '30px'}}>
+				{ data.description && <div style={{marginBottom: '30px'}}>
 					<div style={{
 						whiteSpace: 'pre-wrap',
 						fontSize: '30px',
@@ -111,7 +111,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 						<ReadMeHtml htmlText={data.description!}/>
 					</div>
 
-				</div>
+				</div>}
 				<Divider/>
 				<ContentWrapper>
 					<div>
