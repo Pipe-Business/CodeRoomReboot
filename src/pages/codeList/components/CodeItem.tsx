@@ -1,4 +1,4 @@
-import {Box, ListItem, ListItemButton, ListItemText, Typography} from '@mui/material';
+import {Box, ListItem, ListItemButton, ListItemText, Paper, Typography} from '@mui/material';
 import React, {FC, useCallback} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {MainPageCodeListEntity} from '../../../data/entity/MainPageCodeListEntity';
@@ -55,45 +55,51 @@ const CodeItem: FC<Props> = ({ item }) => {
               {item.title}
             </Typography>
 
-            <Typography
-              variant="body2"
-              sx={{
-                ml: '8px',
-                mt: '16px',
-                mb: '16px',
-                mr: { xs: '16px', sm: '16px', md: '250px' },
-                color: 'grey',
-                fontSize: { xs: '12px', sm: '14px', md: '14px' },
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                WebkitLineClamp: { xs: 2, sm: 1 },
-                lineClamp: { xs: 2, sm: 1 },
-              }}
-            >
-                <ReadMeHtml htmlText={item.description!}/>
-            </Typography>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    ml: '8px',
+                    mt: '16px',
+                    mb: '16px',
+                    mr: { xs: '16px', sm: '16px', md: '250px' },
+                    color: 'grey',
+                    fontSize: { xs: '12px', sm: '14px', md: '14px' },
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: { xs: 2, sm: 1 },
+                    lineClamp: { xs: 2, sm: 1 },
+                  }}
+                >
 
-            {/* 캐시, 닉네임, 시간 */}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'row',
-                ml: '8px',
-                mt: '8px',
-                mb: '8px',
-              }}
-            >
-              <Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>
-                💵 {item.price.toLocaleString()}
-              </Typography>
-              {/*<Box width={8} />*/}
-              {/*<Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>*/}
-              {/*  🌱 {(item.price * 5).toLocaleString()}*/}
-              {/*</Typography>*/}
-            </Box>
+                <ReadMeHtml htmlText={item.description!}/>
+                </Paper>
+
+                {/* 캐시, 닉네임, 시간 */}
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        ml: '8px',
+                        mt: '8px',
+                        mb: '8px',
+                    }}
+                >
+                    <Typography variant="body2" sx={{
+                        color: 'black',
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        fontSize: {xs: '16px', sm: '20px', md: '22px'}
+                    }}>
+                        💵 {item.price.toLocaleString()}
+                    </Typography>
+                    {/*<Box width={8} />*/}
+                    {/*<Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>*/}
+                    {/*  🌱 {(item.price * 5).toLocaleString()}*/}
+                    {/*</Typography>*/}
+                </Box>
 
             {/* item.createdAt을 좌측 하단으로 이동 */}
             <Typography
