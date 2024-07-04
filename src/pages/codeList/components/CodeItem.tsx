@@ -72,8 +72,7 @@ const CodeItem: FC<Props> = ({ item }) => {
                     lineClamp: { xs: 2, sm: 1 },
                   }}
                 >
-
-                <ReadMeHtml htmlText={item.description!}/>
+                    {item.buyerGuide}
                 </Paper>
 
                 {/* 캐시, 닉네임, 시간 */}
