@@ -2,38 +2,24 @@ import React, {FC} from 'react';
 import {Link, useNavigate, useParams} from 'react-router-dom';
 import AdminLayout from '../../layout/AdminLayout';
 import {useQuery} from '@tanstack/react-query';
-import {Button, Divider, IconButton, Skeleton} from '@mui/material';
+import {Button, IconButton, Skeleton} from '@mui/material';
 import useDialogState from '../../hooks/UseDialogState';
 import AcceptModal from '../../components/review/modal/AcceptModal';
 import RejectModal from '../../components/review/modal/RejectModal';
-import styled from '@emotion/styled';
 import {reformatTime} from "../../utils/DayJsHelper";
 import {useQueryUserById} from "../../hooks/fetcher/UserFetcher";
 import {ArrowBack} from '@mui/icons-material';
 import {CATEGORY_TO_KOR} from "../../constants/define";
 import {apiClient} from "../../api/ApiClient";
-import ImageCard from './components/codeRequest/ImageCard';
 import MainLayout from '../../layout/MainLayout';
 import {PostStateType} from "../../enums/PostStateType";
 import ReadMeHtml from "../codeInfo/components/ReadMeHtml";
+import {ContentContainer, TitleContainer} from "./styles";
 
 interface Props {
 	children?: React.ReactNode;
 }
 
-const ContentWrapper = styled.div`
-  & div {
-    font-size: 25px;
-    margin-bottom: 16px;
-  }
-
-  & span {
-    font-size: 20px;
-  }
-
-  margin-top: 16px;
-  margin-bottom: 16px;
-`;
 const AdminCodeRequestInfo: FC<Props> = () => {
 	const { userId, codeId } = useParams();
 	const navigate = useNavigate();
@@ -43,12 +29,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 		queryFn: () => apiClient.getTargetCode(Number(codeId)),
 	});
 
-	// if (!userId || !codeId) {
-	// 	return <div>ID가 없습니다.</div>;
-	// }
-
 	const { userById } = useQueryUserById(userId!);
-	 //const { codeData } = useQueryCodeById(['codeStore', codeId]);
 	const [openAcceptModal, onOpenAcceptModal, onCloseAcceptModal] = useDialogState();
 	const [openRejectModal, onOpenRejectModal, onCloseRejectModal] = useDialogState();
 
@@ -74,95 +55,94 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 		<AdminLayout>
 
 
-			<div style={{ height: '100dvh' }}>
+			<div style={{height: '100dvh'}}>
 
-				<div style={{ display: 'flex', alignItems: 'center' }}>
+				<div style={{display: 'flex', alignItems: 'center'}}>
 					<IconButton onClick={() => {
 						navigate(-1);
 					}}>
-						<ArrowBack />
+						<ArrowBack/>
 					</IconButton>
 					<h1>{userById.nickname} 님의 {data.title}</h1>
 				</div>
-				<h2 style={{ marginBottom: 64 }}>{data.state === PostStateType.pending ? '요청 대기' : data.state === PostStateType.rejected ? '요청 반려' : '승인'}</h2>
+				<h2 style={{
+					marginBottom: 64,
+					color: 'red',
+					fontSize: '48px'
+				}}>{data.state === PostStateType.pending ? '요청 대기' : data.state === PostStateType.rejected ? '요청 반려' : '승인'}</h2>
 				{data.state === PostStateType.rejected &&
-				
-					<ContentWrapper>
-						<div>반려사유</div>
-						<span>{data.rejectMessage}</span>
-					</ContentWrapper>
-	
+
+					<div>
+						<TitleContainer>반려사유</TitleContainer>
+						<ContentContainer>{data.rejectMessage}</ContentContainer>
+					</div>
 
 				}
-				<ContentWrapper>
-					<div>제목</div>
-					<span>{data.title}</span>
-				</ContentWrapper>
-				{ data.description && <div style={{marginBottom: '30px'}}>
-					<div style={{
-						whiteSpace: 'pre-wrap',
-						fontSize: '30px',
-						marginBottom: '10px',
-						marginTop: '10px',
-					}}>코드 설명
-					</div>
+				<div>
+					<TitleContainer>제목</TitleContainer>
+					<ContentContainer>{data.title}</ContentContainer>
+				</div>
 
-					<div>
+				<div>
+					<TitleContainer>
+						<img src='/robot.png' alt='robot.png' width="32" style={{paddingRight:'10px'}}/>
+						AI ROOMY의 KeyPoint ✨
+					</TitleContainer>
+
+
+					<ContentContainer>{data.buyerGuide}</ContentContainer>
+				</div>
+
+				{data.description && <div style={{marginBottom: '30px'}}>
+					<TitleContainer>
+						코드 설명
+					</TitleContainer>
+
+					<ContentContainer>
 						<ReadMeHtml htmlText={data.description!}/>
-					</div>
+					</ContentContainer>
 
 				</div>}
-				<Divider/>
-				<ContentWrapper>
+				<div>
 					<div>
-						<div style={{ whiteSpace: 'pre-wrap' }}>카테고리</div>
-						<div>{CATEGORY_TO_KOR[data.category as keyof typeof CATEGORY_TO_KOR ]}</div>
+						<TitleContainer>카테고리</TitleContainer>
+						<ContentContainer>{CATEGORY_TO_KOR[data.category as keyof typeof CATEGORY_TO_KOR]}</ContentContainer>
 					</div>
-				</ContentWrapper>
-				<ContentWrapper>
-					<div style={{ whiteSpace: 'pre-wrap' }}>개발언어</div>
-					<span style={{ display: 'flex', alignItems: 'center' }}>
-					<span style={{ marginLeft: 16 }}>{data.language}</span>
-					</span>
-				</ContentWrapper>
-				<Divider />
-			
-					<>
-						<h3>이미지</h3>
-						<div>
-							{data.images ? <ImageCard src={data.images} /> : <>no image</>}
-						</div>
-						<Divider />
-					</>
-				
-				<ContentWrapper>
-					<div>{data.state === PostStateType.pending ? '요청' : data.state === PostStateType.rejected ? '반려' : '승인'}시간</div>
-					<span>
-					{reformatTime(data.createdAt)}
-				</span>
-				</ContentWrapper>
-				<Divider />
-			
-					
-						<ContentWrapper>
-							<div>판매가격</div>
-							<span>{data.price}p</span>
-						</ContentWrapper>
-						<Divider />
-						<ContentWrapper>
-							<div>판매자 레포지토리 주소</div>
-							<span><a href={data.githubRepoUrl} target={'_blank'}>{data.githubRepoUrl}</a></span>
-						</ContentWrapper>
-						<Divider />
-						<ContentWrapper>
-							<div>판매자 깃허브 닉네임</div>
-							<Link to={`https://github.com/${data.sellerGithubName}`} target='_blank'>
-								<span>{data.sellerGithubName}</span>
-							</Link>
-						</ContentWrapper>
-				
+				</div>
+
+				<div>
+					<TitleContainer>개발언어</TitleContainer>
+					<ContentContainer>{data.language}</ContentContainer>
+				</div>
+
+				<div>
+					<TitleContainer>{data.state === PostStateType.pending ? '요청' : data.state === PostStateType.rejected ? '반려' : '승인'}시간</TitleContainer>
+					<ContentContainer>
+						{reformatTime(data.createdAt)}
+					</ContentContainer>
+				</div>
+
+
+				<div>
+					<TitleContainer>판매가격</TitleContainer>
+					<ContentContainer>{data.price} 💵</ContentContainer>
+				</div>
+				<div>
+					<TitleContainer>판매자 레포지토리 주소</TitleContainer>
+					<ContentContainer><a href={data.githubRepoUrl}
+										 target={'_blank'}>{data.githubRepoUrl}</a></ContentContainer>
+				</div>
+				<div>
+					<TitleContainer>판매자 깃허브 닉네임</TitleContainer>
+					<ContentContainer>
+						<Link to={`https://github.com/${data.sellerGithubName}`} target='_blank'>
+							<span>{data.sellerGithubName}</span>
+						</Link>
+					</ContentContainer>
+				</div>
+
 				{data.state === PostStateType.pending &&
-					<div>
+					<div style={{marginBottom: '128px', marginTop: '128px'}}>
 						<div style={{
 							position: 'sticky',
 							bottom: 0,
@@ -170,22 +150,22 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 							fontSize: '30px',
 							display: 'flex',
 						}}>
-							<Button style={{ flex: 1, fontSize: 30 }} onClick={onOpenAcceptModal}
+							<Button style={{flex: 1, fontSize: 30}} onClick={onOpenAcceptModal}
 									variant={'contained'}>
 								승인
 							</Button>
-							<Button style={{ flex: 1, fontSize: 30 }} onClick={onOpenRejectModal}
+							<Button style={{flex: 1, fontSize: 30}} onClick={onOpenRejectModal}
 									variant={'contained'}
 									color={'error'}>
 								반려
 							</Button>
 						</div>
-						<AcceptModal open={openAcceptModal} onClose={onCloseAcceptModal} />
+						<AcceptModal open={openAcceptModal} onClose={onCloseAcceptModal}/>
 						<RejectModal postId={data.id!.toString()} title={data.title} userToken={data.userToken}
 									 open={openRejectModal}
 									 onClose={onCloseRejectModal} refetch={() => {
-										navigate('/admin');
-									 }} />
+							navigate('/admin');
+						}}/>
 					</div>
 				}
 
