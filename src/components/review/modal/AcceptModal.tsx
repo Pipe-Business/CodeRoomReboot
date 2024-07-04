@@ -36,6 +36,10 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 			 const readMe: string = await apiClient.getReadMe(forkUrl);
 			 await apiClient.insertReadme(data.id.toString(), readMe);
 
+			// 마케팅 문구 작성 by gpt
+			const marketingReadmeByGpt:string = await apiClient.makeReadMeByGpt(forkUrl);
+			await apiClient.updateAdminMarketingText(data.id.toString(), marketingReadmeByGpt);
+
 			// 알림보내기
 			const notificationEntity: NotificationEntity ={
 				title : '심사 승인 알림',

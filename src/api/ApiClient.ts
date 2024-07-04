@@ -770,6 +770,24 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async makeReadMeByGpt(adminGithubRepoUrl: string):Promise<string> {
+
+        try {
+            const split = adminGithubRepoUrl.split('/');
+            const userName = split[split.length - 2];
+            const repoName = split[split.length - 1];
+            console.log("adminGithubrepo:+ "+adminGithubRepoUrl);
+            const result = await axios.post<any>(`${serverURL}/makereadme/bygpt/${userName}/${repoName}`);
+            console.log("readmesldf: "+JSON.stringify(result.data.gptReadme));
+
+            return result.data.gptReadme;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('makeReadMeByGpt error');
+        }
+    }
+
+
     updateImageUrls = (readmeContent: string, owner: string, repo: string, token: string) => {
         const imageUrlPattern = /!\[.*?\]\((.*?)\)/g;
         return readmeContent.replace(imageUrlPattern, (match, p1) => {
@@ -2302,6 +2320,30 @@ class ApiClient implements SupabaseAuthAPI {
         } catch (e: any) {
             console.log(e);
             throw new Error('알림을 읽음 처리하는데 실패했습니다.s');
+        }
+    }
+
+    async updateAdminMarketingText(postId:string, buyer_guide: string) {
+        try {
+            const {data, error} = await supabase.from('code')
+                .update({buyer_guide: buyer_guide})
+                .eq('post_id', postId);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('readme marketing text insert 실패');
+            }
+
+            return data!;
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('readme marketing text insert 실패');
         }
     }
 }
