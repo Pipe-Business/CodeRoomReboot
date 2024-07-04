@@ -212,6 +212,16 @@ const CodeInfo: FC<Props> = () => {
 									{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} / {postData.language}
 								</Typography>
 							</Box>
+							<Box height={32} />
+							<Box my={1} style={{border:'10px solid #D1B04A', borderRadius:'4px', padding:'16px'}}>
+								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+									이 코드의 장점 👑
+								</Typography>
+								<div>
+									{postData.buyerGuide}
+								</div>
+							</Box>
+
 							<Box my={2}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									코드 설명
