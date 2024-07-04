@@ -215,11 +215,14 @@ const CodeInfo: FC<Props> = () => {
 							<Box height={32} />
 							<Box my={1} style={{border:'10px solid #D1B04A', borderRadius:'4px', padding:'16px'}}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-									이 코드의 장점 👑
+									<img src='/robot.png' alt='robot.png' width="32" style={{paddingRight:'10px'}}/>
+									AI ROOMY의 KeyPoint ✨
 								</Typography>
-								<div>
+								<Box height={16} />
+								<div style={{fontSize : '20px', whiteSpace: 'pre-line'}}>
 									{postData.buyerGuide}
 								</div>
+								<Box height={16} />
 							</Box>
 
 							<Box my={2}>
