@@ -1,12 +1,10 @@
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import LinkIcon from '@mui/icons-material/Link';
-import {Box, Button, Card, Grid, IconButton, TextField, Typography} from '@mui/material';
+import {Box, Button, Card, CircularProgress, Grid, TextField, Typography} from '@mui/material';
 import {useMutation} from '@tanstack/react-query';
 import React, {ChangeEvent, FC, useCallback, useEffect, useRef, useState} from 'react';
 import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {apiClient} from '../../api/ApiClient';
-import ImageCard from '../../components/ImageCard';
 import {useInputValidate} from '../../hooks/common/UseInputValidate';
 import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import useInput from '../../hooks/UseInput';
@@ -41,6 +39,8 @@ const CreateCodePage: FC<Props> = () => {
   const [inputPoint, , setPoint] = useInput<number | ''>('');
   const [inputGithubUrl, setGithubUrl] = useState('');
   let postId: number;
+
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   //const [src, setSrc] = useState<string[] | null>(null);
   //const [files, setFiles] = useState<File[] | null>(null);
@@ -99,6 +99,7 @@ const CreateCodePage: FC<Props> = () => {
   // }, []);
 
   const onSubmitCodeRequest = useCallback(async () => {
+    setLoading(true);
     if (!inputCategory || inputCategory.trim() === "") {
       toast.error("카테고리를 선택해주세요");
       return;
@@ -189,6 +190,7 @@ const CreateCodePage: FC<Props> = () => {
       //setDescription('');
       setLanguage('');
       setPoint('');
+      setLoading(false);
       toast.success('회원님의 코드가 관리자에게 전달되었습니다!');
       navigate('/');
     },
@@ -197,9 +199,16 @@ const CreateCodePage: FC<Props> = () => {
     },
   });
 
+  if(isLoading) {
+    return <MainLayout>
+      <CircularProgress style={{color: '#000000'}} size={100}/>
+    </MainLayout>
+
+  }
+
   return (
-    <MainLayout>
-      <Box sx={{ marginTop: 4, marginBottom: 4 }}>
+      <MainLayout>
+        <Box sx={{marginTop: 4, marginBottom: 4}}>
         <Typography variant="h4" fontWeight="bold" sx={{ color: '#333' }}>코드 올리기</Typography>
       </Box>
 
