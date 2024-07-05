@@ -1,5 +1,6 @@
- import React, {FC, useRef, useState} from 'react';
- interface Props {
+import React, {FC} from 'react';
+
+interface Props {
    children?: React.ReactNode;
  }
 const MentoringPage: FC<Props> = () => {
