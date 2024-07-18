@@ -88,6 +88,10 @@ const CreateCodePage: FC<Props> = () => {
     setGithubUrl(e.target.value);
   }, []);
 
+  const goToAIBuilderPage = useCallback(() => {
+      navigate('/aibuilder');
+  },[]);
+
   // const handleChangeImage = useCallback((e: ChangeEvent<HTMLInputElement>) => {
   //   const urlList: string[] = [];
   //   const fileList = Array.from(e.target.files ?? []);
@@ -211,6 +215,18 @@ const CreateCodePage: FC<Props> = () => {
         <Box sx={{marginTop: 4, marginBottom: 4}}>
         <Typography variant="h4" fontWeight="bold" sx={{ color: '#333' }}>코드 올리기</Typography>
       </Box>
+
+        <Button
+        onClick={goToAIBuilderPage}
+            style={{
+          padding: 16,
+          backgroundColor: '#26282D',
+          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          borderRadius: '8px',
+          color: '#56A8F5',
+          fontWeight:'bold',
+          marginBottom:32
+        }}>AI 빌더 이용하기 ✨</Button>
 
       { editTargetModel &&
         <Card sx={{

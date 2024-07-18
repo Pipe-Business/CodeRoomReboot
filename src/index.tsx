@@ -43,6 +43,8 @@ const NotificationPage = React.lazy(() => import('./pages/notification/Notificat
 const EditCodePage = React.lazy(() => import('./pages/editCode/EditCodePage'));
 const SearchPage = React.lazy(() => import('./pages/search/SearchPage'));
 const PaymentPage = React.lazy(() => import('./pages/payment/PaymentPage'));
+const AiBuilderPage = React.lazy(() => import('./pages/aiBuilder/AiBuilderPage'));
+const AiBuilderSuggestPage = React.lazy(() => import('./pages/aiBuilder/AiBuilderServicePlanning'));
 
 const queryClient = new QueryClient();
 
@@ -102,6 +104,8 @@ root.render(
       <Route path='/notification' element={<NotificationPage/>}/>
       <Route path='/code/search' element={<SearchPage />} />
       <Route path='/payment' element={<PaymentPage/>} />
+      <Route path='/aibuilder' element={<AiBuilderPage/>} />
+      <Route path='/aibuilder/serviceplanning' element={<AiBuilderSuggestPage/>} />
 
 
       <Route path='/*' element={<NotFoundPage/>}/>
