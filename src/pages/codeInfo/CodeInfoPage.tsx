@@ -212,18 +212,51 @@ const CodeInfo: FC<Props> = () => {
 									{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} / {postData.language}
 								</Typography>
 							</Box>
+
+
+
+							{/*<Box height={32} />*/}
+							{/*<Box my={1} style={{border:'10px solid #6DA8F6', borderRadius:'4px', padding:'16px'}}>*/}
+							{/*	<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>*/}
+							{/*		<img src='/robot.png' alt='robot.png' width="32" style={{paddingRight:'10px'}}/>*/}
+							{/*		AI ROOMY가 정리한 코드소개 ✅*/}
+							{/*	</Typography>*/}
+							{/*	<Box height={16} />*/}
+							{/*	<div style={{fontSize : '20px', whiteSpace: 'pre-line'}}>*/}
+							{/*		{postData.introduction}*/}
+							{/*	</div>*/}
+							{/*	<Box height={16} />*/}
+							{/*</Box>*/}
+
+
 							<Box height={32} />
 							<Box my={1} style={{border:'10px solid #D1B04A', borderRadius:'4px', padding:'16px'}}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									<img src='/robot.png' alt='robot.png' width="32" style={{paddingRight:'10px'}}/>
-									AI ROOMY의 KeyPoint ✨
+									AI ROOMY가 생성한 콘텐츠 ✨
 								</Typography>
+
 								<Box height={16} />
+								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+									✅ 이 코드의 key point
+								</Typography>
+
 								<div style={{fontSize : '20px', whiteSpace: 'pre-line'}}>
 									{postData.buyerGuide}
 								</div>
+								<Box height={32} />
+
+								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+									✅ 코드 소개
+								</Typography>
+									<div style={{fontSize : '20px', whiteSpace: 'pre-line'}}>
+										{postData.introduction}
+									</div>
 								<Box height={16} />
+
 							</Box>
+
+							<Box height={32} />
 
 							<Box my={2}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>

@@ -481,6 +481,7 @@ class ApiClient implements SupabaseAuthAPI {
                     buyerGuide: e.code.buyer_guide,
                     language: e.code.language,
                     category: e.category,
+                    introduction: e.introduction,
                     createdAt: e.created_at,
                     postType: e.post_type,
                     popularity: e.code.popularity,
@@ -777,7 +778,7 @@ class ApiClient implements SupabaseAuthAPI {
             const userName = split[split.length - 2];
             const repoName = split[split.length - 1];
             console.log("adminGithubrepo:+ "+adminGithubRepoUrl);
-            const result = await axios.post<any>(`${serverURL}/makereadme/bygpt/${userName}/${repoName}`);
+            const result = await axios.post<any>(`${serverURL}/gpt/makereadme/${userName}/${repoName}`);
             console.log("readmesldf: "+JSON.stringify(result.data.gptReadme));
 
             return result.data.gptReadme;
@@ -786,6 +787,19 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('makeReadMeByGpt error');
         }
     }
+
+    async refactoringByGpt(targetCode:string):Promise<string> {
+
+        try {
+            const result = await axios.post<any>(`${serverURL}/gpt/refactoring`, {data:targetCode});
+
+            return result.data.refactorResult;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('refactoring by gpt error');
+        }
+    }
+
 
 
     updateImageUrls = (readmeContent: string, owner: string, repo: string, token: string) => {
@@ -925,6 +939,7 @@ class ApiClient implements SupabaseAuthAPI {
                     rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                     is_deleted: e.is_deleted,
+                    introduction: e.introduction,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -968,6 +983,7 @@ class ApiClient implements SupabaseAuthAPI {
                     rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                     is_deleted: e.is_deleted,
+                    introduction: e.introduction,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -1107,6 +1123,7 @@ class ApiClient implements SupabaseAuthAPI {
                     rejectMessage: e.reject_message,
                     viewCount: e.view_count,
                     is_deleted: e.is_deleted,
+                    introduction: e.introduction,
                 }
                 lstCodeModel.push(codeModel);
             });
