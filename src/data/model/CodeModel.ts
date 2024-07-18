@@ -20,4 +20,5 @@ export type CodeModel = {
     viewCount : number, // 조회수
     rejectMessage : string, // 반려사유
     is_deleted: boolean; // 삭제된 게시물인지 확인
+    introduction: string; // 코드소개
 }
