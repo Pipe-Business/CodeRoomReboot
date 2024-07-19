@@ -93,3 +93,9 @@ export const BuilderMenuListItemContainer = styled.button<BuilderMenuContainerPr
     margin: 16px 16px 16px 0;
     background-color: white;
 `
+
+export const CenterBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`

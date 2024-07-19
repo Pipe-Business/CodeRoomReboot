@@ -1,12 +1,15 @@
-import React, {FC, useCallback} from "react";
+import React, {FC, useCallback, useState} from "react";
 import MainLayout from "../../layout/MainLayout";
 import {Box, Card, CardHeader, IconButton, Typography} from "@mui/material";
 import {ArrowBack} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import BuilderMenuListItemButton from "./components/builderMenuListItemButton";
-import {GoToCustomBtnContainer} from "./styles";
+import {CenterBox, GoToCustomBtnContainer} from "./styles";
 import {useRecoilState} from "recoil";
 import {aiBuilderStepStatus, suggestPromptState} from "./atom";
+import {apiClient} from "../../api/ApiClient";
+import Lottie from "lottie-react";
+import loadingLottie from "../../assets/aibuilderLoading.json";
 
 interface Props {
     children?: React.ReactNode;
@@ -19,9 +22,18 @@ const AiBuilderPage: FC<Props> = ({children}) => {
         navigate(-1);
     }, []);
 
-    const [suggestPrompt, setSuggestPrompt] = useRecoilState(suggestPromptState);
     const [stepStatus, setStepStatus] = useRecoilState(aiBuilderStepStatus);
+    const [isLoading, setIsLoading] = useState(false);
 
+    if(isLoading){ // tood 생성중입니다 로딩
+        return  <MainLayout>
+            <CenterBox>
+                <div style={{display: 'flex', justifyContent: 'center', width: '256px', height: '256px'}}>
+                    <Lottie animationData={loadingLottie}/>
+                </div>
+            </CenterBox>
+        </MainLayout>
+    }
 
 
     return <MainLayout>
@@ -53,9 +65,11 @@ const AiBuilderPage: FC<Props> = ({children}) => {
             <div style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
                 <BuilderMenuListItemButton title={'서비스 기획'} content={'기능정의서, PRD 제작과\n개발에 필요한 AI 개발 프롬프트 서비스 제공'}
                                            height={'300px'}
-                                           onClick={() => {
-                    navigate('/aibuilder/serviceplanning');
-                    setSuggestPrompt(["프론트엔드 개발"]);
+                                           onClick={async() => {
+                                               setIsLoading(true);
+                                               const ideaList: string[] = await apiClient.servicePlanningByGpt();
+                                               setIsLoading(false);
+                                               navigate('/aibuilder/serviceplanning', {state: {ideaList:ideaList}});
                     setStepStatus(1);
                 }}/>
                 <BuilderMenuListItemButton title={'서비스 개발'} content={'원하시는 기능의 모듈코드를 생성하는\n서비스 제공'} onClick={() => {
