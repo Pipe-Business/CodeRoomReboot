@@ -59,8 +59,11 @@ const AiBuilderPage: FC<Props> = ({children}) => {
                     setStepStatus(1);
                 }}/>
                 <BuilderMenuListItemButton title={'서비스 개발'} content={'원하시는 기능의 모듈코드를 생성하는\n서비스 제공'} onClick={() => {
+
                 }}/>
                 <BuilderMenuListItemButton title={'코드 개선'} content={'보유 코드에 대한 코드 리뷰, 코드 최적화 서비스 제공'} onClick={() => {
+                    navigate('/aibuilder/refactoring');
+                    setStepStatus(1);
                 }}/>
             </div>
 
