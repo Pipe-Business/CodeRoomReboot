@@ -153,7 +153,7 @@ const AiBuilderServicePlanning: FC<Props> = () => {
                     let splitedList = item.split(':');
                     let title: string = splitedList[0];
                     let content: string = splitedList[1];
-                    return <BuilderMenuListItemButton title={title} content={content} width={'80%'} onClick={() => builderMenuListItemOnClicked(title,content)}/>
+                    return <BuilderMenuListItemButton key = {index} title={title} content={content} width={'80%'} onClick={() => builderMenuListItemOnClicked(title,content)}/>
                 })}
             </AibuilderPageLayout>
         }
