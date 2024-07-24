@@ -58,7 +58,6 @@ const CreateCodePage: FC<Props> = () => {
 
 
   useEffect(() => {
-    console.log(JSON.stringify(editTargetModel));
     if(editTargetModel){
       setTitle(editTargetModel.title);
       //setDescription(editTargetModel.description);
