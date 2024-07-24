@@ -332,7 +332,7 @@ const PaymentPage: FC<Props> = () => {
                             error={cashError}
                             helperText={cashError && '캐시는 음수가 될수 없습니다.'}
                             type='number'
-                            inputProps={{InputProps:{min: 0, max: cashData}}}
+                            //inputProps={{InputProps:{min: 0, max: cashData}}}
                         />
                             <Box width={16}/>
                             <ColorButton onClick={onUseAllCash} variant={'contained'}>전액사용</ColorButton>
@@ -374,7 +374,7 @@ const PaymentPage: FC<Props> = () => {
                                 error={coinError}
                                 helperText={coinError && '코인은 음수가 될수 없습니다.'}
                                 type='number'
-                                inputProps={{InputProps:{min: 0, max: coinData}}}
+                                //inputProps={{InputProps:{min: 0, max: coinData}}}
                             />
                             <Box width={16}/>
                             <ColorButton onClick={onUseAllCoin} variant={'contained'}>전액사용</ColorButton>
