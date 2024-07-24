@@ -805,25 +805,11 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const result = await axios.get<any>(`${serverURL}/gpt/serviceplanning`,);
             const resultList:string[] =result.data.servicePlanningResult.split(',,');
-            console.log(resultList);
-            console.log("sdfsdf: "+typeof resultList);
 
             return resultList;
         } catch (e: any) {
             console.log(e);
             throw new Error('service planning by gpt error');
-        }
-    }
-
-    async makeServicePlanningDocumentByGpt(idea:string):Promise<string> {
-
-        try {
-            const result = await axios.post<any>(`${serverURL}/gpt/serviceplanning/document`, {data:idea});
-            console.log("document: "+result.data.serviceDocument);
-            return result.data.serviceDocument;
-        } catch (e: any) {
-            console.log(e);
-            throw new Error('service planning document by gpt error');
         }
     }
 
