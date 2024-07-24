@@ -67,6 +67,7 @@ const AiBuilderServicePlanning: FC<Props> = () => {
     }
 
     const builderMenuListItemOnClicked = async (title:string, content: string) => {
+            setIsLoading(true);
             setStepStatus(2);
             // gpt 질문
 
@@ -130,19 +131,10 @@ const AiBuilderServicePlanning: FC<Props> = () => {
                     }
                 });
 
+                setIsLoading(false);
             } catch (e: any) {
                 console.log(e);
             }
-    }
-
-    if(isLoading){
-        return <MainLayout>
-            <CenterBox>
-                <div style={{display: 'flex', justifyContent: 'center', width: '256px', height: '256px'}}>
-                    <Lottie animationData={loadingLottie}/>
-                </div>
-            </CenterBox>
-        </MainLayout>
     }
 
     return <MainLayout>
@@ -166,9 +158,12 @@ const AiBuilderServicePlanning: FC<Props> = () => {
                     </ReactMarkdown>
                 </div>
                 <RightEndContainer>
-                <IconButton onClick={handleCopyClipBoard}>
-                    <CopyAll /> 복사하기
-                </IconButton>
+                    {
+                        !isLoading &&
+                        <IconButton onClick={handleCopyClipBoard}>
+                            <CopyAll/> 복사하기
+                        </IconButton>
+                    }
                 </RightEndContainer>
             </AibuilderPageLayout>
         </div>}
