@@ -66,16 +66,6 @@ const AiBuilderServicePlanning: FC<Props> = () => {
         }
     }
 
-    const handleShowPromptList = async() => {
-        // 개발에 필요한 프롬프트 리스트 질문
-        // set answer
-        setIsLoading(true);
-        const result = await apiClient.makeServicePlanningDocumentPromptListByGpt(ideaDocument!);
-        setPrompt(result);
-        setIsLoading(false);
-        setStepStatus(3);
-    }
-
     const builderMenuListItemOnClicked = async (title:string, content: string) => {
             setStepStatus(2);
             // gpt 질문
@@ -179,24 +169,9 @@ const AiBuilderServicePlanning: FC<Props> = () => {
                 <IconButton onClick={handleCopyClipBoard}>
                     <CopyAll /> 복사하기
                 </IconButton>
-                <button
-                    onClick={handleShowPromptList}
-                    style={{alignItems:'center', fontWeight:'bold', fontSize:'20px',}}>개발에 필요한 AI 프롬프트 리스트 확인 <NavigateNextIcon/></button>
                 </RightEndContainer>
             </AibuilderPageLayout>
         </div>}
-
-        {
-            stepStatus === 3 &&
-            <AibuilderPageLayout pageHeaderTitle={"AI 코드 빌더 ROOMY가 생성한 프롬프트✨"} cardHeaderTitle={"개발에 필요한 AI 프롬프트 리스트 확인"}>
-                {prompt!.map((item, index) => {
-                    let splitedList = item.split(':');
-                    let title: string = splitedList[0];
-                    let content: string = splitedList[1];
-                    return <BuilderMenuListItem title={title} content={content} width={'80%'}/>
-                })}
-            </AibuilderPageLayout>
-        }
 
     </MainLayout>;
 }

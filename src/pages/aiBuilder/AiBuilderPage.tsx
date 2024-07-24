@@ -25,7 +25,7 @@ const AiBuilderPage: FC<Props> = ({children}) => {
     const [stepStatus, setStepStatus] = useRecoilState(aiBuilderStepStatus);
     const [isLoading, setIsLoading] = useState(false);
 
-    if(isLoading){ // tood 생성중입니다 로딩
+    if(isLoading){
         return  <MainLayout>
             <CenterBox style={{justifyContent: 'center'}}>
                 <div style={{fontSize: '24px', fontWeight:'bold'}}>요청사항을 처리 중입니다.. 잠시만 기다려주세요</div>
