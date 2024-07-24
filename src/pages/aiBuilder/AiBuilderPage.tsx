@@ -27,10 +27,9 @@ const AiBuilderPage: FC<Props> = ({children}) => {
 
     if(isLoading){ // tood 생성중입니다 로딩
         return  <MainLayout>
-            <CenterBox>
-                <div style={{display: 'flex', justifyContent: 'center', width: '256px', height: '256px'}}>
-                    <Lottie animationData={loadingLottie}/>
-                </div>
+            <CenterBox style={{justifyContent: 'center'}}>
+                <div style={{fontSize: '24px', fontWeight:'bold'}}>요청사항을 처리 중입니다.. 잠시만 기다려주세요</div>
+                <Lottie animationData={loadingLottie}/>
             </CenterBox>
         </MainLayout>
     }
