@@ -103,7 +103,7 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 						{
 							item.is_confirmed && 
 							<div style={{ width: '15%' }}>
-							{reformatTime(item.confirmed_time!)}
+							{item.confirmed_time!}
 						</div>
 						}
 
