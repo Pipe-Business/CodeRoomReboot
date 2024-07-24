@@ -35,9 +35,9 @@ export const useMutateCodePayment = () => {
             if( inputCash !== 0 || paymentRequiredAmount !== 0 ) {
                 lstPayType.push(PayType.cash);
             }
-            if( inputCoin !== 0 ) {
-                lstPayType.push(PayType.point);
-            }
+            // if( inputCoin !== 0 ) {
+            //     lstPayType.push(PayType.point);
+            // }
 
 
             // purchase sale history insert (구매기록)
@@ -46,7 +46,7 @@ export const useMutateCodePayment = () => {
                 post_id: postData!.id,
                 sell_price: postData!.price,
                 use_cash: inputCash + paymentRequiredAmount,
-                use_coin: inputCoin,
+                //use_coin: inputCoin,
                 is_confirmed: false,
                 purchase_user_token: userLogin!.user_token!,
                 sales_user_token: postData!.userToken,
@@ -83,7 +83,7 @@ export const useMutateCodePayment = () => {
 
             // cash, coin amount 값 set
             const cashAmount = currentCash - inputCash;
-            const coinAmount = currentCoin - inputCoin;
+            //const coinAmount = currentCoin - inputCoin;
 
 
             // 캐시결제
@@ -103,27 +103,27 @@ export const useMutateCodePayment = () => {
             }
 
 
-            // 코인결제
-            if(inputCoin !== 0){
-
-                // 유저 코인 차감 -> 코인 사용기록 insert
-                const pointHistory: PointHistoryRequestEntity = {
-                    user_token: userLogin!.user_token!,
-                    point: inputCoin,
-                    amount: coinAmount,
-                    description: "코드 구매",
-                    point_history_type: PointHistoryType.use_point,
-                    purchase_id: purchaseSaleHistoryId,
-                }
-
-                await apiClient.insertUserPointHistory(pointHistory);
-            }
+            // // 코인결제
+            // if(inputCoin !== 0){
+            //
+            //     // 유저 코인 차감 -> 코인 사용기록 insert
+            //     const pointHistory: PointHistoryRequestEntity = {
+            //         user_token: userLogin!.user_token!,
+            //         point: inputCoin,
+            //         amount: coinAmount,
+            //         description: "코드 구매",
+            //         point_history_type: PointHistoryType.use_point,
+            //         purchase_id: purchaseSaleHistoryId,
+            //     }
+            //
+            //     await apiClient.insertUserPointHistory(pointHistory);
+            // }
 
 
             // point cash amount update
 
             await apiClient.updateTotalCash(userLogin!.user_token!,cashAmount);
-            await apiClient.updateTotalPoint(userLogin!.user_token!,coinAmount);
+            //await apiClient.updateTotalPoint(userLogin!.user_token!,coinAmount);
 
 
         return postData;

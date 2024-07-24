@@ -37,10 +37,10 @@ const PaymentPage: FC<Props> = () => {
     //     queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
     // });
 
-    const { isLoading: isCoinDataLoading, data: coinData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.point],
-        queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
-    });
+    // const { isLoading: isCoinDataLoading, data: coinData } = useQuery({
+    //     queryKey: [REACT_QUERY_KEY.point],
+    //     queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
+    // });
 
 
     const inputCashRef = useRef<HTMLInputElement | null>(null);
@@ -65,9 +65,9 @@ const PaymentPage: FC<Props> = () => {
         UseAll(inputCash,inputCoin, cashData!, setCash);
     }
 
-    const onUseAllCoin = () => {
-        UseAll(inputCoin,inputCash, coinData!, setCoin);
-    }
+    // const onUseAllCoin = () => {
+    //     UseAll(inputCoin,inputCash, coinData!, setCoin);
+    // }
 
     const UseAll = useCallback((currentInput : number , otherInput : number,currentMoney: number, setFunc: Function) => {
         let total;
@@ -125,42 +125,43 @@ const PaymentPage: FC<Props> = () => {
 
     }, [inputCash]);
 
-    const onChangeCoin = useCallback((e: any) => {
-        let value = parseInt(e.target.value);
-        if(value > coinData!) value = coinData!; // 입력값 > 보유금액 -> 입력값 = 보유금액
-        if(value > postData!.price!) value = postData!.price!;
-        if(value < 0) value = 0;
-
-        if(inputCash){
-            let remainPrice = postData!.price - inputCash;
-            if(value > remainPrice) value = remainPrice;
-        }
-
-        setCoin(value);
-        onSetPaymentRequiredAmount(inputCash,value);
-
-        if (e.target.value < 0) {
-            setCoinError(true);
-        } else {
-            setCoinError(false);
-        }
-        //console.log(inputCoin);
-
-
-    }, [inputCoin]);
+    // const onChangeCoin = useCallback((e: any) => {
+    //     let value = parseInt(e.target.value);
+    //     if(value > coinData!) value = coinData!; // 입력값 > 보유금액 -> 입력값 = 보유금액
+    //     if(value > postData!.price!) value = postData!.price!;
+    //     if(value < 0) value = 0;
+    //
+    //     if(inputCash){
+    //         let remainPrice = postData!.price - inputCash;
+    //         if(value > remainPrice) value = remainPrice;
+    //     }
+    //
+    //     setCoin(value);
+    //     onSetPaymentRequiredAmount(inputCash,value);
+    //
+    //     if (e.target.value < 0) {
+    //         setCoinError(true);
+    //     } else {
+    //         setCoinError(false);
+    //     }
+    //     //console.log(inputCoin);
+    //
+    //
+    // }, [inputCoin]);
 
     const onClickBackButton = useCallback(() => {
         navigate(-1);
     }, []);
 
     const onClickPurchase = () => {
-        const result = window.confirm(`결제하시겠습니까?\n${inputCash} 캐시 사용\n${inputCoin} 코인 사용\n추가결제 : ${paymentRequiredAmount}`);
+        const result = window.confirm(`결제하시겠습니까?\n${inputCash} 캐시 사용\n추가결제 : ${paymentRequiredAmount}`);
         if (result) {
             onPaymentConfirm();
         }
     }
 
-    if(isCashDataLoading || isCoinDataLoading){
+    //if(isCashDataLoading || isCoinDataLoading){
+    if(isCashDataLoading){
         return (
             <MainLayout>
                 <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4, width: { xs: '100%', md: '850px' }, mx: 'auto' }}>
@@ -341,45 +342,45 @@ const PaymentPage: FC<Props> = () => {
 
                         <Box height={16}/>
 
-                        <Box height={16}/>
-                        <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft:'16px', marginRight:'8px'}}>
-                            <Typography variant="body1" component="div" sx={{color: '#333'}}
-                                        style={{fontWeight: 'bold'}}>
-                                코인
-                            </Typography>
-                            <Typography variant="body2" component="div" sx={{color: '#333'}}
-                                        style={{fontWeight: 'bold'}}>
-                                {coinData} 보유
-                            </Typography>
+                        {/*<Box height={16}/>*/}
+                        {/*<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginLeft:'16px', marginRight:'8px'}}>*/}
+                        {/*    <Typography variant="body1" component="div" sx={{color: '#333'}}*/}
+                        {/*                style={{fontWeight: 'bold'}}>*/}
+                        {/*        코인*/}
+                        {/*    </Typography>*/}
+                        {/*    <Typography variant="body2" component="div" sx={{color: '#333'}}*/}
+                        {/*                style={{fontWeight: 'bold'}}>*/}
+                        {/*        {coinData} 보유*/}
+                        {/*    </Typography>*/}
 
-                        </div>
+                        {/*</div>*/}
 
-                        <Box height={8}/>
+                        {/*<Box height={8}/>*/}
 
-                        <div style={{ display:'flex', marginLeft:'16px', flexDirection:'row'}}>
-                            <TextField
-                                sx={{
-                                    width: { lg: 196 },
-                                    "input::-webkit-outer-spin-button, input::-webkit-inner-spin-button": {
-                                        WebkitAppearance: "none",
-                                        margin: 0,
-                                    },
-                                    "input[type=number]": {
-                                        MozAppearance: "textfield",
-                                    },
-                                }}
-                                value={inputCoin} onChange={onChangeCoin}
-                                placeholder={''}
-                                inputRef={inputCoinRef}
-                                error={coinError}
-                                helperText={coinError && '코인은 음수가 될수 없습니다.'}
-                                type='number'
-                                //inputProps={{InputProps:{min: 0, max: coinData}}}
-                            />
-                            <Box width={16}/>
-                            <ColorButton onClick={onUseAllCoin} variant={'contained'}>전액사용</ColorButton>
+                        {/*<div style={{ display:'flex', marginLeft:'16px', flexDirection:'row'}}>*/}
+                        {/*    <TextField*/}
+                        {/*        sx={{*/}
+                        {/*            width: { lg: 196 },*/}
+                        {/*            "input::-webkit-outer-spin-button, input::-webkit-inner-spin-button": {*/}
+                        {/*                WebkitAppearance: "none",*/}
+                        {/*                margin: 0,*/}
+                        {/*            },*/}
+                        {/*            "input[type=number]": {*/}
+                        {/*                MozAppearance: "textfield",*/}
+                        {/*            },*/}
+                        {/*        }}*/}
+                        {/*        value={inputCoin} onChange={onChangeCoin}*/}
+                        {/*        placeholder={''}*/}
+                        {/*        inputRef={inputCoinRef}*/}
+                        {/*        error={coinError}*/}
+                        {/*        helperText={coinError && '코인은 음수가 될수 없습니다.'}*/}
+                        {/*        type='number'*/}
+                        {/*        //inputProps={{InputProps:{min: 0, max: coinData}}}*/}
+                        {/*    />*/}
+                        {/*    <Box width={16}/>*/}
+                        {/*    <ColorButton onClick={onUseAllCoin} variant={'contained'}>전액사용</ColorButton>*/}
 
-                        </div>
+                        {/*</div>*/}
 
 
                         <CardContent>
@@ -407,17 +408,17 @@ const PaymentPage: FC<Props> = () => {
 
                             </div>
 
-                            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-                                <Typography variant="body1" component="div" sx={{color: '#E96B5A'}}
-                                            style={{fontWeight: 'bold',fontSize:'20px'}}>
-                                    코인
-                                </Typography>
+                            {/*<div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>*/}
+                            {/*    <Typography variant="body1" component="div" sx={{color: '#E96B5A'}}*/}
+                            {/*                style={{fontWeight: 'bold',fontSize:'20px'}}>*/}
+                            {/*        코인*/}
+                            {/*    </Typography>*/}
 
-                                <Typography variant="body1" component="div" sx={{color: '#333'}} style={{fontSize:'20px'}}>
-                                    - {inputCoin}
-                                </Typography>
+                            {/*    <Typography variant="body1" component="div" sx={{color: '#333'}} style={{fontSize:'20px'}}>*/}
+                            {/*        - {inputCoin}*/}
+                            {/*    </Typography>*/}
 
-                            </div>
+                            {/*</div>*/}
 
                             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                                 <Typography variant="body1" component="div" sx={{color: '#3C3F41'}}
