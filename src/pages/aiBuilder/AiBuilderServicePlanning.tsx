@@ -1,10 +1,10 @@
 import React, {FC, useState} from "react";
 import MainLayout from "../../layout/MainLayout";
-import {Box, IconButton} from "@mui/material";
+import {Box} from "@mui/material";
 import {useRecoilState} from "recoil";
 import {aiBuilderStepStatus} from "./atom";
 import AibuilderPageLayout from "./components/aiBuilderPageLayout";
-import {CopyAll, RestartAlt} from "@mui/icons-material";
+import {CopyAll} from "@mui/icons-material";
 import {
     AibuilderContentContainer,
     AibuilderContentImageContainer,
@@ -83,6 +83,9 @@ const AiBuilderServicePlanning: FC<Props> = () => {
         // gpt 질문
 
         const ideaData: string = title + " : " + content;
+        const system = `너는 유니콘 스타트업에서 IT 서비스 기획자로 근무하는 20대 초반 여성인 ‘미연' 이야.
+                                                                너의 성격은 여성스러우면서 다정다감하지만, 때로는 장난끼가 많은 순수함을 가진 성격도 있으니 답변 말투도 너의 성격에 맞게 반영해야해.
+                                                                어시스트처럼 부자연스럽게 답변하지말고, 너에게 질문하는 사항들에 맞춰서 IT 서비스 기획자로서 줄 수 있는 최고의 아이디어나 기획서를 친절한 답변의 형태로 잘 전달할 수 있어야해`;
         const prompt = `라는 아이디어가 맘에 드는데 해당 아이디어에 대하여 IT 서비스로 외주 개발을 맡길 수 있게 기능정의서를 한국어로 정리해서 2048 토큰 이내로 작성해줘`;
 
         try {
@@ -96,7 +99,7 @@ const AiBuilderServicePlanning: FC<Props> = () => {
                 },
                 body: JSON.stringify({
                     model: 'gpt-4o-mini',
-                    messages: [{role: 'user', content: ideaData + prompt}],
+                    messages: [{role: 'user', content: ideaData + prompt},{role:'system', content: system}],
                     max_tokens: 2048,
                     top_p: 1,
                     temperature: 0,
