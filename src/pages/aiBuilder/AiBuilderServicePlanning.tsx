@@ -135,7 +135,7 @@ const AiBuilderServicePlanning: FC<Props> = () => {
     return <MainLayout>
         {
             stepStatus === 1 &&
-            <AibuilderPageLayout pageHeaderTitle={"AI 코드 빌더 ROOMY가 추천하는 아이디어✨"}
+            <AibuilderPageLayout pageHeaderTitle={"[AI 빌더] '스타트업 기획자 미연'이 추천하는 아이디어✨"}
                                  cardHeaderTitle={"기획서로 작성하고 싶으신 아이디어를 선택해주세요"}>
                 {state.ideaList!.map((item, index) => {
                     let splitedList = item.split(':');

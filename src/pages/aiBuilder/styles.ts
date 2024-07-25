@@ -70,11 +70,18 @@ export const TitleContainer = styled.div`
     flex-direction: row;
 `;
 
-export const TitleSelectButtonContainer = styled.div`
+interface IdeaListItemButtonProps {
+
+}
+
+export const TitleSelectButtonContainer = styled.button`
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    background-color: white;
+    color:#B4B4B4;
+    border: none;
 `;
 
 export const TitleSelectAreaContainer = styled.div`

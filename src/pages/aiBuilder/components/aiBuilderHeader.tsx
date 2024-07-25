@@ -3,6 +3,7 @@ import {TitleContainer, TitleSelectAreaContainer, TitleSelectButtonContainer} fr
 import {Box, IconButton, Typography} from "@mui/material";
 import {Home, RestartAlt} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 interface  Props{
     children?: React.ReactNode;
@@ -26,22 +27,18 @@ const AiBuilderHeader:FC<Props> = ({title}) => {
             </Typography>
             <div>
                 <TitleSelectAreaContainer>
-                    <TitleSelectButtonContainer>
-                        <IconButton onClick={onClickGoToHome}>
-                            <RestartAlt sx={{fontSize: '24px', color:''}}/>
-                        </IconButton>
-                        <Typography variant="h6" component="div" sx={{fontWeight: 'bold', color: '#333'}}>
-                            나가기
+                    <TitleSelectButtonContainer onClick={onClickGoToHome}>
+                        <LogoutIcon sx={{fontSize: '24px'}}/>
+                        <Typography variant="h6" component="div" sx={{fontWeight: 'bold'}}>
+                           AI 빌더 종료
                         </Typography>
                     </TitleSelectButtonContainer>
 
                     <Box width="32px"/>
 
-                    <TitleSelectButtonContainer>
-                        <IconButton onClick={onClickGoToSelectMain}>
-                            <Home sx={{fontSize: '24px'}}/>
-                        </IconButton>
-                        <Typography variant="h6" component="div" sx={{fontWeight: 'bold', color: '#333'}}>
+                    <TitleSelectButtonContainer onClick={onClickGoToSelectMain}>
+                        <Home sx={{fontSize: '24px'}}/>
+                        <Typography variant="h6" component="div" sx={{fontWeight: 'bold'}}>
                             선택 화면으로 돌아가기
                         </Typography>
                     </TitleSelectButtonContainer>
