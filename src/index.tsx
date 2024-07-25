@@ -46,6 +46,7 @@ const PaymentPage = React.lazy(() => import('./pages/payment/PaymentPage'));
 const AiBuilderPage = React.lazy(() => import('./pages/aiBuilder/AiBuilderPage'));
 const AiBuilderSuggestPage = React.lazy(() => import('./pages/aiBuilder/AiBuilderServicePlanning'));
 const AiBuilderRefactoring = React.lazy(() => import('./pages/aiBuilder/AiBuilderRefactoring'));
+const SmartAnalysisPage = React.lazy(() => import('./pages/admin/SmartAnalysisPage'));
 
 const queryClient = new QueryClient();
 
@@ -108,6 +109,7 @@ root.render(
       <Route path='/aibuilder' element={<AiBuilderPage/>} />
       <Route path='/aibuilder/serviceplanning' element={<AiBuilderSuggestPage/>} />
       <Route path='/aibuilder/refactoring' element={<AiBuilderRefactoring/>} />
+      <Route path="/admin/codeRequest/:userId/:codeId/smart-analysis" element={<SmartAnalysisPage />} />
 
 
       <Route path='/*' element={<NotFoundPage/>}/>
