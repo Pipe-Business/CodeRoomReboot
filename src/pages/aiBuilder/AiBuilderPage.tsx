@@ -53,49 +53,56 @@ const AiBuilderPage: FC<Props> = ({children}) => {
                 }
                 title={
                     <Typography variant="h5" component="div" sx={{fontWeight: 'bold', color: '#333', fontSize:'32px'}} >
-                        AI 코드 빌더 ROOMY
+                        AI 빌더
                     </Typography>
                 }
             />
             <Box height={32}/>
-            <div style={{fontSize: '22px'}}>추천 카테고리</div>
+            <div style={{fontSize: '22px'}}>원하시는 대화 상대를 선택해주세요</div>
 
-            <Box height={64}/>
+            <Box height={32}/>
             <div style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
-                <BuilderMenuListItemButton title={'서비스 기획'} content={'기능정의서, PRD 제작과\n개발에 필요한 AI 개발 프롬프트 서비스 제공'}
+                <BuilderMenuListItemButton title={'스타트업 기획자 미연'} content={'아이데이션, MVP 기획 전문가\nIT 서비스 개발에 필요한 기획서 작성'}
                                            height={'300px'}
+                                           imagePath={'/image/aibuilder-serviceplanning.svg'}
                                            onClick={async() => {
                                                setIsLoading(true);
                                                const ideaList: string[] = await apiClient.servicePlanningByGpt();
                                                setIsLoading(false);
                                                navigate('/aibuilder/serviceplanning', {state: {ideaList:ideaList}});
-                    setStepStatus(1);
+                                               setStepStatus(1);
                 }}/>
-                <BuilderMenuListItemButton title={'서비스 개발'} content={'원하시는 기능의 모듈코드를 생성하는\n서비스 제공'} onClick={() => {
+                <BuilderMenuListItemButton title={'대기업 IT 사수 Jackson'} content={'현업 개발자 출신의 멘토\n비즈니스 관련 코드 개발 전문'}
+                                           height={'300px'}
+                                           imagePath={'/image/aibuilder-businesscode.svg'}
+                                           onClick={() => {
 
                 }}/>
-                <BuilderMenuListItemButton title={'코드 개선'} content={'보유 코드에 대한 코드 리뷰, 코드 최적화 서비스 제공'} onClick={() => {
-                    navigate('/aibuilder/refactoring');
-                    setStepStatus(1);
+                <BuilderMenuListItemButton title={'코딩테스트 마스터 민준'} content={'코딩 알고리즘 개발과 관련된 질문\n코딩 테스트 문제 풀이 전문'}
+                                           height={'300px'}
+                                           imagePath={'/image/aibuilder-codetest.svg'}
+                                           onClick={() => {
+                                            navigate('/aibuilder/refactoring');
+                                            setStepStatus(1);
                 }}/>
+                <BuilderMenuListItemButton title={'프로젝트 리딩 PM Mia'} content={'프로젝트 분석 피드백 전문가\n디버깅, 리뷰, 리펙토링제안'}
+                                           height={'300px'}
+                                           imagePath={'/image/aibuilder-pm.svg'}
+                                           onClick={() => {
+                                               navigate('/aibuilder/refactoring');
+                                               setStepStatus(1);
+                                           }}/>
+                <BuilderMenuListItemButton title={'코딩강사 Amy'} content={'부트캠프 출신 코딩강사\n코딩학습 관련 질문 최적화'}
+                                           height={'300px'}
+                                           imagePath={'/image/aibuilder-studycode.svg'}
+                                           onClick={() => {
+                                               navigate('/aibuilder/refactoring');
+                                               setStepStatus(1);
+                                           }}/>
             </div>
 
 
             <Box height={128}/>
-
-            <GoToCustomBtnContainer onClick={() => {
-            }}>
-                <div style={{fontSize: '24px',fontWeight:'bold', textAlign:'start'}}>
-                    사용자 정의 방식 (Custom)으로 코드 제작하기 ▶️
-                </div>
-
-                <Box height={8}/>
-
-                <div style={{fontSize: '18px', color: 'grey'}}>
-                    클릭 시 직접 입력 화면으로 이동
-                </div>
-
-            </GoToCustomBtnContainer>
         </Card>
     </MainLayout>
 }
