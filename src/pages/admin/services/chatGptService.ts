@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const API_URL = 'https://api.openai.com/v1/chat/completions'; // Replace with the actual endpoint if different
-const API_KEY = process.env.GPT_API_KEY; // Replace with your actual OpenAI API key
+const API_KEY = process.env.REACT_APP_GPT_KEY; // Replace with your actual OpenAI API key
 
 export const analyzeCode = async (code: string) => {
     const response = await axios.post(API_URL, {

@@ -10,6 +10,7 @@ import {aiBuilderStepStatus, suggestPromptState} from "./atom";
 import {apiClient} from "../../api/ApiClient";
 import Lottie from "lottie-react";
 import loadingLottie from "../../assets/aibuilderLoading.json";
+import Loading from "./components/loading";
 
 interface Props {
     children?: React.ReactNode;
@@ -26,12 +27,7 @@ const AiBuilderPage: FC<Props> = ({children}) => {
     const [isLoading, setIsLoading] = useState(false);
 
     if(isLoading){
-        return  <MainLayout>
-            <CenterBox style={{justifyContent: 'center'}}>
-                <div style={{fontSize: '24px', fontWeight:'bold'}}>요청사항을 처리 중입니다.. 잠시만 기다려주세요</div>
-                <Lottie animationData={loadingLottie}/>
-            </CenterBox>
-        </MainLayout>
+        return <Loading />
     }
 
 
@@ -94,7 +90,7 @@ const AiBuilderPage: FC<Props> = ({children}) => {
                                            }}/>
                 <BuilderMenuListItemButton title={'코딩강사 Amy'} content={'부트캠프 출신 코딩강사\n코딩학습 관련 질문 최적화'}
                                            height={'300px'}
-                                           imagePath={'/image/aibuilder-studycode.svg'}
+                                           imagePath={'/image/aibuilder-codestudy.svg'}
                                            onClick={() => {
                                                navigate('/aibuilder/refactoring');
                                                setStepStatus(1);

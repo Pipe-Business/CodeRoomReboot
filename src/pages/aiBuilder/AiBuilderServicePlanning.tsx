@@ -1,15 +1,23 @@
 import React, {FC, useState} from "react";
 import MainLayout from "../../layout/MainLayout";
-import {IconButton} from "@mui/material";
+import {Box, IconButton} from "@mui/material";
 import {useRecoilState} from "recoil";
 import {aiBuilderStepStatus} from "./atom";
 import AibuilderPageLayout from "./components/aiBuilderPageLayout";
-import {CopyAll} from "@mui/icons-material";
-import {RightEndContainer} from "./styles";
+import {CopyAll, RestartAlt} from "@mui/icons-material";
+import {
+    AibuilderContentContainer,
+    AibuilderContentImageContainer,
+    RestartButtonContainer,
+    RightEndContainer
+} from "./styles";
 import {toast} from "react-toastify";
 import {useLocation} from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import IdeaListItemButton from "./components/ideaListItemButton";
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import {apiClient} from "../../api/ApiClient";
+import Loading from "./components/loading";
 
 interface Delta {
     role: string,
@@ -49,7 +57,10 @@ const AiBuilderServicePlanning: FC<Props> = () => {
     const [stepStatus, setStepStatus] = useRecoilState(aiBuilderStepStatus);
     const {state} = useLocation() as RouteState;
     const [ideaDocument, setIdeaDocument] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingDocument, setIsLoadingDocumentDocument] = useState(false);
+    const [ideaList,setIdeaList] = useState(state.ideaList);
+    const [isLoadingIdeaList, setIsLoadingIdeaList] = useState(false);
+
 
     const handleCopyClipBoard = async () => {
         try {
@@ -60,9 +71,14 @@ const AiBuilderServicePlanning: FC<Props> = () => {
             toast.error('복사에 실패했습니다.');
         }
     }
-
+    const handleClickresetIdeaList = async () => {
+        setIsLoadingIdeaList(true);
+        const ideaList: string[] = await apiClient.servicePlanningByGpt();
+        setIdeaList(ideaList);
+        setIsLoadingIdeaList(false);
+    }
     const builderMenuListItemOnClicked = async (title: string, content: string) => {
-        setIsLoading(true);
+        setIsLoadingDocumentDocument(true);
         setStepStatus(2);
         // gpt 질문
 
@@ -126,18 +142,32 @@ const AiBuilderServicePlanning: FC<Props> = () => {
                 }
             });
 
-            setIsLoading(false);
+            setIsLoadingDocumentDocument(false);
         } catch (e: any) {
             console.log(e);
         }
     }
 
+    if(isLoadingIdeaList){
+        return <Loading />
+    }
+
     return <MainLayout>
         {
             stepStatus === 1 &&
-            <AibuilderPageLayout pageHeaderTitle={"[AI 빌더] '스타트업 기획자 미연'이 추천하는 아이디어✨"}
-                                 cardHeaderTitle={"기획서로 작성하고 싶으신 아이디어를 선택해주세요"}>
-                {state.ideaList!.map((item, index) => {
+            <AibuilderPageLayout
+                                pageHeaderTitle={"[AI 빌더] '스타트업 기획자 미연'이 추천하는 아이디어✨"}
+                                cardHeaderTitle={"기획서로 작성하고 싶으신 아이디어를 선택해주세요"}
+                                profileUrl={'/image/aibuilder-serviceplanning.svg'}
+            >
+                <div style={{display: "flex", justifyContent: "end"}}>
+                <RestartButtonContainer onClick={handleClickresetIdeaList}>
+                    <RestartAltIcon />
+                    <Box height={'8px'}/>
+                    <div>아이디어 다시 생성하기</div>
+                </RestartButtonContainer>
+                    </div>
+                {ideaList.map((item, index) => {
                     let splitedList = item.split(':');
                     let title: string = splitedList[0];
                     let content: string = splitedList[1];
@@ -148,20 +178,23 @@ const AiBuilderServicePlanning: FC<Props> = () => {
         }
 
         {stepStatus === 2 && <div>
-            <AibuilderPageLayout pageHeaderTitle={"AI 코드 빌더 ROOMY가 작성한 기획서"}>
-                <div>
+            <AibuilderPageLayout pageHeaderTitle={"[AI 빌더] '스타트업 기획자 미연'이 작성한 기획서"}>
+                <AibuilderContentContainer>
+                    <div style={{display:'flex', flexDirection:'column', width:'70%'}}>
                     <ReactMarkdown>
                         {ideaDocument!}
                     </ReactMarkdown>
-                </div>
-                <RightEndContainer>
+                    </div>
+                    <AibuilderContentImageContainer src={'/image/aibuilder-serviceplanning.svg'} alt={'이미지'}/>
+                </AibuilderContentContainer>
+
                     {
-                        !isLoading &&
-                        <IconButton onClick={handleCopyClipBoard}>
-                            <CopyAll/> 복사하기
-                        </IconButton>
+                        !isLoadingDocument &&
+                        <RightEndContainer onClick={handleCopyClipBoard}>
+                            <CopyAll/> 설명 복사하기
+                        </RightEndContainer>
                     }
-                </RightEndContainer>
+
             </AibuilderPageLayout>
         </div>}
 

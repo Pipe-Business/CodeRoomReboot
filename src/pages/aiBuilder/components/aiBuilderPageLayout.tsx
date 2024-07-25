@@ -1,14 +1,16 @@
 import AiBuilderHeader from "./aiBuilderHeader";
-import {Box, Card, CardHeader} from "@mui/material";
+import {Avatar, Box, Card, CardHeader} from "@mui/material";
 import React from "react";
+import {CardHeaderContainer} from "../styles";
 
 interface Props{
     children:React.ReactNode;
     pageHeaderTitle:string;
     cardHeaderTitle?:string;
+    profileUrl?:string;
 }
 
-const AibuilderPageLayout: React.FC<Props> = ({children, pageHeaderTitle, cardHeaderTitle}) => {
+const AibuilderPageLayout: React.FC<Props> = ({children, pageHeaderTitle, cardHeaderTitle,profileUrl}) => {
     return (
         <div>
             <AiBuilderHeader title={pageHeaderTitle}/>
@@ -21,9 +23,15 @@ const AibuilderPageLayout: React.FC<Props> = ({children, pageHeaderTitle, cardHe
                     mb: {xs: 2, md: 0},
                 }}
             >
+                <CardHeaderContainer>
+                    {
+                        profileUrl &&
+                        <Avatar src={profileUrl} sx={{width: 45, height: 45, border: '3px solid black'}}/>
+                    }
                 <CardHeader title={cardHeaderTitle}/>
-                <Box height={'32px'}/>
-                {children}
+                </CardHeaderContainer>
+                    <Box height={'32px'}/>
+                        {children}
             </Card>
         </div>
     );

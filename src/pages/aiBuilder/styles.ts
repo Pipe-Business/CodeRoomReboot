@@ -21,8 +21,27 @@ export const BuilderMenuListItemButtonContainer = styled.button<BuilderMenuConta
     padding: 12px;
     margin: 16px 16px 16px 0;
     color: white;
+    position: relative;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* 투명도 조절 (0.6: 60% 투명도) */
+        z-index: 1;
+        border-radius: 10px;
+    }
+    
     &:hover {
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    > * {
+        position: relative;
+        z-index: 2; /* 자식 요소들이 투명 오버레이 위에 위치하도록 설정 */
     }
 `
 
@@ -93,9 +112,18 @@ export const TitleSelectAreaContainer = styled.div`
 
 export const RightEndContainer = styled.div`
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: flex-end;
     align-items: flex-end;
+    position: fixed;
+    color:white;
+    background-color: black;
+    font-weight: bold;
+    right: 104px;
+    bottom: 48px;
+    padding: 16px 32px 16px;
+    border-radius: 4px;
+    font-size: 24px;
 `;
 
 export const BuilderMenuListItemContainer = styled.button<BuilderMenuContainerProps>`
@@ -117,3 +145,32 @@ export const CenterBox = styled.div`
   justify-content: center;
   align-items: center;
 `
+
+export const CardHeaderContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin:8px;
+`
+
+export const RestartButtonContainer = styled.button`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px;
+    margin-right: 256px;
+`
+
+export const AibuilderContentContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+`
+
+export const AibuilderContentImageContainer = styled.img`
+    height: 600px;
+    width:30%;
+    position: fixed;
+    top: 160px;
+    right: 0;
+    opacity: 0.4;
+   `
