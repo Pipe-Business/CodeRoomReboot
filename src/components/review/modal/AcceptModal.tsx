@@ -33,8 +33,8 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 			await apiClient.updateAdminGithubRepoUrl(data.id.toString(),forkUrl);
 
 			// readme insert
-			 const readMe: string = await apiClient.getReadMe(forkUrl);
-			 await apiClient.insertReadme(data.id.toString(), readMe);
+			 //const readMe: string = await apiClient.getReadMe(forkUrl);
+			 //await apiClient.insertReadme(data.id.toString(), readMe);
 
 			// 마케팅 문구 작성 by gpt
 			const marketingReadmeByGpt:string = await apiClient.makeReadMeByGpt(forkUrl);

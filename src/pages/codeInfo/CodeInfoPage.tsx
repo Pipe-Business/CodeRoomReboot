@@ -59,10 +59,10 @@ const CodeInfo: FC<Props> = () => {
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
-	// const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
-	// 	queryKey: ['readme', id],
-	// 	queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
-	// });
+	const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
+		queryKey: ['readme', id],
+		queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
+	});
 	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.user],
 		queryFn: () => apiClient.getTargetUser(postData!.userToken),
@@ -164,7 +164,7 @@ const CodeInfo: FC<Props> = () => {
 	}, []);
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isCashDataLoading) {
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isCashDataLoading || isReadMeLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -263,7 +263,8 @@ const CodeInfo: FC<Props> = () => {
 									코드 설명
 								</Typography>
 								<div>
-									<ReadMeHtml htmlText={postData.description!}/>
+									{/*<ReadMeHtml htmlText={postData.description!}/>*/}
+									<ReadMeHtml htmlText={readMeData!} />
 								</div>
 							</Box>
 							<Box height={32} />
