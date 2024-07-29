@@ -799,6 +799,17 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('refactoring by gpt error');
         }
     }
+
+    async riskRefactoringByGpt(targetCode:string):Promise<string> {
+
+        try {
+            const result = await axios.post<any>(`${serverURL}/gpt/refactoring/risk`, {data:targetCode});
+            return result.data.refactorResult;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('refactoring by gpt error');
+        }
+    }
     ///gpt/serviceplanning
     async servicePlanningByGpt():Promise<string[]> {
 

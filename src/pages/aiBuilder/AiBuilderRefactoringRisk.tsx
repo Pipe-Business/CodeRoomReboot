@@ -18,7 +18,7 @@ interface Props{
 
 }
 
-const AiBuilderRefactoring: FC<Props> = () => {
+const AiBuilderRefactoringRisk: FC<Props> = () => {
     const [stepStatus, setStepStatus] = useRecoilState(aiBuilderStepStatus);
     const [code, setCode] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
@@ -43,13 +43,13 @@ const AiBuilderRefactoring: FC<Props> = () => {
         {
             stepStatus === 1 &&
             <AibuilderPageLayout
-                pageHeaderTitle={"[AI 빌더] '프로젝트 리딩 PM Mia'에게 요청하기✨"}
+                pageHeaderTitle={"[AI 빌더] ‘시니어 개발자 민준’에게 요청하기 ✨"}
             >
             <CustomPromptInput
                 setCode={setCode}
-                placeHolder={'개선 또는 성능 관련 리뷰 받을 코드 여기에 붙여넣기'}
-                title={'개선하고싶으신 기존의 코드를 복사한 뒤 이곳에 붙여넣기 해주세요'}
-                profileUrl={'/image/aibuilder-pm.svg'}
+                placeHolder={'위험 진단 또는 안정성 관련 리뷰 받을 코드 여기에 붙여넣기'}
+                title={'보유하신 코드의 잠재적인 위험을 진단 받고 싶거나,\n코드의 안정성 관련하여 리뷰 받고 싶으신 코드를 붙여넣어 주세요'}
+                profileUrl={'/image/aibuilder-refactoringrisk.svg'}
                 setIsLoading = {setIsLoading}
             />
             </AibuilderPageLayout>
@@ -57,14 +57,14 @@ const AiBuilderRefactoring: FC<Props> = () => {
 
         {
             stepStatus === 2 &&
-            <AibuilderPageLayout pageHeaderTitle={"[AI 빌더] 프로젝트 리딩 PM Mia가 개선한 내용✨"}>
+            <AibuilderPageLayout pageHeaderTitle={"[AI 빌더] '시니어 개발자 민준'이 설명하는 코드✨"}>
                 <AibuilderContentContainer>
                     <div style={{display: 'flex', flexDirection: 'column', width: '70%'}}>
                         <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
                             {code}
                         </ReactMarkdown>
                     </div>
-                    <AibuilderContentImageContainer src={'/image/aibuilder-pm.svg'} alt={'페르소나 이미지'}/>
+                    <AibuilderContentImageContainer src={'/image/aibuilder-refactoringrisk.svg'} alt={'페르소나 이미지'}/>
                     {
                         !isLoading &&
                         <RightEndContainer onClick={handleCopyClipBoard}>
@@ -77,4 +77,4 @@ const AiBuilderRefactoring: FC<Props> = () => {
     </MainLayout>
 }
 
-export default AiBuilderRefactoring;
+export default AiBuilderRefactoringRisk;

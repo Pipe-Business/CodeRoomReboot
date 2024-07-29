@@ -85,7 +85,7 @@ const AiBuilderPage: FC<Props> = ({children}) => {
                                            height={'512px'}
                                            imagePath={'/image/aibuilder-refactoringrisk.svg'}
                                            onClick={() => {
-                                               navigate('/aibuilder/refactoring');
+                                               navigate('/aibuilder/refactoring/risk');
                                                setStepStatus(1);
                                            }}/>
                 {/*<BuilderMenuListItemButton title={'코딩강사 Amy'} content={'부트캠프 출신 코딩강사\n코딩학습 관련 질문 최적화'}*/}

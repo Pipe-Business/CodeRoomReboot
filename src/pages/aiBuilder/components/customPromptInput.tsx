@@ -31,7 +31,7 @@ const CustomPromptInput:FC<Props> = ({setCode, placeHolder, title, profileUrl, s
             console.log(inputPrompt);
 
             setIsLoading(true);
-            const refactedCode = await apiClient.refactoringByGpt(inputPrompt);
+            const refactedCode = await apiClient.riskRefactoringByGpt(inputPrompt);
             console.log("결과: "+refactedCode);
             setCode(refactedCode);
             setStepStatus(2);
