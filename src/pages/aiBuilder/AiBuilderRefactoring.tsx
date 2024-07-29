@@ -7,7 +7,7 @@ import CustomPromptInput from "./components/customPromptInput";
 import Loading from "./components/loading";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/an-old-hope.css";
+import "./an-old-hope.css"
 
 import {AibuilderContentContainer, AibuilderContentImageContainer, RightEndContainer} from "./styles";
 
