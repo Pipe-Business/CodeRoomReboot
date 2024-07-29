@@ -5,6 +5,9 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {FC} from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/an-old-hope.css";
 
 interface Props {
     code:string,
@@ -21,9 +24,9 @@ const RefactoringCodeShowAccordion:FC<Props> = ({code}) => {
                     <Typography>기존 코드 펼치기</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography>
-                        {code}
-                    </Typography>
+                        <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                            {code}
+                        </ReactMarkdown>
                 </AccordionDetails>
             </Accordion>
         </div>

@@ -1,38 +1,58 @@
-import {Box, IconButton, TextField} from "@mui/material";
+import {Avatar, Box, IconButton, TextField} from "@mui/material";
 import {ArrowCircleUp} from "@mui/icons-material";
 import React, {FC, useState} from "react";
 import {useRecoilState} from "recoil";
 import {aiBuilderStepStatus, suggestPromptState} from "../atom";
+import {CustomPromptContainer} from "../styles";
+import {apiClient} from "../../../api/ApiClient";
+import Loading from "./loading";
 
 interface Props{
     setCode:(code:string) => void;
+    title: string;
+    placeHolder: string;
+    profileUrl:string;
+    setIsLoading:(status:boolean) => void;
 }
 
-const CustomPromptInput:FC<Props> = ({setCode})=>{
+const CustomPromptInput:FC<Props> = ({setCode, placeHolder, title, profileUrl, setIsLoading})=>{
 
     const [suggestPrompt, setSuggestPrompt] = useRecoilState(suggestPromptState);
     const [stepStatus, setStepStatus] = useRecoilState(aiBuilderStepStatus);
 
     const [inputPrompt,setInputPrompt] = useState('');
+
     const onChangePrompt = (e:any) => {
         setInputPrompt(e.target.value);
     }
-    const onSubmit = () => { // todo 제출
+
+    const onSubmit = async () => {
         if(inputPrompt && inputPrompt.length !== 0){
             console.log(inputPrompt);
 
-            setCode(inputPrompt);
-            console.log(stepStatus);
+            setIsLoading(true);
+            const refactedCode = await apiClient.refactoringByGpt(inputPrompt);
+            console.log("결과: "+refactedCode);
+            setCode(refactedCode);
             setStepStatus(2);
+            setIsLoading(false);
         }
-
     }
+
 
     return (
         <div style={{display: 'flex', width: '100%', flexDirection: 'column'}}>
             <Box height={128}/>
 
-            {/*<div>"{suggestPrompt[1]}" 에 대한 추가 요청사항을 작성해주세요</div>*/}
+
+        <CustomPromptContainer>
+            {
+                profileUrl &&
+                <Avatar src={profileUrl} sx={{width: 45, height: 45, border: '3px solid black'}}/>
+            }
+            <div style={{padding: '8px'}}>{title}</div>
+
+        </CustomPromptContainer>
 
             <Box height={32}/>
 
@@ -43,7 +63,7 @@ const CustomPromptInput:FC<Props> = ({setCode})=>{
                 }}
                 value={inputPrompt}
                 onChange={onChangePrompt}
-                placeholder={'개선할 코드를 여기에 붙여넣기'}
+                placeholder={placeHolder}
             />
         </div>
     );

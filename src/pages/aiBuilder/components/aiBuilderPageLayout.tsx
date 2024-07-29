@@ -28,7 +28,10 @@ const AibuilderPageLayout: React.FC<Props> = ({children, pageHeaderTitle, cardHe
                         profileUrl &&
                         <Avatar src={profileUrl} sx={{width: 45, height: 45, border: '3px solid black'}}/>
                     }
-                <CardHeader title={cardHeaderTitle}/>
+                    {
+                        cardHeaderTitle &&
+                        <CardHeader title={cardHeaderTitle}/>
+                    }
                 </CardHeaderContainer>
                     <Box height={'32px'}/>
                         {children}

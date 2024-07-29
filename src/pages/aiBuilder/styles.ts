@@ -14,7 +14,7 @@ export const BuilderMenuListItemButtonContainer = styled.button<BuilderMenuConta
     background-repeat : no-repeat;
     background-size: cover;
     flex-direction: column;
-    width: ${props => props.width || '16%'};
+    width: ${props => props.width || '32%'};
     height: ${props => props.height || 'auto'};
     border: none;
     border-radius: 10px;
@@ -149,7 +149,7 @@ export const CenterBox = styled.div`
 export const CardHeaderContainer = styled.div`
     display: flex;
     flex-direction: row;
-    margin:8px;
+    margin: 16px 8px 16px;
 `
 
 export const RestartButtonContainer = styled.button`
@@ -164,6 +164,7 @@ export const AibuilderContentContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: start;
+    margin-bottom: 256px;
 `
 
 export const AibuilderContentImageContainer = styled.img`
@@ -174,3 +175,17 @@ export const AibuilderContentImageContainer = styled.img`
     right: 0;
     opacity: 0.4;
    `
+
+
+export const CustomPromptContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin: 16px 8px 16px;
+    align-items: center;
+`
+
+export const RefactoredContainer = styled.div`
+    padding: 16px;
+    border: 1px solid #B4B4B4;
+    border-radius: 4px;
+`
