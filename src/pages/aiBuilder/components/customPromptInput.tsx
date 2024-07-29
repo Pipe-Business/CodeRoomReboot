@@ -12,9 +12,9 @@ interface Props{
     placeHolder: string;
     profileUrl:string;
     setIsLoading:(status:boolean) => void;
+    refactorApiFun: (code:string) => Promise<string>;
 }
-
-const CustomPromptInput:FC<Props> = ({setCode, placeHolder, title, profileUrl, setIsLoading})=>{
+const CustomPromptInput:FC<Props> = ({setCode, placeHolder, title, profileUrl, setIsLoading, refactorApiFun})=>{
 
     const [suggestPrompt, setSuggestPrompt] = useRecoilState(suggestPromptState);
     const [stepStatus, setStepStatus] = useRecoilState(aiBuilderStepStatus);
@@ -30,7 +30,7 @@ const CustomPromptInput:FC<Props> = ({setCode, placeHolder, title, profileUrl, s
             console.log(inputPrompt);
 
             setIsLoading(true);
-            const refactedCode = await apiClient.riskRefactoringByGpt(inputPrompt);
+            const refactedCode = await refactorApiFun(inputPrompt);
             console.log("결과: "+refactedCode);
             setCode(refactedCode);
             setStepStatus(2);

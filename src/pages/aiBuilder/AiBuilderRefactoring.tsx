@@ -13,6 +13,7 @@ import {AibuilderContentContainer, AibuilderContentImageContainer, RightEndConta
 
 import {CopyAll} from "@mui/icons-material";
 import {toast} from "react-toastify";
+import {apiClient} from "../../api/ApiClient";
 
 interface Props{
 
@@ -51,6 +52,7 @@ const AiBuilderRefactoring: FC<Props> = () => {
                 title={'개선하고싶으신 기존의 코드를 복사한 뒤 이곳에 붙여넣기 해주세요'}
                 profileUrl={'/image/aibuilder-pm.svg'}
                 setIsLoading = {setIsLoading}
+                refactorApiFun={apiClient.refactoringByGpt}
             />
             </AibuilderPageLayout>
         }

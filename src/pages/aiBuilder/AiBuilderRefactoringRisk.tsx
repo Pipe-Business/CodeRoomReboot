@@ -13,6 +13,7 @@ import {AibuilderContentContainer, AibuilderContentImageContainer, RightEndConta
 
 import {CopyAll} from "@mui/icons-material";
 import {toast} from "react-toastify";
+import {apiClient} from "../../api/ApiClient";
 
 interface Props{
 
@@ -51,6 +52,7 @@ const AiBuilderRefactoringRisk: FC<Props> = () => {
                 title={'보유하신 코드의 잠재적인 위험을 진단 받고 싶거나,\n코드의 안정성 관련하여 리뷰 받고 싶으신 코드를 붙여넣어 주세요'}
                 profileUrl={'/image/aibuilder-refactoringrisk.svg'}
                 setIsLoading = {setIsLoading}
+                refactorApiFun={apiClient.riskRefactoringByGpt}
             />
             </AibuilderPageLayout>
         }
