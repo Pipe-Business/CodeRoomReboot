@@ -5,7 +5,6 @@ import {useRecoilState} from "recoil";
 import {aiBuilderStepStatus, suggestPromptState} from "../atom";
 import {CustomPromptContainer} from "../styles";
 import {apiClient} from "../../../api/ApiClient";
-import Loading from "./loading";
 
 interface Props{
     setCode:(code:string) => void;

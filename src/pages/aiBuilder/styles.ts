@@ -22,6 +22,10 @@ export const BuilderMenuListItemButtonContainer = styled.button<BuilderMenuConta
     margin: 16px 16px 16px 0;
     color: white;
     position: relative;
+
+    @media (max-width: 512px) {
+        width: 312px;
+    }
     
     &::after {
         content: '';
@@ -184,8 +188,13 @@ export const CustomPromptContainer = styled.div`
     align-items: center;
 `
 
-export const RefactoredContainer = styled.div`
-    padding: 16px;
-    border: 1px solid #B4B4B4;
-    border-radius: 4px;
+export const AibuilderMenuContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    @media (max-width: 512px) {
+        flex-direction: column;
+        align-items: center;
+    }
+    
 `

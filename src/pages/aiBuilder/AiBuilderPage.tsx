@@ -4,12 +4,9 @@ import {Box, Card, CardHeader, IconButton, Typography} from "@mui/material";
 import {ArrowBack} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import BuilderMenuListItemButton from "./components/builderMenuListItemButton";
-import {CenterBox, GoToCustomBtnContainer} from "./styles";
+import {AibuilderMenuContainer} from "./styles";
 import {useRecoilState} from "recoil";
-import {aiBuilderStepStatus, suggestPromptState} from "./atom";
-import {apiClient} from "../../api/ApiClient";
-import Lottie from "lottie-react";
-import loadingLottie from "../../assets/aibuilderLoading.json";
+import {aiBuilderStepStatus} from "./atom";
 import Loading from "./components/loading";
 
 interface Props {
@@ -57,7 +54,7 @@ const AiBuilderPage: FC<Props> = ({children}) => {
             <div style={{fontSize: '22px'}}>원하시는 대화 상대를 선택해주세요</div>
 
             <Box height={32}/>
-            <div style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
+            <AibuilderMenuContainer>
                 {/*<BuilderMenuListItemButton title={'스타트업 기획자 미연'} content={'아이데이션, MVP 기획 전문가\nIT 서비스 개발에 필요한 기획서 작성'}*/}
                 {/*                           height={'300px'}*/}
                 {/*                           imagePath={'/image/aibuilder-serviceplanning.svg'}*/}
@@ -95,7 +92,7 @@ const AiBuilderPage: FC<Props> = ({children}) => {
                 {/*                               navigate('/aibuilder/refactoring');*/}
                 {/*                               setStepStatus(1);*/}
                 {/*                           }}/>*/}
-            </div>
+            </AibuilderMenuContainer>
 
 
             <Box height={128}/>
