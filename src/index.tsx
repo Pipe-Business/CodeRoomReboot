@@ -24,6 +24,7 @@ const ResetCompletePage = React.lazy(() => import('./pages/profile/ResetComplete
 const SignUpCompletePage = React.lazy(() => import('./pages/register/SignUpCompletePage'));
 const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage'));
 const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage'));
+const OldCreateCodePage = React.lazy(() => import('./pages/createCode/OldCreateCodePage'));
 const MyPurchaseDataPage = React.lazy(() => import('./pages/profile/MyPurchaseDataPage'));
 const MyMentoringDataPage = React.lazy(() => import('./pages/profile/MyMentoringDataPage'));
 const MyMentoringDetailPage = React.lazy(() => import('./pages/profile/MyMentoringDetailPage'));
