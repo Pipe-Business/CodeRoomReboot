@@ -20,6 +20,6 @@ export const analyzeCode = async (code: string) => {
         },
     });
 
-    console.log('Response:', response.data.choices[0].message.content);
+    //console.log('Response:', response.data.choices[0].message.content);
     return response.data.choices[0].message.content;
 };
