@@ -50,6 +50,7 @@ const AiBuilderRefactoring = React.lazy(() => import('./pages/aiBuilder/AiBuilde
 const SmartAnalysisPage = React.lazy(() => import('./pages/admin/SmartAnalysisPage'));
 const AiBuilderRefactoringRisk = React.lazy(() => import('./pages/aiBuilder/AiBuilderRefactoringRisk'));
 const RefactoringSuggestionsPage = React.lazy(() => import('./pages/createCode/RefactoringSuggestionsPage'));
+const InputCodeInfoPage = React.lazy(() => import('./pages/createCode/InputCodeInfoPage'));
 const queryClient = new QueryClient();
 
 export const useOctokit = new Octokit({
@@ -114,9 +115,9 @@ root.render(
       <Route path="/admin/codeRequest/:userId/:codeId/smart-analysis" element={<SmartAnalysisPage />} />
       <Route path='/aibuilder/refactoring/risk' element={<AiBuilderRefactoringRisk/>} />
       <Route path='/create/code/refactoring' element={<RefactoringSuggestionsPage />} />
+      <Route path= '/create/code/inputinformation' element={<InputCodeInfoPage />} />
 
-
-        <Route path='/*' element={<NotFoundPage/>}/>
+      <Route path='/*' element={<NotFoundPage/>}/>
     
     </Routes>
     </Suspense>

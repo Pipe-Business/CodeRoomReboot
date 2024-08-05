@@ -5,6 +5,10 @@ import {ArrowBack} from '@mui/icons-material';
 import AdminLayout from '../../layout/AdminLayout';
 import useRepoFiles from "../admin/hooks/useRepoFiles";
 import MainLayout from "../../layout/MainLayout";
+import useRefactor from "./hooks/useRefactor";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/an-old-hope.css";
 
 interface LocationState {
     githubRepoName?: string;
@@ -26,7 +30,7 @@ const RefactoringSuggestionPage: FC = () => {
     const navigate = useNavigate();
     const {githubRepoName, sellerGithubName} = location.state as LocationState;
 
-    const {files, fileNames, loading, error, totalCodeFiles} = useRepoFiles(
+    const {files, fileNames, isLoading, error, totalCodeFileLength} = useRefactor(
         sellerGithubName || '',
         githubRepoName || ''
     );
@@ -35,7 +39,10 @@ const RefactoringSuggestionPage: FC = () => {
     const [currentFile, setCurrentFile] = useState<string>('');
 
     const goToCreateCode = () => {
-
+        navigate('/create/code/inputinformation', {state: {
+                githubRepoName: githubRepoName,
+                sellerGithubName: sellerGithubName,
+            }});
     }
     useEffect(() => {
         const newAnalyzedFiles = files.filter(file =>
@@ -55,7 +62,7 @@ const RefactoringSuggestionPage: FC = () => {
         }
     }, [files, analyzedFiles]);
 
-    const progress = totalCodeFiles > 0 ? (analyzedFiles.length / totalCodeFiles) * 100 : 0;
+    const progress = totalCodeFileLength > 0 ? (analyzedFiles.length / totalCodeFileLength) * 100 : 0;
 
     if (!githubRepoName || !sellerGithubName) {
         return (
@@ -84,11 +91,11 @@ const RefactoringSuggestionPage: FC = () => {
                         '\n코드를 수정하여 다시 커밋해주세요. (선택사항입니다)'}
                 </Typography>
 
-                {(loading || analyzedFiles.length < totalCodeFiles) && (
+                {(isLoading || analyzedFiles.length < totalCodeFileLength) && (
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4}}>
                         <CircularProgress/>
                         <Typography variant="body1" sx={{mt: 2}}>
-                            {loading ? `Analyzing code... ${analyzedFiles.length}/${totalCodeFiles} files` : '코드 분석이 모두 완료되었습니다'}
+                            {isLoading ? `Analyzing code... ${analyzedFiles.length}/${totalCodeFileLength} files` : '코드 분석이 모두 완료되었습니다'}
                         </Typography>
                         {currentFile && (
                             <Typography variant="body2" sx={{mt: 1}}>
@@ -135,7 +142,10 @@ const RefactoringSuggestionPage: FC = () => {
                                             overflowX: 'auto',
                                             width: '100%'
                                         }}>
-                                            <code>{file.analysis}</code>
+                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                                                {file.analysis}
+                                            </ReactMarkdown>
+                                            {/*<code>{file.analysis}</code>*/}
                                         </Box>
                                     </Box>
                                 )}
@@ -146,7 +156,7 @@ const RefactoringSuggestionPage: FC = () => {
             </Box>
 
             {
-                !loading &&
+                !isLoading &&
                 <button style={{display: 'flex', justifyContent: 'end'}} onClick={goToCreateCode}>추가 정보 작성하고 코드
                     올리기</button>
             }
