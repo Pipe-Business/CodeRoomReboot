@@ -27,7 +27,7 @@ const FooterLayout: FC<Props> = () => {
                     </MarginHorizontal>
                 </FooterBox>
                 <MarginHorizontal size={8}>
-                        <span style={{ color: '#000000', fontSize: '12px', }}>주소 : 서울특별시 구로구</span>
+                        <span style={{ color: '#000000', fontSize: '12px', }}>주소 : 서울특별시 금천구 독산동 331-28</span>
                     </MarginHorizontal>
                 
             </footer>

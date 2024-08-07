@@ -83,7 +83,7 @@ const MainPage: FC = () => {
                         fontSize: { xs: '24px', sm: '30px', md: '36px' }
                     }}
                 >
-                    "코드룸은 개발자들을 위한 코드거래 플랫폼입니다"
+                    "개발자들을 위한 코드거래 플랫폼" CODE ROOM
                 </Typography>
             </CenterBox>
             <CenterBox>
@@ -95,7 +95,7 @@ const MainPage: FC = () => {
                     sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
                 >
                     <InputBase
-                        placeholder='찾으시는 상품의 이름을 검색해주세요'                        
+                        placeholder='찾으시는 코드 상품의 이름을 검색해주세요'
                         sx={{ flex: 1, px: 1, height: '50px' }}
                         value={inputSearch}
                         onChange={onChangeInput}

@@ -35,7 +35,7 @@ const RequiredLoginModal: FC<Props> = ({ isOpen, onClose }) => {
                     <div style={{height:'100px'}}>
                     코드를 구매하시려면 로그인이 필요합니다.
                     </div>
-                <ColorButton sx={{fontSize:'15', width: '194px',}} onClick={onClickLogin}>로그인 하러가기</ColorButton>
+                <ColorButton sx={{fontSize:'20px', width: '100%',}} onClick={onClickLogin}>로그인 하러가기</ColorButton>
                 
                 </Card>
             </DialogContent>

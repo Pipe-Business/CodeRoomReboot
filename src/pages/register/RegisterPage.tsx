@@ -244,7 +244,7 @@ const RegisterPage: FC<Props> = () => {
 							/>
 						</TextFieldWrapper>
 						<TextFieldWrapper>
-							<div>비밀번호 재확인</div>
+							<div>비밀번호 확인</div>
 							<TextField
 								sx={{
 									width: { sm: 300, md: 400 },
@@ -278,7 +278,7 @@ const RegisterPage: FC<Props> = () => {
 							/>
 						</TextFieldWrapper>
 						<div>
-							<ColorButton type={'submit'} sx={{ fontSize: '18px', width: '100%', fontWeight: 'bold' }}>가입 완료</ColorButton>
+							<ColorButton type={'submit'} sx={{ fontSize: '20px', width: '100%', fontWeight: 'bold' }}>가입 완료</ColorButton>
 						</div>
 					</FormWrapper>
 

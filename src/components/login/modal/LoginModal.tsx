@@ -79,7 +79,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'xs'}>
 			<DialogTitle  >
 				<div style={{display:'flex', justifyContent:"space-between", alignItems:'center'}}>
-					<h3>코드룸에 로그인 하세요</h3>
+					<h3>지금 로그인하고 코드를 거래하세요</h3>
 					<IconButton onClick={onClose}>
 						<CloseIcon/>
 					</IconButton>
@@ -111,7 +111,7 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 							placeholder='비밀번호 입력' />
 					</div>
 					<Box height={32} />
-					<ColorButton type={'submit'} sx={{fontSize:'15px', width: '100%' }}>로그인</ColorButton>
+					<ColorButton type={'submit'} sx={{fontSize:'20px', width: '100%' }}>로그인</ColorButton>
 						</form>
 			
 				<Box height={16} />
