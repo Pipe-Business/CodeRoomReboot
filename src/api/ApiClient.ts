@@ -811,9 +811,9 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async makeTitleBygpt(targetCode:string):Promise<string> {
+    async makeCodeInfoBygpt(targetCode:string):Promise<string> {
         try {
-            const result = await axios.post<any>(`${serverURL}/gpt/recommand/title`, {data:targetCode});
+            const result = await axios.post<any>(`${serverURL}/gpt/recommand/codeInfo`, {data:targetCode});
             console.log("gpt: "+JSON.stringify(result));
             return result.data.recommanded;
         } catch (e: any) {

@@ -34,10 +34,10 @@ const useFileExtensionFilter = () => {
                 }));
 
                 setFileNames(codeFiles.map((file: FileNode) => file.name));
-               const recommandedTitle = await apiClient.makeTitleBygpt(fileContents.toString());
-               const readMe = await apiClient.getReadMe(`https://github.com/${owner}/${repo}`); // todo 초대 되어있는 상황이라 가져올 수 있다.
-               console.log("recomannededTitle:", recommandedTitle);
-                console.log("readMe:", readMe);
+              // const recommandedTitle = await apiClient.makeTitleBygpt(fileContents.toString());
+               //const readMe = await apiClient.getReadMe(`https://github.com/${owner}/${repo}`); // todo 초대 되어있는 상황이라 가져올 수 있다.
+               //console.log("recomannededTitle:", recommandedTitle);
+                //console.log("readMe:", readMe);
                 return fileContents;
 
             }catch(err){
