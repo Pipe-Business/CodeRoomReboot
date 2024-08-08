@@ -83,6 +83,7 @@ const copyToClipboard = async () => {
 
 const HelpPage: FC<Props> = () => {
 	return (
+		//Todo 판매자 가이드 수정 필요
 		<FullLayout>
 			<Box py={4}>
 				<Card variant="outlined" sx={{ mb: 4 }}>

@@ -39,10 +39,7 @@ const RefactoringSuggestionPage: FC = () => {
     const [currentFile, setCurrentFile] = useState<string>('');
 
     const goToCreateCode = () => {
-        navigate('/create/code/inputinformation', {state: {
-                githubRepoName: githubRepoName,
-                sellerGithubName: sellerGithubName,
-            }});
+        navigate('/create/code/codesubmission');
     }
     useEffect(() => {
         const newAnalyzedFiles = files.filter(file =>
@@ -83,7 +80,7 @@ const RefactoringSuggestionPage: FC = () => {
                     onClick={() => navigate(-1)}
                     sx={{mb: 3}}
                 >
-                    Back to Code Request
+                    뒤로가기
                 </Button>
                 <Typography variant="h4" sx={{mb: 3}}>코드 최적화 제안</Typography>
                 <Typography variant="body1" sx={{mb: 2, whiteSpace: 'pre-wrap'}}>
@@ -119,18 +116,18 @@ const RefactoringSuggestionPage: FC = () => {
                         {analyzedFiles.map((file) => (
                             <ListItem key={file.path} sx={{flexDirection: 'column', alignItems: 'flex-start'}}>
                                 <Typography variant="h6">{file.name}</Typography>
-                                {file.content && (
-                                    <Box component="pre" sx={{
-                                        mt: 1,
-                                        p: 2,
-                                        backgroundColor: '#f5f5f5',
-                                        borderRadius: 1,
-                                        overflowX: 'auto',
-                                        width: '100%'
-                                    }}>
-                                        <code>{file.content}</code>
-                                    </Box>
-                                )}
+                                {/*{file.content && (*/}
+                                {/*    <Box component="pre" sx={{*/}
+                                {/*        mt: 1,*/}
+                                {/*        p: 2,*/}
+                                {/*        backgroundColor: '#f5f5f5',*/}
+                                {/*        borderRadius: 1,*/}
+                                {/*        overflowX: 'auto',*/}
+                                {/*        width: '100%'*/}
+                                {/*    }}>*/}
+                                {/*        <code>{file.content}</code>*/}
+                                {/*    </Box>*/}
+                                {/*)}*/}
                                 {file.analysis && (
                                     <Box sx={{mt: 2, width: '100%'}}>
                                         <Typography variant="h6">Analysis</Typography>

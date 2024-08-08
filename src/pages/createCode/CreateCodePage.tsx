@@ -7,28 +7,39 @@ import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import useFileExtensionFilter from "./hooks/useFileExtensionFilter";
 import {apiClient} from "../../api/ApiClient";
+import {GptCodeInfoResponseEntity} from "../../data/entity/GptCodeInfoResponseEntity";
+import {GptCodeInfoEntity} from "../../data/entity/GptCodeInfoEntity";
+import {useRecoilState} from "recoil";
+import {gptGeneratedCodeInfo} from "./createCodeAtom";
+import {ColorButton, NavigateButtonContainer} from "./styles";
 
 const CreateCodePage = () => {
     const [repoUrl, setRepoUrlUrl] = useState('');
     const [isValid, setIsValid] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [buttonTitle, setButtonTitle] = useState('입력하기');
     const [repoOwner, setRepoOwner] = useState('');
     const [repoName, setRepoName] = useState('');
     const [fileContentLength, setFileContentLength] = useState(0);
     const {getFiles, totalCodeFileLength, fileNames, error} = useFileExtensionFilter();
+    const [gptCodeInfo, setGptCodeInfo] = useRecoilState(gptGeneratedCodeInfo);
 
     const navigate = useNavigate();
 
-    // const handleRefactorSuggestionPage = (githubRepoName: string, sellerGithubName: string) => {
-    //     navigate(`/create/code/refactoring`, {
-    //         state: {
-    //             githubRepoName: githubRepoName,
-    //             sellerGithubName: sellerGithubName,
-    //         }
-    //     });
-    // };
+    const handleRefactorSuggestionPage = (githubRepoName: string, sellerGithubName: string) => {
+        navigate(`/create/code/refactoring`, {
+            state: {
+                githubRepoName: githubRepoName,
+                sellerGithubName: sellerGithubName,
+            }
+        });
+    };
+
+    const handleCodeSubmissoinPage = () => {
+        navigate('/create/code/codesubmission');
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
@@ -48,7 +59,8 @@ const CreateCodePage = () => {
         }
 
         setIsLoading(true);
-        setButtonTitle('확인 중');
+        setIsButtonDisabled(true);
+        setButtonTitle('유효성 확인 중');
 
         try {
             const token: string = process.env.REACT_APP_GITHUB_TOKEN!;
@@ -64,12 +76,35 @@ const CreateCodePage = () => {
                 setIsValid(true);
                 setErrorMessage('');
 
+                setButtonTitle('레포지토리 확인 중');
+
                 const fileContents = await getFiles(owner, repoName); // 파일 get 및 필터링
-                //console.log("fileContents: "+fileContents);
-                setFileContentLength(fileContents?.length ?? 0);
-                const parsedFileContens:string = JSON.stringify(fileContents!);
-                const result = await  apiClient.makeCodeInfoBygpt(parsedFileContens);
-                console.log(JSON.stringify(result));
+                const contents = fileContents!.map((file) => {
+                    return file.content;
+                })
+                //todo 포맷에 맞지 않을 시 재시도 요청 필요
+                // todo 이미 게시된 레포지토리인지 검증 필요
+                console.log("fileContents: "+JSON.stringify(contents));
+
+                setFileContentLength(contents?.length ?? 0);
+
+                const parsedFileContens:string = JSON.stringify(contents);
+                setButtonTitle('코드 분석 중');
+
+                const result: GptCodeInfoResponseEntity = await  apiClient.makeCodeInfoBygpt(parsedFileContens);
+                const splitedResult:string[] = result.defaultInfo.split('|');
+                const parsedResult: GptCodeInfoEntity = {
+                    title: splitedResult[0].trim(),
+                    category:splitedResult[1].trim(),
+                    language: splitedResult[2].trim(),
+                    readMe: result.readMe,
+                    introduction: result.introduction,
+                    buyerGuide: result.buyerGuide,
+                }
+                console.log("data: "+JSON.stringify(parsedResult));
+                setGptCodeInfo(parsedResult);
+                //console.log("makeCodeinfoby gpt result: "+JSON.stringify(result.readMe));
+                console.log("gpt: "+gptCodeInfo);
                 //console.log("길이: "+fileContents!.length);
             } else {
                 setIsValid(false);
@@ -84,6 +119,7 @@ const CreateCodePage = () => {
             }
         } finally {
             setIsLoading(false);
+            setIsButtonDisabled(true);
             setButtonTitle('유효함');
         }
     };
@@ -113,7 +149,7 @@ const CreateCodePage = () => {
                 variant="outlined"
                 color={isValid ? "success" : "primary"}
                 onClick={validateRepo}
-                disabled={isLoading}
+                disabled={isButtonDisabled}
                 startIcon={
                     isLoading ? <CircularProgress size={20}/> :
                         isValid ? <CheckCircleOutlineIcon/> :
@@ -128,13 +164,22 @@ const CreateCodePage = () => {
 
         {
             isValid && !isLoading &&
-            <Box sx={{marginTop: 4, marginBottom: 4}}>
-            <Typography variant="h5" fontWeight="bold" sx={{color: '#333'}}>프로젝트 정보</Typography>
-            <Typography variant="h6" sx={{color: '#333'}}>레포지토리 이름: {repoName}</Typography>
-            <Typography variant="h6" sx={{color: '#333'}}>레포지토리 작성자: {repoOwner}</Typography>
-            <Typography variant="h6" sx={{color: '#333'}}>Content Total Count: {fileContentLength}</Typography>
+            <div>
+                <Box sx={{marginTop: 4, marginBottom: 4}}>
+                    <Typography variant="h5" fontWeight="bold" sx={{color: '#333'}}>프로젝트 정보</Typography>
+                    <Typography variant="h6" sx={{color: '#333'}}>레포지토리 이름: {repoName}</Typography>
+                    <Typography variant="h6" sx={{color: '#333'}}>레포지토리 작성자: {repoOwner}</Typography>
+                    <Typography variant="h6" sx={{color: '#333'}}>핵심 컨텐츠 파일 갯수: {fileContentLength}개</Typography>
+                </Box>
 
-        </Box>
+                <NavigateButtonContainer>
+                    <ColorButton variant='contained' onClick={() => {
+                        handleRefactorSuggestionPage(repoName, repoOwner)
+                    }}>최적화 코드 제안 받아보기</ColorButton>
+                    <Box height={'16px'}/>
+                    <ColorButton variant='contained' onClick={handleCodeSubmissoinPage}>업로드 계속하기</ColorButton>
+                </NavigateButtonContainer>
+            </div>
         }
 
     </MainLayout>

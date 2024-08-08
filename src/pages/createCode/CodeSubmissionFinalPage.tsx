@@ -16,26 +16,32 @@ import {PostRequestEntity} from "../../data/entity/PostRequestEntity";
 import {CodeRequestEntity} from "../../data/entity/CodeRequestEntity";
 import {CodeModel} from "../../data/model/CodeModel";
 import {PostStateType} from "../../enums/PostStateType";
+import {useRecoilState} from "recoil";
+import {gptGeneratedCodeInfo} from "./createCodeAtom";
+import {ArrowBack} from "@mui/icons-material";
 
 interface Props {
   children?: React.ReactNode;
 }
 
-const OldCreateCodePage: FC<Props> = () => {
+const CodeSubmissionFinalPage: FC<Props> = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
   const editTargetModel: CodeModel = location.state?.item;
+  const [gptCodeInfo] = useRecoilState(gptGeneratedCodeInfo);
 
   const { userLogin } = useQueryUserLogin();
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputPointRef = useRef<HTMLInputElement | null>(null);
-  //const inputContentRef = useRef<HTMLInputElement | null>(null);
+  const inputContentRef = useRef<HTMLInputElement | null>(null);
   const inputUrlRef = useRef<HTMLInputElement | null>(null);
-  //const inputGuideRef = useRef<HTMLInputElement | null>(null);
+  const inputGuideRef = useRef<HTMLInputElement | null>(null);
+  const inputIntroductionRef = useRef<HTMLInputElement | null>(null);
 
-  const [inputCategory, setCategory] = useState('');
-  const [inputLanguage, setLanguage] = useState('');
+
+  const [inputCategory, setCategory] = useState(gptCodeInfo?.category ?? '');
+  const [inputLanguage, setLanguage] = useState(gptCodeInfo?.language ?? '');
   const [inputPoint, , setPoint] = useInput<number | ''>('');
   const [inputGithubUrl, setGithubUrl] = useState('');
   let postId: number;
@@ -48,13 +54,30 @@ const OldCreateCodePage: FC<Props> = () => {
   const [pointError, setPointError] = useState(false);
 
   const [inputTitle, onChangeTitle, errorTitle, errorMessage, setTitle] =
-    useInputValidate({ minLen: 10, maxLen: 30 });
-  // const [inputDescription, onChangeDescription, errorDesc, errDescMessage, setDescription, , , ,
-  //   , , , inputDescriptionCount] =
-  //   useInputValidate({ minLen: 30, maxLen: 3000 });
-  // const [inputGuide, onChangeGuide, errorGuide, errGuideMessage, setGuideMessage, , , ,
-  //   , , , inputGuideCount] =
-  //   useInputValidate({ minLen: 30, maxLen: 3000 });
+    useInputValidate({
+      defaultValue: gptCodeInfo?.title ?? "",
+      minLen: 10, maxLen: 30
+    });
+  const [inputDescription, onChangeDescription, errorDesc, errDescMessage, setDescription, , , ,
+    , , , inputDescriptionCount] =
+    useInputValidate({
+      defaultValue: gptCodeInfo?.readMe ?? "",
+      minLen: 30, maxLen: 3000
+    });
+
+  const [inputGuide, onChangeGuide, errorGuide, errGuideMessage, setGuideMessage, , , ,
+    , , , inputGuideCount] =
+    useInputValidate({
+      defaultValue: gptCodeInfo?.buyerGuide ?? "",
+      minLen: 30, maxLen: 100,
+    });
+
+  const [inputIntroduction, onChangeIntroduction, errorIntroduction, errIntroductionMessage, setIntroductionMessage, , , ,
+    , , , inputIntroductionCount] =
+      useInputValidate({
+        defaultValue: gptCodeInfo?.introduction ?? "",
+        minLen: 30, maxLen: 100
+      });
 
 
   useEffect(() => {
@@ -212,22 +235,41 @@ const OldCreateCodePage: FC<Props> = () => {
   return (
       <MainLayout>
         <Box sx={{marginTop: 4, marginBottom: 4}}>
+          <Button
+              startIcon={<ArrowBack/>}
+              onClick={() => navigate(-1)}
+              sx={{mb: 3}}
+          >
+            뒤로가기
+          </Button>
         <Typography variant="h4" fontWeight="bold" sx={{ color: '#333' }}>코드 올리기</Typography>
-      </Box>
+        </Box>
 
-        <Button
-        onClick={goToAIBuilderPage}
-            style={{
-          padding: 16,
-          backgroundColor: '#26282D',
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
-          borderRadius: '8px',
-          color: '#56A8F5',
-          fontWeight:'bold',
-          marginBottom:32
-        }}>AI 빌더 이용하기 ✨</Button>
+        <Link to={'/help'} target={"_blank"} style={{ display: 'flex', alignItems: 'center', color: '#555', textDecoration: 'none', marginBottom: 3 }}>
+          <LinkIcon sx={{ marginRight: 1, color: '#555' }} />
+          <Typography variant="body1">코드룸 판매가 처음이신가요?</Typography>
+        </Link>
 
-      { editTargetModel &&
+        <Box height={'16px'}/>
+
+        {/*todo 제거예정*/}
+        {/*<Button*/}
+        {/*onClick={goToAIBuilderPage}*/}
+        {/*    style={{*/}
+        {/*  padding: 16,*/}
+        {/*  backgroundColor: '#26282D',*/}
+        {/*  boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',*/}
+        {/*  borderRadius: '8px',*/}
+        {/*  color: '#56A8F5',*/}
+        {/*  fontWeight:'bold',*/}
+        {/*  marginBottom:32*/}
+        {/*}}>AI 빌더 이용하기 ✨</Button>*/}
+
+        <Typography variant="h6" color="textSecondary" fontWeight="bold" sx={{ marginBottom: 2 }}>Roomy가 작성한 코드 설명이에요. 추가적인 설명을 해주셔도 좋아요.</Typography>
+
+        <Box height={'16px'}/>
+
+        { editTargetModel &&
         <Card sx={{
         padding: 4,
         marginBottom: 4,
@@ -245,8 +287,6 @@ const OldCreateCodePage: FC<Props> = () => {
 
       <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px'}}
       >
-        <Typography variant="h6" color="textSecondary" fontWeight="bold" sx={{ marginBottom: 2 }}>코드에 대한 설명을 작성해주세요</Typography>
-
         <SectionTitle title='코드 제목' helpText='코드 제목은 기능과 사용한 기술에 대한 정보를 포함하여 직관적으로 설명해주시면 좋습니다' />
         <TextField
           value={inputTitle}
@@ -306,46 +346,87 @@ const OldCreateCodePage: FC<Props> = () => {
       {/*  </IconButton>*/}
       {/*</Card>*/}
 
-      <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
-        <Link to={'/help'} target={"_blank"} style={{ display: 'flex', alignItems: 'center', color: '#555', textDecoration: 'none', marginBottom: 3 }}>
-          <LinkIcon sx={{ marginRight: 1, color: '#555' }} />
-          <Typography variant="body1">코드룸 판매가 처음이신가요?</Typography>
-        </Link>
-
-        <SectionTitle title='업로드할 깃허브 레포지토리 url (꼭 private으로 만들어 주세요)' helpText='올리려는 코드에 깃허브 레포지토리 URL 을 입력하시면됩니다. 반드시 private 레포지토리로 설정해야합니다.' />
-        <TextField
-          value={inputGithubUrl}
-          sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}
-          inputRef={inputUrlRef}
-          onChange={onChangeGithubUrl}
-          placeholder='예) https://github.com/your_nickname/your_repository'
-          fullWidth
-          helperText='본인이 공유할 private 레포지토리 에 관리자를 추가해주세요 관리자 닉네임: team-code-room 자세한 사항은 상단 가이드를 참고해주세요'
-          type='url'
-        />
-      </Card>
 
       {/*<Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>*/}
-      {/*  <SectionTitle title='코드 설명' helpText='코드에서 사용되는 기술에 대한 개념, 왜 이러한 기술은 선택했는지 등 코드에 대한 설명을 자유롭게 적어주세요.' />*/}
+
+      {/*  <SectionTitle title='업로드할 깃허브 레포지토리 url (꼭 private으로 만들어 주세요)' helpText='올리려는 코드에 깃허브 레포지토리 URL 을 입력하시면됩니다. 반드시 private 레포지토리로 설정해야합니다.' />*/}
       {/*  <TextField*/}
-      {/*    value={inputDescription}*/}
+      {/*    value={inputGithubUrl}*/}
       {/*    sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}*/}
-      {/*    onChange={onChangeDescription}*/}
-      {/*    type='text'*/}
-      {/*    inputRef={inputContentRef}*/}
-      {/*    color={inputDescription ? errorDesc ? 'error' : 'success' : 'info'}*/}
-      {/*    placeholder='최소 30자 이상 작성'*/}
-      {/*    error={errorDesc}*/}
-      {/*    autoComplete='off'*/}
-      {/*    helperText={errDescMessage}*/}
+      {/*    inputRef={inputUrlRef}*/}
+      {/*    onChange={onChangeGithubUrl}*/}
+      {/*    placeholder='예) https://github.com/your_nickname/your_repository'*/}
       {/*    fullWidth*/}
-      {/*    multiline*/}
-      {/*    rows={10}*/}
+      {/*    helperText='본인이 공유할 private 레포지토리 에 관리자를 추가해주세요 관리자 닉네임: team-code-room 자세한 사항은 상단 가이드를 참고해주세요'*/}
+      {/*    type='url'*/}
       {/*  />*/}
-      {/*  <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'right', marginTop: 1 }}>*/}
-      {/*    ({inputDescriptionCount}/3,000)*/}
-      {/*  </Typography>*/}
       {/*</Card>*/}
+
+        <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
+          <SectionTitle title='이 코드의 key point' helpText='코드가 더 잘 팔릴 수 있도록 코드의 강점을 소개해주세요' />
+          <TextField
+              value={inputGuide}
+              sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+              onChange={onChangeGuide}
+              type='text'
+              inputRef={inputGuideRef}
+              color={inputGuide ? errorGuide ? 'error' : 'success' : 'info'}
+              placeholder='최소 30자 이상 작성'
+              error={errorGuide}
+              autoComplete='off'
+              helperText={errGuideMessage}
+              fullWidth
+              multiline
+              rows={2}
+          />
+          <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'right', marginTop: 1 }}>
+            ({inputGuideCount}/100)
+          </Typography>
+        </Card>
+
+        <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
+          <SectionTitle title='코드 소개' helpText='구매자가 더 잘 이해 할 수 있도록 코드의 짧은 소개를 작성해주세요' />
+          <TextField
+              value={inputIntroduction}
+              sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+              onChange={onChangeIntroduction}
+              type='text'
+              inputRef={inputIntroductionRef}
+              color={inputIntroduction ? errorIntroduction ? 'error' : 'success' : 'info'}
+              placeholder='최소 30자 이상 작성'
+              error={errorIntroduction}
+              autoComplete='off'
+              helperText={errIntroductionMessage}
+              fullWidth
+              multiline
+              rows={2}
+          />
+          <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'right', marginTop: 1 }}>
+            ({inputIntroductionCount}/100)
+          </Typography>
+        </Card>
+
+      <Card sx={{ padding: 4, marginBottom: 4, backgroundColor: '#f9f9f9', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
+        <SectionTitle title='코드 설명' helpText={'코드에서 사용되는 기술에 대한 개념, 왜 이러한 기술은 선택했는지 등 코드에 대한 설명을 자유롭게 적어주세요.\n아래 내용은 .md 파일 형식으로 작성됩니다.'} />
+        <TextField
+          value={inputDescription}
+          sx={{ width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px' }}
+          onChange={onChangeDescription}
+          type='text'
+          inputRef={inputContentRef}
+          color={inputDescription ? errorDesc ? 'error' : 'success' : 'info'}
+          placeholder='최소 30자 이상 작성'
+          error={errorDesc}
+          autoComplete='off'
+          helperText={errDescMessage}
+          fullWidth
+          multiline
+          rows={10}
+        />
+        <Typography variant="body2" color="textSecondary" sx={{ textAlign: 'right', marginTop: 1 }}>
+          ({inputDescriptionCount}/3,000)
+        </Typography>
+      </Card>
 
       <Box sx={{ marginTop: 6, display: 'flex', justifyContent: 'end' }}>
         <Button variant="contained" sx={{ backgroundColor: '#333', color: '#fff', fontSize: 15, width: 194 }} onClick={onSubmitCodeRequest}>
@@ -356,4 +437,4 @@ const OldCreateCodePage: FC<Props> = () => {
   );
 };
 
-export default OldCreateCodePage;
+export default CodeSubmissionFinalPage;

@@ -34,6 +34,7 @@ import {PayType} from "../enums/PayType";
 import {UsersAmountEntity} from "../data/entity/UsersAmountEntity";
 import {PostStateType} from "../enums/PostStateType";
 import {CashHistoryType} from "../enums/CashHistoryType";
+import {GptCodeInfoResponseEntity} from "../data/entity/GptCodeInfoResponseEntity";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 
@@ -803,7 +804,7 @@ class ApiClient implements SupabaseAuthAPI {
     async riskRefactoringByGpt(targetCode:string):Promise<string> {
 
         try {
-            const result = await axios.post<any>(`${serverURL}/gpt/refactoring/risk`, {data:targetCode});
+            const result = await axios.post<any>(`${serverURL}/gpt/refactoring/risk`, {data: targetCode});
             return result.data.refactorResult;
         } catch (e: any) {
             console.log(e);
@@ -811,11 +812,16 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async makeCodeInfoBygpt(targetCode:string):Promise<string> {
+    async makeCodeInfoBygpt(targetCode:string):Promise<GptCodeInfoResponseEntity> {
         try {
             const result = await axios.post<any>(`${serverURL}/gpt/recommand/codeInfo`, {data:targetCode});
-            console.log("gpt: "+JSON.stringify(result));
-            return result.data.recommanded;
+
+            return {
+                defaultInfo: result.data.defaultInfo,
+                buyerGuide: result.data.buyerGuide,
+                introduction: result.data.introduction,
+                readMe: result.data.readMe,
+            }
         } catch (e: any) {
             console.log(e);
             throw new Error('recommand title by gpt error');

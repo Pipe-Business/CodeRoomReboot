@@ -232,7 +232,7 @@ const CodeInfo: FC<Props> = () => {
 							<Box height={32} />
 							<Box my={1} style={{border:'10px solid #D1B04A', borderRadius:'4px', padding:'16px'}}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-									<img src='/robot.png' alt='robot.png' width="32" style={{paddingRight:'10px'}}/>
+									<img src='/robot.png' alt='robot.png' width="32px" style={{paddingRight:'10px'}}/>
 									AI ROOMY가 생성한 콘텐츠 ✨
 								</Typography>
 

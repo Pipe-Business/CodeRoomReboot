@@ -24,7 +24,7 @@ const ResetCompletePage = React.lazy(() => import('./pages/profile/ResetComplete
 const SignUpCompletePage = React.lazy(() => import('./pages/register/SignUpCompletePage'));
 const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage'));
 const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage'));
-const OldCreateCodePage = React.lazy(() => import('./pages/createCode/OldCreateCodePage'));
+const CodeSubmissionFinalPage = React.lazy(() => import('./pages/createCode/CodeSubmissionFinalPage'));
 const MyPurchaseDataPage = React.lazy(() => import('./pages/profile/MyPurchaseDataPage'));
 const MyMentoringDataPage = React.lazy(() => import('./pages/profile/MyMentoringDataPage'));
 const MyMentoringDetailPage = React.lazy(() => import('./pages/profile/MyMentoringDetailPage'));
@@ -116,6 +116,7 @@ root.render(
       <Route path='/aibuilder/refactoring/risk' element={<AiBuilderRefactoringRisk/>} />
       <Route path='/create/code/refactoring' element={<RefactoringSuggestionsPage />} />
       <Route path= '/create/code/inputinformation' element={<InputCodeInfoPage />} />
+      <Route path='/create/code/codesubmission' element={<CodeSubmissionFinalPage />} />
 
       <Route path='/*' element={<NotFoundPage/>}/>
     

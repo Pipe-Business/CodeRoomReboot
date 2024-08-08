@@ -82,11 +82,7 @@ const useRefactor = (owner: string, repo: string): UseRepoFilesReturn => {
                         analyzedFiles.push(file);
                     }
                 }
-                //todo 제목
-                const title =  await apiClient.makeTitleBygpt(fileContents!.toString());
 
-                // 파일 이름 목록 설정
-                // setFileNames(codeFiles.map((file: FileNode) => file.name));
             } catch (err) {
                 if (err instanceof Error) {
                     console.error('Error in useRepoFiles:', err.message);
