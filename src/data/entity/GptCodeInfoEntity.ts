@@ -5,4 +5,5 @@ export interface GptCodeInfoEntity {
     readMe: string,
     introduction: string,
     buyerGuide: string,
+    githubRepoUrl: string,
 }

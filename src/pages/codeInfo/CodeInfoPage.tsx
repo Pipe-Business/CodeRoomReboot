@@ -26,12 +26,15 @@ import DeleteCodeButton from './components/DeleteCodeButton';
 import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
 import {PointHistoryType} from '../../enums/PointHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
-import ReadMeHtml from "./components/ReadMeHtml";
 import PurchaseButton from "./components/Purchasebutton";
 import CodeDownloadButton from "./components/CodeDownloadButton";
 import {paymentDialogState} from "../payment/atom";
 import {useRecoilState} from "recoil";
 import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/an-old-hope.css";
+
 
 dayjs.locale('ko');
 
@@ -59,10 +62,10 @@ const CodeInfo: FC<Props> = () => {
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
-	const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
-		queryKey: ['readme', id],
-		queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
-	});
+	// const { isLoading: isReadMeLoading, data: readMeData } = useQuery({
+	// 	queryKey: ['readme', id],
+	// 	queryFn: () => apiClient.getReadMe(postData!.adminGitRepoURL),
+	// });
 	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.user],
 		queryFn: () => apiClient.getTargetUser(postData!.userToken),
@@ -164,7 +167,7 @@ const CodeInfo: FC<Props> = () => {
 	}, []);
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isCashDataLoading || isReadMeLoading) {
+	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isCashDataLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -263,8 +266,11 @@ const CodeInfo: FC<Props> = () => {
 									코드 설명
 								</Typography>
 								<div>
+									<ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+										{postData.description!}
+									</ReactMarkdown>
 									{/*<ReadMeHtml htmlText={postData.description!}/>*/}
-									<ReadMeHtml htmlText={readMeData!} />
+									{/*<ReadMeHtml htmlText={readMeData!} />*/}
 								</div>
 							</Box>
 							<Box height={32} />
@@ -342,9 +348,9 @@ const CodeInfo: FC<Props> = () => {
 								<Typography variant="body1" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									이 템플릿은 {postData.buyerCount * postData.price}의 인기도를 가지고 있습니다 🔥
 								</Typography>
-								<Box my={1}>
-									{userLogin?.user_token === postData.userToken && <EditCodeButton codePost={postData} />}
-								</Box>
+								{/*<Box my={1}>*/}
+								{/*	{userLogin?.user_token === postData.userToken && <EditCodeButton codePost={postData} />}*/}
+								{/*</Box>*/}
 								<Box my={1}>
 									{userLogin?.user_token === postData.userToken && <DeleteCodeButton codePost={postData} />}
 								</Box>

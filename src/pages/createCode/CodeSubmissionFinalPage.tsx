@@ -35,7 +35,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
   const inputTitleRef = useRef<HTMLInputElement | null>(null);
   const inputPointRef = useRef<HTMLInputElement | null>(null);
   const inputContentRef = useRef<HTMLInputElement | null>(null);
-  const inputUrlRef = useRef<HTMLInputElement | null>(null);
+  //const inputUrlRef = useRef<HTMLInputElement | null>(null);
   const inputGuideRef = useRef<HTMLInputElement | null>(null);
   const inputIntroductionRef = useRef<HTMLInputElement | null>(null);
 
@@ -43,7 +43,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
   const [inputCategory, setCategory] = useState(gptCodeInfo?.category ?? '');
   const [inputLanguage, setLanguage] = useState(gptCodeInfo?.language ?? '');
   const [inputPoint, , setPoint] = useInput<number | ''>('');
-  const [inputGithubUrl, setGithubUrl] = useState('');
+  //const [inputGithubUrl, setGithubUrl] = useState(l);
   let postId: number;
 
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -91,7 +91,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
       // if(editTargetModel.images){
       //   setSrc(editTargetModel.images);
       // }
-      setGithubUrl(editTargetModel.githubRepoUrl);
+      //setGithubUrl(editTargetModel.githubRepoUrl);
     }
   }, [editTargetModel]);
 
@@ -106,9 +106,9 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
   //   setSrc(newImages);
   // };
 
-  const onChangeGithubUrl = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setGithubUrl(e.target.value);
-  }, []);
+  // const onChangeGithubUrl = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+  //   setGithubUrl(e.target.value);
+  // }, []);
 
   const goToAIBuilderPage = useCallback(() => {
       navigate('/aibuilder');
@@ -126,35 +126,40 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
 
   const onSubmitCodeRequest = useCallback(async () => {
     setLoading(true);
+
     if (!inputCategory || inputCategory.trim() === "") {
       toast.error("카테고리를 선택해주세요");
+      setLoading(false);
       return;
     }
     if (!inputLanguage || inputLanguage.trim() === '') {
       toast.error('개발 언어를 선택해주세요');
+      setLoading(false);
       return;
     }
     if (!inputPoint) {
       toast.error('캐시를 입력해주세요');
       inputPointRef.current?.focus();
+      setLoading(false);
       return;
     }
     if (inputPoint < 0) {
       toast.error('캐시는 음수가 될수 없습니다.');
       inputPointRef.current?.focus();
+      setLoading(false);
       return;
     }
-    if (!inputGithubUrl) {
-      toast.error('깃허브 레포지토리 url 을 입력해주세요');
-      inputUrlRef.current?.focus();
-      return;
-    }
-    const urlParser = inputGithubUrl.split('/');
-    if (urlParser.length < 5 || !inputGithubUrl.startsWith('https://') || inputGithubUrl.endsWith('.git')) {
-      toast.error('url 이 올바르지 않습니다.');
-      inputUrlRef.current?.focus();
-      return;
-    }
+    // if (!inputGithubUrl) {
+    //   toast.error('깃허브 레포지토리 url 을 입력해주세요');
+    //   inputUrlRef.current?.focus();
+    //   return;
+    // }
+    //const urlParser = inputGithubUrl.split('/');
+    // if (urlParser.length < 5 || !inputGithubUrl.startsWith('https://') || inputGithubUrl.endsWith('.git')) {
+    //   toast.error('url 이 올바르지 않습니다.');
+    //   inputUrlRef.current?.focus();
+    //   return;
+    // }
     if (!inputTitle || errorTitle) {
       toast.error('제목 양식에 맞게 입력해주세요');
       inputTitleRef.current?.focus();
@@ -170,22 +175,29 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
     //   inputGuideRef.current?.focus();
     //   return;
     // }
+    try{
+      const postReqEntity: PostRequestEntity = {
+        title: inputTitle,
+        description: inputDescription,
+        user_token: userLogin?.user_token!,
+        category: inputCategory,
+        state: PostStateType.pending,
+        introduction: inputIntroduction,
+        post_type: 'code',
+        hash_tag: [""],
+        view_count: 0,
+      };
+      if (!pointError) {
+        mutate(postReqEntity);
+      }
 
-    const postReqEntity: PostRequestEntity = {
-      title: inputTitle,
-      //description: inputDescription,
-      user_token: userLogin?.user_token!,
-      category: inputCategory,
-      state: PostStateType.pending,
-      post_type: 'code',
-      hash_tag: [""],
-      view_count: 0,
-    };
-
-    if (!pointError) {
-      mutate(postReqEntity);
+    }catch(error){
+      setLoading(false);
+      console.log(error);
     }
-  }, [inputCategory, inputTitle, inputLanguage, inputPoint, inputGithubUrl, userLogin, errorTitle, pointError]);
+
+  //}, [inputCategory, inputTitle, inputLanguage, inputPoint, inputGithubUrl, userLogin, errorTitle, pointError]);
+  }, [inputCategory, inputTitle, inputLanguage, inputPoint, userLogin, errorTitle, pointError]);
 
   const { mutate } = useMutation({
     mutationFn: async (postRequest: PostRequestEntity) => {
@@ -195,15 +207,15 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
       //   const urls = await apiClient.uploadImages(userLogin?.user_token!, postId, files);
       //   await apiClient.insertImgUrl(postId, urls);
       // }
-      const urlParser = inputGithubUrl.split('/');
+      const urlParser = gptCodeInfo!.githubRepoUrl.split('/');
       const codeRequest: CodeRequestEntity = {
         post_id: postId,
-        github_repo_url: inputGithubUrl,
+        github_repo_url: gptCodeInfo!.githubRepoUrl,
         cost: Number(inputPoint),
         language: inputLanguage,
         seller_github_name: urlParser[urlParser.length - 2],
         popularity: 0,
-        //buyer_guide: inputGuide,
+        buyer_guide: inputGuide,
         buyer_count: 0,
       };
       await apiClient.insertCodeData(codeRequest);
@@ -211,7 +223,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
     onSuccess: () => {
       //setFiles(null);
       //setSrc(null);
-      setGithubUrl('');
+      //setGithubUrl('');
       setTitle('');
       //setDescription('');
       setLanguage('');

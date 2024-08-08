@@ -94,6 +94,7 @@ const CreateCodePage = () => {
                 const result: GptCodeInfoResponseEntity = await  apiClient.makeCodeInfoBygpt(parsedFileContens);
                 const splitedResult:string[] = result.defaultInfo.split('|');
                 const parsedResult: GptCodeInfoEntity = {
+                    githubRepoUrl: repoUrl,
                     title: splitedResult[0].trim(),
                     category:splitedResult[1].trim(),
                     language: splitedResult[2].trim(),
