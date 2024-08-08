@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import {analyzeCode, suggestRefactorByGpt} from "../../admin/services/chatGptService";
 import useFileExtensionFilter from "./useFileExtensionFilter";
 import {apiClient} from "../../../api/ApiClient";
 
@@ -25,16 +24,18 @@ interface UseRepoFilesReturn {
     isLoading: boolean;
     error: string | null;
     totalCodeFileLength: number;
+    refactoredReuslt: string;
 }
 
 const useRefactor = (owner: string, repo: string): UseRepoFilesReturn => {
     const {getFiles, totalCodeFileLength, fileNames, error} = useFileExtensionFilter();
+    const [refactoredReuslt, setRefactoredResult] = useState<string>('');
     const [files, setFiles] = useState<FileNode[]>([]);
     // const [fileNames, setFileNames] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isError, setIsError] = useState<string | null>(null);
-    // 지연 함수 정의
 
+    // 지연 함수 정의
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     // 분석 재시도 함수 정의
     const analyzeWithRetry = async (content: string, retries = 0): Promise<string> => {
@@ -61,27 +62,37 @@ const useRefactor = (owner: string, repo: string): UseRepoFilesReturn => {
             try {
 
                const fileContents = await getFiles(owner, repo); // 파일 get 및 필터링
-                const analyzedFiles: FileNode[] = [];
-                for (const file of fileContents!) {
-                    if (file.content) {
-                        try {
-                            // 분석 실행
-                            const analysis = await analyzeWithRetry(file.content);
-                            analyzedFiles.push({ ...file, analysis });
-                            // Update state after each file is analyzed
-                            // 각 파일 분석 후 상태 업데이트
-                            setFiles([...analyzedFiles]);
-                        } catch (err) {
-                            console.error(`Failed to analyze ${file.name}:`, err);
-                            analyzedFiles.push({ ...file, analysis: 'Analysis failed' });
-                        }
-                        // Add delay between each analysis
-                        // 분석 간 지연 추가
-                        await delay(INITIAL_DELAY);
-                    } else {
-                        analyzedFiles.push(file);
-                    }
-                }
+                const contents = fileContents!.map((file) => {
+                    return file.content;
+                })
+                console.log("fileContents: "+JSON.stringify(contents));
+                const parsedFileContens:string = JSON.stringify(contents);
+                const result: string = await  apiClient.refactoringByGpt(parsedFileContens);
+                setRefactoredResult(result);
+                console.log(JSON.stringify("리펙토링 결과: "+result));
+
+
+                // const analyzedFiles: FileNode[] = [];
+                // for (const file of fileContents!) {
+                //     if (file.content) {
+                //         try {
+                //             // 분석 실행
+                //             const analysis = await analyzeWithRetry(file.content);
+                //             analyzedFiles.push({ ...file, analysis });
+                //             // Update state after each file is analyzed
+                //             // 각 파일 분석 후 상태 업데이트
+                //             setFiles([...analyzedFiles]);
+                //         } catch (err) {
+                //             console.error(`Failed to analyze ${file.name}:`, err);
+                //             analyzedFiles.push({ ...file, analysis: 'Analysis failed' });
+                //         }
+                //         // Add delay between each analysis
+                //         // 분석 간 지연 추가
+                //         await delay(INITIAL_DELAY);
+                //     } else {
+                //         analyzedFiles.push(file);
+                //     }
+                // }
 
             } catch (err) {
                 if (err instanceof Error) {
@@ -98,7 +109,7 @@ const useRefactor = (owner: string, repo: string): UseRepoFilesReturn => {
         doRefactor();
     }, [owner, repo]);
 
-    return { files, fileNames, isLoading, error: isError, totalCodeFileLength };
+    return { files, fileNames, isLoading, error: isError, totalCodeFileLength, refactoredReuslt };
 };
 
 export default useRefactor;

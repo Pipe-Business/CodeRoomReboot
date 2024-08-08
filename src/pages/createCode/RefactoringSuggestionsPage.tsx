@@ -3,7 +3,6 @@ import {useLocation, useNavigate, useParams} from 'react-router-dom';
 import {Box, Button, CircularProgress, LinearProgress, List, ListItem, Typography} from '@mui/material';
 import {ArrowBack} from '@mui/icons-material';
 import AdminLayout from '../../layout/AdminLayout';
-import useRepoFiles from "../admin/hooks/useRepoFiles";
 import MainLayout from "../../layout/MainLayout";
 import useRefactor from "./hooks/useRefactor";
 import ReactMarkdown from "react-markdown";
@@ -26,11 +25,10 @@ interface FileData {
 
 const RefactoringSuggestionPage: FC = () => {
     const location = useLocation();
-    const {userId, codeId} = useParams();
     const navigate = useNavigate();
     const {githubRepoName, sellerGithubName} = location.state as LocationState;
 
-    const {files, fileNames, isLoading, error, totalCodeFileLength} = useRefactor(
+    const {files, fileNames, isLoading, error, totalCodeFileLength, refactoredReuslt} = useRefactor(
         sellerGithubName || '',
         githubRepoName || ''
     );
@@ -88,22 +86,29 @@ const RefactoringSuggestionPage: FC = () => {
                         '\n코드를 수정하여 다시 커밋해주세요. (선택사항입니다)'}
                 </Typography>
 
-                {(isLoading || analyzedFiles.length < totalCodeFileLength) && (
+                {/*{(isLoading || analyzedFiles.length < totalCodeFileLength) && (*/}
+                {/*    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4}}>*/}
+                {/*        <CircularProgress/>*/}
+                {/*        <Typography variant="body1" sx={{mt: 2}}>*/}
+                {/*            {isLoading ? `Analyzing code... ${analyzedFiles.length}/${totalCodeFileLength} files` : '코드 분석이 모두 완료되었습니다'}*/}
+                {/*        </Typography>*/}
+                {/*        {currentFile && (*/}
+                {/*            <Typography variant="body2" sx={{mt: 1}}>*/}
+                {/*                Currently analyzing: {currentFile}*/}
+                {/*            </Typography>*/}
+                {/*        )}*/}
+                {/*        <Box sx={{width: '100%', mt: 2}}>*/}
+                {/*            <LinearProgress variant="determinate" value={progress}/>*/}
+                {/*        </Box>*/}
+                {/*    </Box>*/}
+                {/*)}*/}
+
+                {
+                    isLoading &&
                     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4}}>
                         <CircularProgress/>
-                        <Typography variant="body1" sx={{mt: 2}}>
-                            {isLoading ? `Analyzing code... ${analyzedFiles.length}/${totalCodeFileLength} files` : '코드 분석이 모두 완료되었습니다'}
-                        </Typography>
-                        {currentFile && (
-                            <Typography variant="body2" sx={{mt: 1}}>
-                                Currently analyzing: {currentFile}
-                            </Typography>
-                        )}
-                        <Box sx={{width: '100%', mt: 2}}>
-                            <LinearProgress variant="determinate" value={progress}/>
-                        </Box>
                     </Box>
-                )}
+                }
 
                 {error && (
                     <Typography color="error" sx={{mt: 2}}>
@@ -111,44 +116,66 @@ const RefactoringSuggestionPage: FC = () => {
                     </Typography>
                 )}
 
-                {analyzedFiles.length > 0 && (
-                    <List sx={{mt: 4}}>
-                        {analyzedFiles.map((file) => (
-                            <ListItem key={file.path} sx={{flexDirection: 'column', alignItems: 'flex-start'}}>
-                                <Typography variant="h6">{file.name}</Typography>
-                                {/*{file.content && (*/}
-                                {/*    <Box component="pre" sx={{*/}
-                                {/*        mt: 1,*/}
-                                {/*        p: 2,*/}
-                                {/*        backgroundColor: '#f5f5f5',*/}
-                                {/*        borderRadius: 1,*/}
-                                {/*        overflowX: 'auto',*/}
-                                {/*        width: '100%'*/}
-                                {/*    }}>*/}
-                                {/*        <code>{file.content}</code>*/}
-                                {/*    </Box>*/}
-                                {/*)}*/}
-                                {file.analysis && (
-                                    <Box sx={{mt: 2, width: '100%'}}>
-                                        <Typography variant="h6">Analysis</Typography>
-                                        <Box component="pre" sx={{
-                                            mt: 1,
-                                            p: 2,
-                                            backgroundColor: '#e3f2fd',
-                                            borderRadius: 1,
-                                            overflowX: 'auto',
-                                            width: '100%'
-                                        }}>
-                                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
-                                                {file.analysis}
-                                            </ReactMarkdown>
-                                            {/*<code>{file.analysis}</code>*/}
-                                        </Box>
-                                    </Box>
-                                )}
-                            </ListItem>
-                        ))}
-                    </List>
+                {/*{analyzedFiles.length > 0 && (*/}
+                {/*    <List sx={{mt: 4}}>*/}
+                {/*        {analyzedFiles.map((file) => (*/}
+                {/*            <ListItem key={file.path} sx={{flexDirection: 'column', alignItems: 'flex-start'}}>*/}
+                {/*                <Typography variant="h6">{file.name}</Typography>*/}
+                {/*                /!*{file.content && (*!/*/}
+                {/*                /!*    <Box component="pre" sx={{*!/*/}
+                {/*                /!*        mt: 1,*!/*/}
+                {/*                /!*        p: 2,*!/*/}
+                {/*                /!*        backgroundColor: '#f5f5f5',*!/*/}
+                {/*                /!*        borderRadius: 1,*!/*/}
+                {/*                /!*        overflowX: 'auto',*!/*/}
+                {/*                /!*        width: '100%'*!/*/}
+                {/*                /!*    }}>*!/*/}
+                {/*                /!*        <code>{file.content}</code>*!/*/}
+                {/*                /!*    </Box>*!/*/}
+                {/*                /!*)}*!/*/}
+                {/*                /!*{file.analysis && (*!/*/}
+                {/*                {refactoredReuslt && (*/}
+                {/*                    <Box sx={{mt: 2, width: '100%'}}>*/}
+                {/*                        <Typography variant="h6">Analysis</Typography>*/}
+                {/*                        <Box component="pre" sx={{*/}
+                {/*                            mt: 1,*/}
+                {/*                            p: 2,*/}
+                {/*                            backgroundColor: '#e3f2fd',*/}
+                {/*                            borderRadius: 1,*/}
+                {/*                            overflowX: 'auto',*/}
+                {/*                            width: '100%'*/}
+                {/*                        }}>*/}
+                {/*                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>*/}
+                {/*                                /!*{file.analysis}*!/*/}
+                {/*                                { refactoredReuslt }*/}
+                {/*                            </ReactMarkdown>*/}
+                {/*                            /!*<code>{file.analysis}</code>*!/*/}
+                {/*                        </Box>*/}
+                {/*                    </Box>*/}
+                {/*                )}*/}
+                {/*            </ListItem>*/}
+                {/*        ))}*/}
+                {/*    </List>*/}
+                {/*)}*/}
+
+                {refactoredReuslt && (
+                    <Box sx={{mt: 2, width: '100%'}}>
+                        <Typography variant="h6">Analysis</Typography>
+                        <Box component="pre" sx={{
+                            mt: 1,
+                            p: 2,
+                            backgroundColor: '#e3f2fd',
+                            borderRadius: 1,
+                            overflowX: 'auto',
+                            width: '100%'
+                        }}>
+                            <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                                {/*{file.analysis}*/}
+                                { refactoredReuslt }
+                            </ReactMarkdown>
+                            {/*<code>{file.analysis}</code>*/}
+                        </Box>
+                    </Box>
                 )}
             </Box>
 
