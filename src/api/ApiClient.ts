@@ -11,7 +11,7 @@ import {useOctokit} from "../index";
 import {NotificationEntity} from "../data/entity/NotificationEntity";
 import {NotificationType} from '../enums/NotificationType';
 import {PointHistoryRequestEntity} from "../data/entity/PointHistoryRequestEntity";
-import {BootPayPaymentEntity} from "../data/entity/BootpayPaymentEntity";
+import {BootPayPaymentModel} from "../data/entity/BootPayPaymentModel";
 import {PurchaseReviewEntity} from "../data/entity/PurchaseReviewEntity";
 import {AdminUserManageEntity} from "../data/entity/AdminUserManageEntity";
 import {MainPageCodeListEntity} from "../data/entity/MainPageCodeListEntity";
@@ -1482,7 +1482,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async insertBootpayPayment(bootpayPayment: BootPayPaymentEntity) {
+    async insertBootpayPayment(bootpayPayment: BootPayPaymentModel) {
 
         try {
             const {error, data} = await supabase.from('bootpay_payment').insert(bootpayPayment).select();

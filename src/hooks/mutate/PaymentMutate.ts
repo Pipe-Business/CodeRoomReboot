@@ -1,23 +1,7 @@
 import {useMutation} from '@tanstack/react-query';
 import {apiClient} from "../../api/ApiClient";
-import {BootPayPaymentEntity} from "../../data/entity/BootpayPaymentEntity";
 import {CashHistoryRequestEntity} from "../../data/entity/CashHistoryRequestEntity";
 import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
-
-export const useMutateBootPayPaymentRequest = () => {
-	const { mutateAsync } = useMutation({
-		mutationFn: async (data: BootPayPaymentEntity) => {
-			return await apiClient.insertBootpayPayment(data);
-		},
-		onSuccess: async (id) => {
-			return id;
-		},
-
-	});
-	return {
-		mutateBootpayRequest: mutateAsync,
-	};
-};
 
 /**
  * 캐시 정산하는 mutate

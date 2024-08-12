@@ -7,11 +7,9 @@ import {paymentDialogState} from "../../payment/atom";
 import {useNavigate} from "react-router-dom";
 import {CashHistoryRequestEntity} from "../../../data/entity/CashHistoryRequestEntity";
 import {apiClient} from "../../../api/ApiClient";
-import {PointHistoryRequestEntity} from "../../../data/entity/PointHistoryRequestEntity";
-import {PointHistoryType} from "../../../enums/PointHistoryType";
 import {PurchaseSaleRequestEntity} from "../../../data/entity/PurchaseSaleRequestEntity";
 import {Bootpay} from "@bootpay/client-js";
-import {BootPayPaymentEntity} from "../../../data/entity/BootpayPaymentEntity";
+import {BootPayPaymentModel} from "../../../data/entity/BootPayPaymentModel";
 import {CashHistoryType} from "../../../enums/CashHistoryType";
 import {PayType} from "../../../enums/PayType";
 
@@ -183,14 +181,16 @@ export const useMutateCodePayment = () => {
             });
 
             if (response.event === 'done') {
-                const entity: BootPayPaymentEntity = {
+                const entity: BootPayPaymentModel = {
                     user_token: userLogin?.user_token!,
-                    cash: paymentRequiredAmount, // 코드룸 캐시
-                    price: paymentRequiredAmount, // 원화
+                    company_name: response.data.company_name,
+                    price: paymentRequiredAmount, // 코드 가격
                     purchased_at: response.data.purchased_at,
+                    cancelled_at: response.data.cancelled_at,
+                    requested_at: response.data.requested_at,
+                    receipt_url: response.data.receipt_url,
                     order_name: response.data.order_name,
                     method_origin: response.data.method_origin,
-                    company_name: response.data.company_name,
                     receipt_id: response.data.receipt_id,
                 };
 
