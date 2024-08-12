@@ -1,4 +1,4 @@
-import {ArrowBack} from '@mui/icons-material';
+import {ArrowBack, ShoppingBag} from '@mui/icons-material';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import {Box, Card, CardContent, CardHeader, CircularProgress, IconButton, Typography} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
@@ -17,14 +17,13 @@ import {CenterBox} from '../main/styles';
 import {BlurContainer} from './styles';
 import 'slick-carousel/slick/slick-theme.css';
 import 'slick-carousel/slick/slick.css';
-import EditCodeButton from './components/EditCodeButton';
 import MessageModal from './components/MessageModal';
 import ReviewDialog from './components/ReviewDialog';
 import {PurchaseReviewEntity} from '../../data/entity/PurchaseReviewEntity';
 import ReviewList from './components/ReviewList';
 import DeleteCodeButton from './components/DeleteCodeButton';
-import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq.ts';
-import {CoinHistoryType} from '../../enums/CoinHistoryType.tsx';
+import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
+import {CoinHistoryType} from '../../enums/CoinHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import PurchaseButton from "./components/Purchasebutton";
 import CodeDownloadButton from "./components/CodeDownloadButton";
@@ -212,7 +211,7 @@ const CodeInfo: FC<Props> = () => {
 									카테고리
 								</Typography>
 								<Typography variant="body1" color="textPrimary">
-									{postData.postType} / {CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} / {postData.language}
+									{CATEGORY_TO_KOR[postData.category as keyof typeof CATEGORY_TO_KOR]} / {postData.language}
 								</Typography>
 							</Box>
 
@@ -247,14 +246,7 @@ const CodeInfo: FC<Props> = () => {
 								<div style={{fontSize : '20px', whiteSpace: 'pre-line'}}>
 									{postData.aiSummary}
 								</div>
-								<Box height={32} />
 
-								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-									✅ 코드 소개
-								</Typography>
-									<div style={{fontSize : '20px', whiteSpace: 'pre-line'}}>
-										{postData.introduction}
-									</div>
 								<Box height={16} />
 
 							</Box>
@@ -303,15 +295,15 @@ const CodeInfo: FC<Props> = () => {
 							{/*	/>*/}
 							{/*</Box>*/}
 							<Box my={3} sx={{ textAlign: 'center' }}>
-								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-									이 코드 템플릿이 좋아요
+								<Typography variant="h5" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
+									위시 리스트에 코드 담아두기
 								</Typography>
 								<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-									<Typography variant="h4" component="div" sx={{ fontWeight: 'bold', color: '#3179f8' }}>
-										{likedNumberData!.toString()}
-									</Typography>
+									{/*<Typography variant="h4" component="div" sx={{ fontWeight: 'bold', color: '#3179f8' }}>*/}
+									{/*	{likedNumberData!.toString()}*/}
+									{/*</Typography>*/}
 									<IconButton onClick={onClickLike}>
-										<ThumbUpIcon sx={{ color: isLike ? '#3179f8' : 'grey', fontSize: '40px' }} />
+										<ShoppingBag sx={{ color: isLike ? 'orange' : 'grey', fontSize: '60px' }} />
 									</IconButton>
 								</Box>
 							</Box>
@@ -344,9 +336,6 @@ const CodeInfo: FC<Props> = () => {
 								</Typography>
 								<Typography variant="body1" color="textPrimary" sx={{ mb: 2 }}>
 									{postUserData.nickname}
-								</Typography>
-								<Typography variant="body1" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-									이 템플릿은 {postData.buyerCount * postData.price}의 인기도를 가지고 있습니다 🔥
 								</Typography>
 								{/*<Box my={1}>*/}
 								{/*	{userLogin?.user_token === postData.userToken && <EditCodeButton codePost={postData} />}*/}

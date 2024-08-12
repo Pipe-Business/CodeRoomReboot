@@ -31,9 +31,9 @@ const MessageModal: FC<MessageModalProps> = ({targetUserToken}) => {
 
   return (
     <div>
-      <Button onClick={handleOpenMessageModal} variant="contained" sx={{ fontSize: '15', width: '210px', height : '52px', backgroundColor: 'black' }}>
-        1:1 쪽지 보내기
-      </Button>
+      {/*<Button onClick={handleOpenMessageModal} variant="contained" sx={{ fontSize: '15', width: '210px', height : '52px', backgroundColor: 'black' }}>*/}
+      {/*  1:1 쪽지 보내기*/}
+      {/*</Button>*/}
 
       <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
         <DialogTitle>1:1 쪽지 보내기</DialogTitle>

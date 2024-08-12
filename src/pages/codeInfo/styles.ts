@@ -7,7 +7,7 @@ import Slider from "react-slick";
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: '#ffffff',
     backgroundColor: 'primary',
-    height : '52px',
+    height : '64px',
   '&:hover': {
     backgroundColor: '#569CD6',
     boxShadow: 'none',
