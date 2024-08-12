@@ -14,7 +14,8 @@ export const Paging: FC<Props> = ({ page, count, setPage }) => {
     <div>
       <Pagination
         activePage={page}
-        itemsCountPerPage={20}
+        //itemsCountPerPage={20}
+          itemsCountPerPage={5}
         totalItemsCount={count}
         pageRangeDisplayed={5}
         prevPageText={"<"}

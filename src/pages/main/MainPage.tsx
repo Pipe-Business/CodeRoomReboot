@@ -32,7 +32,8 @@ const MainPage: FC = () => {
     const [list, setList] = useState<MainPageCodeListEntity[]>([]);
     const [count, setCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [postPerPage] = useState(20);
+    //const [postPerPage] = useState(20); TODO 5개로 수정
+    const [postPerPage] = useState(5);
     const [currentPosts, setCurrentPosts] = useState<MainPageCodeListEntity[]>([]);
 
     const setPage = useCallback(

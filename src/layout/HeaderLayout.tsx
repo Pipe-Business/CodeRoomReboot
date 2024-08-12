@@ -90,11 +90,11 @@ const HeaderLayout: FC<Props> = () => {
                             }}>{totalCashPointData?.point_amount + ' 🌱'}</span>
                         </MarginHorizontal>
 
-                        <MarginHorizontal size={8}>
-                            <Link to={'/charge'} style={{textDecoration: "none"}}>
-                                <span style={{color: '#000000', fontSize: '14px'}}>충전하기</span>
-                            </Link>
-                        </MarginHorizontal>
+                        {/*<MarginHorizontal size={8}>*/}
+                        {/*    <Link to={'/charge'} style={{textDecoration: "none"}}>*/}
+                        {/*        <span style={{color: '#000000', fontSize: '14px'}}>충전하기</span>*/}
+                        {/*    </Link>*/}
+                        {/*</MarginHorizontal>*/}
 
                         <MarginHorizontal size={8}>
                             <Link to={'/create/code'} style={{textDecoration: "none"}}>

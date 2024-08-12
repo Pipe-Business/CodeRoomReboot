@@ -121,15 +121,15 @@ const HelpPage: FC<Props> = () => {
 									primaryTypographyProps={{ fontSize: 20 }}
 								/>
 							</ListItem>
-							<ListItem>
-								<Button onClick={copyToClipboard} style={{ textTransform: 'none', fontSize: '20px' }}>
-									제시된 코드룸 ReadMe 공식 템플릿
-								</Button>
-								<ListItemText
-									primary="에 맞춰서 코드에 대한 설명을 작성해주세요"
-									primaryTypographyProps={{ fontSize: 20 }}
-								/>
-							</ListItem>
+							{/*<ListItem>*/}
+							{/*	<Button onClick={copyToClipboard} style={{ textTransform: 'none', fontSize: '20px' }}>*/}
+							{/*		제시된 코드룸 ReadMe 공식 템플릿*/}
+							{/*	</Button>*/}
+							{/*	<ListItemText*/}
+							{/*		primary="에 맞춰서 코드에 대한 설명을 작성해주세요"*/}
+							{/*		primaryTypographyProps={{ fontSize: 20 }}*/}
+							{/*	/>*/}
+							{/*</ListItem>*/}
 						</List>
 						<Typography variant="body1" style={{ fontSize: '18px', marginBottom: '16px', fontWeight: 'bold' }}>
 							🚨 깃허브 레포지토리를 생성 할 때, 반드시 private repository로 생성 해주셔야 합니다 🚨
@@ -201,9 +201,9 @@ const HelpPage: FC<Props> = () => {
 							<ListItem>
 								<ListItemText primary="4. 코드설명 : 코드에 대한 자세한 설명입니다. 코드에서 사용되는 기술에대한 개념 설명, 왜 이러한 기술은 선택했는지등 자유롭게 적어주세요" primaryTypographyProps={{ fontSize: 20 }} />
 							</ListItem>
-							<ListItem>
-								<ListItemText primary="5. 구매자가이드 : 구매자가 코드를 다운받을때 참고사항으로 사용 에디터, 사용된 언어의 버전, 사용된 라이브러리등 자유롭게 작성해주세요" primaryTypographyProps={{ fontSize: 20 }} />
-							</ListItem>
+							{/*<ListItem>*/}
+							{/*	<ListItemText primary="5. 구매자가이드 : 구매자가 코드를 다운받을때 참고사항으로 사용 에디터, 사용된 언어의 버전, 사용된 라이브러리등 자유롭게 작성해주세요" primaryTypographyProps={{ fontSize: 20 }} />*/}
+							{/*</ListItem>*/}
 						</List>
 					</CardContent>
 				</Card>

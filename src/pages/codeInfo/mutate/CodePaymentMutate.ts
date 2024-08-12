@@ -187,7 +187,7 @@ export const useMutateCodePayment = () => {
                     user_token: userLogin?.user_token!,
                     cash: paymentRequiredAmount, // 코드룸 캐시
                     price: paymentRequiredAmount, // 원화
-                    purchase_at: response.data.purchased_at,
+                    purchased_at: response.data.purchased_at,
                     order_name: response.data.order_name,
                     method_origin: response.data.method_origin,
                     company_name: response.data.company_name,
