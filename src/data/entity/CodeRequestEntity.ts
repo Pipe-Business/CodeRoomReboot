@@ -3,7 +3,7 @@ export interface CodeRequestEntity {
     post_id: number; // Post 테이블의 Pk 참조키
     created_at?: number;
     github_repo_url:string; // 깃허브 URL
-    cost:number; //가격
+    code_price:number; //가격
     language:string, // 개발 언어
     github_download_url?: string; // 깃허브 다운로드 url
     seller_github_name: string; // 판매자의 GitHub 사용자명

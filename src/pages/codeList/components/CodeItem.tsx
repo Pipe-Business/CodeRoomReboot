@@ -92,7 +92,7 @@ const CodeItem: FC<Props> = ({ item }) => {
                         textAlign: 'center',
                         fontSize: {xs: '16px', sm: '20px', md: '22px'}
                     }}>
-                        💵 {item.price.toLocaleString()}
+                        💵 {item.code_price.toLocaleString()}
                     </Typography>
                     {/*<Box width={8} />*/}
                     {/*<Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>*/}
@@ -169,7 +169,7 @@ const CodeItem: FC<Props> = ({ item }) => {
 
               <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
                 <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
-                  {(item.buyerCount * item.price).toLocaleString()}
+                  {(item.buyerCount * item.code_price).toLocaleString()}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
                   인기도

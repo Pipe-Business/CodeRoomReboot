@@ -3,7 +3,7 @@ export type MainPageCodeListEntity = {
     title: string,
     description: string,  /** 코드 설명 */
     images: string[],  /** 코드 결과물 이미지 url */
-    price: number /** 코드 가격 */
+    code_price: number /** 코드 가격 */
     userToken: string, // 게시자 usertoken
     popularity:number, // 코드 평점
     category: string, /** 카테고리(프론트엔드, 웹 퍼블리싱 등..) */

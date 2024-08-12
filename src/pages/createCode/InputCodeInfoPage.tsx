@@ -138,7 +138,7 @@ const InputCodeInfoPage:FC = () => {
             const codeRequest: CodeRequestEntity = {
                 post_id: postId,
                 github_repo_url: inputGithubUrl,
-                cost: Number(inputPoint),
+                code_price: Number(inputPoint),
                 language: inputLanguage,
                 seller_github_name: urlParser[urlParser.length - 2],
                 popularity: 0,
