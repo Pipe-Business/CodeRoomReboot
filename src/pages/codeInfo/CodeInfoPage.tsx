@@ -245,7 +245,7 @@ const CodeInfo: FC<Props> = () => {
 								</Typography>
 
 								<div style={{fontSize : '20px', whiteSpace: 'pre-line'}}>
-									{postData.buyerGuide}
+									{postData.aiSummary}
 								</div>
 								<Box height={32} />
 

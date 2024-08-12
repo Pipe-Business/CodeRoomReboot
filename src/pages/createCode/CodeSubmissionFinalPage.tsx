@@ -215,7 +215,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
         language: inputLanguage,
         seller_github_name: urlParser[urlParser.length - 2],
         popularity: 0,
-        buyer_guide: inputGuide,
+        ai_summary: inputGuide,
         buyer_count: 0,
       };
       await apiClient.insertCodeData(codeRequest);
@@ -293,7 +293,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
         <Box>
           <Typography variant="h4" fontWeight="bold" sx={{color: 'red'}}>반려사유</Typography>
           <Box height={16}></Box>
-          <div style={{fontSize: 18, fontWeight: 'bold'}}>{editTargetModel.rejectMessage}</div>
+          <div style={{fontSize: 18, fontWeight: 'bold'}}>{editTargetModel.reviewResultMsg}</div>
         </Box>
       </Card>}
 

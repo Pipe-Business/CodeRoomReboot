@@ -128,7 +128,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					<StyledCard>
 						<StyledCardContent>
 							<TitleTypography variant="h6">반려사유</TitleTypography>
-							<ContentTypography>{data.rejectMessage}</ContentTypography>
+							<ContentTypography>{data.reviewResultMsg}</ContentTypography>
 						</StyledCardContent>
 					</StyledCard>
 				)}
@@ -146,7 +146,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 							<img src='/robot.png' alt='robot' width="32" style={{marginRight: '10px'}}/>
 							<TitleTypography variant="h6">AI ROOMY의 KeyPoint ✨</TitleTypography>
 						</Box>
-						<ContentTypography>{data.buyerGuide}</ContentTypography>
+						<ContentTypography>{data.aiSummary}</ContentTypography>
 					</StyledCardContent>
 				</StyledCard>
 

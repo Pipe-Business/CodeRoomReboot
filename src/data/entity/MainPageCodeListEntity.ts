@@ -11,7 +11,7 @@ export type MainPageCodeListEntity = {
     createdAt: string,  /** 코드 생성일 */
     postType:string, // 코드 / 글
     hashTag: string[],
-    buyerGuide: string, // 구매자가이드
+    aiSummary: string, // 구매자가이드
     buyerCount: number, // 구매자수
     state: string, // 상태
     adminGitRepoURL: string,  /** 관리자의 포크뜬 깃헙 url */

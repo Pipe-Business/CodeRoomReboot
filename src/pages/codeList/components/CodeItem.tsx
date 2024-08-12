@@ -72,7 +72,7 @@ const CodeItem: FC<Props> = ({ item }) => {
                     lineClamp: { xs: 2, sm: 1 },
                   }}
                 >
-                    {item.buyerGuide}
+                    {item.aiSummary}
                 </Paper>
 
                 {/* 캐시, 닉네임, 시간 */}

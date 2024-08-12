@@ -1,6 +1,5 @@
 export interface GptCodeInfoResponseEntity {
     defaultInfo: string,
-    introduction: string,
-    buyerGuide: string,
+    aiSummary: string,
     readMe: string,
 }

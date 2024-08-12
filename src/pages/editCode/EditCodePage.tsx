@@ -183,7 +183,7 @@ const EditCodePage: FC<Props> = () => {
                 //description: inputDescription,
                 language : inputLanguage,
                 category: inputCategory,
-                cost: inputPoint,
+                price: inputPoint,
                 //buyer_guide: inputGuide,
                 //img_urls : resultImgUrl,
             }

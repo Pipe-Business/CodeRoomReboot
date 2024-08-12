@@ -19,7 +19,7 @@ const CashConfirmItem: FC<Props> = ({ cashConfirmData }) => {
     const onClickListItem = useCallback((e: any) => {
         e.stopPropagation();
 
-        if(codeData?.is_deleted){
+        if(codeData?.isDeleted){
                 window.alert('삭제된 게시글입니다.');
         }else{
             if (cashConfirmData) {

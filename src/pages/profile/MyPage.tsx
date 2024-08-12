@@ -103,7 +103,7 @@ const MyPage: FC<Props> = () => {
     const handleWriteReviewClick = async(purchaseData: PurchaseSaleResponseEntity) => {
         console.log('Review click event received for:', purchaseData);
         const targetCode:CodeModel	= await apiClient.getTargetCode(purchaseData.post_id);
-        if(targetCode.is_deleted){
+        if(targetCode.isDeleted){
             console.log("targetCode");
             window.alert('삭제된 게시글입니다.');
         }else{

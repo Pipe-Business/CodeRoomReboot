@@ -10,7 +10,7 @@ import {serverURL} from '../hooks/fetcher/HttpFetcher';
 import {useOctokit} from "../index";
 import {NotificationEntity} from "../data/entity/NotificationEntity";
 import {NotificationType} from '../enums/NotificationType';
-import {UsersCoinHistoryReq} from "../data/entity/UsersCoinHistoryReq.ts";
+import {UsersCoinHistoryReq} from "../data/entity/UsersCoinHistoryReq";
 import {BootPayPaymentModel} from "../data/entity/BootPayPaymentModel";
 import {PurchaseReviewEntity} from "../data/entity/PurchaseReviewEntity";
 import {AdminUserManageEntity} from "../data/entity/AdminUserManageEntity";
@@ -24,14 +24,11 @@ import {PurchaseSaleResponseEntity} from "../data/entity/PurchaseSaleResponseEnt
 import {LikeRequestEntity} from "../data/entity/LikeRequestEntity";
 import {LikeResponseEntity} from "../data/entity/LikeResponseEntity";
 import {MentoringResponseEntity} from "../data/entity/MentoringResponseEntity";
-import {UsersCoinHistoryRes} from "../data/entity/UsersCoinHistoryRes.ts";
+import {UsersCoinHistoryRes} from "../data/entity/UsersCoinHistoryRes";
 import {CodeEditRequestEntity} from "../data/entity/CodeEditRequestEntity";
 import {createTodayDate} from "../utils/DayJsHelper";
-import {CashCoinHistoryEntity} from "../data/model/CashCoinHistoryEntity.ts";
-import {PayType} from "../enums/PayType";
 import {UsersAmountModel} from "../data/entity/UsersAmountModel";
 import {PostStateType} from "../enums/PostStateType";
-import {CashHistoryType} from "../enums/CashHistoryType";
 import {GptCodeInfoResponseEntity} from "../data/entity/GptCodeInfoResponseEntity";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
@@ -110,7 +107,7 @@ class ApiClient implements SupabaseAuthAPI {
                         language: e.code.language,
                         postType: e.post_type,
                         createdAt: e.created_at,
-                        buyerGuide: e.code.buyer_guide,
+                        aiSummary: e.code.ai_summary,
                         githubRepoUrl: e.code.github_repo_url,
                         buyerCount: e.code.buyer_count,
                         popularity: e.code.popularity,
@@ -477,10 +474,9 @@ class ApiClient implements SupabaseAuthAPI {
                     images: e.img_urls,
                     price: e.code.cost,
                     userToken: e.user_token,
-                    buyerGuide: e.code.buyer_guide,
+                    aiSummary: e.code.ai_summary,
                     language: e.code.language,
                     category: e.category,
-                    introduction: e.introduction,
                     createdAt: e.created_at,
                     postType: e.post_type,
                     popularity: e.code.popularity,
@@ -489,10 +485,10 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     sellerGithubName: e.code.seller_github_name,
                     githubRepoUrl: e.code.github_repo_url,
-                    rejectMessage: e.reject_message,
+                    reviewResultMsg: e.review_result_msg,
                     viewCount: e.view_count,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    is_deleted: e.is_deleted,
+                    isDeleted: e.is_deleted,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -793,8 +789,7 @@ class ApiClient implements SupabaseAuthAPI {
 
             return {
                 defaultInfo: result.data.defaultInfo,
-                buyerGuide: result.data.buyerGuide,
-                introduction: result.data.introduction,
+                aiSummary: result.data.aiSummary,
                 readMe: result.data.readMe,
             }
         } catch (e: any) {
@@ -958,7 +953,7 @@ class ApiClient implements SupabaseAuthAPI {
                     language: e.code.language,
                     postType: e.post_type,
                     createdAt: e.created_at,
-                    buyerGuide: e.code.buyer_guide,
+                    aiSummary: e.code.ai_summary,
                     sellerGithubName: e.code.seller_github_name,
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
@@ -966,10 +961,9 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage: e.reject_message,
+                    reviewResultMsg: e.code.review_result_msg,
                     viewCount: e.view_count,
-                    is_deleted: e.is_deleted,
-                    introduction: e.introduction,
+                    isDeleted: e.is_deleted,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -1002,7 +996,7 @@ class ApiClient implements SupabaseAuthAPI {
                     language: e.code.language,
                     postType: e.post_type,
                     createdAt: e.created_at,
-                    buyerGuide: e.code.buyer_guide,
+                    aiSummary: e.code.ai_summary,
                     sellerGithubName: e.code.seller_github_name,
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
@@ -1010,10 +1004,9 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage: e.reject_message,
+                    reviewResultMsg: e.reject_message,
                     viewCount: e.view_count,
-                    is_deleted: e.is_deleted,
-                    introduction: e.introduction,
+                    isDeleted: e.is_deleted,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -1073,10 +1066,10 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateCodeRequestRejectMessage(userToken: string, postId: string, rejectMessage: string) {
+    async updateCodeRequestRejectMessage(userToken: string, postId: string, reviewResultMsg: string) {
         try {
             const {error} = await supabase.from('post')
-                .update({reject_message: rejectMessage})
+                .update({review_result_msg: reviewResultMsg})
                 .eq('id', postId)
                 .eq('user_token', userToken);
 
@@ -1142,7 +1135,7 @@ class ApiClient implements SupabaseAuthAPI {
                     language: e.code.language,
                     postType: e.post_type,
                     createdAt: e.created_at,
-                    buyerGuide: e.code.buyer_guide,
+                    aiSummary: e.code.ai_summary,
                     sellerGithubName: e.code.seller_github_name,
                     buyerCount: e.code.buyer_count,
                     popularity: e.code.popularity,
@@ -1150,10 +1143,9 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    rejectMessage: e.reject_message,
+                    reviewResultMsg: e.reject_message,
                     viewCount: e.view_count,
-                    is_deleted: e.is_deleted,
-                    introduction: e.introduction,
+                    isDeleted: e.is_deleted,
                 }
                 lstCodeModel.push(codeModel);
             });
@@ -1335,7 +1327,6 @@ class ApiClient implements SupabaseAuthAPI {
             "description": pointHistoryRequestEntity.description,
             "from_user_token": pointHistoryRequestEntity.from_user_token,
             "point_history_type": pointHistoryRequestEntity.point_history_type,
-            "purchase_id" : pointHistoryRequestEntity.purchase_id,
         }
 
         try {
@@ -1511,8 +1502,8 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const {error} = await supabase.from('code')
                 .update({
-                    cost: codeEditRequestEntity.cost,
-                    buyer_guide: codeEditRequestEntity.buyer_guide,
+                    price: codeEditRequestEntity.price,
+                    ai_summary: codeEditRequestEntity.ai_summary,
                 })
                 .eq('post_id', codeEditRequestEntity.post_id);
 
@@ -1840,7 +1831,7 @@ class ApiClient implements SupabaseAuthAPI {
                         language: e.code.language,
                         postType: e.post_type,
                         createdAt: e.created_at,
-                        buyerGuide: e.code.buyer_guide,
+                        aiSummary: e.code.ai_summary,
                         githubRepoUrl: e.code.github_repo_url,
                         buyerCount: e.code.buyer_count,
                         popularity: e.code.popularity,
@@ -2284,10 +2275,10 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateAdminMarketingText(postId:string, buyer_guide: string) {
+    async updateAdminMarketingText(postId:string, ai_summary: string) {
         try {
             const {data, error} = await supabase.from('code')
-                .update({buyer_guide: buyer_guide})
+                .update({ai_summary: ai_summary})
                 .eq('post_id', postId);
 
             if (error) {

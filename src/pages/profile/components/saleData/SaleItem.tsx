@@ -18,7 +18,7 @@ const SaleItem: FC<Props> = ({ saleData }) => {
     const { data: codeData, isLoading } = useQuery({ queryKey: ['codeStore', saleData.post_id], queryFn: () => apiClient.getTargetCode(saleData.post_id) });
     const onClickListItem = useCallback((e: any) => {
         e.stopPropagation();
-        if (codeData?.is_deleted) {
+        if (codeData?.isDeleted) {
             window.alert('삭제된 게시글입니다.');
         }
         else {

@@ -99,8 +99,7 @@ const CreateCodePage = () => {
                     category:splitedResult[1].trim(),
                     language: splitedResult[2].trim(),
                     readMe: result.readMe,
-                    introduction: result.introduction,
-                    buyerGuide: result.buyerGuide,
+                    aiSummary: result.aiSummary,
                 }
                 console.log("data: "+JSON.stringify(parsedResult));
                 setGptCodeInfo(parsedResult);

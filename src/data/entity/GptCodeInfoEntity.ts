@@ -3,7 +3,6 @@ export interface GptCodeInfoEntity {
     category: string,
     language: string,
     readMe: string,
-    introduction: string,
-    buyerGuide: string,
+    aiSummary: string,
     githubRepoUrl: string,
 }

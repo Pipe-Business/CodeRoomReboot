@@ -11,14 +11,13 @@ export type CodeModel = {
     createdAt: string,  /** 코드 생성일 */
     postType:string, // 코드 / 글
     hashTag: string[],
-    buyerGuide: string, // 구매자가이드
+    aiSummary: string, // ai가 요약하는 코드 핵심요약
     buyerCount: number, // 구매자수
     state: string, // 상태
     adminGitRepoURL: string,  /** 관리자의 포크뜬 깃헙 url */
     githubRepoUrl: string, // 깃허브 url
     sellerGithubName: string, // 판매자의 GitHub 사용자명
     viewCount : number, // 조회수
-    rejectMessage : string, // 반려사유
-    is_deleted: boolean; // 삭제된 게시물인지 확인
-    introduction: string; // 코드소개
+    reviewResultMsg : string, // 심사 결과 메시지
+    isDeleted: boolean; // 삭제된 게시물인지 확인
 }
