@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import {List, ListItem, ListItemText} from '@mui/material';
 import CashHistoryItem from './CashHistoryItem';
-import {CashPointHistoryEntity} from "../../../../data/model/CashPointHistoryEntity";
+import {CashCoinHistoryEntity} from "../../../../data/model/CashCoinHistoryEntity.ts";
 
 
 interface Props {
 	children?: React.ReactNode,
-	cashPointHistory:CashPointHistoryEntity[],
+	cashPointHistory:CashCoinHistoryEntity[],
 }
 
 const TableHeader: FC = () => {

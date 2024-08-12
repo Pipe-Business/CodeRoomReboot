@@ -1,13 +1,13 @@
 import React, {FC} from 'react';
 import {Divider, ListItem, ListItemText} from '@mui/material';
 import {reformatTime} from '../../../../utils/DayJsHelper';
-import {CashPointHistoryEntity} from "../../../../data/model/CashPointHistoryEntity";
+import {CashCoinHistoryEntity} from "../../../../data/model/CashCoinHistoryEntity.ts";
 import {CashHistoryType} from "../../../../enums/CashHistoryType";
-import {PointHistoryType} from "../../../../enums/PointHistoryType";
+import {CoinHistoryType} from "../../../../enums/CoinHistoryType.tsx";
 
 interface Props {
     children?: React.ReactNode;
-    cashPointHistory:CashPointHistoryEntity,
+    cashPointHistory:CashCoinHistoryEntity,
 }
 
 const CashHistoryItem: FC<Props> = ({ cashPointHistory }) => {
@@ -39,7 +39,7 @@ const CashHistoryItem: FC<Props> = ({ cashPointHistory }) => {
                             {/*</div>*/}
                             <div style={{width: '20%'}}>
                                 {
-                                    `${cashPointHistory!.price_history_type === CashHistoryType.earn_cash ? '+' : cashPointHistory!.price_history_type ===  PointHistoryType.earn_point ? '+': '-'}
+                                    `${cashPointHistory!.price_history_type === CashHistoryType.earn_cash ? '+' : cashPointHistory!.price_history_type ===  CoinHistoryType.earn_coin ? '+': '-'}
                                      ${cashPointHistory!.price}
                                      ${cashPointHistory!.pay_type === 'point' ? '코인'  : '캐시'}`
                                 }

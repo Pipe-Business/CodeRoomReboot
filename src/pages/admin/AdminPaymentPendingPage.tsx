@@ -6,21 +6,20 @@ import {compareDates, createTodayDate, DATE_FORMAT} from "../../utils/DayJsHelpe
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {apiClient} from "../../api/ApiClient";
 import {
-	useMutateSettleCashBySeller,
+	// useMutateSettleCashBySeller,
 	useMutateSettleCoinBySeller,
 	useMutateUpdateConfirmedStatus
 } from "../../hooks/mutate/PaymentMutate";
 import PaymentPending from './components/paymentPending/PaymentPending';
 import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
-import {CashHistoryResponseEntity} from "../../data/entity/CashHistoryResponseEntity";
-import {CashHistoryType} from "../../enums/CashHistoryType";
-import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
-import {PointHistoryType} from "../../enums/PointHistoryType";
+import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq.ts";
+import {CoinHistoryType} from "../../enums/CoinHistoryType.tsx";
 
 interface Props {
 	children?: React.ReactNode;
 	isSettlement: boolean;
 }
+// TODO : users_cash_history table이 제거됨에 따라 바뀐 기획대로 정산 로직 변경 필요.
 
 const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 
@@ -58,7 +57,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 		setFilter(false);
 		setDate('');
 	}, []);
-	const { settleCashMutate } = useMutateSettleCashBySeller();
+	//const { settleCashMutate } = useMutateSettleCashBySeller();
 	const { settleCoinMutate } = useMutateSettleCoinBySeller();
 	const { updatePayConfirmedMutate } = useMutateUpdateConfirmedStatus();
 	const onClickAllSettlement = useCallback(() => {
@@ -72,24 +71,24 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
                 const codeData = await apiClient.getTargetCode(item.post_id); // 코드 정보
 
 				if (item.use_cash != null && item.use_cash > 0) {
-					let cashHistoryRequestEntity : CashHistoryResponseEntity = {
-						user_token : item.sales_user_token,
-						cash : Math.floor(item.use_cash! - (item.use_cash! * 0.2)),
-						amount: Math.floor(item.use_cash! - (item.use_cash! * 0.2) + sellerPrevTotalCash),
-						description : `[${codeData.title}] 코드 캐시 정산`,
-						cash_history_type : CashHistoryType.earn_cash,
-					}
+					// let cashHistoryRequestEntity : CashHistoryResponseEntity = {
+					// 	user_token : item.sales_user_token,
+					// 	cash : Math.floor(item.use_cash! - (item.use_cash! * 0.2)),
+					// 	amount: Math.floor(item.use_cash! - (item.use_cash! * 0.2) + sellerPrevTotalCash),
+					// 	description : `[${codeData.title}] 코드 캐시 정산`,
+					// 	cash_history_type : CashHistoryType.earn_cash,
+					// }
 					const cashAmount = Math.floor(item.use_cash! + sellerPrevTotalCash);
-					await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
+				//	await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
 				}
 
 				if (item.use_coin != null && item.use_coin > 0) {
-					let coinHistoryRequestEntity : PointHistoryRequestEntity = {
+					let coinHistoryRequestEntity : UsersCoinHistoryReq = {
 						user_token : item.sales_user_token,
-						point : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
+						coin : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
 						amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
 						description : `[${codeData.title}] 코드 코인 정산`,
-						point_history_type : PointHistoryType.use_point,
+						point_history_type : CoinHistoryType.use_coin,
 					}
 					const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
 					await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액

@@ -8,8 +8,8 @@ import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponse
 import {apiClient} from "../../api/ApiClient";
 import ReviewDialog from "../codeInfo/components/ReviewDialog";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
-import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
-import {PointHistoryType} from "../../enums/PointHistoryType";
+import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq.ts";
+import {CoinHistoryType} from "../../enums/CoinHistoryType.tsx";
 import {CodeModel} from "../../data/model/CodeModel";
 
 interface Props {
@@ -74,15 +74,15 @@ const MyPurchaseDataPage: FC<Props> = () => {
 		// } else {
 		// }
 
-		const pointHistoryRequest: PointHistoryRequestEntity = {
+		const pointHistoryRequest: UsersCoinHistoryReq = {
 			description: "리뷰 작성 보상",
 			amount: currentAmount + amountUpdateValue,
 			user_token: userLogin?.user_token!,
-			point: amountUpdateValue,
-			point_history_type: PointHistoryType.earn_point,
+			coin: amountUpdateValue,
+			point_history_type: CoinHistoryType.earn_coin,
 		};
 
-		await apiClient.insertUserPointHistory(pointHistoryRequest); // point history insert
+		await apiClient.insertUserCoinHistory(pointHistoryRequest); // point history insert
 		await apiClient.updateTotalPoint(userLogin.user_token!,  currentAmount + amountUpdateValue);  // total point update
 
 		setReviewDialogOpen(false);

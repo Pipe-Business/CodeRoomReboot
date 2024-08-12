@@ -1,7 +1,7 @@
 /**
- * 부트페이 결제 결과 Entity
+ * 부트페이 결제 결과 Model type
  */
-export type BootPayPaymentModel = {
+export interface BootPayPaymentModel {
 	id?: string, // ai id
 	user_token: string, // userToken
 	company_name: string, // 결제 회사 이름 (파이프 빌더)

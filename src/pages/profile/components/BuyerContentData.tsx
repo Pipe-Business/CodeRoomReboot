@@ -9,7 +9,7 @@ import CashHistoryList from './CashHistoryData/CashHistoryList';
 import SaleList from './saleData/SaleList';
 import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
 import MyCodeList from "./code/MyCodeList";
-import {CashPointHistoryEntity} from "../../../data/model/CashPointHistoryEntity";
+import {CashCoinHistoryEntity} from "../../../data/model/CashCoinHistoryEntity.ts";
 import {PostStateType} from "../../../enums/PostStateType";
 
 interface Props {
@@ -17,12 +17,11 @@ interface Props {
     saleData: PurchaseSaleResponseEntity[];
     purchaseData: PurchaseSaleResponseEntity[];
     codeData: CodeModel[];
-    cashPointHistoryData:CashPointHistoryEntity[];
     onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
     onReadReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
 }
 
-const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPointHistoryData, onWriteReviewClick, onReadReviewClick }) => {
+const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData, onWriteReviewClick, onReadReviewClick }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
     const navigate = useNavigate();
 
@@ -85,21 +84,21 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,cashPoint
             </Card>
             <Box height={32} />
 
-            <h4>캐시, 코인</h4>
-            <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
-                <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시, 코인 내역</div>}
-                    action={
-                        <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
-                            navigate(`/profile/my/cashhistory`, { state: { cashPointHistoryData: cashPointHistoryData, title: '캐시,코인 내역' } });
-                        }}>
-                            더보기</Button>
-                    }
-                />
-                <CardContent>
-                    <CashHistoryList cashPointHistory={cashPointHistoryData?.slice(0, 3)} />
-                </CardContent>
-            </Card>
+            {/*<h4>캐시, 코인</h4>*/}
+            {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>*/}
+            {/*    <CardHeader*/}
+            {/*        title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>캐시, 코인 내역</div>}*/}
+            {/*        action={*/}
+            {/*            <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {*/}
+            {/*                navigate(`/profile/my/cashhistory`, { state: { cashPointHistoryData: cashPointHistoryData, title: '캐시,코인 내역' } });*/}
+            {/*            }}>*/}
+            {/*                더보기</Button>*/}
+            {/*        }*/}
+            {/*    />*/}
+            {/*    <CardContent>*/}
+            {/*        <CashHistoryList cashPointHistory={cashPointHistoryData?.slice(0, 3)} />*/}
+            {/*    </CardContent>*/}
+            {/*</Card>*/}
 
             {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>*/}
             {/*    <CardHeader*/}

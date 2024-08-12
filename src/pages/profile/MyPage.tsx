@@ -17,9 +17,9 @@ import BuyerContentData from './components/BuyerContentData';
 import {SectionWrapper, StyledTab, StyledTabList} from './styles';
 import SellerContentData from './components/SellerContentData';
 import ReviewDialog from '../codeInfo/components/ReviewDialog';
-import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
+import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq.ts';
 import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEntity';
-import {PointHistoryType} from '../../enums/PointHistoryType';
+import {CoinHistoryType} from '../../enums/CoinHistoryType.tsx';
 import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
 import {CodeModel} from "../../data/model/CodeModel";
@@ -74,15 +74,15 @@ const MyPage: FC<Props> = () => {
         queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.user_token!, false),
     });
 
-    const {data: cashPointHistory, isLoading: isCashPointHistoryLoading} = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashPointHistory, userLogin?.user_token!],
-        queryFn: () => apiClient.getUserCashPointHistory(userLogin!.user_token!),
-    });
-
-    const {data: cashHistoryData, isLoading: cashHistoryLoading, refetch: refetchCashHistoryData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.user_token!],
-        queryFn: () => apiClient.getUserCashHistory(userLogin!.user_token!),
-    });
+    // const {data: cashPointHistory, isLoading: isCashPointHistoryLoading} = useQuery({
+    //     queryKey: [REACT_QUERY_KEY.cashPointHistory, userLogin?.user_token!],
+    //     queryFn: () => apiClient.getUserCashPointHistory(userLogin!.user_token!),
+    // });
+    //
+    // const {data: cashHistoryData, isLoading: cashHistoryLoading, refetch: refetchCashHistoryData} = useQuery({
+    //     queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.user_token!],
+    //     queryFn: () => apiClient.getUserCashHistory(userLogin!.user_token!),
+    // });
 
     const {data: pointHistoryData, isLoading: pointHistoryLoading, refetch: refetchPointHistoryData} = useQuery({
         queryKey: [REACT_QUERY_KEY.pointistory, userLogin?.user_token!],
@@ -141,15 +141,15 @@ const MyPage: FC<Props> = () => {
             amountUpdateValue = Math.round((purchaseData?.sell_price! * 0.05) * 10);
      //}
 
-        const pointHistoryRequest: PointHistoryRequestEntity = {
+        const pointHistoryRequest: UsersCoinHistoryReq = {
             description: "리뷰 작성 보상",
             amount: (currentAmount + amountUpdateValue),
             user_token: userLogin?.user_token!,
-            point: amountUpdateValue,
-            point_history_type: PointHistoryType.earn_point,
+            coin: amountUpdateValue,
+            point_history_type: CoinHistoryType.earn_coin,
         }
 
-        await apiClient.insertUserPointHistory(pointHistoryRequest);
+        await apiClient.insertUserCoinHistory(pointHistoryRequest);
         await apiClient.updateTotalPoint(userLogin?.user_token!, (currentAmount + amountUpdateValue));  // total point update
 
 
@@ -159,12 +159,12 @@ const MyPage: FC<Props> = () => {
         await refetchMentoringData();
         await refetchCashConfirmData();
         await refetchCashConfirmPendingData();
-        await refetchCashHistoryData();
+        //await refetchCashHistoryData();
         await refetchPointHistoryData();
     };
 
 
-    if (isCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || cashHistoryLoading || pointHistoryLoading || saleCodeDataLoading) {
+    if (isCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || pointHistoryLoading || saleCodeDataLoading) {
         return (
             <FullLayout>
                 <Skeleton style={{height: '200px'}}/>
@@ -238,7 +238,6 @@ const MyPage: FC<Props> = () => {
                                     saleData={saleData!}
                                     purchaseData={purchaseData!}
                                     codeData={codeData!}
-                                    cashPointHistoryData={cashPointHistory!}
                                     onWriteReviewClick={handleWriteReviewClick}
                                     onReadReviewClick={handleReadReviewClick}
                                 />

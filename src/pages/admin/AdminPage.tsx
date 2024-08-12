@@ -81,19 +81,19 @@ const AdminPage: FC<Props> = () => {
 				<TabPanel value='3'>
 					<AdminCodeRequestList type={PostStateType.approve} />
 				</TabPanel>
+				{/*<TabPanel value='4'>*/}
+				{/*	<AdminCashPointPage type={'cash'}/>*/}
+				{/*</TabPanel>*/}
+				{/*<TabPanel value='5'>*/}
+				{/*	<AdminCashPointPage type={'point'}/>*/}
+				{/*</TabPanel>*/}
 				<TabPanel value='4'>
-					<AdminCashPointPage type={'cash'}/>
-				</TabPanel>
-				<TabPanel value='5'>
-					<AdminCashPointPage type={'point'}/>
-				</TabPanel>
-				<TabPanel value='6'>
 					<AdminPaymentPendingPage isSettlement={false}/>
 				</TabPanel>
-				<TabPanel value='7'>
+				<TabPanel value='5'>
 					<AdminPaymentPendingPage isSettlement={true}/>
 				</TabPanel>
-				<TabPanel value='8'>
+				<TabPanel value='6'>
 					<UserManageList />
 				</TabPanel>
 			</TabContext>

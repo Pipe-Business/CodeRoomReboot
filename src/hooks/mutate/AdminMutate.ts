@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import {PointHistoryRequestEntity} from "../../data/entity/PointHistoryRequestEntity";
-import {PointHistoryType} from "../../enums/PointHistoryType";
+import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq.ts";
+import {CoinHistoryType} from "../../enums/CoinHistoryType.tsx";
 import {apiClient} from "../../api/ApiClient";
 
 export const useMutateSendPoint = () => {
@@ -12,15 +12,15 @@ export const useMutateSendPoint = () => {
 
             const coinAmount = data.point + data.prevPoint!;
 				// 코인 증가
-                const pointHistory: PointHistoryRequestEntity = {
+                const coinHistory: UsersCoinHistoryReq = {
                     user_token: data.userToken!,
-                    point: data.point!,
+                    coin: data.point!,
                     amount: coinAmount,
                     description: data.description,
-                    point_history_type: PointHistoryType.earn_point,
+                    point_history_type: CoinHistoryType.earn_coin,
                 }
         
-                await apiClient.insertUserPointHistory(pointHistory);
+                await apiClient.insertUserCoinHistory(coinHistory);
                 await apiClient.updateTotalPoint(data.userToken,coinAmount);
 
         },

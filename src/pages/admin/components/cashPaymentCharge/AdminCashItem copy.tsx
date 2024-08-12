@@ -3,12 +3,12 @@ import {Divider, ListItem, ListItemText} from '@mui/material';
 import {reformatTime} from "../../../../utils/DayJsHelper";
 import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher";
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
-import {PointHistoryType} from "../../../../enums/PointHistoryType";
-import {PointHistoryResponseEntity} from "../../../../data/entity/PointHistoryResponseEntity";
+import {CoinHistoryType} from "../../../../enums/CoinHistoryType.tsx";
+import {UsersCoinHistoryRes} from "../../../../data/entity/UsersCoinHistoryRes.ts";
 
 interface Props {
 	children?: React.ReactNode;
-	item: PointHistoryResponseEntity;
+	item: UsersCoinHistoryRes;
 }
 
 const AdminPointItem: FC<Props> = ({ item }) => {
@@ -35,8 +35,8 @@ const AdminPointItem: FC<Props> = ({ item }) => {
 						</div>
 					</div>
 					<div style={{ width: '40%' }}>{item.description}</div>
-					<div style={{ width: '10%' }}>{item.point.toLocaleString()}코인</div>
-					<div style={{ width: '10%' }}>{item.point_history_type == PointHistoryType.earn_point? "획득" : "사용"}</div>
+					<div style={{ width: '10%' }}>{item.coin.toLocaleString()}코인</div>
+					<div style={{ width: '10%' }}>{item.point_history_type == CoinHistoryType.earn_coin? "획득" : "사용"}</div>
 				</div>
 			</ListItemText>
 		</ListItem>

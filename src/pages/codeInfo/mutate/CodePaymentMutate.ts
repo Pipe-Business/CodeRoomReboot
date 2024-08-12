@@ -5,14 +5,13 @@ import {toast} from "react-toastify";
 import {useRecoilState} from "recoil";
 import {paymentDialogState} from "../../payment/atom";
 import {useNavigate} from "react-router-dom";
-import {CashHistoryRequestEntity} from "../../../data/entity/CashHistoryRequestEntity";
 import {apiClient} from "../../../api/ApiClient";
 import {PurchaseSaleRequestEntity} from "../../../data/entity/PurchaseSaleRequestEntity";
 import {Bootpay} from "@bootpay/client-js";
 import {BootPayPaymentModel} from "../../../data/entity/BootPayPaymentModel";
 import {CashHistoryType} from "../../../enums/CashHistoryType";
 import {PayType} from "../../../enums/PayType";
-
+// TODO : 캐시 결제 사라짐 -> 결제 로직 변경 필요
 export const useMutateCodePayment = () => {
     const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState);
     const navigate = useNavigate();
@@ -58,17 +57,17 @@ export const useMutateCodePayment = () => {
                 purchaseSaleHistoryId = await chargePaymentRequired(paymentRequiredAmount, userLogin, cashData, coinData, postData, purchaseSaleHistory); // 충전
                 const currentCash= await apiClient.getUserTotalCash(userLogin!.user_token!);
 
-                // 유저 캐시 차감 -> 캐시 사용기록 insert
-                const cashHistory: CashHistoryRequestEntity = {
-                    user_token: userLogin!.user_token!,
-                    cash: paymentRequiredAmount,
-                    amount: currentCash - paymentRequiredAmount,
-                    description: "코드 구매",
-                    cash_history_type: CashHistoryType.use_cash,
-                    purchase_id: purchaseSaleHistoryId,
-                }
-
-                await apiClient.insertUserCashHistory(cashHistory);
+                // // 유저 캐시 차감 -> 캐시 사용기록 insert
+                // const cashHistory: CashHistoryRequestEntity = {
+                //     user_token: userLogin!.user_token!,
+                //     cash: paymentRequiredAmount,
+                //     amount: currentCash - paymentRequiredAmount,
+                //     description: "코드 구매",
+                //     cash_history_type: CashHistoryType.use_cash,
+                //     purchase_id: purchaseSaleHistoryId,
+                // }
+                //
+                // await apiClient.insertUserCashHistory(cashHistory);
                 await apiClient.updateTotalCash(userLogin?.user_token!,currentCash - paymentRequiredAmount);
             }else{
 
@@ -88,16 +87,16 @@ export const useMutateCodePayment = () => {
             if(inputCash !== 0){
 
                 // 유저 캐시 차감 -> 캐시 사용기록 insert
-                const cashHistory: CashHistoryRequestEntity = {
-                    user_token: userLogin!.user_token!,
-                    cash: inputCash,
-                    amount: cashAmount,
-                    description: "코드 구매",
-                    cash_history_type: CashHistoryType.use_cash,
-                    purchase_id: purchaseSaleHistoryId,
-                }
-
-                await apiClient.insertUserCashHistory(cashHistory);
+                // const cashHistory: CashHistoryRequestEntity = {
+                //     user_token: userLogin!.user_token!,
+                //     cash: inputCash,
+                //     amount: cashAmount,
+                //     description: "코드 구매",
+                //     cash_history_type: CashHistoryType.use_cash,
+                //     purchase_id: purchaseSaleHistoryId,
+                // }
+                //
+                // await apiClient.insertUserCashHistory(cashHistory);
             }
 
 
@@ -199,15 +198,15 @@ export const useMutateCodePayment = () => {
                     await apiClient.insertBootpayPayment(entity);
 
                     // 유저 캐시 증가 -> 캐시 사용기록 insert
-                    const cashHistory: CashHistoryRequestEntity = {
-                        user_token: userLogin!.user_token!,
-                        cash: paymentRequiredAmount,
-                        amount: cashData + paymentRequiredAmount,
-                        description: '캐시 충전',
-                        cash_history_type: 'earn_cash',
-                    };
-
-                    await apiClient.insertUserCashHistory(cashHistory);
+                    // const cashHistory: CashHistoryRequestEntity = {
+                    //     user_token: userLogin!.user_token!,
+                    //     cash: paymentRequiredAmount,
+                    //     amount: cashData + paymentRequiredAmount,
+                    //     description: '캐시 충전',
+                    //     cash_history_type: 'earn_cash',
+                    // };
+                    //
+                    // await apiClient.insertUserCashHistory(cashHistory);
                     await apiClient.updateTotalCash(userLogin?.user_token!,cashData + paymentRequiredAmount,);
 
                     Bootpay.destroy();

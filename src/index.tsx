@@ -32,7 +32,7 @@ const EditMyProfilePage = React.lazy(() => import('./pages/profile/EditMyProfile
 const MyCodeDataPage = React.lazy(() => import('./pages/profile/MyCodeDataPage'));
 const MySaleDataPage = React.lazy(() => import('./pages/profile/MySaleDataPage'));
 const CashConfirmDataPage = React.lazy(() => import ("./pages/profile/CashConfirmDataPage"));
-const CashPointHistoryDataPage = React.lazy(() => import('./pages/profile/CashPointHistoryDataPage'));
+const CashPointHistoryDataPage = React.lazy(() => import('./pages/profile/CashPointHistoryDataPage.tsx'));
 const HelpPage = React.lazy(()=> import('./pages/help/HelpPage'));
 const CodeInfo = React.lazy(()=> import('./pages/codeInfo/CodeInfoPage'));
 const AdminPage = React.lazy(() => import ('./pages/admin/AdminPage'));

@@ -13,8 +13,8 @@ import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import SectionTitle from './components/SectionTitle';
 import UserProfileImage from '../../components/profile/UserProfileImage';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {PointHistoryType} from '../../enums/PointHistoryType';
-import {PointHistoryRequestEntity} from '../../data/entity/PointHistoryRequestEntity';
+import {CoinHistoryType} from '../../enums/CoinHistoryType.tsx';
+import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq.ts';
 import {UserModel} from "../../data/model/UserModel";
 
 interface Props {
@@ -47,14 +47,14 @@ const EditMyProfilePage: FC<Props> = () => {
             const totalPoint = await apiClient.getUserTotalPoint(userLogin?.user_token!);
             if (totalPoint) {
                 const totalAmount = totalPoint + REWARD_COIN.PROFILE_IMG_BONUS_COIN;
-                const pointHistory: PointHistoryRequestEntity = {
+                const pointHistory: UsersCoinHistoryReq = {
                     user_token: userLogin!.user_token!,
-                    point: REWARD_COIN.PROFILE_IMG_BONUS_COIN,
+                    coin: REWARD_COIN.PROFILE_IMG_BONUS_COIN,
                     amount: totalAmount,
                     description: "프로필 사진 설정 보상",
-                    point_history_type: PointHistoryType.earn_point,
+                    point_history_type: CoinHistoryType.earn_coin,
                 }
-                await apiClient.insertUserPointHistory(pointHistory);
+                await apiClient.insertUserCoinHistory(pointHistory);
                 await apiClient.updateTotalPoint(userLogin!.user_token!, totalAmount);
 
             } else {
@@ -77,14 +77,14 @@ const EditMyProfilePage: FC<Props> = () => {
             const totalPoint = await apiClient.getUserTotalPoint(userLogin?.user_token!);
             if (totalPoint) {
                 const totalAmount = totalPoint + REWARD_COIN.INTRODUCTION_BONUS_COIN;
-                const pointHistory: PointHistoryRequestEntity = {
+                const pointHistory: UsersCoinHistoryReq = {
                     user_token: userLogin!.user_token!,
-                    point: REWARD_COIN.INTRODUCTION_BONUS_COIN,
+                    coin: REWARD_COIN.INTRODUCTION_BONUS_COIN,
                     amount: totalAmount,
                     description: "프로필 자기소개 작성 보상",
-                    point_history_type: PointHistoryType.earn_point,
+                    point_history_type: CoinHistoryType.earn_coin,
                 }
-                await apiClient.insertUserPointHistory(pointHistory);
+                await apiClient.insertUserCoinHistory(pointHistory);
                 await apiClient.updateTotalPoint(userLogin?.user_token!, totalAmount);
             } else {
                 return false;

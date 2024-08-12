@@ -1,4 +1,4 @@
-export interface CashPointHistoryEntity {
+export interface CashCoinHistoryEntity {
     id?: string; // ai id
     user_token: string; // 코인 충전 및 사용한 사람의 usertoken
     price: number; // 금액

@@ -9,7 +9,7 @@ interface Props {
 	children?: React.ReactNode,
 }
 
-const CashPointHistoryDataPage: FC<Props> = () => {
+const CashCoinHistoryDataPage: FC<Props> = () => {
 
 	const { state: {
 		title,
@@ -25,4 +25,4 @@ const CashPointHistoryDataPage: FC<Props> = () => {
 	);
 };
 
-export default CashPointHistoryDataPage;
+export default CashCoinHistoryDataPage;

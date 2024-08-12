@@ -50,43 +50,43 @@ const Header: FC<{ type: 'cash' | 'point' }> = ({ type }) => {
 	}
 }
 const AdminCashPointList: FC<Props> = ({ type }) => {
-	const { isLoading:isCashLoading, data: cashData } = useQuery({
-		queryKey: ['admin', 'userCashHistory'],
-		queryFn: () => apiClient.getAllUserCashHistory()
-	});
-
-	const { isLoading:isPointLoading, data: pointData } = useQuery({
-		queryKey: ['admin', 'userPointHistory'],
-		queryFn: () => apiClient.getAllUserPointHistory()
-	});
-	if (isCashLoading || isPointLoading) {
-		return <CenterBox><CircularProgress /></CenterBox>;
-	}
-	if (!cashData || !pointData) {
-		return <>nodata</>;
-	}
-	if(type ==='cash'){
-		return (
-			<List>	
-				<Header type={type} />
-				{ type ==='cash' && 
-				cashData.map(item => {
-					return <AdminCashItem item={item} key={item.id}/>
-				})}
-			</List>
-		);
-	}else{
+	// const { isLoading:isCashLoading, data: cashData } = useQuery({
+	// 	queryKey: ['admin', 'userCashHistory'],
+	// 	queryFn: () => apiClient.getAllUserCashHistory()
+	// });
+	//
+	// const { isLoading:isPointLoading, data: pointData } = useQuery({
+	// 	queryKey: ['admin', 'userPointHistory'],
+	// 	queryFn: () => apiClient.getAllUserPointHistory()
+	// });
+	// if (isCashLoading || isPointLoading) {
+	// 	return <CenterBox><CircularProgress /></CenterBox>;
+	// }
+	// if (!cashData || !pointData) {
+	// 	return <>nodata</>;
+	// }
+	// if(type ==='cash'){
+	// 	return (
+	// 		<List>
+	// 			<Header type={type} />
+	// 			{ type ==='cash' &&
+	// 			cashData.map(item => {
+	// 				return <AdminCashItem item={item} key={item.id}/>
+	// 			})}
+	// 		</List>
+	// 	);
+	// }else{
 		return (
 			<List>
-				<Header type={type} />
-				{ type ==='point' && 
-				pointData.map(item => {
-					return <AdminPointItem item={item} key={item.id}/>
-				})}
-			
+				{/*<Header type={type} />*/}
+				{/*{ type ==='point' && */}
+				{/*pointData.map(item => {*/}
+				{/*	return <AdminPointItem item={item} key={item.id}/>*/}
+				{/*})}*/}
+
 			</List>
 		);
-	}
+	//}
 	
 };
 
