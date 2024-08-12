@@ -19,8 +19,8 @@ import {MentoringRequestEntity} from "../data/entity/MentoringRequestEntity";
 import {CodeReviewRequestEntity} from "../data/entity/CodeReviewRequestEntity";
 import {PostRequestEntity} from "../data/entity/PostRequestEntity";
 import {CodeRequestEntity} from "../data/entity/CodeRequestEntity";
-import {PurchaseSaleRequestEntity} from "../data/entity/PurchaseSaleRequestEntity";
-import {PurchaseSaleResponseEntity} from "../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleReq} from "../data/entity/PurchaseSaleReq";
+import {PurchaseSaleRes} from "../data/entity/PurchaseSaleRes";
 import {LikeRequestEntity} from "../data/entity/LikeRequestEntity";
 import {LikeResponseEntity} from "../data/entity/LikeResponseEntity";
 import {MentoringResponseEntity} from "../data/entity/MentoringResponseEntity";
@@ -592,7 +592,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async insertPurchaseSaleHistory(purchaseSaleRequestEntity: PurchaseSaleRequestEntity) : Promise<number> {
+    async insertPurchaseSaleHistory(purchaseSaleRequestEntity: PurchaseSaleReq) : Promise<number> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .insert(purchaseSaleRequestEntity).select();
@@ -655,21 +655,20 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMyPurchaseSaleHistoryByPostID(myUserToken: string, postId: number): Promise<PurchaseSaleResponseEntity | null> {
+    async getMyPurchaseSaleHistoryByPostID(myUserToken: string, postId: number): Promise<PurchaseSaleRes | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('purchase_user_token', myUserToken)
                 .eq('post_id', postId);
 
-            let lstPurchaseSale: PurchaseSaleResponseEntity[] = [];
+            let lstPurchaseSale: PurchaseSaleRes[] = [];
             data?.forEach((e) => {
-                let purchaseSale: PurchaseSaleResponseEntity = {
+                let purchaseSale: PurchaseSaleRes = {
                     id: e.id,
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    use_coin: e.use_coin,
                     is_confirmed: e.is_confirmed,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
@@ -1158,20 +1157,19 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async getMyPurchaseSaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[] | null> {
+    async getMyPurchaseSaleHistory(myUserToken: string): Promise<PurchaseSaleRes[] | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('purchase_user_token', myUserToken);
 
-            let lstPurchaseSale: PurchaseSaleResponseEntity[] = [];
+            let lstPurchaseSale: PurchaseSaleRes[] = [];
             data?.forEach((e) => {
-                let purchaseSale: PurchaseSaleResponseEntity = {
+                let purchaseSale: PurchaseSaleRes = {
                     id: e.id,
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    use_coin: e.use_coin,
                     is_confirmed: e.is_confirmed,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
@@ -1269,7 +1267,7 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
         }
     }
-    async getUserTotalPointCash(myUserToken: string): Promise<UsersAmountModel> {
+    async getUserTotalAmount(myUserToken: string): Promise<UsersAmountModel> {
         try {
             const {data, error} = await supabase.from('users_amount')
                 .select('*')
@@ -1292,7 +1290,7 @@ class ApiClient implements SupabaseAuthAPI {
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 합산 캐시를 가져오는 데 실패했습니다.');
+            throw new Error('유저의 총 재화를 가져오는 데 실패했습니다.');
         }
     }
     async getUserTotalPoint(myUserToken: string): Promise<number> {
@@ -1326,7 +1324,7 @@ class ApiClient implements SupabaseAuthAPI {
             "user_token": pointHistoryRequestEntity.user_token,
             "description": pointHistoryRequestEntity.description,
             "from_user_token": pointHistoryRequestEntity.from_user_token,
-            "point_history_type": pointHistoryRequestEntity.point_history_type,
+            "point_history_type": pointHistoryRequestEntity.coin_history_type,
         }
 
         try {
@@ -1523,14 +1521,14 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMySaleHistory(myUserToken: string): Promise<PurchaseSaleResponseEntity[] | null> {
+    async getMySaleHistory(myUserToken: string): Promise<PurchaseSaleRes[] | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('sales_user_token', myUserToken,)
                 .order('created_at', {ascending: false});
 
-            let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
+            let lstPurchaseSaleData: PurchaseSaleRes[] = [];
 
             // id를 가져와야됨
             data?.forEach((e) => {
@@ -1555,7 +1553,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMySaleConfirmedHistory(myUserToken: string, isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
+    async getMySaleConfirmedHistory(myUserToken: string, isConfirmed: boolean): Promise<PurchaseSaleRes[] | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
@@ -1565,7 +1563,7 @@ class ApiClient implements SupabaseAuthAPI {
                 .contains('pay_type',['cash'])
                 .order('created_at', {ascending: false});
 
-            let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
+            let lstPurchaseSaleData: PurchaseSaleRes[] = [];
 
             // id를 가져와야됨
             data?.forEach((e) => {
@@ -1730,7 +1728,7 @@ class ApiClient implements SupabaseAuthAPI {
         return data;
     };
 
-    async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleResponseEntity[] | null> {
+    async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleRes[] | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
@@ -1738,7 +1736,7 @@ class ApiClient implements SupabaseAuthAPI {
                 .contains('pay_type', ['cash'])
                 .order('created_at', {ascending: false});
 
-            let lstPurchaseSaleData: PurchaseSaleResponseEntity[] = [];
+            let lstPurchaseSaleData: PurchaseSaleRes[] = [];
 
             // id를 가져와야됨
             data?.forEach((e) => {

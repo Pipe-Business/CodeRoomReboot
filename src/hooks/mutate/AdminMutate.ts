@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq.ts";
-import {CoinHistoryType} from "../../enums/CoinHistoryType.tsx";
+import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq";
+import {CoinHistoryType} from "../../enums/CoinHistoryType";
 import {apiClient} from "../../api/ApiClient";
 
 export const useMutateSendPoint = () => {
@@ -17,7 +17,7 @@ export const useMutateSendPoint = () => {
                     coin: data.point!,
                     amount: coinAmount,
                     description: data.description,
-                    point_history_type: CoinHistoryType.earn_coin,
+                    coin_history_type: CoinHistoryType.earn_coin,
                 }
         
                 await apiClient.insertUserCoinHistory(coinHistory);

@@ -68,14 +68,14 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
   const [inputGuide, onChangeGuide, errorGuide, errGuideMessage, setGuideMessage, , , ,
     , , , inputGuideCount] =
     useInputValidate({
-      defaultValue: gptCodeInfo?.buyerGuide ?? "",
+      defaultValue: gptCodeInfo?.aiSummary ?? "",
       minLen: 30, maxLen: 100,
     });
 
   const [inputIntroduction, onChangeIntroduction, errorIntroduction, errIntroductionMessage, setIntroductionMessage, , , ,
     , , , inputIntroductionCount] =
       useInputValidate({
-        defaultValue: gptCodeInfo?.introduction ?? "",
+        defaultValue: gptCodeInfo?.aiSummary ?? "",
         minLen: 30, maxLen: 100
       });
 
@@ -182,7 +182,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
         user_token: userLogin?.user_token!,
         category: inputCategory,
         state: PostStateType.pending,
-        introduction: inputIntroduction,
+        //introduction: inputIntroduction,
         post_type: 'code',
         hash_tag: [""],
         view_count: 0,

@@ -11,9 +11,9 @@ import {
 	useMutateUpdateConfirmedStatus
 } from "../../hooks/mutate/PaymentMutate";
 import PaymentPending from './components/paymentPending/PaymentPending';
-import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
-import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq.ts";
-import {CoinHistoryType} from "../../enums/CoinHistoryType.tsx";
+import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
+import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq";
+import {CoinHistoryType} from "../../enums/CoinHistoryType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -32,7 +32,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 		setDate(e.target.value);
 	}, [date]);
 	const [isFilter, setFilter] = useState(false);
-	const [filterData, setFilterData] = useState<PurchaseSaleResponseEntity[] | null>(null);
+	const [filterData, setFilterData] = useState<PurchaseSaleRes[] | null>(null);
 	const onClickFilterData = useCallback(() => {
 		if (date && paymentPendingData) {
 			setFilter(true);
@@ -40,7 +40,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			const startDay = filterDayjs.startOf('day').format(DATE_FORMAT);
 			const endDay = filterDayjs.endOf('day').format(DATE_FORMAT);
 			console.log(startDay, endDay);
-			const myList: PurchaseSaleResponseEntity[] = [];
+			const myList: PurchaseSaleRes[] = [];
 			paymentPendingData.map(item => {
 				if (item.is_confirmed === isSettlement) {
 					if (compareDates(item.created_at!, endDay) <= 0 && compareDates(startDay, item.created_at!) <= 0) {
@@ -81,18 +81,19 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 					const cashAmount = Math.floor(item.use_cash! + sellerPrevTotalCash);
 				//	await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
 				}
+				// TODO : 코인으로 코드 구매 불가 -> 코인 정산로직 제거
 
-				if (item.use_coin != null && item.use_coin > 0) {
-					let coinHistoryRequestEntity : UsersCoinHistoryReq = {
-						user_token : item.sales_user_token,
-						coin : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
-						amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
-						description : `[${codeData.title}] 코드 코인 정산`,
-						point_history_type : CoinHistoryType.use_coin,
-					}
-					const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
-					await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액
-				}
+				// if (item.use_coin != null && item.use_coin > 0) {
+				// 	let coinHistoryRequestEntity : UsersCoinHistoryReq = {
+				// 		user_token : item.sales_user_token,
+				// 		coin : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
+				// 		amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
+				// 		description : `[${codeData.title}] 코드 코인 정산`,
+				// 		point_history_type : CoinHistoryType.use_coin,
+				// 	}
+				// 	const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
+				// 	await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액
+				// }
 
 
 				// 정산시각

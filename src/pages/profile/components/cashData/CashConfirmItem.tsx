@@ -4,11 +4,11 @@ import {useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../../api/ApiClient';
 import {reformatTime} from '../../../../utils/DayJsHelper';
-import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
 
 interface Props {
     children?: React.ReactNode;
-    cashConfirmData: PurchaseSaleResponseEntity;
+    cashConfirmData: PurchaseSaleRes;
 }
 
 const CashConfirmItem: FC<Props> = ({ cashConfirmData }) => {

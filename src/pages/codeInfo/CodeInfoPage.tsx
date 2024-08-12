@@ -29,7 +29,7 @@ import PurchaseButton from "./components/Purchasebutton";
 import CodeDownloadButton from "./components/CodeDownloadButton";
 import {paymentDialogState} from "../payment/atom";
 import {useRecoilState} from "recoil";
-import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/an-old-hope.css";
@@ -97,7 +97,7 @@ const CodeInfo: FC<Props> = () => {
 	const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState);
 	const handleReviewSubmit = async () => {
 		// 리뷰 작성 완료시 이 콜백을 수행
-		const purchaseData: PurchaseSaleResponseEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
+		const purchaseData: PurchaseSaleRes | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
 		const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
 
 		let amountUpdateValue;
@@ -114,7 +114,7 @@ const CodeInfo: FC<Props> = () => {
 			amount: (currentAmount + amountUpdateValue),
 			user_token: userLogin?.user_token!,
 			coin: amountUpdateValue,
-			point_history_type: CoinHistoryType.earn_coin,
+			coin_history_type: CoinHistoryType.earn_coin,
 		}
 
 		await apiClient.insertUserCoinHistory(pointHistoryRequest);

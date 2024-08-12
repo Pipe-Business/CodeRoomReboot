@@ -6,7 +6,7 @@ import {useRecoilState} from "recoil";
 import {paymentDialogState} from "../../payment/atom";
 import {useNavigate} from "react-router-dom";
 import {apiClient} from "../../../api/ApiClient";
-import {PurchaseSaleRequestEntity} from "../../../data/entity/PurchaseSaleRequestEntity";
+import {PurchaseSaleReq} from "../../../data/entity/PurchaseSaleReq";
 import {Bootpay} from "@bootpay/client-js";
 import {BootPayPaymentModel} from "../../../data/entity/BootPayPaymentModel";
 import {CashHistoryType} from "../../../enums/CashHistoryType";
@@ -39,7 +39,7 @@ export const useMutateCodePayment = () => {
 
             // purchase sale history insert (구매기록)
 
-            const purchaseSaleHistory: PurchaseSaleRequestEntity = {
+            const purchaseSaleHistory: PurchaseSaleReq = {
                 post_id: postData!.id,
                 sell_price: postData!.price,
                 use_cash: inputCash + paymentRequiredAmount,
@@ -149,7 +149,7 @@ export const useMutateCodePayment = () => {
                                           cashData: number,
                                           coinData: number,
                                           postData: CodeModel,
-                                          purchaseSaleHistory: PurchaseSaleRequestEntity):Promise<number> => {
+                                          purchaseSaleHistory: PurchaseSaleReq):Promise<number> => {
         const orderName: string = '[CODEROOM] 코드 결제'
         try{
             const response = await Bootpay.requestPayment({

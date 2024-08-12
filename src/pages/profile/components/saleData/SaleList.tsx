@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import {List, ListItem, ListItemText} from '@mui/material';
 import SaleItem from './SaleItem';
-import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
 
 
 interface Props {
 	children?: React.ReactNode,
-	saleData?: PurchaseSaleResponseEntity[] | null,
+	saleData?: PurchaseSaleRes[] | null,
 }
 
 const TableHeader: FC = () => {

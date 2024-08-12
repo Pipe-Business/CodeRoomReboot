@@ -5,13 +5,13 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../../api/ApiClient';
 import CodeDownloadButton from '../../../codeInfo/components/CodeDownloadButton';
 import {REACT_QUERY_KEY} from '../../../../constants/define';
-import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
 
 interface Props {
     children?: React.ReactNode;
-    purchaseData: PurchaseSaleResponseEntity;
-    onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
-    onReadReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
+    purchaseData: PurchaseSaleRes;
+    onWriteReviewClick: (purchaseData: PurchaseSaleRes) => void;
+    onReadReviewClick: (purchaseData: PurchaseSaleRes) => void;
 }
 
 const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick, onReadReviewClick }) => {

@@ -11,10 +11,11 @@ import {apiClient} from '../../api/ApiClient';
 import {UserEntity} from '../../data/entity/UserEntity';
 import {useMutation} from '@tanstack/react-query';
 import {User} from '@supabase/supabase-js';
-import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq.ts';
+import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
 import {NotificationEntity} from '../../data/entity/NotificationEntity';
 import {NotificationType} from "../../enums/NotificationType";
 import {UsersAmountModel} from "../../data/entity/UsersAmountModel";
+import {CoinHistoryType} from "../../enums/CoinHistoryType";
 
 interface Props {
 	children?: React.ReactNode;
@@ -37,14 +38,16 @@ const RegisterPage: FC<Props> = () => {
 			await apiClient.insertUserData(userEntity);
 
 			// 초기 코인 기록 내역 생성
-			const pointHistory: UsersCoinHistoryReq = {
+			const coinHistory: UsersCoinHistoryReq = {
+				from_user_token: "admin",
+				coin_history_type: CoinHistoryType.earn_coin,
 				user_token: user.id,
 				coin: REWARD_COIN.SIGNUP_BONUS_COIN,
 				amount: REWARD_COIN.SIGNUP_BONUS_COIN,
-				description: "가입 축하 코인",
+				description: "가입 축하 코인"
 			}
 
-			await apiClient.insertUserCoinHistory(pointHistory);
+			await apiClient.insertUserCoinHistory(coinHistory);
 
 			// user_amount table 기록
 			const userAmount: UsersAmountModel = {

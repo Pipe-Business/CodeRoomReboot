@@ -13,8 +13,8 @@ import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import SectionTitle from './components/SectionTitle';
 import UserProfileImage from '../../components/profile/UserProfileImage';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {CoinHistoryType} from '../../enums/CoinHistoryType.tsx';
-import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq.ts';
+import {CoinHistoryType} from '../../enums/CoinHistoryType';
+import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
 import {UserModel} from "../../data/model/UserModel";
 
 interface Props {
@@ -52,7 +52,7 @@ const EditMyProfilePage: FC<Props> = () => {
                     coin: REWARD_COIN.PROFILE_IMG_BONUS_COIN,
                     amount: totalAmount,
                     description: "프로필 사진 설정 보상",
-                    point_history_type: CoinHistoryType.earn_coin,
+                    coin_history_type: CoinHistoryType.earn_coin,
                 }
                 await apiClient.insertUserCoinHistory(pointHistory);
                 await apiClient.updateTotalPoint(userLogin!.user_token!, totalAmount);
@@ -82,7 +82,7 @@ const EditMyProfilePage: FC<Props> = () => {
                     coin: REWARD_COIN.INTRODUCTION_BONUS_COIN,
                     amount: totalAmount,
                     description: "프로필 자기소개 작성 보상",
-                    point_history_type: CoinHistoryType.earn_coin,
+                    coin_history_type: CoinHistoryType.earn_coin,
                 }
                 await apiClient.insertUserCoinHistory(pointHistory);
                 await apiClient.updateTotalPoint(userLogin?.user_token!, totalAmount);

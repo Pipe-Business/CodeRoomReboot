@@ -4,24 +4,19 @@ import {Button, Divider, ListItem, ListItemText} from '@mui/material';
 
 
 import {toast} from 'react-toastify';
-import {
-	//useMutateSettleCashBySeller,
-	useMutateSettleCoinBySeller,
-	useMutateUpdateConfirmedStatus
-} from '../../../../hooks/mutate/PaymentMutate';
-import {createTodayDate, reformatTime} from '../../../../utils/DayJsHelper';
+import {useMutateSettleCoinBySeller, useMutateUpdateConfirmedStatus} from '../../../../hooks/mutate/PaymentMutate';
+import {createTodayDate} from '../../../../utils/DayJsHelper';
 import {useQuery} from '@tanstack/react-query';
 import {apiClient} from '../../../../api/ApiClient';
 import UserProfileImage from '../../../../components/profile/UserProfileImage';
-import {PurchaseSaleResponseEntity} from '../../../../data/entity/PurchaseSaleResponseEntity';
+import {PurchaseSaleRes} from '../../../../data/entity/PurchaseSaleRes';
 import {REACT_QUERY_KEY} from '../../../../constants/define';
-import {UsersCoinHistoryReq} from "../../../../data/entity/UsersCoinHistoryReq.ts";
-import {CoinHistoryType} from "../../../../enums/CoinHistoryType.tsx";
-import {CashHistoryType} from "../../../../enums/CashHistoryType";
+
+//import {UsersCoinHistoryReq} from "../../../../data/entity/UsersCoinHistoryRes';
 
 interface Props {
 	children?: React.ReactNode;
-	item: PurchaseSaleResponseEntity;
+	item: PurchaseSaleRes;
 	refetch: () => void;
 }
 
@@ -73,17 +68,17 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 				// await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
 			}
 
-			if (item.use_coin != null && item.use_coin > 0) {
-				let coinHistoryRequestEntity : UsersCoinHistoryReq = {
-					user_token : item.sales_user_token,
-					coin : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
-					amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
-					description : `[${codeData.title}] 코드 코인 정산`,
-					point_history_type : CoinHistoryType.use_coin,
-				}
-				const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
-				await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액
-			}
+			// if (item.use_coin != null && item.use_coin > 0) {
+			// 	let coinHistoryRequestEntity : UsersCoinHistoryReq = {
+			// 		user_token : item.sales_user_token,
+			// 		coin : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
+			// 		amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
+			// 		description : `[${codeData.title}] 코드 코인 정산`,
+			// 		point_history_type : CoinHistoryType.use_coin,
+			// 	}
+			// 	const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
+			// 	await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액
+			// }
 
 			// 정산시각
 			const date = createTodayDate();
@@ -137,9 +132,9 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 						<div style={{width: '10%'}}>
 							{item.use_cash! != null ? item.use_cash!.toLocaleString() : 0} 캐시
 						</div>
-						<div style={{width: '10%'}}>
-							{item.use_coin! != null ? item.use_coin!.toLocaleString() : 0} 코인
-						</div>
+						{/*<div style={{width: '10%'}}>*/}
+						{/*	{item.use_coin! != null ? item.use_coin!.toLocaleString() : 0} 코인*/}
+						{/*</div>*/}
 						<div style={{width: '10%'}}>
 							{item.is_confirmed ?
 								<Button variant={'text'}>정산됨 </Button> :

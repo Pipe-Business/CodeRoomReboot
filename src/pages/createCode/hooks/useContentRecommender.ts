@@ -10,8 +10,8 @@ export const useContentRecommender = (repoName:string, owner:string) => {
         const contentRecommender = async () => {
             setLoading(true);
             const result = await getFiles(owner, repoName);
-            const title =  await apiClient.makeTitleBygpt(result!.toString());
-            setRecommandedTitle(title);
+            const title =  await apiClient.makeCodeInfoBygpt(result!.toString());
+            //setRecommandedTitle(title); // TODO 로직 및 사용처 확인 후 안쓰면 제거
             setLoading(false);
         }
         contentRecommender();

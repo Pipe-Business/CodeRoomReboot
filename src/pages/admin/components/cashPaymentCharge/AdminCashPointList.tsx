@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import {apiClient} from "../../../../api/ApiClient";
 import styled from "@emotion/styled"
 import AdminCashItem from './AdminCashItem';
-import AdminPointItem from './AdminCashItem copy';
 
 
 interface Props {

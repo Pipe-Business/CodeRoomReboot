@@ -1,6 +1,6 @@
 import {useMutation} from '@tanstack/react-query';
 import {apiClient} from "../../api/ApiClient";
-import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq.ts";
+import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq";
 
 // /**
 //  * 캐시 정산하는 mutate  // TODO : 캐시 기록이 아니라 purchase_sale_history_table과 bootpay_payment table을 사용하여 다시 작성

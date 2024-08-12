@@ -4,11 +4,11 @@ import {useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../../api/ApiClient';
 import {reformatTime} from '../../../../utils/DayJsHelper';
-import {PurchaseSaleResponseEntity} from "../../../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
 
 interface Props {
     children?: React.ReactNode;
-    saleData: PurchaseSaleResponseEntity;
+    saleData: PurchaseSaleRes;
 }
 
 const SaleItem: FC<Props> = ({ saleData }) => {
@@ -49,13 +49,14 @@ const SaleItem: FC<Props> = ({ saleData }) => {
                                 width: '40%'
                             }}>{codeData?.title!}</div>
 
-                            <div style={{width: '15%'}}>
-                                {saleData.pay_type == "point" ? "코인" : "캐시"}
-                            </div>
+                            {/*<div style={{width: '15%'}}>*/}
+                            {/*    /!*TODO : pay_type이 배열이기 떄문에 로직 수정 필요*!/*/}
+                            {/*    {saleData.pay_type == "point" ? "코인" : "캐시"}*/}
+                            {/*</div>*/}
 
-                            <div style={{width: '15%'}}>
-                                {saleData.is_confirmed ? '정산됨' : saleData.pay_type == "point" ? '해당없음' : '미정산'}
-                            </div>
+                            {/*<div style={{width: '15%'}}>*/}
+                            {/*    {saleData.is_confirmed ? '정산됨' : saleData.pay_type == "point" ? '해당없음' : '미정산'}*/}
+                            {/*</div>*/}
 
                             <div style={{width: '20%'}}>
                                 {codeData?.price!}

@@ -1,6 +1,7 @@
 /**
- * 유저의 보유 재화 Model Type
+ * 유저의 보유 재화 Model interface
  */
+
 export interface UsersAmountModel {
     id?: number;
     user_token: string; // 유저 고유값

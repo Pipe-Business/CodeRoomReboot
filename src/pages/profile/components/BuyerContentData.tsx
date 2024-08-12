@@ -7,18 +7,17 @@ import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import PurchaseList from './purchaseData/PurchaseList';
 import CashHistoryList from './CashHistoryData/CashHistoryList';
 import SaleList from './saleData/SaleList';
-import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../../data/entity/PurchaseSaleRes";
 import MyCodeList from "./code/MyCodeList";
-import {CashCoinHistoryEntity} from "../../../data/model/CashCoinHistoryEntity.ts";
 import {PostStateType} from "../../../enums/PostStateType";
 
 interface Props {
     children?: React.ReactNode;
-    saleData: PurchaseSaleResponseEntity[];
-    purchaseData: PurchaseSaleResponseEntity[];
+    saleData: PurchaseSaleRes[];
+    purchaseData: PurchaseSaleRes[];
     codeData: CodeModel[];
-    onWriteReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
-    onReadReviewClick: (purchaseData: PurchaseSaleResponseEntity) => void;
+    onWriteReviewClick: (purchaseData: PurchaseSaleRes) => void;
+    onReadReviewClick: (purchaseData: PurchaseSaleRes) => void;
 }
 
 const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData, onWriteReviewClick, onReadReviewClick }) => {

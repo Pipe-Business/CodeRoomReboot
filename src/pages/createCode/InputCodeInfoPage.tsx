@@ -14,8 +14,7 @@ import {Box, Button, Card, CircularProgress, Grid, TextField, Typography} from "
 import SectionTitle from "./components/SectionTitle";
 import SelectCodeCategory from "./components/SelectCodeCategory";
 import SelectCodeLanguage from "./components/SelectCodeLanguage";
-import LinkIcon from "@mui/icons-material/Link";
-import {useContentRecommender} from "./hooks/useContentRecommender";
+
 
 const InputCodeInfoPage:FC = () => {
     const navigate = useNavigate();

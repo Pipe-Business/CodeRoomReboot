@@ -3,12 +3,12 @@ import {ColorButton} from "../styles";
 import {useNavigate} from "react-router-dom";
 import {CodeModel} from "../../../data/model/CodeModel";
 import {useQueryUserLogin} from "../../../hooks/fetcher/UserFetcher";
-import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../../data/entity/PurchaseSaleRes";
 
 interface Props {
     children? : React.ReactNode;
     postData: CodeModel;
-    purchasedSaleData?: PurchaseSaleResponseEntity | null,
+    purchasedSaleData?: PurchaseSaleRes | null,
 }
 
 const PurchaseButton: FC<Props> = ({purchasedSaleData,postData}) => {

@@ -17,10 +17,9 @@ import BuyerContentData from './components/BuyerContentData';
 import {SectionWrapper, StyledTab, StyledTabList} from './styles';
 import SellerContentData from './components/SellerContentData';
 import ReviewDialog from '../codeInfo/components/ReviewDialog';
-import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq.ts';
-import {PurchaseSaleRequestEntity} from '../../data/entity/PurchaseSaleRequestEntity';
-import {CoinHistoryType} from '../../enums/CoinHistoryType.tsx';
-import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
+import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
+import {CoinHistoryType} from '../../enums/CoinHistoryType';
+import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
 import {CodeModel} from "../../data/model/CodeModel";
 
@@ -57,10 +56,6 @@ const MyPage: FC<Props> = () => {
         queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
     });
 
-    const {data: mentoringData, isLoading: mentoringDataLoading, refetch: refetchMentoringData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.mentoring, userLogin?.user_token!],
-        queryFn: () => apiClient.getMyMentorings(userLogin!.user_token!),
-    });
     const {data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData} = useQuery({
         queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.user_token!],
         queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.user_token!, true),
@@ -100,7 +95,7 @@ const MyPage: FC<Props> = () => {
     };
 
 
-    const handleWriteReviewClick = async(purchaseData: PurchaseSaleResponseEntity) => {
+    const handleWriteReviewClick = async(purchaseData: PurchaseSaleRes) => {
         console.log('Review click event received for:', purchaseData);
         const targetCode:CodeModel	= await apiClient.getTargetCode(purchaseData.post_id);
         if(targetCode.isDeleted){
@@ -114,7 +109,7 @@ const MyPage: FC<Props> = () => {
         }
     };
 
-    const handleReadReviewClick = async (purchaseData: PurchaseSaleResponseEntity) => {
+    const handleReadReviewClick = async (purchaseData: PurchaseSaleRes) => {
         console.log('Review click event received for:', purchaseData);
         setPurchasePostId(purchaseData.post_id);
         setReadonly(true);
@@ -130,7 +125,7 @@ const MyPage: FC<Props> = () => {
 
     const handleReviewSubmit = async () => {
         // 리뷰 작성 완료시 이 콜백을 수행
-        const purchaseData: PurchaseSaleResponseEntity | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
+        const purchaseData: PurchaseSaleRes | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
         const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
         let amountUpdateValue;
         // if (purchaseData?.pay_type == "point") {
@@ -146,7 +141,7 @@ const MyPage: FC<Props> = () => {
             amount: (currentAmount + amountUpdateValue),
             user_token: userLogin?.user_token!,
             coin: amountUpdateValue,
-            point_history_type: CoinHistoryType.earn_coin,
+            coin_history_type: CoinHistoryType.earn_coin,
         }
 
         await apiClient.insertUserCoinHistory(pointHistoryRequest);
@@ -156,7 +151,6 @@ const MyPage: FC<Props> = () => {
         setReviewDialogOpen(false);
         navigate(0);
         await refetchPurchaseData();
-        await refetchMentoringData();
         await refetchCashConfirmData();
         await refetchCashConfirmPendingData();
         //await refetchCashHistoryData();
@@ -164,7 +158,7 @@ const MyPage: FC<Props> = () => {
     };
 
 
-    if (isCodeDataLoading || mentoringDataLoading || cashConfirmLoading || cashConfirmPendingLoading || pointHistoryLoading || saleCodeDataLoading) {
+    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading || pointHistoryLoading || saleCodeDataLoading) {
         return (
             <FullLayout>
                 <Skeleton style={{height: '200px'}}/>

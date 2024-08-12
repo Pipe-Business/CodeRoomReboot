@@ -1,5 +1,5 @@
 /**
- * 부트페이 결제 결과 Model type
+ * 부트페이 결제 결과 Model interface
  */
 export interface BootPayPaymentModel {
 	id?: string, // ai id

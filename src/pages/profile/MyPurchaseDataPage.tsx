@@ -4,12 +4,12 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import FullLayout from '../../layout/FullLayout';
 import PurchaseList from './components/purchaseData/PurchaseList';
 import {Box} from '@mui/material';
-import {PurchaseSaleResponseEntity} from "../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import {apiClient} from "../../api/ApiClient";
 import ReviewDialog from "../codeInfo/components/ReviewDialog";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
-import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq.ts";
-import {CoinHistoryType} from "../../enums/CoinHistoryType.tsx";
+import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq";
+import {CoinHistoryType} from "../../enums/CoinHistoryType";
 import {CodeModel} from "../../data/model/CodeModel";
 
 interface Props {
@@ -26,7 +26,7 @@ const MyPurchaseDataPage: FC<Props> = () => {
 	const { state: { userLogin, purchaseData } } = useLocation();
 	console.log("user model"+JSON.stringify(userLogin));
 
-	const handleWriteReviewClick = async (purchaseData: PurchaseSaleResponseEntity) =>  {
+	const handleWriteReviewClick = async (purchaseData: PurchaseSaleRes) =>  {
 		console.log('Review click event received for:', purchaseData);
 
 		const targetCode:CodeModel	= await apiClient.getTargetCode(purchaseData.post_id);
@@ -41,7 +41,7 @@ const MyPurchaseDataPage: FC<Props> = () => {
 		}
 	};
 
-	const handleReadReviewClick = async (purchaseData: PurchaseSaleResponseEntity) => {
+	const handleReadReviewClick = async (purchaseData: PurchaseSaleRes) => {
 		console.log('Review click event received for:', purchaseData);
 		setPurchasePostId(purchaseData.post_id);
 		setReadonly(true);
@@ -79,7 +79,7 @@ const MyPurchaseDataPage: FC<Props> = () => {
 			amount: currentAmount + amountUpdateValue,
 			user_token: userLogin?.user_token!,
 			coin: amountUpdateValue,
-			point_history_type: CoinHistoryType.earn_coin,
+			coin_history_type: CoinHistoryType.earn_coin,
 		};
 
 		await apiClient.insertUserCoinHistory(pointHistoryRequest); // point history insert

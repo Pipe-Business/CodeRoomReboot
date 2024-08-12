@@ -4,13 +4,13 @@ import React, {FC} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import CashConfirmList from './cashData/CashConfirmList';
-import {PurchaseSaleResponseEntity} from "../../../data/entity/PurchaseSaleResponseEntity";
+import {PurchaseSaleRes} from "../../../data/entity/PurchaseSaleRes";
 
 
 interface Props {
     children?: React.ReactNode;
-    cashConfirmData : PurchaseSaleResponseEntity[],
-    cashConfirmPendingData : PurchaseSaleResponseEntity[],
+    cashConfirmData : PurchaseSaleRes[],
+    cashConfirmPendingData : PurchaseSaleRes[],
 }
 
 const SellerContentData: FC<Props> = ({ cashConfirmData, cashConfirmPendingData}) => {

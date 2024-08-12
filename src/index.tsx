@@ -15,7 +15,6 @@ const MainPage = React.lazy(() => import('./pages/main/MainPage'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage'));
 const MyPage = React.lazy(() => import('./pages/profile/MyPage'));
 const ContactPage = React.lazy(() => import('./pages/contact/ContactPage'));
-const MentoringPage = React.lazy(() => import('./pages/mentoring/MentoringPage'));
 const CodeReviewPage = React.lazy(() => import('./pages/codeReview/CodeReviewPage'));
 const ResetPasswdPage = React.lazy(() => import('./pages/profile/ResetPasswdPage'));
 const RegisterPage = React.lazy(() => import('./pages/register/RegisterPage'));
@@ -81,7 +80,6 @@ root.render(
       <Route path='/code' element={<CodePage />} />
       <Route path='/profile/my' element={<MyPage />} />
       <Route path='/contact' element={<ContactPage />} />
-      <Route path='/mentoring' element={<MentoringPage />} />
       <Route path='/code-review' element={<CodeReviewPage />} />
       <Route path='/reset-password' element={<ResetPasswdPage />}/>
       <Route path='/register' element={<RegisterPage/>}/>

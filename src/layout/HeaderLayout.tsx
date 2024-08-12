@@ -23,7 +23,7 @@ const HeaderLayout: FC<Props> = () => {
 
     const {isLoading: isTotalCashPointLading, data: totalCashPointData} = useQuery({
         queryKey: [REACT_QUERY_KEY.totalCashPoint,userLogin?.user_token],
-        queryFn: () => apiClient.getUserTotalPointCash(userLogin?.user_token!),
+        queryFn: () => apiClient.getUserTotalAmount(userLogin?.user_token!),
         enabled: userLogin?.user_token ? true : false,
     });
 
@@ -75,19 +75,19 @@ const HeaderLayout: FC<Props> = () => {
                 {
 
                     userLogin && <CenterBox>
+                        {/*<MarginHorizontal size={8}>*/}
+                        {/*    <span style={{*/}
+                        {/*        color: '#000000',*/}
+                        {/*        fontSize: '14px',*/}
+                        {/*        fontWeight: 'bold'*/}
+                        {/*    }}>{totalCashPointData?.cash_amount + ' 💵'}</span>*/}
+                        {/*</MarginHorizontal>*/}
                         <MarginHorizontal size={8}>
                             <span style={{
                                 color: '#000000',
                                 fontSize: '14px',
                                 fontWeight: 'bold'
-                            }}>{totalCashPointData?.cash_amount + ' 💵'}</span>
-                        </MarginHorizontal>
-                        <MarginHorizontal size={8}>
-                            <span style={{
-                                color: '#000000',
-                                fontSize: '14px',
-                                fontWeight: 'bold'
-                            }}>{totalCashPointData?.point_amount + ' 🌱'}</span>
+                            }}>{totalCashPointData?.coin_amount + ' 🌱'}</span>
                         </MarginHorizontal>
 
                         {/*<MarginHorizontal size={8}>*/}

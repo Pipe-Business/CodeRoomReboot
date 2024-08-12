@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
 import {Divider, ListItem, ListItemText} from '@mui/material';
 import {reformatTime} from '../../../../utils/DayJsHelper';
-import {CashCoinHistoryEntity} from "../../../../data/model/CashCoinHistoryEntity.ts";
+import {CashCoinHistoryEntity} from "../../../../data/model/CashCoinHistoryEntity";
 import {CashHistoryType} from "../../../../enums/CashHistoryType";
-import {CoinHistoryType} from "../../../../enums/CoinHistoryType.tsx";
+import {CoinHistoryType} from "../../../../enums/CoinHistoryType";
 
 interface Props {
     children?: React.ReactNode;

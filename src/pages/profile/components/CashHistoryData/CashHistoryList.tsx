@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {List, ListItem, ListItemText} from '@mui/material';
 import CashHistoryItem from './CashHistoryItem';
-import {CashCoinHistoryEntity} from "../../../../data/model/CashCoinHistoryEntity.ts";
+import {CashCoinHistoryEntity} from "../../../../data/model/CashCoinHistoryEntity";
 
 
 interface Props {
