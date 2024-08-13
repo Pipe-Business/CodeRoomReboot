@@ -16,6 +16,7 @@ import PaymentDialog from "../codeInfo/components/PaymentDialog";
 interface Props {
     children?: React.ReactNode;
 }
+// TODO 제거 예정 (결제 로직 참고하려고 남겨둠)
 
 const PaymentPage: FC<Props> = () => {
     const { userLogin } = useQueryUserLogin();

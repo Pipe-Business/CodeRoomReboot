@@ -1,10 +1,9 @@
 import {ArrowBack, ShoppingBag} from '@mui/icons-material';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import {Box, Card, CardContent, CardHeader, CircularProgress, IconButton, Typography} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useRef, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../api/ApiClient';
 import RequiredLoginModal from '../../components/login/modal/RequiredLoginModal';
@@ -33,6 +32,9 @@ import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/an-old-hope.css";
+import {ColorButton} from "../payment/styles";
+import useInput from "../../hooks/UseInput";
+import PaymentDialog from "./components/PaymentDialog";
 
 
 dayjs.locale('ko');
@@ -57,7 +59,7 @@ const CodeInfo: FC<Props> = () => {
 		queryKey: [REACT_QUERY_KEY.point],
 		queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
 	});
-	const { isLoading, data: postData } = useQuery({
+	const { isLoading: isPostDataLoading, data: postData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
@@ -91,6 +93,24 @@ const CodeInfo: FC<Props> = () => {
 
 
 	const [isOpenLoginDialog, onOpenLoginDialog, onCloseDialogDialog] = useDialogState();
+	const [isPurchaseSection,setIsPurchaseSection] = useState<boolean>(false);
+	const inputCashRef = useRef<HTMLInputElement | null>(null);
+	const [inputCash, , setCash] = useInput<number>(0);
+
+	const [inputCoin, , setCoin] = useInput<number>(0);
+	const handlePurchaseBtn = () => {
+		setIsPurchaseSection(true);
+	}
+
+	const [paymentRequiredAmount, setPaymentRequiredAmount] = useState<number>(postData?.price ?? 0);
+	const onPaymentConfirm: () => void = PaymentDialog(inputCash,inputCoin, paymentRequiredAmount , userLogin!, cashData!, pointData!, postData!);
+	const onClickPurchase = () => {
+		const result = window.confirm(`결제하시겠습니까?\n추가결제 : ${paymentRequiredAmount}`);
+		if (result) {
+			onPaymentConfirm();
+		}
+	}
+
 
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
@@ -166,7 +186,7 @@ const CodeInfo: FC<Props> = () => {
 	}, []);
 
 
-	if (isLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isCashDataLoading) {
+	if (isPostDataLoading	 || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isCashDataLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -204,7 +224,7 @@ const CodeInfo: FC<Props> = () => {
 								{calcTimeDiff(postData.createdAt)}
 							</Typography>
 							<Typography variant="body2" color="textSecondary" gutterBottom>
-								조회수: {postData.viewCount}
+								조회수: {postData.viewCount} / 구매수: {postData.buyerCount}
 							</Typography>
 							<Box my={2}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
@@ -371,7 +391,7 @@ const CodeInfo: FC<Props> = () => {
 								{/*	onOpenPointDialog={onOpenPointDailog}*/}
 								{/*/>*/}
 								<Box my={1} />
-								<PurchaseButton postData={postData} purchasedSaleData={purchaseSaleData}/>
+								<PurchaseButton postData={postData} purchasedSaleData={purchaseSaleData} handlePurchase={onClickPurchase}/>
 								{	purchaseSaleData &&
 									<CodeDownloadButton repoURL={postData.githubRepoUrl}></CodeDownloadButton>
 								}

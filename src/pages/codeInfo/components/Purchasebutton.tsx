@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, {FC, useState} from "react";
 import {ColorButton} from "../styles";
 import {useNavigate} from "react-router-dom";
 import {CodeModel} from "../../../data/model/CodeModel";
@@ -9,13 +9,11 @@ interface Props {
     children? : React.ReactNode;
     postData: CodeModel;
     purchasedSaleData?: PurchaseSaleRes | null,
+    handlePurchase: () => void,
 }
 
-const PurchaseButton: FC<Props> = ({purchasedSaleData,postData}) => {
+const PurchaseButton: FC<Props> = ({purchasedSaleData,postData, handlePurchase}) => {
     const { userLogin } = useQueryUserLogin();
-
-    const navigate = useNavigate();
-
     // 로그인 안한 유저의 경우
     if (!userLogin) {
         alert("로그인이 필요한 서비스입니다.")
@@ -32,7 +30,7 @@ const PurchaseButton: FC<Props> = ({purchasedSaleData,postData}) => {
     }
 
     return (
-        <ColorButton sx={{ fontSize: '20px', width: '100%', height:'60px' }} onClick={() => navigate('/payment', {state:{postData}})}  variant='contained'> 💵 ₩{postData.price}원으로 코드 구매</ColorButton>
+        <ColorButton sx={{ fontSize: '20px', width: '100%', height:'60px' }} onClick={handlePurchase}  variant='contained'> 💵 ₩{postData.price}원으로 코드 구매</ColorButton>
     );
 }
 export default PurchaseButton;
