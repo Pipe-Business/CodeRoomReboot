@@ -93,6 +93,7 @@ const CreateCodePage = () => {
 
                 const result: GptCodeInfoResponseEntity = await  apiClient.makeCodeInfoBygpt(parsedFileContens);
                 const splitedResult:string[] = result.defaultInfo.split('|');
+                const splitedHashTag:string[] = result.hashTag.split('|').map(e => e.trim());
                 const parsedResult: GptCodeInfoEntity = {
                     githubRepoUrl: repoUrl,
                     title: splitedResult[0].trim(),
@@ -100,12 +101,11 @@ const CreateCodePage = () => {
                     language: splitedResult[2].trim(),
                     readMe: result.readMe,
                     aiSummary: result.aiSummary,
+                    hashTag: splitedHashTag,
                 }
                 console.log("data: "+JSON.stringify(parsedResult));
                 setGptCodeInfo(parsedResult);
-                //console.log("makeCodeinfoby gpt result: "+JSON.stringify(result.readMe));
-                console.log("gpt: "+gptCodeInfo);
-                //console.log("길이: "+fileContents!.length);
+
             } else {
                 setIsValid(false);
                 setErrorMessage('존재하지 않는 레포지토리입니다.');

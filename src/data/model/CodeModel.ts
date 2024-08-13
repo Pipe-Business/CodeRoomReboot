@@ -10,7 +10,7 @@ export type CodeModel = {
     language:string, // 개발 언어
     createdAt: string,  /** 코드 생성일 */
     postType:string, // 코드 / 글
-    hashTag?: string[],
+    hashTag?: string,
     aiSummary: string, // ai가 요약하는 코드 핵심요약
     buyerCount: number, // 구매자수
     state: string, // 상태

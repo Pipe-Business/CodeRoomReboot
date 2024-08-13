@@ -4,5 +4,6 @@ export interface GptCodeInfoEntity {
     language: string,
     readMe: string,
     aiSummary: string,
+    hashTag?: string[],
     githubRepoUrl: string,
 }

@@ -182,8 +182,8 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
         user_token: userLogin?.user_token!,
         category: inputCategory,
         state: PostStateType.pending,
-        //introduction: inputIntroduction,
         post_type: 'code',
+        hash_tag: gptCodeInfo?.hashTag,
         view_count: 0,
       };
       if (!pointError) {

@@ -790,6 +790,7 @@ class ApiClient implements SupabaseAuthAPI {
                 defaultInfo: result.data.defaultInfo,
                 aiSummary: result.data.aiSummary,
                 readMe: result.data.readMe,
+                hashTag: result.data.hashTag,
             }
         } catch (e: any) {
             console.log(e);

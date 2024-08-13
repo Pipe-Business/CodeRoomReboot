@@ -55,6 +55,23 @@ const CodeItem: FC<Props> = ({ item }) => {
               {item.title}
             </Typography>
 
+              <Typography
+                  variant="h5"
+                  sx={{
+                      ml: '8px',
+                      color: '#b4b4b4',
+                      fontSize: { xs: '12px', sm: '12px', md: '16px' },
+                      marginTop: '6px',
+                  }}
+                  className={styles.textOverflow}
+              >
+                  {
+                      item.hashTag &&
+                      (item.hashTag.map((tag) => `#${tag} `))
+                  }
+
+              </Typography>
+
                 {/* 캐시, 닉네임, 시간 */}
                 <Box
                     sx={{
@@ -75,11 +92,6 @@ const CodeItem: FC<Props> = ({ item }) => {
                     }}>
                         💵 {item.code_price.toLocaleString()}
                     </Typography>
-                    {
-                        item.hashTag &&
-                        (item.hashTag.map((tag) => `#${tag} `))
-                    }
-
                 </Box>
 
             {/* item.createdAt을 좌측 하단으로 이동 */}
