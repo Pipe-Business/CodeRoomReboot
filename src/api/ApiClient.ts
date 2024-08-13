@@ -929,6 +929,39 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
+    async getAllMyLikeData(myUserToken: string, postId: number): Promise<LikeResponseEntity[]> {
+        try {
+            const {data, error} = await supabase.from('liked')
+                .select('*')
+                .eq('user_token', myUserToken);
+
+            let lstLikeResponseEntity: LikeResponseEntity[] = [];
+            data?.forEach((e) => {
+                let likeData: LikeResponseEntity = {
+                    id: e.id,
+                    created_at: e.created_at,
+                    user_token: e.user_token,
+                    post_id: e.post_id,
+                }
+                lstLikeResponseEntity.push(likeData);
+            });
+
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('나의 좋아요 데이터를 가져오는데 실패했습니다.');
+            }
+
+            return lstLikeResponseEntity;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('나의 좋아요 데이터를 가져오는데 실패했습니다.');
+        }
+    }
+
 
     async getAllPendingCode(type: string): Promise<CodeModel[]> {
         try {

@@ -8,7 +8,7 @@ interface Props {
 	children?: React.ReactNode,
 	mentoringData?: MentoringResponseEntity[] | null,
 	userLogin:User
-}
+} // TODO: 멘토링 관련 코드 제거
 
 const MentoringList: FC<Props> = ({ mentoringData, userLogin }) => {
 	console.log("mentoring",mentoringData);

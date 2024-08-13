@@ -56,6 +56,12 @@ const MyPage: FC<Props> = () => {
         queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
     });
 
+    const {data: likedData, isLoading: likedDataLoading} = useQuery({
+        queryKey: ['/liked', userLogin?.user_token!],
+        queryFn: () => apiClient.getAllMyLikeData(userLogin!.user_token!),
+    });
+
+
     const {data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData} = useQuery({
         queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.user_token!],
         queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.user_token!, true),
@@ -158,7 +164,7 @@ const MyPage: FC<Props> = () => {
     };
 
 
-    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading || pointHistoryLoading || saleCodeDataLoading) {
+    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading || pointHistoryLoading || saleCodeDataLoading || likedDataLoading) {
         return (
             <FullLayout>
                 <Skeleton style={{height: '200px'}}/>
@@ -223,8 +229,9 @@ const MyPage: FC<Props> = () => {
                         <TabContext value={value}>
                             <Box sx={{ width: '100%'}}>
                                 <StyledTabList onChange={handleChange} aria-label="lab API tabs example">
-                                    <StyledTab label="나의 활동 내역" value="1" />
-                                    <StyledTab label="판매 / 수익통계" value="2" />
+                                    <StyledTab label="구매자" value="1" />
+                                    <StyledTab label="판매자" value="2" />
+                                    <StyledTab label="나의 파이프 코인" value="3" />
                                 </StyledTabList>
                             </Box>
                             <TabPanel value="1" sx={{ flex: 1 }}>
@@ -232,6 +239,7 @@ const MyPage: FC<Props> = () => {
                                     saleData={saleData!}
                                     purchaseData={purchaseData!}
                                     codeData={codeData!}
+                                    likedData={likedData!}
                                     onWriteReviewClick={handleWriteReviewClick}
                                     onReadReviewClick={handleReadReviewClick}
                                 />
