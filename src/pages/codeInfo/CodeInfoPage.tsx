@@ -103,9 +103,9 @@ const CodeInfo: FC<Props> = () => {
 	}
 
 	const [paymentRequiredAmount, setPaymentRequiredAmount] = useState<number>(postData?.price ?? 0);
-	const onPaymentConfirm: () => void = PaymentDialog(inputCash,inputCoin, paymentRequiredAmount , userLogin!, cashData!, pointData!, postData!);
+	const onPaymentConfirm: () => void = PaymentDialog(userLogin!, postData!);
 	const onClickPurchase = () => {
-		const result = window.confirm(`결제하시겠습니까?\n추가결제 : ${paymentRequiredAmount}`);
+		const result = window.confirm(`결제하시겠습니까?: ${postData!.price}원`);
 		if (result) {
 			onPaymentConfirm();
 		}
@@ -114,7 +114,7 @@ const CodeInfo: FC<Props> = () => {
 
 	const [isBlur, setBlur] = useState<boolean>(false);
 	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
-	const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState);
+	const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState); // TODO : 구매자 후기 modal status
 	const handleReviewSubmit = async () => {
 		// 리뷰 작성 완료시 이 콜백을 수행
 		const purchaseData: PurchaseSaleRes | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id);
@@ -332,7 +332,8 @@ const CodeInfo: FC<Props> = () => {
 									<RequiredLoginModal isOpen={openRequireLoginModal} onClose={onCloseLoginModal} />
 								</CenterBox>
 							)}
-							{reviews && <ReviewList reviews={reviews} />}
+							{/*TODO 구매자 후기 리스트*/}
+							{/*{reviews && <ReviewList reviews={reviews} />}*/}
 						</CardContent>
 					</BlurContainer>
 				</Card>
@@ -391,10 +392,12 @@ const CodeInfo: FC<Props> = () => {
 								{/*	onOpenPointDialog={onOpenPointDailog}*/}
 								{/*/>*/}
 								<Box my={1} />
+
 								<PurchaseButton postData={postData} purchasedSaleData={purchaseSaleData} handlePurchase={onClickPurchase}/>
 								{	purchaseSaleData &&
 									<CodeDownloadButton repoURL={postData.githubRepoUrl}></CodeDownloadButton>
 								}
+
 								<Box my={2}>
 									{
 										(postData.userToken !== userLogin?.user_token) &&

@@ -20,7 +20,6 @@ const ResetPasswdPage = React.lazy(() => import('./pages/profile/ResetPasswdPage
 const RegisterPage = React.lazy(() => import('./pages/register/RegisterPage'));
 const ChangePasswdPage = React.lazy(() => import('./pages/profile/ChangePasswdPage'));
 const ResetCompletePage = React.lazy(() => import('./pages/profile/ResetCompletePage'));
-const SignUpCompletePage = React.lazy(() => import('./pages/register/SignUpCompletePage'));
 const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage'));
 const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage'));
 const CodeSubmissionFinalPage = React.lazy(() => import('./pages/createCode/CodeSubmissionFinalPage'));
@@ -85,7 +84,6 @@ root.render(
       <Route path='/register' element={<RegisterPage/>}/>
       <Route path='/change-password' element={<ChangePasswdPage/>}/>
       <Route path='/reset-complete' element={<ResetCompletePage/>}/>
-      <Route path='/signup-complete' element={<SignUpCompletePage/>}/>
       <Route path='/profile/my/purchase' element={<MyPurchaseDataPage/>}/>
       <Route path='/profile/my/mentoring' element={<MyMentoringDataPage/>}/>
       <Route path='/profile/my/mentoring/:id' element={<MyMentoringDetailPage/>}/>

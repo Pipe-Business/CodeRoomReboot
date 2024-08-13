@@ -8,7 +8,7 @@ export interface PurchaseSaleModel {
 	post_id: number; // 거래된 게시글의 id
 	purchaseUserToken: string; // 구매자 유저 토큰
 	salesUserToken: string; // 판매한 유저의 ID
-	bootpayPaymentId?: number; // bootpay pay 결제 이력 시퀀스 id
+	bootpayPaymentId: number; // bootpay pay 결제 이력 시퀀스 id
 	isConfirmed: boolean; //  정산여부
 	payType: string[]; // 구매방식 (결제 수단)
 	sellPrice: number; // 판매가

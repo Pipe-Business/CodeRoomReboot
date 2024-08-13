@@ -589,7 +589,8 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async insertPurchaseSaleHistory(purchaseSaleRequestEntity: PurchaseSaleReq) : Promise<number> {
+    async insertPurchaseSaleHistory(purchaseSaleRequestEntity: PurchaseSaleReq){
+        console.log("결과: "+JSON.stringify(purchaseSaleRequestEntity));
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .insert(purchaseSaleRequestEntity).select();
@@ -599,8 +600,6 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('코드 거래 기록을 insert 하는데 실패했습니다.');
             }
-
-            return data[0].id;
             //console.log(...data);
         } catch (e: any) {
             console.log(e);
@@ -668,6 +667,7 @@ class ApiClient implements SupabaseAuthAPI {
                     use_cash: e.use_cash,
                     is_confirmed: e.is_confirmed,
                     purchase_user_token: e.purchase_user_token,
+                    bootpay_payment_id: e.bootpay_payemnt_id,
                     sales_user_token: e.sales_user_token,
                     pay_type: e.pay_type,
                     created_at: e.created_at,
@@ -1171,6 +1171,7 @@ class ApiClient implements SupabaseAuthAPI {
                     is_confirmed: e.is_confirmed,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
+                    bootpay_payment_id: e.bootpay_payment_id,
                     pay_type: e.pay_type,
                     created_at: e.created_at,
                 }
@@ -1437,13 +1438,11 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async insertBootpayPayment(bootpayPayment: BootPayPaymentModel) {
+    async insertBootpayPayment(bootpayPayment: BootPayPaymentModel):Promise<number> {
 
         try {
             const {error, data} = await supabase.from('bootpay_payment').insert(bootpayPayment).select();
-            if (data) {
-                console.log(JSON.stringify(data));
-            }
+
             if (error) {
                 console.log("error" + error.code);
                 console.log("error" + error.message);
@@ -1453,6 +1452,9 @@ class ApiClient implements SupabaseAuthAPI {
 
                 throw new Error('결제내역 insert에 실패했습니다.');
             }
+
+            console.log("id: "+data[0].id);
+            return data[0].id;
         } catch (e: any) {
             console.log(e);
             throw new Error('결제내역 insert에 실패했습니다.');
