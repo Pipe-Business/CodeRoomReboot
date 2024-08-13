@@ -4,7 +4,7 @@ import {TextButton} from '../main/styles';
 import {Link} from 'react-router-dom';
 import {Box, Card} from '@mui/material';
 import {MarginHorizontal} from '../../components/styles';
-
+// TODO :제거예정
 
 interface Props {
     children?: React.ReactNode;

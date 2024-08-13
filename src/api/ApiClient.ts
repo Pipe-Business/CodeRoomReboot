@@ -178,17 +178,14 @@ class ApiClient implements SupabaseAuthAPI {
                 "about_me": user.aboutMe,
                 "is_profile_image_rewarded": user.is_profile_image_rewarded,
                 "is_introduce_rewarded": user.is_introduce_rewarded,
-                "contacts": user.contacts,
                 "user_token": user.userToken,
             }
+            console.log("회원가입 할 유저: "+JSON.stringify(userData));
 
             const {data, error} = await supabase.from('users')
-                .insert(userData).select();
+                .insert(userData);
             if (error) {
-                console.log("error" + error.code);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
-                console.log("error" + error.details);
+                console.log(JSON.stringify(error))
 
                 throw new Error('회원정보 저장에 실패하였습니다.');
             }
@@ -1318,26 +1315,21 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
     async insertUserCoinHistory(pointHistoryRequestEntity: UsersCoinHistoryReq) {
-        //console.log(pointHistoryRequestEntity);
         const coinHistoryObj = { // TODO: coinHistoryObj로 변환이 필요한지 확인
-            "point": pointHistoryRequestEntity.coin,
+            "coin": pointHistoryRequestEntity.coin,
             "amount": pointHistoryRequestEntity.amount,
             "user_token": pointHistoryRequestEntity.user_token,
             "description": pointHistoryRequestEntity.description,
             "from_user_token": pointHistoryRequestEntity.from_user_token,
-            "point_history_type": pointHistoryRequestEntity.coin_history_type,
+            "coin_history_type": pointHistoryRequestEntity.coin_history_type,
         }
 
         try {
            // console.log("insert userPoint history");
-            const {data, error} = await supabase.from("users_point_history").insert(coinHistoryObj).select();
+            const {data, error} = await supabase.from("users_coin_history").insert(coinHistoryObj).select();
 
             if (error) {
-                console.log("error" + error.code);
-                console.log("error" + error.message);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
-                console.log("error" + error.details);
+                console.log(JSON.stringify(error));
 
                 throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니다.');
             }

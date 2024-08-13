@@ -184,19 +184,14 @@ const RegisterPage: FC<Props> = () => {
 			}
 
 		  const user : UserEntity = {
-				authType : 'CODEROOM',
+				authType : 'coderoom',
 				email : inputEmail,
 				nickname : inputNickName,
-				name:null,
-				profileUrl:null,
-				contacts : null,
-				aboutMe:null,
-				userToken : null,
 				is_profile_image_rewarded: false,
 				is_introduce_rewarded: false,
 			}	
 			await mutate(user);
-			navigate('/signup-complete');
+			navigate('/');
 		} catch (e) {
 			console.log('supabase error', e);
 			console.log(e);
