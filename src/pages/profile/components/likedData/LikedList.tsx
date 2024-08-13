@@ -1,11 +1,12 @@
 import React, {FC} from 'react';
-import LikedItem from './LikedItem.tsx';
+import LikedItem from './LikedItem';
 import {User} from '@supabase/supabase-js';
 import {List, ListItem, ListItemText} from '@mui/material';
+import {LikeResponseEntity} from "../../../../data/entity/LikeResponseEntity";
 
 interface Props {
 	children?: React.ReactNode,
-	likedData?: [] | null,
+	likedData?: LikeResponseEntity[] | null,
 }
 
 const LikedList: FC<Props> = ({ likedData }) => {

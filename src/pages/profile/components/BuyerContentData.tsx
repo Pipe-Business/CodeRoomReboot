@@ -5,13 +5,9 @@ import {useNavigate} from 'react-router-dom';
 import {CodeModel} from '../../../data/model/CodeModel';
 import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import PurchaseList from './purchaseData/PurchaseList';
-import CashHistoryList from './CashHistoryData/CashHistoryList';
-import SaleList from './saleData/SaleList';
 import {PurchaseSaleRes} from "../../../data/entity/PurchaseSaleRes";
-import MyCodeList from "./code/MyCodeList";
-import {PostStateType} from "../../../enums/PostStateType";
-import {LikeResponseEntity} from "../../../data/entity/LikeResponseEntity.ts";
-import LikedList from "./likedData/LikedList.tsx";
+import {LikeResponseEntity} from "../../../data/entity/LikeResponseEntity";
+import LikedList from "./likedData/LikedList";
 
 interface Props {
     children?: React.ReactNode;
