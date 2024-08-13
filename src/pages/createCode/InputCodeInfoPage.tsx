@@ -116,7 +116,6 @@ const InputCodeInfoPage:FC = () => {
             category: inputCategory,
             state: PostStateType.pending,
             post_type: 'code',
-            hash_tag: [""],
             view_count: 0,
         };
 

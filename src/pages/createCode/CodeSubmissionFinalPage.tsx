@@ -184,7 +184,6 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
         state: PostStateType.pending,
         //introduction: inputIntroduction,
         post_type: 'code',
-        hash_tag: [""],
         view_count: 0,
       };
       if (!pointError) {

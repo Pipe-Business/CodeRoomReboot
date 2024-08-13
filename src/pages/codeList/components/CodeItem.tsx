@@ -55,26 +55,6 @@ const CodeItem: FC<Props> = ({ item }) => {
               {item.title}
             </Typography>
 
-                <Paper
-                  elevation={0}
-                  sx={{
-                    ml: '8px',
-                    mt: '16px',
-                    mb: '16px',
-                    mr: { xs: '16px', sm: '16px', md: '250px' },
-                    color: 'grey',
-                    fontSize: { xs: '12px', sm: '14px', md: '14px' },
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    display: '-webkit-box',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: { xs: 2, sm: 1 },
-                    lineClamp: { xs: 2, sm: 1 },
-                  }}
-                >
-                    {item.aiSummary}
-                </Paper>
-
                 {/* 캐시, 닉네임, 시간 */}
                 <Box
                     sx={{
@@ -90,14 +70,16 @@ const CodeItem: FC<Props> = ({ item }) => {
                         color: 'black',
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        fontSize: {xs: '16px', sm: '20px', md: '22px'}
+                        fontSize: {xs: '16px', sm: '20px', md: '22px'},
+                        marginRight: '16px'
                     }}>
                         💵 {item.code_price.toLocaleString()}
                     </Typography>
-                    {/*<Box width={8} />*/}
-                    {/*<Typography variant="body2" sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center', fontSize: { xs: '16px', sm: '20px', md: '22px' } }}>*/}
-                    {/*  🌱 {(item.price * 5).toLocaleString()}*/}
-                    {/*</Typography>*/}
+                    {
+                        item.hashTag &&
+                        (item.hashTag.map((tag) => `#${tag} `))
+                    }
+
                 </Box>
 
             {/* item.createdAt을 좌측 하단으로 이동 */}
@@ -115,7 +97,6 @@ const CodeItem: FC<Props> = ({ item }) => {
             >
               {calcTimeDiff(item.createdAt)}
             </Typography>
-
             <Box height={16} />
 
             {/* 태그, 좋아요 수, 인기도, 리뷰 수를 우측 상단으로 이동 */}
@@ -169,10 +150,10 @@ const CodeItem: FC<Props> = ({ item }) => {
 
               <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
                 <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
-                  {(item.buyerCount * item.code_price).toLocaleString()}
+                  {(item.buyerCount).toLocaleString()}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
-                  인기도
+                  구매됨
                 </Typography>
               </Box>
             </Box>

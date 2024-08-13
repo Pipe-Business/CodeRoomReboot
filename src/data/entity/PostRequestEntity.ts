@@ -10,6 +10,6 @@ export interface PostRequestEntity {
 	state: PostStateType.pending | PostStateType.rejected | PostStateType.approve; // 코드의 현재 상태: 'pending'(대기), 'rejected'(거절), 'approve(승인)' 중 하나
 	created_at?: number; //코드 생성일
 	post_type:'article'|'code'; // 폼의 유형 article 게시글, code 코드
-	hash_tag : string[]; // 해시태그
+	hash_tag? : string[]; // 해시태그
 	view_count: number; // 조회수
 }

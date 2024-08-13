@@ -10,7 +10,7 @@ export type MainPageCodeListEntity = {
     language:string, // 개발 언어
     createdAt: string,  /** 코드 생성일 */
     postType:string, // 코드 / 글
-    hashTag: string[],
+    hashTag?: string[],
     aiSummary: string, // 구매자가이드
     buyerCount: number, // 구매자수
     state: string, // 상태
