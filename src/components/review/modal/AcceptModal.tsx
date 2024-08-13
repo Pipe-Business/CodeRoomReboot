@@ -8,6 +8,7 @@ import {CodeModel} from "../../../data/model/CodeModel";
 import {NotificationEntity} from "../../../data/entity/NotificationEntity";
 import {NotificationType} from "../../../enums/NotificationType"
 import {PostStateType} from "../../../enums/PostStateType";
+import {Octokit} from "@octokit/rest";
 
 interface Props {
 	children?: React.ReactNode
@@ -25,8 +26,8 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 	});
 	 const { mutate } = useMutation({
 		mutationFn: async (data: CodeModel) => {
-
-			const forkUrl = await apiClient.forkForSellerGitRepo(data.sellerGithubName, data.githubRepoUrl);
+			const octokit = new Octokit({ auth: process.env.REACT_APP_GITHUB_TOKEN });
+			const forkUrl = await apiClient.forkForSellerGitRepo(octokit, data.sellerGithubName, data.githubRepoUrl);
 			// console.log(""+ forkUrl);
 		
 			// fork한 데이터 update

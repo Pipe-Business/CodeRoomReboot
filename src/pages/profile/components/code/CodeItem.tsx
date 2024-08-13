@@ -5,6 +5,8 @@ import {CodeModel} from '../../../../data/model/CodeModel';
 import {useNavigate} from 'react-router-dom';
 import {reformatTime} from '../../../../utils/DayJsHelper';
 import {PostStateType} from "../../../../enums/PostStateType";
+import {useRecoilState} from "recoil";
+import {codeInfo} from "../../../createCode/createCodeAtom";
 
 interface Props {
 	children?: React.ReactNode;
@@ -12,10 +14,12 @@ interface Props {
 }
 
 const CodeItem: FC<Props> = ({ item }) => {
+	const [codeModel, setCodeInfo] = useRecoilState(codeInfo);
 
 	const navigate = useNavigate();
 	const onClickNavigateRejectForm = useCallback(() => {
-		navigate('/create/code', {state:{item}});
+		setCodeInfo(item);
+		navigate('/create/code/codesubmission');
 	},[]);
 
 	return (
@@ -42,7 +46,7 @@ const CodeItem: FC<Props> = ({ item }) => {
 					<div
 						style={{ width: '10%'}}>{item.state === PostStateType.pending ? '심사중' : item.state ===PostStateType.approve ? '승인' : '반려'}</div>
 					<div style={{ width: '25%' }}>
-						{item.state === 'rejected' &&
+						{(item.state === PostStateType.rejected || item.state === PostStateType.approve) &&
 							<Button onClick={() => onClickNavigateRejectForm()}>
 								수정 및 재심사
 							</Button>}

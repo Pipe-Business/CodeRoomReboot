@@ -30,6 +30,8 @@ import {createTodayDate} from "../utils/DayJsHelper";
 import {UsersAmountModel} from "../data/entity/UsersAmountModel";
 import {PostStateType} from "../enums/PostStateType";
 import {GptCodeInfoResponseEntity} from "../data/entity/GptCodeInfoResponseEntity";
+import { Octokit } from "@octokit/rest";
+import {toast} from "react-toastify";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 
@@ -1050,11 +1052,40 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async forkForSellerGitRepo(owner: string, repo: string): Promise<string> {
+
+    async forkForSellerGitRepo(octokit: Octokit, owner: string, repo: string): Promise<string> {
         try {
             const urlConvertArr = repo.split('/');
             const repoName = urlConvertArr[urlConvertArr.length - 1];
             console.log(repoName);
+            const adminOwner: string = "team-code-room";
+            // 1. admin의 모든 레포지토리 가져오기
+            const repos = await this.fetchAllRepositories(String(process.env.REACT_APP_GITHUB_TOKEN));
+
+            var existingFork = false;
+            repos.forEach((repository:any) => {
+                if (repository.name === repoName) {
+                    existingFork = true;
+                }
+            });
+
+            if (existingFork) {
+                console.log(`이미 ${owner}/${repoName}를 fork했습니다.`);
+                const response = await axios.post<any>(`${serverURL}/sync-fork`, {
+                    owner: owner,
+                    repo: repoName,
+                    forkOwner: 'team-code-room'});
+
+                console.log('Sync successful:', response.data['message']);
+                if (response.data['message'] != 'Sync successful') {
+                    toast.error('깃허브를 싱크하는 과정에서 문제가 발생했습니다');
+                    return 'error';
+                }
+
+                var github_base_url = 'https://github.com/';
+                return `${github_base_url}/${adminOwner}/${repoName}`;
+            }
+
 
             const result = await useOctokit.request('POST /repos/{owner}/{repo}/forks', {
                 owner: owner,
@@ -1071,6 +1102,37 @@ class ApiClient implements SupabaseAuthAPI {
             console.dir(e);
             throw new Error('github repo 포크 오류');
         }
+    }
+
+    async fetchAllRepositories(token: string): Promise<any[]> {
+        const octokit = new Octokit({ auth: token });
+        let page = 1;
+        let allRepositories: any[] = [];
+
+        while (true) {
+            try {
+                const response = await octokit.rest.repos.listForAuthenticatedUser({
+                    per_page: 100,
+                    page: page,
+                });
+
+                if (response.data.length === 0) {
+                    break;
+                }
+
+                allRepositories = allRepositories.concat(response.data);
+                page++;
+            } catch (error) {
+                if (error instanceof Error) {
+                    console.error('Error fetching repositories:', error.message);
+                } else {
+                    console.error('An unknown error occurred');
+                }
+                break;
+            }
+        }
+
+        return allRepositories;
     }
 
     async updateCodeRequestState(userToken: string, postId: string, state: string) {
@@ -1965,6 +2027,28 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
     }
+
+    //
+    //
+    // async checkAndForkRepository(
+    //     octokit: Octokit,
+    //     owner: string,
+    //     repo: string
+    // ) {
+    //     try {
+    //
+    //
+    //         // 4. fork되지 않았다면 fork 실행
+    //         const { data: newFork } = await octokit.repos.createFork({
+    //             owner,
+    //             repo,
+    //         });
+    //
+    //         console.log(`${owner}/${repo}를 성공적으로 fork했습니다. 새 repo: ${newFork.full_name}`);
+    //     } catch (error) {
+    //         console.error("Fork 과정에서 오류가 발생했습니다:", error);
+    //     }
+    // }
 
 
     async getPurchaseReviews(postId: number): Promise<PurchaseReviewEntity[] | null> {
