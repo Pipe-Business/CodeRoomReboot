@@ -7,6 +7,7 @@ import {useQuery} from "@tanstack/react-query";
 import {REACT_QUERY_KEY} from "../../../../constants/define";
 import {apiClient} from "../../../../api/ApiClient";
 import UserProfileImage from "../../../../components/profile/UserProfileImage";
+import {useQueryUserLogin} from "../../../../hooks/fetcher/UserFetcher";
 
 interface Props {
     coinHistoryData: UsersCoinHistoryRes;
@@ -17,6 +18,8 @@ const CoinHistoryItem: FC<Props> = ({coinHistoryData}) => {
         queryKey: [REACT_QUERY_KEY.user, coinHistoryData.user_token!],
         queryFn: async() => await apiClient.getTargetUser(coinHistoryData.user_token)
     })
+    const { userLogin } = useQueryUserLogin();
+
     return (
         <>
             {
@@ -29,7 +32,9 @@ const CoinHistoryItem: FC<Props> = ({coinHistoryData}) => {
                                     {reformatTime(coinHistoryData?.created_at!)}
                                 </div>
 
-                                <div style={{width: '20%'}}>
+                                {/*TODO: 마이페이지 - 나의 파이프 코인, admin 에서 이 컴포넌트를 같이쓰고있음. 간격이 다른것 처리 필요*/}
+                                { userLogin!.user_token !== salesUserData!.user_token &&
+                                    <div style={{width: '20%'}}>
                                     <div style={{display: 'flex'}}>
                                         <UserProfileImage userId={salesUserData?.user_token!}/>
                                         <div>
@@ -37,7 +42,7 @@ const CoinHistoryItem: FC<Props> = ({coinHistoryData}) => {
                                             <div>{salesUserData?.email}</div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>}
 
                                 <div style={{
                                     whiteSpace: 'nowrap',
