@@ -24,8 +24,7 @@ const NotFoundPage = React.lazy(() => import('./pages/error/NotFoundPage'));
 const CreateCodePage = React.lazy(() => import('./pages/createCode/CreateCodePage'));
 const CodeSubmissionFinalPage = React.lazy(() => import('./pages/createCode/CodeSubmissionFinalPage'));
 const MyPurchaseDataPage = React.lazy(() => import('./pages/profile/MyPurchaseDataPage'));
-const MyMentoringDataPage = React.lazy(() => import('./pages/profile/MyMentoringDataPage'));
-const MyMentoringDetailPage = React.lazy(() => import('./pages/profile/MyMentoringDetailPage'));
+const LikedDetailDataPage = React.lazy(() => import('./pages/profile/LikedDetailDataPage'));
 const EditMyProfilePage = React.lazy(() => import('./pages/profile/EditMyProfilePage'));
 const MyCodeDataPage = React.lazy(() => import('./pages/profile/MyCodeDataPage'));
 const MySaleDataPage = React.lazy(() => import('./pages/profile/MySaleDataPage'));
@@ -85,8 +84,7 @@ root.render(
       <Route path='/change-password' element={<ChangePasswdPage/>}/>
       <Route path='/reset-complete' element={<ResetCompletePage/>}/>
       <Route path='/profile/my/purchase' element={<MyPurchaseDataPage/>}/>
-      <Route path='/profile/my/mentoring' element={<MyMentoringDataPage/>}/>
-      <Route path='/profile/my/mentoring/:id' element={<MyMentoringDetailPage/>}/>
+      <Route path='/profile/my/liked' element={<LikedDetailDataPage/>}/>
       <Route path='/profile/my/code-page' element={<MyCodeDataPage/>}/>
       <Route path='/profile/my/sale' element={<MySaleDataPage/>}/>
       <Route path='/profile/my/edit' element={<EditMyProfilePage/>}/>

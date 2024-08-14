@@ -31,12 +31,11 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,likedData
                 <CardHeader
                     title={<div style={{fontSize: 18, fontWeight: 'bold'}}>위시리스트</div>}
                     action={
-                        // TODO : 위시리스트 더보기 페이지 구현 필요
+                        // TODO : 더보기 페이지 통합 필요
                         <Button variant={'text'} endIcon={<AddIcon/>} onClick={() => {
-                            navigate(`/profile/my/purchase`, {
+                            navigate(`/profile/my/liked`, {
                                 state: {
-                                    purchaseData: purchaseData,
-                                    userLogin: userLogin
+                                    likedData: likedData,
                                 }
                             });
                         }}>

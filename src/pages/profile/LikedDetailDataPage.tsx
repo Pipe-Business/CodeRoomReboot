@@ -2,26 +2,25 @@ import React, {FC} from 'react';
 import {useLocation} from 'react-router-dom';
 import FullLayout from '../../layout/FullLayout';
 import {Box} from '@mui/material';
-import MentoringList from './components/mentoringData/MentoringList';
+import LikedList from "./components/likedData/LikedList";
 
 interface Props {
 	children?: React.ReactNode,
 }
 
-const MyMentoringDataPage: FC<Props> = () => {
+const LikedDetailDataPage: FC<Props> = () => {
 
 	const { state: {
-		userLogin,
-		mentoringData,
+		likedData,
 	} } = useLocation();
 
 	return (
 		<FullLayout>
 			<Box height={32} />
-			<h2>내가 신청한 멘토링</h2>
-			<MentoringList mentoringData={mentoringData} userLogin={userLogin} />
+			<h2>위시리스트에 추가한 게시글</h2>
+			<LikedList likedData={likedData} />
 		</FullLayout>
 	);
 };
 
-export default MyMentoringDataPage;
+export default LikedDetailDataPage;
