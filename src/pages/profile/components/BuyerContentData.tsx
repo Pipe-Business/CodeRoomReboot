@@ -23,11 +23,10 @@ const BuyerContentData: FC<Props> = ({purchaseData,likedData , onWriteReviewClic
 
     return (
         <div>
-            <Box height={32}/>
-            <h3>나의 위시리스트</h3>
+            <Box height={16}/>
             <Card sx={{marginTop: '16px', marginLeft: '8px',}} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{fontSize: 18, fontWeight: 'bold', color: '#b4b4b4'}}>위시리스트</div>}
+                    title={<div style={{fontSize: 18, fontWeight: 'bold', color: '#000000'}}>위시리스트</div>}
                     action={
                         // TODO : 더보기 페이지 통합 필요
                         <Button variant={'text'} endIcon={<AddIcon/>} onClick={() => {
@@ -45,11 +44,9 @@ const BuyerContentData: FC<Props> = ({purchaseData,likedData , onWriteReviewClic
                 </CardContent>
             </Card>
 
-            <Box height={32}/>
-            <h3>내가 구매한 코드</h3>
             <Card sx={{marginTop: '16px', marginLeft: '8px',}} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{fontSize: 18, fontWeight: 'bold', color: '#b4b4b4'}}>구매 목록</div>}
+                    title={<div style={{fontSize: 18, fontWeight: 'bold', color: '#000000'}}>코드 구매 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon/>} onClick={() => {
                             navigate(`/profile/my/purchase`, {

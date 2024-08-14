@@ -13,8 +13,6 @@ interface Props {
 const PipeCoinContentData: FC<Props> = ({ coinHistoryData }) => {
     return (
         <div>
-            <h3>코인 내역</h3>
-
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
                 <CardHeader
                     title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>코인 내역</div>}

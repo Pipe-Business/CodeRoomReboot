@@ -25,12 +25,11 @@ const SellerContentData: FC<Props> = ({codeData, saleData, cashConfirmData, cash
 
     return (
         <div>
-            <h3>판매</h3>
 
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
                 elevation={1}>
                 <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#b4b4b4' }}>판매된 코드 내역</div>}
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#000000' }}>코드 판매 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
                             navigate(`/profile/my/sale`, { state: { saleData: saleData, userLogin: userLogin } });
@@ -43,13 +42,9 @@ const SellerContentData: FC<Props> = ({codeData, saleData, cashConfirmData, cash
                 </CardContent>
             </Card>
 
-            <Box height={32}/>
-
-
-            <h3>나의 코드</h3>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#b4b4b4' }}>코드 심사 진행 단계</div>}
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#000000' }}>코드 심사 요청 상태</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
                             navigate(`/profile/my/code-page`, { state: { codeData: codeData, type: PostStateType.pending, maxCount: false } });
@@ -63,12 +58,10 @@ const SellerContentData: FC<Props> = ({codeData, saleData, cashConfirmData, cash
             </Card>
             <Box height={32}/>
 
-            <Box height={32} />
-            <h4>수익</h4>
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
                 elevation={1}>
                 <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#b4b4b4' }}>캐시 정산 내역</div>}
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#000000' }}>정산 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
                             navigate(`/profile/my/cashconfirm`, { state: { cashConfirm: cashConfirmData, title: '캐시 정산 내역'} });
@@ -83,7 +76,7 @@ const SellerContentData: FC<Props> = ({codeData, saleData, cashConfirmData, cash
             <Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised
                 elevation={1}>
                 <CardHeader
-                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#b4b4b4' }}>캐시 정산 대기 내역</div>}
+                    title={<div style={{ fontSize: 18, fontWeight: 'bold', color: '#000000' }}>정산 대기 내역</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {
                             navigate(`/profile/my/cashconfirm`, { state: { cashConfirm: cashConfirmPendingData, title: '캐시 정산 대기 내역' } });

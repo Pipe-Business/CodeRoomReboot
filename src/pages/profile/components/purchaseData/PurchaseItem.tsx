@@ -65,8 +65,8 @@ const PurchaseItem: FC<Props> = ({ purchaseData, onWriteReviewClick, onReadRevie
                         secondary={postedUser?.nickname}
                     />
                     {!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.adminGitRepoURL} />}
-                    <Box width={16}/>
-                    {!reviewData ? <Button variant="outlined" onClick={handleWriteReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 작성</Button> : <Button variant="outlined" onClick={handleReadReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 확인</Button>}
+                    {/*<Box width={16}/>*/}
+                    {/*{!reviewData ? <Button variant="outlined" onClick={handleWriteReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 작성</Button> : <Button variant="outlined" onClick={handleReadReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 확인</Button>}*/}
                 </ListItem>
             </ListItemButton>
             <Divider />
