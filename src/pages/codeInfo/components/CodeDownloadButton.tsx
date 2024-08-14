@@ -49,7 +49,7 @@ const CodeDownloadButton: FC<Props> = ({ repoURL }) => {
 	}, [handleURL]);
 	return (
 		
-		<ColorButton onClick={onClickDownload} startIcon={<DownloadIcon />}  sx={{ fontSize: '15', width: '140px' }}
+		<ColorButton onClick={onClickDownload} startIcon={<DownloadIcon />}  sx={{ fontSize: '20px', width: '220px', fontWeight: 'bold' }}
 				variant='contained'>코드 다운로드</ColorButton>
 
 	);
