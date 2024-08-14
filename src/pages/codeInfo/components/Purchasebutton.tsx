@@ -30,7 +30,7 @@ const PurchaseButton: FC<Props> = ({purchasedSaleData,postData, handlePurchase})
     }
 
     return (
-        <ColorButton sx={{ fontSize: '20px', width: '100%', height:'60px' }} onClick={handlePurchase}  variant='contained'> 💵 ₩{postData.price}원으로 코드 구매</ColorButton>
+        <ColorButton sx={{ fontSize: '20px', width: '100%', height:'60px', fontWeight: 'bold' }} onClick={handlePurchase}  variant='contained'> 코드 템플릿 구매 </ColorButton>
     );
 }
 export default PurchaseButton;

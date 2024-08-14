@@ -1,5 +1,5 @@
 import {ArrowBack, ShoppingBag} from '@mui/icons-material';
-import {Box, Card, CardContent, CardHeader, CircularProgress, IconButton, Typography} from '@mui/material';
+import {Avatar, Box, Card, CardContent, CardHeader, CircularProgress, IconButton, Typography} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
@@ -255,7 +255,7 @@ const CodeInfo: FC<Props> = () => {
 							<Box my={1} style={{border:'10px solid #D1B04A', borderRadius:'4px', padding:'16px'}}>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									<img src='/robot.png' alt='robot.png' width="32px" style={{paddingRight:'10px'}}/>
-									AI ROOMY가 생성한 콘텐츠 ✨
+									ROOMY AI가 생성한 콘텐츠 ✨
 								</Typography>
 
 								<Box height={16} />
@@ -352,57 +352,47 @@ const CodeInfo: FC<Props> = () => {
 									mb: 2,
 								}}
 							>
+								<Avatar
+									src={postUserData.profile_url}
+									alt={postUserData.nickname}
+									sx={{ width: 120, height: 120, mb: 2 }}
+								/>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
-									코드 템플릿 판매자
+									판매자 [ {postUserData.nickname} ] 님의 코드 템플릿
 								</Typography>
-								<Typography variant="body1" color="textPrimary" sx={{ mb: 2 }}>
-									{postUserData.nickname}
+								<Typography variant="body1" color="textPrimary" sx={{ mb: 2, textAlign: 'center' }}>
+									{postUserData.about_me || '안녕하세요 많은 관심 부탁드립니다'}
 								</Typography>
-								{/*<Box my={1}>*/}
-								{/*	{userLogin?.user_token === postData.userToken && <EditCodeButton codePost={postData} />}*/}
-								{/*</Box>*/}
-								<Box my={1}>
-									{userLogin?.user_token === postData.userToken && <DeleteCodeButton codePost={postData} />}
-								</Box>
-								{/*<CodeInfoBuyItByCashButton*/}
-								{/*	isBlur={isBlur}*/}
-								{/*	point={postData.price}*/}
-								{/*	codeHostId={postData.userToken}*/}
-								{/*	userId={userLogin?.user_token!}*/}
-								{/*	userHavePoint={cashData ?? 0}*/}
-								{/*	githubRepoUrl={postData.githubRepoUrl}*/}
-								{/*	purchasedSaleData={purchaseSaleData}*/}
-								{/*	onClickBuyItButton={onClickBuyItButton}*/}
-								{/*	onPaymentConfirm={onCashClickConfirm}*/}
-								{/*	onClickLoginRegister={onOpenLoginDialog}*/}
-								{/*	onOpenPointDialog={onOpenPointDailog}*/}
-								{/*/>*/}
-								{/*<Box my={1} />*/}
-								{/*<F*/}
-								{/*	isBlur={isBlur}*/}
-								{/*	point={postData.price}*/}
-								{/*	codeHostId={postData.userToken}*/}
-								{/*	userId={userLogin?.user_token!}*/}
-								{/*	userHavePoint={pointData ?? 0}*/}
-								{/*	githubRepoUrl={postData.githubRepoUrl}*/}
-								{/*	purchasedSaleData={purchaseSaleData}*/}
-								{/*	onClickBuyItButton={onClickBuyItButton}*/}
-								{/*	onPaymentConfirm={onPointClickConfirm}*/}
-								{/*	onClickLoginRegister={onOpenLoginDialog}*/}
-								{/*	onOpenPointDialog={onOpenPointDailog}*/}
-								{/*/>*/}
-								<Box my={1} />
 
-								<PurchaseButton postData={postData} purchasedSaleData={purchaseSaleData} handlePurchase={onClickPurchase}/>
-								{	purchaseSaleData &&
-									<CodeDownloadButton repoURL={postData.githubRepoUrl}></CodeDownloadButton>
-								}
+								<Box sx={{ width: '100%', mt: 2 }}>
+									<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1, fontSize: '30px' }}>
+										즉시 구매가
+									</Typography>
+									<Typography variant="body1" color="textPrimary" sx={{ mb: 2, fontSize: '30px', }}>
+										{postData.price.toLocaleString()}원
+									</Typography>
 
-								<Box my={2}>
-									{
-										(postData.userToken !== userLogin?.user_token) &&
-										<MessageModal targetUserToken={postData.userToken} />
-									}
+									{userLogin?.user_token === postData.userToken && (
+										<Box my={1}>
+											<DeleteCodeButton codePost={postData} />
+										</Box>
+									)}
+
+									<PurchaseButton
+										postData={postData}
+										purchasedSaleData={purchaseSaleData}
+										handlePurchase={onClickPurchase}
+									/>
+
+									{purchaseSaleData && (
+										<CodeDownloadButton repoURL={postData.githubRepoUrl} />
+									)}
+
+									{postData.userToken !== userLogin?.user_token && (
+										<Box mt={2}>
+											<MessageModal targetUserToken={postData.userToken} />
+										</Box>
+									)}
 								</Box>
 							</Card>
 						</Box>
