@@ -30,12 +30,12 @@ const UserManageItem: FC<Props> = ({ item }) => {
 				<ListItemText>
 					<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 						<div style={{ width: '15%' }}>{reformatTime(item.created_at!)}</div>
-						<div style={{ width: '10%' }}>{item.nickname}</div>
-						<div style={{ width: '40%' }}>{item.email}</div>
-						<div style={{ width: '5%' }}>{item.cash?.toLocaleString()}</div>
-						<div style={{ width: '5%' }}>{item.point?.toLocaleString()}</div>
+						<div style={{ width: '25%' }}>{item.nickname}</div>
+						<div style={{ width: '35%' }}>{item.email}</div>
+						{/*<div style={{ width: '5%' }}>{item.cash?.toLocaleString()}</div>*/}
+						<div style={{ width: '10%' }}>{item.point?.toLocaleString()}</div>
 						<div style={{ width: '15%' }}><Button onClick={(e:any)=>{e.stopPropagation();handleOpenDialog()}}>코인 지급</Button></div>
-						<div style={{ width: '10%' }}><Button onClick={(e:any) => {e.stopPropagation();setMsgDialogOpen(true)}}>쪽지 전송</Button></div>
+						{/*<div style={{ width: '10%' }}><Button onClick={(e:any) => {e.stopPropagation();setMsgDialogOpen(true)}}>쪽지 전송</Button></div>*/}
 					</div>
 				</ListItemText>
 			</ListItemButton>

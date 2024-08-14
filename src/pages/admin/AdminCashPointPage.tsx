@@ -3,7 +3,7 @@ import AdminCashPointList from './components/cashPaymentCharge/AdminCashPointLis
 
 interface Props {
 	children?: React.ReactNode;
-	type: 'cash' | 'point';
+	type: 'cash' | 'coin';
 }
 
 // 캐시/코인

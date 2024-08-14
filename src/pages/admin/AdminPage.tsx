@@ -64,7 +64,7 @@ const AdminPage: FC<Props> = () => {
 						<Tab label='요청대기' value='1' />
 						<Tab label='반려내역' value='2' />
 						<Tab label='승인내역' value='3' />
-						<Tab label='캐시' value='4' />
+						<Tab label='결제내역' value='4' />
 						<Tab label='코인' value='5' />
 						<Tab label='정산대기' value='6' />
 						<Tab label='정산내역' value='7' />
@@ -81,19 +81,19 @@ const AdminPage: FC<Props> = () => {
 				<TabPanel value='3'>
 					<AdminCodeRequestList type={PostStateType.approve} />
 				</TabPanel>
-				{/*<TabPanel value='4'>*/}
-				{/*	<AdminCashPointPage type={'cash'}/>*/}
-				{/*</TabPanel>*/}
-				{/*<TabPanel value='5'>*/}
-				{/*	<AdminCashPointPage type={'point'}/>*/}
-				{/*</TabPanel>*/}
 				<TabPanel value='4'>
-					<AdminPaymentPendingPage isSettlement={false}/>
+					<AdminCashPointPage type={'cash'}/>
 				</TabPanel>
 				<TabPanel value='5'>
-					<AdminPaymentPendingPage isSettlement={true}/>
+					<AdminCashPointPage type={'coin'}/>
 				</TabPanel>
 				<TabPanel value='6'>
+					<AdminPaymentPendingPage isSettlement={false}/>
+				</TabPanel>
+				<TabPanel value='7'>
+					<AdminPaymentPendingPage isSettlement={true}/>
+				</TabPanel>
+				<TabPanel value='8'>
 					<UserManageList />
 				</TabPanel>
 			</TabContext>

@@ -13,12 +13,12 @@ const UserManageHeader: FC = () => {
 		<ListItemText>
 			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 				<div style={{ width: '15%' }}>가입날짜</div>
-				<div style={{ width: '10%' }}>닉네임</div>
-				<div style={{ width: '40%' }}>이메일</div>
-				<div style={{ width: '5%' }}>캐시</div>
-				<div style={{ width: '5%' }}>코인</div>
+				<div style={{ width: '25%' }}>닉네임</div>
+				<div style={{ width: '35%' }}>이메일</div>
+				{/*<div style={{ width: '5%' }}>캐시</div>*/}
+				<div style={{ width: '10%' }}>코인</div>
 				<div style={{ width: '15%' }}>코인지급</div>
-				<div style={{ width: '10%' }}>쪽지보내기</div>
+				{/*<div style={{ width: '10%' }}>쪽지보내기</div>*/}
 			</div>
 		</ListItemText>
 	</ListItem>;

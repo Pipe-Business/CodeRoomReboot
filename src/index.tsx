@@ -38,7 +38,6 @@ const AdminUserInfo = React.lazy(() => import('./pages/admin/components/userMana
 const NotificationPage = React.lazy(() => import('./pages/notification/NotificationPage'));
 const EditCodePage = React.lazy(() => import('./pages/editCode/EditCodePage'));
 const SearchPage = React.lazy(() => import('./pages/search/SearchPage'));
-const PaymentPage = React.lazy(() => import('./pages/payment/PaymentPage'));
 const AiBuilderPage = React.lazy(() => import('./pages/aiBuilder/AiBuilderPage'));
 const AiBuilderSuggestPage = React.lazy(() => import('./pages/aiBuilder/AiBuilderServicePlanning'));
 const AiBuilderRefactoring = React.lazy(() => import('./pages/aiBuilder/AiBuilderRefactoring'));
@@ -98,7 +97,6 @@ root.render(
       <Route path='/admin/user/:userId' element={<AdminUserInfo />} />
       <Route path='/notification' element={<NotificationPage/>}/>
       <Route path='/code/search' element={<SearchPage />} />
-      <Route path='/payment' element={<PaymentPage/>} />
       <Route path='/aibuilder' element={<AiBuilderPage/>} />
       <Route path='/aibuilder/serviceplanning' element={<AiBuilderSuggestPage/>} />
       <Route path='/aibuilder/refactoring' element={<AiBuilderRefactoring/>} />

@@ -1,5 +1,4 @@
-import AddIcon from '@mui/icons-material/Add';
-import {Box, Button, Card, CardContent, CardHeader} from '@mui/material';
+import {Box, Card, CardContent, CardHeader} from '@mui/material';
 import React, {FC} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
@@ -12,9 +11,6 @@ interface Props {
 }
 
 const PipeCoinContentData: FC<Props> = ({ coinHistoryData }) => {
-    const navigate = useNavigate();
-    const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
-
     return (
         <div>
             <h3>코인 내역</h3>

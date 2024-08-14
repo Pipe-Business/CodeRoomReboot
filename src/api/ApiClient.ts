@@ -909,7 +909,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async getAllMyLikeData(myUserToken: string): Promise<LikeResponseEntity[]> {
+    async MyLikeData(myUserToken: string): Promise<LikeResponseEntity[]> {
         try {
             const {data, error} = await supabase.from('liked')
                 .select('*')
@@ -985,6 +985,40 @@ class ApiClient implements SupabaseAuthAPI {
         }
 
     }
+
+    async getAllMyLikeData(myUserToken: string): Promise<LikeResponseEntity[]> {
+        try {
+            const {data, error} = await supabase.from('liked')
+                .select('*')
+                .eq('user_token', myUserToken);
+
+            let lstLikeResponseEntity: LikeResponseEntity[] = [];
+            data?.forEach((e) => {
+                let likeData: LikeResponseEntity = {
+                    id: e.id,
+                    created_at: e.created_at,
+                    user_token: e.user_token,
+                    post_id: e.post_id,
+                }
+                lstLikeResponseEntity.push(likeData);
+            });
+
+            if (error) {
+                console.log("error" + error.message);
+                console.log("error" + error.code);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+
+                throw new Error('나의 좋아요 데이터를 가져오는데 실패했습니다.');
+            }
+
+            return lstLikeResponseEntity;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('나의 좋아요 데이터를 가져오는데 실패했습니다.');
+        }
+    }
+
 
     async getAllMyCode(userToken: string): Promise<CodeModel[]> {
         try {
@@ -1643,6 +1677,32 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async getAllUserCoinHistory(): Promise<UsersCoinHistoryRes[]> {
+        try {
+            const {data, error} = await supabase.from('users_coin_history')
+                .select('*')
+                .order('created_at', {ascending: false});
+
+            let lstCoinHistory: UsersCoinHistoryRes[] = [];
+            data?.forEach((e) => {
+                let coinHistory: UsersCoinHistoryRes = {
+                    id: e.id,
+                    user_token: e.user_token,
+                    coin: e.coin,
+                    amount: e.amount,
+                    description: e.description,
+                    coin_history_type: e.coin_history_type,
+                    created_at: e.created_at,
+                }
+                lstCoinHistory.push(coinHistory);
+            });
+            return lstCoinHistory;
+
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저의 코인 히스토리를 가져오는 데 실패했습니다.');
+        }
+    }
 
     // async getUserCashPointHistory(myUserToken: string):Promise<CashPointHistoryEntity[]> {
     //     try {
@@ -1761,7 +1821,7 @@ class ApiClient implements SupabaseAuthAPI {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('is_confirmed', isConfirmed)
-                .contains('pay_type', ['cash'])
+                .contains('pay_type', ['coin'])
                 .order('created_at', {ascending: false});
 
             let lstPurchaseSaleData: PurchaseSaleRes[] = [];
@@ -1917,6 +1977,26 @@ class ApiClient implements SupabaseAuthAPI {
 
 
             return lstUserModel;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('관리자 : 모든 유저 데이터를 가져오는 데 실패했습니다.');
+        }
+
+    }
+
+    async getAllBootpayPayment(): Promise<BootPayPaymentModel[]> {
+        try {
+            const {data, error} = await supabase.from('bootpay_payment')
+                .select('*');
+
+
+            let lstBootpayPaymentModel: BootPayPaymentModel[] = [];
+
+            data?.map((e) => {
+                lstBootpayPaymentModel.push(e);
+            })
+
+            return lstBootpayPaymentModel;
         } catch (e: any) {
             console.log(e);
             throw new Error('관리자 : 모든 유저 데이터를 가져오는 데 실패했습니다.');
@@ -2146,32 +2226,7 @@ class ApiClient implements SupabaseAuthAPI {
     }
 
 
-    async getAllUserPointHistory(): Promise<UsersCoinHistoryRes[]> {
-        try {
-            const {data, error} = await supabase.from('users_point_history')
-                .select('*')
-                .order('created_at', {ascending: false});
 
-            let lstPointHistory: UsersCoinHistoryRes[] = [];
-            data?.forEach((e) => {
-                let pointHistory: UsersCoinHistoryRes = {
-                    id: e.id,
-                    user_token: e.user_token,
-                    coin: e.point,
-                    amount: e.amount,
-                    description: e.description,
-                    coin_history_type: e.point_history_type,
-                    created_at: e.created_at,
-                }
-                lstPointHistory.push(pointHistory);
-            });
-            return lstPointHistory;
-
-        } catch (e: any) {
-            console.log(e);
-            throw new Error('관리자 - 유저의 코인 히스토리를 가져오는 데 실패했습니다.');
-        }
-    }
 
     async messageFromAdminToUser(content: string, targetUserToken: string) {
         try {

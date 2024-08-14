@@ -4,11 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 import {apiClient} from "../../../../api/ApiClient";
 import styled from "@emotion/styled"
 import AdminCashItem from './AdminCashItem';
+import CoinHistoryItem from "../../../profile/components/CoinHistoryData/CoinHistoryItem";
 
 
 interface Props {
 	children?: React.ReactNode;
-	type: 'cash' | 'point';
+	type: 'cash' | 'coin';
 }
 
 export const CenterBox = styled.div`
@@ -17,30 +18,30 @@ export const CenterBox = styled.div`
   align-items: center;
 `
 
-const Header: FC<{ type: 'cash' | 'point' }> = ({ type }) => {
-	if (type === 'cash') {
+const Header: FC<{ type: 'cash' | 'coin' }> = ({ type }) => {
+	if (type === 'cash') { // TODO 결제내역 리스트
 		return (
 			<ListItem>
 				<ListItemText>
-					<div style={{ display: 'flex' }}>
-						<div style={{ width: '15%' }}>날짜</div>
-						<div style={{ width: '25%' }}>유저</div>
-						<div style={{ width: '40%' }}>설명</div>
-						<div style={{ width: '10%' }}>캐시</div>
-						<div style={{ width: '10%' }}>구분</div>
+					<div style={{display: 'flex'}}>
+						<div style={{width: '20%'}}>구매날짜</div>
+						<div style={{width: '25%'}}>상품명</div>
+						<div style={{width: '10%'}}>가격</div>
+						<div style={{width: '10%'}}>결제방식</div>
+						<div style={{width: '30%'}}>영수증 url</div>
 					</div>
 				</ListItemText>
 			</ListItem>
 		);
 	} else {
-		return (
+		return ( // TODO 코인
 			<ListItem>
 				<ListItemText>
 					<div style={{ display: 'flex' }}>
 						<div style={{ width: '15%' }}>날짜</div>
-						<div style={{ width: '25%' }}>유저</div>
+						<div style={{ width: '20%' }}>유저</div>
 						<div style={{ width: '40%' }}>설명</div>
-						<div style={{ width: '10%' }}>코인</div>
+						<div style={{ width: '15%' }}>코인</div>
 						<div style={{ width: '10%' }}>구분</div>
 					</div>
 				</ListItemText>
@@ -49,43 +50,45 @@ const Header: FC<{ type: 'cash' | 'point' }> = ({ type }) => {
 	}
 }
 const AdminCashPointList: FC<Props> = ({ type }) => {
-	// const { isLoading:isCashLoading, data: cashData } = useQuery({
-	// 	queryKey: ['admin', 'userCashHistory'],
-	// 	queryFn: () => apiClient.getAllUserCashHistory()
-	// });
-	//
-	// const { isLoading:isPointLoading, data: pointData } = useQuery({
-	// 	queryKey: ['admin', 'userPointHistory'],
-	// 	queryFn: () => apiClient.getAllUserPointHistory()
-	// });
-	// if (isCashLoading || isPointLoading) {
-	// 	return <CenterBox><CircularProgress /></CenterBox>;
-	// }
-	// if (!cashData || !pointData) {
-	// 	return <>nodata</>;
-	// }
-	// if(type ==='cash'){
-	// 	return (
-	// 		<List>
-	// 			<Header type={type} />
-	// 			{ type ==='cash' &&
-	// 			cashData.map(item => {
-	// 				return <AdminCashItem item={item} key={item.id}/>
-	// 			})}
-	// 		</List>
-	// 	);
-	// }else{
+	const { isLoading:isBootpayLoading, data: bootpayData } = useQuery({
+		queryKey: ['admin', 'bootpay'],
+		queryFn: () => apiClient.getAllBootpayPayment()
+	});
+
+	const { isLoading:isCoinLoading, data: coinData } = useQuery({
+		queryKey: ['admin', 'userCoinHistory'],
+		queryFn: () => apiClient.getAllUserCoinHistory()
+	});
+
+	if (isBootpayLoading) {
+		return <CenterBox><CircularProgress /></CenterBox>;
+	}
+
+	if (!bootpayData || !coinData) {
+		return <>nodata</>;
+	}
+	if(type ==='cash'){
 		return (
 			<List>
-				{/*<Header type={type} />*/}
-				{/*{ type ==='point' && */}
-				{/*pointData.map(item => {*/}
-				{/*	return <AdminPointItem item={item} key={item.id}/>*/}
-				{/*})}*/}
+				<Header type={type} />
+				{ type ==='cash' &&
+					bootpayData!.map(item => {
+					return <AdminCashItem item={item} key={item.id}/>
+				})}
+			</List>
+		);
+	}else{
+		return (
+			<List>
+				<Header type={type} />
+				{ type ==='coin' &&
+				coinData.map(item => {
+					return <CoinHistoryItem coinHistoryData={item} key={item.id}/>
+				})}
 
 			</List>
 		);
-	//}
+	}
 	
 };
 

@@ -145,14 +145,8 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 						<div style={{width: '25%'}}>
 							구매한 유저
 						</div>
-						<div style={{width: '5%'}}>
-							판매가
-						</div>
 						<div style={{width: '10%'}}>
-							결제 캐시
-						</div>
-						<div style={{width: '10%'}}>
-							결제 코인
+							결제 금액
 						</div>
 						<div style={{width: '10%'}}>
 							정산

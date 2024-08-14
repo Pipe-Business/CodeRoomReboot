@@ -26,15 +26,14 @@ import {CoinHistoryType} from '../../enums/CoinHistoryType';
 import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import PurchaseButton from "./components/Purchasebutton";
 import CodeDownloadButton from "./components/CodeDownloadButton";
-import {paymentDialogState} from "../payment/atom";
 import {useRecoilState} from "recoil";
 import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/an-old-hope.css";
-import {ColorButton} from "../payment/styles";
 import useInput from "../../hooks/UseInput";
 import PaymentDialog from "./components/PaymentDialog";
+import {paymentDialogState} from "../payment/atom";
 
 
 dayjs.locale('ko');
@@ -399,7 +398,7 @@ const CodeInfo: FC<Props> = () => {
 					</BlurContainer>
 				</Box>
 			</Box>
-			<ReviewDialog postId={postData.id} open={paymentDialogOpen} onClose={() => setPaymentDialogOpen(false)} onReviewSubmit={handleReviewSubmit} readonly={false} />
+			{/*<ReviewDialog postId={postData.id} open={paymentDialogOpen} onClose={() => setPaymentDialogOpen(false)} onReviewSubmit={handleReviewSubmit} readonly={false} />*/}
 		</MainLayout>
 	);
 };

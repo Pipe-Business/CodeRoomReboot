@@ -126,11 +126,11 @@ const PaymentPending: FC<Props> = ({ item, refetch }) => {
 								</div>
 							</div>
 						</div>
+						{/*<div style={{width: '10%'}}>*/}
+						{/*	{item.sell_price! != null ? item.sell_price!.toLocaleString() : 0} 캐시*/}
+						{/*</div>*/}
 						<div style={{width: '10%'}}>
-							{item.sell_price! != null ? item.sell_price!.toLocaleString() : 0} 캐시
-						</div>
-						<div style={{width: '10%'}}>
-							{item.use_cash! != null ? item.use_cash!.toLocaleString() : 0} 캐시
+							{item.use_cash! != null ? item.use_cash!.toLocaleString() : 0}
 						</div>
 						{/*<div style={{width: '10%'}}>*/}
 						{/*	{item.use_coin! != null ? item.use_coin!.toLocaleString() : 0} 코인*/}
