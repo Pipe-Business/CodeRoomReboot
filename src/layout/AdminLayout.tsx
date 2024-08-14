@@ -15,6 +15,7 @@ const AdminLayout: FC<Props> = ({ children }) => {
                             <span style={{ color: '#000000', fontFamily: 'sans-serif' }}>&lt;</span>
                             <span style={{ color: '#000000', fontFamily: 'sans-serif' }}>CODE ROOM</span>
                             <span style={{ color: '#000000', fontFamily: 'sans-serif' }}>/&gt;</span>
+                             Admin Page
                         </h2>
                 </Link>
             </div>
