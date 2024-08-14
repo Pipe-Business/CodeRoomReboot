@@ -19,6 +19,7 @@ import {PostStateType} from "../../enums/PostStateType";
 import {useRecoilState} from "recoil";
 import {codeInfo, gptGeneratedCodeInfo} from "./createCodeAtom";
 import {ArrowBack} from "@mui/icons-material";
+import {CodeEditRequestEntity} from "../../data/entity/CodeEditRequestEntity";
 
 interface Props {
     children?: React.ReactNode;
@@ -206,24 +207,38 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
     const {mutate} = useMutation({
         mutationFn: async (postRequest: PostRequestEntity) => {
             //setUpload(true);
-            postId = await apiClient.insertPostData(postRequest);
-            // if (files) {
-            //   const urls = await apiClient.uploadImages(userLogin?.user_token!, postId, files);
-            //   await apiClient.insertImgUrl(postId, urls);
-            // }
+            if (gptCodeInfo != null) {
+                postId = await apiClient.insertPostData(postRequest);
+                // if (files) {
+                //   const urls = await apiClient.uploadImages(userLogin?.user_token!, postId, files);
+                //   await apiClient.insertImgUrl(postId, urls);
+                // }
+                const urlParser = gptCodeInfo?.githubRepoUrl?.split('/') ?? [];
+                const codeRequest: CodeRequestEntity = {
+                    post_id: postId,
+                    github_repo_url: gptCodeInfo?.githubRepoUrl ?? '',
+                    code_price: Number(inputPoint),
+                    language: inputLanguage,
+                    seller_github_name: urlParser[urlParser.length - 2],
+                    popularity: 0,
+                    ai_summary: inputGuide,
+                    buyer_count: 0,
+                };
+                await apiClient.insertCodeData(codeRequest);
+            } else {
+                const codeEditRequest: CodeEditRequestEntity = {
+                    post_id: codeModel!.id,
+                    title: codeModel!.title,
+                    category: codeModel!.category,
+                    price: Number(inputPoint),
+                    language: inputLanguage,
+                    ai_summary: inputGuide,
+                    description: inputDescription,
+                    state: PostStateType.pending,
+                };
+                await apiClient.updatePostData(codeEditRequest);
+            }
 
-            const urlParser = gptCodeInfo?.githubRepoUrl?.split('/') ?? codeModel?.githubRepoUrl?.split('/') ?? [];
-            const codeRequest: CodeRequestEntity = {
-                post_id: postId,
-                github_repo_url: gptCodeInfo?.githubRepoUrl ?? codeModel?.githubRepoUrl ?? '',
-                code_price: Number(inputPoint),
-                language: inputLanguage,
-                seller_github_name: urlParser[urlParser.length - 2],
-                popularity: 0,
-                ai_summary: inputGuide,
-                buyer_count: 0,
-            };
-            await apiClient.insertCodeData(codeRequest);
         },
         onSuccess: () => {
             //setFiles(null);

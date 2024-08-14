@@ -1047,6 +1047,7 @@ class ApiClient implements SupabaseAuthAPI {
                 }
             });
 
+            // 2. 기존에 포크를 했던 이력이 존재하는지 체크 (재심사 요청 케이스)
             if (existingFork) {
                 console.log(`이미 ${owner}/${repoName}를 fork했습니다.`);
                 const response = await axios.post<any>(`${serverURL}/sync-fork`, {
@@ -1060,10 +1061,9 @@ class ApiClient implements SupabaseAuthAPI {
                     return 'error';
                 }
 
-                var github_base_url = 'https://github.com/';
+                const github_base_url = 'https://github.com/';
                 return `${github_base_url}/${adminOwner}/${repoName}`;
             }
-
 
             const result = await useOctokit.request('POST /repos/{owner}/{repo}/forks', {
                 owner: owner,
@@ -1504,6 +1504,7 @@ class ApiClient implements SupabaseAuthAPI {
                     title: codeEditRequestEntity.title,
                     description: codeEditRequestEntity.description,
                     category: codeEditRequestEntity.category,
+                    state: codeEditRequestEntity.state,
                 })
                 .eq('id', codeEditRequestEntity.post_id);
             await this.updateCodeData(codeEditRequestEntity);
@@ -1529,7 +1530,7 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const {error} = await supabase.from('code')
                 .update({
-                    price: codeEditRequestEntity.price,
+                    code_price: codeEditRequestEntity.price,
                     ai_summary: codeEditRequestEntity.ai_summary,
                 })
                 .eq('post_id', codeEditRequestEntity.post_id);

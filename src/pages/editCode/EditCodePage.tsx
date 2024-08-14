@@ -17,6 +17,7 @@ import LinkIcon from '@mui/icons-material/Link';
 import {ColorButton} from './styles';
 import {REACT_QUERY_KEY} from '../../constants/define';
 import {CodeEditRequestEntity} from "../../data/entity/CodeEditRequestEntity";
+import {PostStateType} from "../../enums/PostStateType";
 
 interface Props {
     children?: React.ReactNode,
@@ -184,6 +185,7 @@ const EditCodePage: FC<Props> = () => {
                 language : inputLanguage,
                 category: inputCategory,
                 price: inputPoint,
+                state: PostStateType.pending,
                 //buyer_guide: inputGuide,
                 //img_urls : resultImgUrl,
             }
