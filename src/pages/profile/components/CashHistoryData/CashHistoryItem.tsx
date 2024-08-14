@@ -46,7 +46,7 @@ const CashHistoryItem: FC<Props> = ({ cashPointHistory }) => {
                             </div>
                             <div style={{width: '10%'}}>
                                 {`
-                                ${cashPointHistory!.amount}
+                                ${cashPointHistory!.amount.toLocaleString()}
                                 ${cashPointHistory!.pay_type === 'point' ? '코인' : '캐시'}
                                 `}
                             </div>

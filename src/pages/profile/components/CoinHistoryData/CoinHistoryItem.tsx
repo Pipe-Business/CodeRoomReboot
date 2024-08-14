@@ -35,10 +35,7 @@ const CoinHistoryItem: FC<Props> = ({coinHistoryData}) => {
                                     }
                                 </div>
                                 <div style={{width: '10%'}}>
-                                    {`
-                                ${coinHistoryData!.amount}
-                               코인
-                                `}
+                                    {`${coinHistoryData!.amount.toLocaleString()} 코인`}
                                 </div>
                             </div>
                         </ListItemText>

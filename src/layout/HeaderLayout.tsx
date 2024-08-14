@@ -87,7 +87,7 @@ const HeaderLayout: FC<Props> = () => {
                                 color: '#000000',
                                 fontSize: '14px',
                                 fontWeight: 'bold'
-                            }}>{totalCashPointData?.coin_amount + ' 🌱'}</span>
+                            }}>{totalCashPointData?.coin_amount.toLocaleString() + ' 🌱'}</span>
                         </MarginHorizontal>
 
                         {/*<MarginHorizontal size={8}>*/}
