@@ -18,12 +18,17 @@ const RequiredLoginModal: FC<Props> = ({ isOpen, onClose }) => {
         navigate('/');
     }
 
+    const handleClose = () => {
+        onClose();
+        navigate('/');
+    }
+
     return (
-        <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'xs'}>
+        <Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth={'xs'}>
             <DialogTitle  >
                 <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
                     <h4>로그인이 필요한 서비스입니다.</h4>
-                    <IconButton onClick={onClose}>
+                    <IconButton onClick={handleClose}>
                         <CloseIcon />
                     </IconButton>
                 </div>

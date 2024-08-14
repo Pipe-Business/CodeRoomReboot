@@ -14,11 +14,7 @@ interface Props {
 
 const PurchaseButton: FC<Props> = ({purchasedSaleData,postData, handlePurchase}) => {
     const { userLogin } = useQueryUserLogin();
-    // 로그인 안한 유저의 경우
-    if (!userLogin) {
-        alert("로그인이 필요한 서비스입니다.")
-        return null;
-    }
+
     // 게사자일경우
     if (userLogin?.user_token === postData.userToken) {
         return null;
