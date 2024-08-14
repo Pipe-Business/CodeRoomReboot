@@ -15,7 +15,6 @@ import {BootPayPaymentModel} from "../data/entity/BootPayPaymentModel";
 import {PurchaseReviewEntity} from "../data/entity/PurchaseReviewEntity";
 import {AdminUserManageEntity} from "../data/entity/AdminUserManageEntity";
 import {MainPageCodeListEntity} from "../data/entity/MainPageCodeListEntity";
-import {MentoringRequestEntity} from "../data/entity/MentoringRequestEntity";
 import {CodeReviewRequestEntity} from "../data/entity/CodeReviewRequestEntity";
 import {PostRequestEntity} from "../data/entity/PostRequestEntity";
 import {CodeRequestEntity} from "../data/entity/CodeRequestEntity";
@@ -23,7 +22,6 @@ import {PurchaseSaleReq} from "../data/entity/PurchaseSaleReq";
 import {PurchaseSaleRes} from "../data/entity/PurchaseSaleRes";
 import {LikeRequestEntity} from "../data/entity/LikeRequestEntity";
 import {LikeResponseEntity} from "../data/entity/LikeResponseEntity";
-import {MentoringResponseEntity} from "../data/entity/MentoringResponseEntity";
 import {UsersCoinHistoryRes} from "../data/entity/UsersCoinHistoryRes";
 import {CodeEditRequestEntity} from "../data/entity/CodeEditRequestEntity";
 import {createTodayDate} from "../utils/DayJsHelper";
@@ -224,26 +222,6 @@ class ApiClient implements SupabaseAuthAPI {
         } catch (e: any) {
             console.log(e);
             throw new Error('유저 정보를 가져오는데 실패하였습니다.');
-        }
-    }
-
-
-    async insertMentoringHistory(mentoring: MentoringRequestEntity) {
-        console.log("mentoring: " + {...mentoring});
-        try {
-            const {error} = await supabase.from('mentoring_request_history').insert(mentoring);
-            if (error) {
-                console.log("error" + error.code);
-                console.log("error" + error.message);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
-                console.log("error" + error.details);
-
-                throw new Error('멘토링 신청내역 저장에 실패하였습니다.');
-            }
-        } catch (e: any) {
-            console.log(e);
-            throw new Error('멘토링 신청내역 저장에 실패하였습니다.');
         }
     }
 
@@ -1322,45 +1300,6 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMyMentorings(myUserToken: string): Promise<MentoringResponseEntity[] | null> {
-
-        try {
-            const {data, error} = await supabase.from('mentoring_request_history')
-                .select('*')
-                .eq('from_user_token', myUserToken);
-
-            let lstMentoring: MentoringResponseEntity[] = [];
-            data?.forEach((e) => {
-                let mentoring: MentoringResponseEntity = {
-                    id: e.id,
-                    title: e.title,
-                    content: e.content,
-                    to_user_token: e.to_user_token,
-                    from_user_token: e.from_user_token,
-                    request_date: e.request_data,
-                    created_at: e.created_at,
-                }
-                lstMentoring.push(mentoring);
-            });
-            //console.log("구매내역" + { ...data });
-
-            if (error) {
-                console.log("error" + error.message);
-                console.log("error" + error.code);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
-
-                throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
-            }
-
-            return lstMentoring;
-
-
-        } catch (e: any) {
-            console.log(e);
-            throw new Error('멘토링 데이터를 가져오는 데 실패했습니다.');
-        }
-    }
     async getUserTotalAmount(myUserToken: string): Promise<UsersAmountModel> {
         try {
             const {data, error} = await supabase.from('users_amount')

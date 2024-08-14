@@ -17,7 +17,6 @@ export const REACT_QUERY_KEY = {
 	point : '/point',
 	purchaseSaleHistory : '/purchaseSaleHistory',
 	like : '/like',
-	mentoring : '/mentoring',
 	notification: '/notification',
 	
 }
