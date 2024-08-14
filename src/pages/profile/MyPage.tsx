@@ -22,6 +22,7 @@ import {CoinHistoryType} from '../../enums/CoinHistoryType';
 import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
 import {CodeModel} from "../../data/model/CodeModel";
+import PipeCoinContentData from "./components/PipeCoinContentData";
 
 interface Props {
     children?: React.ReactNode;
@@ -61,6 +62,10 @@ const MyPage: FC<Props> = () => {
         queryFn: () => apiClient.getAllMyLikeData(userLogin!.user_token!),
     });
 
+    const {data: coinHistoryData, isLoading: isCoinHistoryLoading, refetch: refetchCoinHistory} = useQuery({
+        queryKey: [REACT_QUERY_KEY.coinhistory, userLogin?.user_token!],
+        queryFn: () => apiClient.getUserCoinHistory(userLogin!.user_token!),
+    });
 
     const {data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData} = useQuery({
         queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.user_token!],
@@ -84,11 +89,6 @@ const MyPage: FC<Props> = () => {
     //     queryKey: [REACT_QUERY_KEY.cashHistory, userLogin?.user_token!],
     //     queryFn: () => apiClient.getUserCashHistory(userLogin!.user_token!),
     // });
-
-    const {data: pointHistoryData, isLoading: pointHistoryLoading, refetch: refetchPointHistoryData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.pointistory, userLogin?.user_token!],
-        queryFn: () => apiClient.getUserPointHistory(userLogin!.user_token!),
-    });
 
     useEffect(() => {
         setValue(searchParams.get('tab') ?? '1');
@@ -160,11 +160,11 @@ const MyPage: FC<Props> = () => {
         await refetchCashConfirmData();
         await refetchCashConfirmPendingData();
         //await refetchCashHistoryData();
-        await refetchPointHistoryData();
+        await refetchCoinHistory();
     };
 
 
-    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading || pointHistoryLoading || saleCodeDataLoading || likedDataLoading) {
+    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading || isCoinHistoryLoading || saleCodeDataLoading || likedDataLoading) {
         return (
             <FullLayout>
                 <Skeleton style={{height: '200px'}}/>
@@ -236,9 +236,7 @@ const MyPage: FC<Props> = () => {
                             </Box>
                             <TabPanel value="1" sx={{ flex: 1 }}>
                                 <BuyerContentData
-                                    saleData={saleData!}
                                     purchaseData={purchaseData!}
-                                    codeData={codeData!}
                                     likedData={likedData!}
                                     onWriteReviewClick={handleWriteReviewClick}
                                     onReadReviewClick={handleReadReviewClick}
@@ -246,9 +244,16 @@ const MyPage: FC<Props> = () => {
                             </TabPanel>
                             <TabPanel value="2" sx={{ flex: 1 }}>
                                 <SellerContentData
+                                    saleData={saleData!}
+                                    codeData={codeData!}
                                     cashConfirmData={cashConfirmData!}
                                     cashConfirmPendingData={cashConfirmPendingData!}
                                 />
+                            </TabPanel>
+                            <TabPanel value="3" sx={{ flex: 1 }}>
+                                    <PipeCoinContentData
+                                        coinHistoryData={coinHistoryData!}
+                                    />
                             </TabPanel>
                         </TabContext>
 

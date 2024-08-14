@@ -11,6 +11,6 @@ export interface UsersCoinHistoryRes {
     amount: number; // 총 코인 값
     description: string; // 상세 내용
     from_user_token?: string; // 포인트 지급한 유저의 토큰
-    point_history_type: CoinHistoryType // 획득 또는 소비
+    coin_history_type: CoinHistoryType // 획득 또는 소비
     created_at: string; // 생성 일시
 }

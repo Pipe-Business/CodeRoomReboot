@@ -11,15 +11,13 @@ import LikedList from "./likedData/LikedList";
 
 interface Props {
     children?: React.ReactNode;
-    saleData: PurchaseSaleRes[];
     purchaseData: PurchaseSaleRes[];
-    codeData: CodeModel[];
     likedData: LikeResponseEntity[];
     onWriteReviewClick: (purchaseData: PurchaseSaleRes) => void;
     onReadReviewClick: (purchaseData: PurchaseSaleRes) => void;
 }
 
-const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,likedData , onWriteReviewClick, onReadReviewClick }) => {
+const BuyerContentData: FC<Props> = ({purchaseData,likedData , onWriteReviewClick, onReadReviewClick }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
     const navigate = useNavigate();
 
@@ -29,7 +27,7 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,likedData
             <h3>나의 위시리스트</h3>
             <Card sx={{marginTop: '16px', marginLeft: '8px',}} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{fontSize: 18, fontWeight: 'bold'}}>위시리스트</div>}
+                    title={<div style={{fontSize: 18, fontWeight: 'bold', color: '#b4b4b4'}}>위시리스트</div>}
                     action={
                         // TODO : 더보기 페이지 통합 필요
                         <Button variant={'text'} endIcon={<AddIcon/>} onClick={() => {
@@ -51,7 +49,7 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,likedData
             <h3>내가 구매한 코드</h3>
             <Card sx={{marginTop: '16px', marginLeft: '8px',}} raised elevation={1}>
                 <CardHeader
-                    title={<div style={{fontSize: 18, fontWeight: 'bold'}}>구매 목록</div>}
+                    title={<div style={{fontSize: 18, fontWeight: 'bold', color: '#b4b4b4'}}>구매 목록</div>}
                     action={
                         <Button variant={'text'} endIcon={<AddIcon/>} onClick={() => {
                             navigate(`/profile/my/purchase`, {
@@ -72,45 +70,6 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,likedData
 
             <Box height={32}/>
 
-
-            {/*<h3>판매</h3>*/}
-
-            {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised*/}
-            {/*    elevation={1}>*/}
-            {/*    <CardHeader*/}
-            {/*        title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>판매된 코드 내역</div>}*/}
-            {/*        action={*/}
-            {/*            <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {*/}
-            {/*                navigate(`/profile/my/sale`, { state: { saleData: saleData, userLogin: userLogin } });*/}
-            {/*            }}>*/}
-            {/*                더보기</Button>*/}
-            {/*        }*/}
-            {/*    />*/}
-            {/*    <CardContent>*/}
-            {/*        <SaleList saleData={saleData?.slice(0, 3)}/>*/}
-            {/*    </CardContent>*/}
-            {/*</Card>*/}
-
-            <Box height={32}/>
-
-
-            {/*<h3>나의 코드</h3>*/}
-            {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>*/}
-            {/*    <CardHeader*/}
-            {/*        title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>코드 심사 진행 단계</div>}*/}
-            {/*        action={*/}
-            {/*            <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {*/}
-            {/*                navigate(`/profile/my/code-page`, { state: { codeData: codeData, type: PostStateType.pending, maxCount: false } });*/}
-            {/*            }}>*/}
-            {/*                더보기</Button>*/}
-            {/*        }*/}
-            {/*    />*/}
-            {/*    <CardContent>*/}
-            {/*        <MyCodeList maxCount={true} data={codeData?.slice(0, 3)}/>*/}
-            {/*    </CardContent>*/}
-            {/*</Card>*/}
-            <Box height={32}/>
-
             {/*<h4>캐시, 코인</h4>*/}
             {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>*/}
             {/*    <CardHeader*/}
@@ -124,21 +83,6 @@ const BuyerContentData: FC<Props> = ({codeData, saleData, purchaseData,likedData
             {/*    />*/}
             {/*    <CardContent>*/}
             {/*        <CashHistoryList cashPointHistory={cashPointHistoryData?.slice(0, 3)} />*/}
-            {/*    </CardContent>*/}
-            {/*</Card>*/}
-
-            {/*<Card sx={{ marginTop: '16px', marginLeft: '8px', }} raised elevation={1}>*/}
-            {/*    <CardHeader*/}
-            {/*        title={<div style={{ fontSize: 18, fontWeight: 'bold' }}>코인 내역</div>}*/}
-            {/*        action={*/}
-            {/*            <Button variant={'text'} endIcon={<AddIcon />} onClick={() => {*/}
-            {/*                navigate(`/profile/my/cashhistory`, { state: { pointHistoryData: pointHistoryData, title: '코인 내역' } });*/}
-            {/*            }}>*/}
-            {/*                더보기</Button>*/}
-            {/*        }*/}
-            {/*    />*/}
-            {/*    <CardContent>*/}
-            {/*        <CashHistoryList pointHistoryData={pointHistoryData?.slice(0, 3)} />*/}
             {/*    </CardContent>*/}
             {/*</Card>*/}
         </div>

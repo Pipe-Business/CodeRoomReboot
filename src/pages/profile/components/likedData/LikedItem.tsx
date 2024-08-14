@@ -6,7 +6,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {apiClient} from '../../../../api/ApiClient';
 import {User} from '@supabase/supabase-js';
 import dayjs from 'dayjs';
-import {LikeResponseEntity} from "../../../../data/entity/LikeResponseEntity.ts";
+import {LikeResponseEntity} from "../../../../data/entity/LikeResponseEntity";
 
 interface Props {
 	children?: React.ReactNode;

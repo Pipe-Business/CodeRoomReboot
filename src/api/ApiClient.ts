@@ -909,7 +909,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async getAllMyLikeData(myUserToken: string, postId: number): Promise<LikeResponseEntity[]> {
+    async getAllMyLikeData(myUserToken: string): Promise<LikeResponseEntity[]> {
         try {
             const {data, error} = await supabase.from('liked')
                 .select('*')
@@ -1615,28 +1615,27 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getUserPointHistory(myUserToken: string): Promise<UsersCoinHistoryRes[]> {
+    async getUserCoinHistory(myUserToken: string): Promise<UsersCoinHistoryRes[]> {
         try {
-            const {data, error} = await supabase.from('users_point_history')
+            const {data, error} = await supabase.from('users_coin_history')
                 .select('*')
                 .eq('user_token', myUserToken)
                 .order('created_at', {ascending: false});
-            // let stringi = JSON.stringify(data);
-            // console.log('point'+stringi);
-            let lstPointHistory: UsersCoinHistoryRes[] = [];
+
+            let lstCoinHistory: UsersCoinHistoryRes[] = [];
             data?.forEach((e) => {
-                let cashHistory: UsersCoinHistoryRes = {
+                let coinHistory: UsersCoinHistoryRes = {
                     id: e.id,
                     user_token: e.user_token,
-                    coin: e.point,
+                    coin: e.coin,
                     amount: e.amount,
                     description: e.description,
-                    point_history_type: e.point_history_type,
+                    coin_history_type: e.coin_history_type,
                     created_at: e.created_at,
                 }
-                lstPointHistory.push(cashHistory);
+                lstCoinHistory.push(coinHistory);
             });
-            return lstPointHistory;
+            return lstCoinHistory;
 
         } catch (e: any) {
             console.log(e);
@@ -2161,7 +2160,7 @@ class ApiClient implements SupabaseAuthAPI {
                     coin: e.point,
                     amount: e.amount,
                     description: e.description,
-                    point_history_type: e.point_history_type,
+                    coin_history_type: e.point_history_type,
                     created_at: e.created_at,
                 }
                 lstPointHistory.push(pointHistory);
