@@ -32,7 +32,7 @@ import { Octokit } from "@octokit/rest";
 import {toast} from "react-toastify";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
-
+export type SortOption = 'latest' | 'oldest' | 'mostPurchased' | 'priceAsc' | 'priceDesc'; // 리스트 정렬 기준
 const updateImageUrls = (readmeContent: string, owner: string, repo: string, token: string) => {
     const imageUrlPattern = /!\[.*?\]\((.*?)\)/g;
     return readmeContent.replace(imageUrlPattern, (match, p1) => {
@@ -80,21 +80,40 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getAllCode(): Promise<MainPageCodeListEntity[]> {
+    async getAllCode(sortOption: SortOption = 'latest'): Promise<MainPageCodeListEntity[]> {
         try {
-            const {data, error} = await supabase.from('post')
+            let query = supabase.from('post')
                 .select('*, code!inner(*)')
                 .eq('state', PostStateType.approve)
-                .eq('is_deleted', false) // 삭제된 게시글은 메인에서 안보이도록 처리
-                .order('created_at', {ascending: false});
+                .eq('is_deleted', false);
 
+            switch (sortOption) {
+                case 'latest':
+                    query = query.order('created_at', { ascending: false });
+                    break;
+                case 'oldest':
+                    query = query.order('created_at', { ascending: true });
+                    break;
+                case 'mostPurchased':
+                    query = query.order('code(buyer_count)', { ascending: false });
+                    break;
+                case 'priceAsc':
+                    query = query.order('code(code_price)', { ascending: true });
+                    break;
+                case 'priceDesc':
+                    query = query.order('code(code_price)', { ascending: false });
+                    break;
+            }
+
+            const { data, error } = await query;
+
+            if (error) throw error;
 
             let lstCodeModel: MainPageCodeListEntity[] = [];
             if (data) {
                 for (const e of data) {
                     const likedCount: number = await this.getTargetPostLikedNumber(e.id);
                     const reviewCount: number = await this.getPurchaseReviewsCount(e.id);
-
 
                     let codeModel: MainPageCodeListEntity = {
                         id: e.id,
@@ -125,13 +144,11 @@ class ApiClient implements SupabaseAuthAPI {
                 }
             }
 
-            //console.log(data);
             return lstCodeModel;
         } catch (e: any) {
-            console.log(e);
+            console.error(e);
             throw new Error('게시글 목록을 가져오는 데 실패했습니다.');
         }
-
     }
 
     async resetPasswordByEmail(email: string) {
