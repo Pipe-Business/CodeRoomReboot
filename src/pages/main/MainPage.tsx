@@ -144,18 +144,18 @@ const MainPage: FC = () => {
                 >
                     <InputBase
                         placeholder='찾으시는 코드 상품의 이름을 검색해주세요'
-                        sx={{ flex: 1, px: 1, height: '50px' }}
+                        sx={{ flex: 1, px: 1, height: '54px', fontSize: '18px' }}
                         value={inputSearch}
                         onChange={onChangeInput}
                     />
                     <IconButton type='submit' sx={{ p: '8px' }}>
-                        <SearchIcon fontSize="small" />
+                        <SearchIcon fontSize="large" />
                     </IconButton>
                 </Paper>
             </SearchBar>
             </CenterBox>
 
-            <Box sx={{ px: 2, display: 'flex', justifyContent: 'flex-end', mt: 4, mr: 4, }}>
+            <Box sx={{ px: 2, display: 'flex', justifyContent: 'flex-end', mt: 4, mr: 6, }}>
                 <SortSelect onSortChange={handleSortChange} currentSort={sortOption} />
             </Box>
           

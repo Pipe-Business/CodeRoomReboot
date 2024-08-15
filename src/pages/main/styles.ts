@@ -3,7 +3,7 @@ import Button, { ButtonProps } from '@mui/material/Button';
 
 export const SearchBar = styled.div`
     margin-top: 16px;
-    width: 1100px;    
+    width: 1000px;    
 `
 
 export const CenterBox = styled.div`
@@ -30,7 +30,7 @@ export const Margin = styled.div<MarginStyle>`
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: '#000000',
   backgroundColor: '#50C1FF',
-  height : '52px',
+  height : '64px',
 '&:hover': {
   backgroundColor: '#569CD6',
   boxShadow: 'none',
