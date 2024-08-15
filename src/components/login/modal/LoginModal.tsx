@@ -62,10 +62,13 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 				});
 			onClose();
 			
-			if(currentPath == '/'){
-				navigate(0);
-			}
-			navigate('/');
+			// if(currentPath == '/'){
+			// 	navigate(0);
+			// }
+			// navigate('/');
+
+			// refresh page
+			navigate(0);
 
 		}else{
 			toast.error('회원 정보가 없습니다.');
@@ -75,9 +78,16 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 		setInputPwd('');
 		
 	}, [inputEmail, inputPwd]);
+
+	const handleClose = (event: {}, reason: "backdropClick" | "escapeKeyDown") => {
+		if (reason !== 'backdropClick') {
+			onClose();
+		}
+	};
+
 	return (
-		<Dialog open={isOpen} onClose={onClose} fullWidth maxWidth={'xs'}>
-			<DialogTitle  >
+		<Dialog open={isOpen} onClose={handleClose} fullWidth maxWidth={'xs'} disableEscapeKeyDown>
+			<DialogTitle>
 				<div style={{display:'flex', justifyContent:"space-between", alignItems:'center'}}>
 					<h3>지금 로그인하고 코드를 거래하세요</h3>
 					<IconButton onClick={onClose}>
@@ -95,7 +105,6 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 							value={inputEmail}
 							type={'text'}
 							autoFocus
-
 							onChange={onChangeEmail}
 							fullWidth
 							placeholder='이메일 입력' />

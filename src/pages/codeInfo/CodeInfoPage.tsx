@@ -34,6 +34,7 @@ import "highlight.js/styles/an-old-hope.css";
 import useInput from "../../hooks/UseInput";
 import PaymentDialog from "./components/PaymentDialog";
 import {paymentDialogState} from "../payment/atom";
+import LoginModal from "../../components/login/modal/LoginModal";
 
 
 dayjs.locale('ko');
@@ -112,7 +113,8 @@ const CodeInfo: FC<Props> = () => {
 
 
 	const [isBlur, setBlur] = useState<boolean>(false);
-	const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
+	// const [openRequireLoginModal, onOpenRequireLoginModal, onCloseLoginModal] = useDialogState();
+	const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
 	const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState); // TODO : 구매자 후기 modal status
 	const handleReviewSubmit = async () => {
 		// 리뷰 작성 완료시 이 콜백을 수행
@@ -156,11 +158,15 @@ const CodeInfo: FC<Props> = () => {
 	}, []);
 
 	useEffect(() => {
+		// if (!userLogin) { // 로그인 확인 필요
+		// 	setBlur(true);
+		// 	onOpenRequireLoginModal();
+		// } else {
+		// 	setBlur(false);
+		// }
+
 		if (!userLogin) { // 로그인 확인 필요
-			setBlur(true);
-			onOpenRequireLoginModal();
-		} else {
-			setBlur(false);
+			onOpenLoginModal();
 		}
 	}, [userLogin]);
 
@@ -328,7 +334,8 @@ const CodeInfo: FC<Props> = () => {
 							</Box>
 							{!userLogin && (
 								<CenterBox>
-									<RequiredLoginModal isOpen={openRequireLoginModal} onClose={onCloseLoginModal} />
+									<LoginModal isOpen={openLoginModal} onClose={onCloseLoginModal}/>
+									{/*<RequiredLoginModal isOpen={openRequireLoginModal} onClose={onCloseLoginModal} />*/}
 								</CenterBox>
 							)}
 							{/*TODO 구매자 후기 리스트*/}

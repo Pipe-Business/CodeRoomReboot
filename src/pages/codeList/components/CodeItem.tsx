@@ -90,7 +90,7 @@ const CodeItem: FC<Props> = ({ item }) => {
                         fontSize: {xs: '16px', sm: '20px', md: '22px'},
                         marginRight: '16px'
                     }}>
-                        💵 {item.code_price.toLocaleString()}
+                        ₩ {item.code_price.toLocaleString()}
                     </Typography>
                 </Box>
 
@@ -122,31 +122,31 @@ const CodeItem: FC<Props> = ({ item }) => {
                 right: { xs: '16px', md: '24px' },
               }}
             >
-              <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
-                <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
-                  {item.likeCount}
-                </Typography>
-                <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
-                  좋아요
-                </Typography>
-              </Box>
+              {/*<Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>*/}
+              {/*  <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>*/}
+              {/*    {item.likeCount}*/}
+              {/*  </Typography>*/}
+              {/*  <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>*/}
+              {/*    좋아요*/}
+              {/*  </Typography>*/}
+              {/*</Box>*/}
 
-              <Box
-                sx={{
-                  width: { xs: '48px', md: '1px' },
-                  height: { xs: '1px', md: '48px' },
-                  backgroundColor: '#e0e0e0',
-                  mx: { xs: 0, md: '16px' },
-                  my: { xs: '8px', md: 0 },
-                }}
-              />
+              {/*<Box*/}
+              {/*  sx={{*/}
+              {/*    width: { xs: '48px', md: '1px' },*/}
+              {/*    height: { xs: '1px', md: '48px' },*/}
+              {/*    backgroundColor: '#e0e0e0',*/}
+              {/*    mx: { xs: 0, md: '16px' },*/}
+              {/*    my: { xs: '8px', md: 0 },*/}
+              {/*  }}*/}
+              {/*/>*/}
 
               <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
                 <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
                   {item.reviewCount}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
-                  리뷰
+                  상품평
                 </Typography>
               </Box>
 
@@ -165,7 +165,7 @@ const CodeItem: FC<Props> = ({ item }) => {
                   {(item.buyerCount).toLocaleString()}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
-                  구매됨
+                  판매수
                 </Typography>
               </Box>
             </Box>

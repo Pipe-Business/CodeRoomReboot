@@ -58,7 +58,7 @@ const PointSendDialog: FC<Props> = ({ isOpen, onClose, userToken, userNickname, 
 		
 		// 코인 지급 알림
         const notificationEntity: NotificationEntity ={
-            title : '코인 지급 알림',
+            title : '파이프 코인 지급 알림',
             content:`관리자 지급 : ${reasonPayment}`,
             from_user_token: 'admin',
             to_user_token: userToken,

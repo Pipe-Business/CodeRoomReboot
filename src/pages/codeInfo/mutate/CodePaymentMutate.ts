@@ -109,8 +109,8 @@ export const useMutateCodePayment = () => {
         }catch (e: any){
             console.log(e);
             Bootpay.destroy();
-            toast.error("캐시 충전이 중단되었습니다.");
-            throw new Error('캐시 충전 중단');
+            toast.error("결제가 중단 되었습니다.");
+            throw new Error('부트페이 결제 중단');
         }
     }
 

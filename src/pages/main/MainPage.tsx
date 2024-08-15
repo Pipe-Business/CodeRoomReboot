@@ -75,19 +75,29 @@ const MainPage: FC = () => {
         return (
             <MainLayout>
                 <CenterBox>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            fontWeight: 'bold',
-                            color: '#000',
-                            mt: 2,
-                            mb: 3,
-                            fontSize: { xs: '24px', sm: '30px', md: '36px' }
-                        }}
-                    >
-                        "개발자들을 위한 코드거래 플랫폼" CODE ROOM
-                    </Typography>
+                    <SearchBar>
+                        <Paper
+                            variant='outlined'
+                            component='form'
+                            onSubmit={onSubmitSearch}
+                            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
+                        >
+                            <InputBase
+                                placeholder='찾으시는 코드 상품의 이름을 검색해주세요'
+                                sx={{ flex: 1, px: 1, height: '50px' }}
+                                value={inputSearch}
+                                onChange={onChangeInput}
+                            />
+                            <IconButton type='submit' sx={{ p: '8px' }}>
+                                <SearchIcon fontSize="small" />
+                            </IconButton>
+                        </Paper>
+                    </SearchBar>
                 </CenterBox>
+
+                <Box sx={{ px: 2, display: 'flex', justifyContent: 'flex-end', mt: 4, mr: 4, }}>
+                    <SortSelect onSortChange={handleSortChange} currentSort={sortOption} />
+                </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4, width: { xs: '100%', md: '100%' }, mx: 'auto' }}>
                     <Skeleton variant="rectangular" sx={{ height: '100px', mb: 2, padding: { xs: '16px', sm: '24px', md: '24px' }, }} />
                     <Skeleton variant="rectangular" sx={{ height: '100px', mb: 2, padding: { xs: '16px', sm: '24px', md: '24px' }, }} />
@@ -109,20 +119,21 @@ const MainPage: FC = () => {
 
     return (
         <MainLayout>
-            <CenterBox>
-                <Typography
-                    variant="h4"
-                    sx={{
-                        fontWeight: 'bold',
-                        color: '#000',
-                        mt: 2,
-                        mb: 3,
-                        fontSize: { xs: '24px', sm: '30px', md: '36px' }
-                    }}
-                >
-                    "개발자들을 위한 코드거래 플랫폼" CODE ROOM
-                </Typography>
-            </CenterBox>
+            {/*<CenterBox>*/}
+            {/*    <Typography*/}
+            {/*        variant="h4"*/}
+            {/*        sx={{*/}
+            {/*            fontWeight: 'bold',*/}
+            {/*            color: '#000',*/}
+            {/*            mt: 2,*/}
+            {/*            mb: 3,*/}
+            {/*            fontSize: { xs: '24px', sm: '30px', md: '36px' }*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        "개발자들을 위한 코드거래 플랫폼" CODE ROOM*/}
+            {/*    </Typography>*/}
+            {/*</CenterBox>*/}
+
             <CenterBox>
             <SearchBar>
                 <Paper

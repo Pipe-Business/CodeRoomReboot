@@ -144,13 +144,13 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
       return;
     }
     if (!inputPoint) {
-      toast.error('캐시를 입력해주세요');
+      toast.error('판매 금액을 입력해주세요');
       inputPointRef.current?.focus();
       setLoading(false);
       return;
     }
     if (inputPoint < 0) {
-      toast.error('캐시는 음수가 될수 없습니다.');
+      toast.error('판매금액은 음수가 될수 없습니다.');
       inputPointRef.current?.focus();
       setLoading(false);
       return;
@@ -376,7 +376,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
                 boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
                 borderRadius: '8px'
             }}>
-                <SectionTitle title='판매 금액 (캐시)'/>
+                <SectionTitle title='판매 금액'/>
                 <TextField
                     sx={{width: '100%', maxWidth: 300, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px'}}
                     value={inputPoint}
@@ -384,7 +384,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
                     placeholder={'예) 300'}
                     inputRef={inputPointRef}
                     error={pointError}
-                    helperText={pointError && '캐시는 음수가 될 수 없습니다.'}
+                    helperText={pointError && '판매금액은 음수가 될 수 없습니다.'}
                     type='number'
                 />
             </Card>
