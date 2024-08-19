@@ -27,6 +27,7 @@ export const HeaderIconButton = styled.div`
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     color: '#000000',
     backgroundColor: '#FFFFFF',
+    fontSize: '17px',
   }));
 
   export const FooterWrapper = styled.div`

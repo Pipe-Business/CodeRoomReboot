@@ -51,7 +51,7 @@ const HeaderLayout: FC<Props> = () => {
                 <HeaderTitle>
                     <Link to='/' style={{textDecoration: "none"}}>
                         <CenterBox>
-                            <h2 style={{fontSize: '30px', marginTop: '20px', marginBottom: '20px', fontWeight: 'bold'}}>
+                            <h2 style={{fontSize: '36px', marginTop: '20px', marginBottom: '20px', fontWeight: 'bold'}}>
                                 <span style={{color: '#000000', fontFamily: 'sans-serif'}}>&lt;</span>
                                 <span style={{color: '#000000', fontFamily: 'sans-serif'}}>CODE ROOM</span>
                                 <span style={{color: '#000000', fontFamily: 'sans-serif'}}>/&gt;</span>
@@ -85,7 +85,7 @@ const HeaderLayout: FC<Props> = () => {
                         <MarginHorizontal size={8}>
                             <span style={{
                                 color: '#000000',
-                                fontSize: '14px',
+                                fontSize: '17px',
                                 fontWeight: 'bold'
                             }}>{totalCashPointData?.coin_amount.toLocaleString() + ' 🌱'}</span>
                         </MarginHorizontal>
@@ -98,7 +98,7 @@ const HeaderLayout: FC<Props> = () => {
 
                         <MarginHorizontal size={8}>
                             <Link to={'/create/code'} style={{textDecoration: "none"}}>
-                                <span style={{color: '#000000', fontSize: '14px'}}>코드 올리기</span>
+                                <span style={{color: '#000000', fontSize: '17px'}}>코드 올리기</span>
                             </Link>
                         </MarginHorizontal>
 
@@ -106,7 +106,7 @@ const HeaderLayout: FC<Props> = () => {
                             <Link to={'/notification'}>
                                 <HeaderIconButton>
                                     <Badge color={'error'} badgeContent={notiCount} max={9}>
-                                        <NotificationsIcon sx={{fontSize: '24px', color: '#000000'}}/>
+                                        <NotificationsIcon sx={{fontSize: '26px', color: '#000000'}}/>
                                     </Badge>
                                 </HeaderIconButton>
                             </Link>
