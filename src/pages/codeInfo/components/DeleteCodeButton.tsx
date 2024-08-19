@@ -16,7 +16,7 @@ const DeleteCodeButton: FC<Props> = ({ codePost }) => {
 
     return (
         <div>
-            <ColorButton onClick={onOpenAcceptModal} variant='contained' sx={{ fontSize: '20px', width: '210px', fontWeight: 'bold', backgroundColor: '#ee3b3b' }}>
+            <ColorButton onClick={onOpenAcceptModal} variant='contained' sx={{ fontSize: '20px', width: '210px', fontWeight: 'bold', backgroundColor: '#d03131' }}>
                 코드 템플릿 삭제
             </ColorButton>
             <DeleteModal open={openDeleteModal} onClose={onCloseDeleteModal} codePost={codePost} />

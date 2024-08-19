@@ -2419,6 +2419,57 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('readme marketing text insert 실패');
         }
     }
+
+
+    async fetchComments(postId: number, userToken: string) {
+        try {
+            const { data, error } = await supabase
+                .from('comment')
+                .select('*')
+                .eq('post_id',postId)
+                .order('created_at', { ascending: true });
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                return error;
+            }
+
+            return data!;
+
+        } catch (e: any) {
+            console.log(e);
+            return e;
+        }
+    };
+
+    async addComment (content?: string, parentCommentId?: number, userToken?: string, postId?: string) {
+        try {
+            const { data, error } = await supabase
+                .from('comment')
+                .insert([{ content: content, parent_comment_id: parentCommentId, user_token: userToken, post_id: postId}])
+                .select();
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                return error;
+            }
+            return data!;
+
+        } catch (e: any) {
+            console.log(e);
+            return e;
+        }
+    };
 }
 
 
