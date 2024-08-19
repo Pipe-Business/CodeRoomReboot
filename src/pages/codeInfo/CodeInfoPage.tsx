@@ -372,7 +372,7 @@ const CodeInfo: FC<Props> = () => {
 
 								<Box sx={{ width: '100%', mt: 2 }}>
 									<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1, fontSize: '30px' }}>
-										즉시 구매가
+										코드 상품 판매가격
 									</Typography>
 									<Typography variant="body1" color="textPrimary" sx={{ mb: 2, fontSize: '30px', }}>
 										{postData.price.toLocaleString()}원

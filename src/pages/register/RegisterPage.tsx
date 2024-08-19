@@ -204,13 +204,14 @@ const RegisterPage: FC<Props> = () => {
 		<MainLayout>
 			<Card>
 				<InfoLayout header={'코드룸 회원가입'}>
-					<FormWrapper onSubmit={onSubmitRegisterForm}>
+					<FormWrapper onSubmit={onSubmitRegisterForm} autoComplete="off">
 						<TextFieldWrapper>
 							<div>이메일</div>
 							<TextField
 								sx={{
 									width: { sm: 300, md: 400 },
 								}}
+								autoComplete='new-password'
 								fullWidth
 								type='email'
 								inputRef={inputEmailRef}
@@ -229,6 +230,7 @@ const RegisterPage: FC<Props> = () => {
 								sx={{
 									width: { sm: 300, md: 400 },
 								}}
+								autoComplete='new-password'
 								fullWidth
 								value={inputPwd}
 								inputRef={inputPwdRef}
@@ -246,6 +248,7 @@ const RegisterPage: FC<Props> = () => {
 								sx={{
 									width: { sm: 300, md: 400 },
 								}}
+								autoComplete='new-password'
 								fullWidth
 								value={inputPwdCheck}
 								inputRef={inputPwdCheckRef}
@@ -267,7 +270,6 @@ const RegisterPage: FC<Props> = () => {
 								ref={inputNicknameRef}
 								onChange={onChangeInputNickName}
 								error={errorNickName}
-
 								color={errorNickName ? 'error' : successNickName ? 'success' : 'info'}
 								helperText={errorNickName ? errNickNameMsg : successNickName ? successNickNameMsg : ''}
 								placeholder={'닉네임을 입력해주세요 2글자 이상'}

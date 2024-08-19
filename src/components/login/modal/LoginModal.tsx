@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Card, Dialog, DialogContent, DialogTitle, IconButton, TextField } from '@mui/material';
 import { User } from '@supabase/supabase-js';
-import React, { FC, useCallback, useRef } from 'react';
+import React, {FC, useCallback, useMemo, useRef} from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {apiClient} from "../../../api/ApiClient";
@@ -27,6 +27,14 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 	const [inputPwd, onChangePwd, setInputPwd] = useInput('');
 	const navigate = useNavigate();
 	const location = useLocation();
+
+	const showCloseIcon = useMemo(() => {
+		// CloseIcon을 숨길 경로 패턴들을 여기에 추가하세요
+		const hideCloseIconPatterns = [
+			/^\/code\/\d+/  // /code/ 뒤에 숫자가 오는 모든 경로
+		];
+		return !hideCloseIconPatterns.some(pattern => pattern.test(location.pathname));
+	}, [location.pathname]);
 
 	const onSubmitLoginForm = useCallback(async (e: any) => {
 		e.preventDefault();
@@ -90,9 +98,11 @@ const LoginModal: FC<Props> = ({ isOpen, onClose }) => {
 			<DialogTitle>
 				<div style={{display:'flex', justifyContent:"space-between", alignItems:'center'}}>
 					<h3>지금 로그인하고 코드를 거래하세요</h3>
-					<IconButton onClick={onClose}>
-						<CloseIcon/>
-					</IconButton>
+					{showCloseIcon && (
+						<IconButton onClick={onClose}>
+							<CloseIcon/>
+						</IconButton>
+					)}
 				</div>
 			</DialogTitle>
 			<DialogContent>
