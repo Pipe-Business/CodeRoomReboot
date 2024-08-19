@@ -18,8 +18,10 @@ export const Paging: FC<Props> = ({ page, count, setPage }) => {
           itemsCountPerPage={5}
         totalItemsCount={count}
         pageRangeDisplayed={5}
-        prevPageText={"<"}
-        nextPageText={">"}
+        prevPageText={"< Prev"}
+        nextPageText={"Next >"}
+        firstPageText={"First"}
+        lastPageText={"Last"}
         onChange={setPage}
       />
     </div>
