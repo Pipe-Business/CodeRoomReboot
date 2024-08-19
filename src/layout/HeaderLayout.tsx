@@ -11,6 +11,7 @@ import {useQueryUserLogin} from '../hooks/fetcher/UserFetcher';
 import useDialogState from '../hooks/UseDialogState';
 import {ColorButton, HeaderIconButton, HeaderTitle, HeaderWrapper} from './styles';
 import ProfileMenu from '../components/profile/ProfileMenu';
+import coinImage from '../assets/coin.png'
 
 interface Props {
     children?: React.ReactNode;
@@ -86,8 +87,18 @@ const HeaderLayout: FC<Props> = () => {
                             <span style={{
                                 color: '#000000',
                                 fontSize: '17px',
-                                fontWeight: 'bold'
-                            }}>{totalCashPointData?.coin_amount.toLocaleString() + ' 🌱'}</span>
+                                fontWeight: 'bold',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}>{totalCashPointData?.coin_amount.toLocaleString()} <img
+                                src={coinImage}
+                                alt="Coin"
+                                style={{
+                                    width: '20px',  // 이미지 크기를 적절히 조정하세요
+                                    height: '20px',
+                                    marginLeft: '4px'  // 텍스트와 이미지 사이의 간격
+                                }}
+                            /></span>
                         </MarginHorizontal>
 
                         {/*<MarginHorizontal size={8}>*/}
