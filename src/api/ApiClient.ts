@@ -30,6 +30,8 @@ import {PostStateType} from "../enums/PostStateType";
 import {GptCodeInfoResponseEntity} from "../data/entity/GptCodeInfoResponseEntity";
 import { Octokit } from "@octokit/rest";
 import {toast} from "react-toastify";
+import {Simulate} from "react-dom/test-utils";
+import select = Simulate.select;
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 export type SortOption = 'latest' | 'oldest' | 'mostPurchased' | 'priceAsc' | 'priceDesc'; // 리스트 정렬 기준
@@ -2466,6 +2468,57 @@ class ApiClient implements SupabaseAuthAPI {
             return data!;
 
         } catch (e: any) {
+            console.log(e);
+            return e;
+        }
+    };
+
+
+    async updateComment(commentId: number, content: string, userToken: string) {
+        try {
+            const { data, error } = await supabase
+                .from('comment')
+                .update({ content })
+                .eq('id', commentId)
+                .eq('user_token', userToken)
+                .select();
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                return error;
+            }
+            return data!;
+        } catch (e) {
+            console.log(e);
+            return e;
+        }
+    };
+
+    async deleteComment(commentId: number, userToken: string) {
+        try {
+            const { data, error } = await supabase
+                .from('comment')
+                .delete()
+                .eq('id', commentId)
+                .eq('user_token', userToken)
+                .select();
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                return error;
+            }
+            return data!;
+        } catch (e) {
             console.log(e);
             return e;
         }
