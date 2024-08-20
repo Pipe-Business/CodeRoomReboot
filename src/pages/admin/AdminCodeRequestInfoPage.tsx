@@ -11,9 +11,10 @@ import {
 	Grid,
 	Chip,
 	Box,
-	Divider
+	Divider,
+	Paper
 } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, Code as CodeIcon, CheckCircle as CheckCircleIcon, Cancel as CancelIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
 import AdminLayout from '../../layout/AdminLayout';
@@ -29,6 +30,8 @@ import ReadMeHtml from "../codeInfo/components/ReadMeHtml";
 
 const StyledCard = styled(Card)(({ theme }) => ({
 	marginBottom: theme.spacing(3),
+	borderRadius: theme.shape.borderRadius * 2,
+	boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
 }));
 
 const StyledCardContent = styled(CardContent)(({ theme }) => ({
@@ -40,11 +43,114 @@ const StyledCardContent = styled(CardContent)(({ theme }) => ({
 const TitleTypography = styled(Typography)(({ theme }) => ({
 	fontWeight: 'bold',
 	marginBottom: theme.spacing(1),
+	color: theme.palette.primary.main,
 }));
 
 const ContentTypography = styled(Typography)(({ theme }) => ({
 	marginBottom: theme.spacing(2),
 }));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+	borderRadius: theme.shape.borderRadius * 2,
+	textTransform: 'none',
+	fontWeight: 'bold',
+	padding: theme.spacing(1.5, 3),
+	boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+	transition: 'all 0.3s ease',
+	'&:hover': {
+		transform: 'translateY(-2px)',
+		boxShadow: '0 6px 8px rgba(0, 0, 0, 0.15)',
+	},
+}));
+
+const StyledChip = styled(Chip)(({ theme }) => ({
+	borderRadius: theme.shape.borderRadius * 2,
+	fontWeight: 'bold',
+	fontSize: '1rem',
+	padding: theme.spacing(2, 3),
+}));
+
+const StatusContainer = styled(Box)(({theme}) => ({
+	display: 'inline-flex',
+	alignItems: 'center',
+	padding: theme.spacing(0.5, 1.5),
+	borderRadius: theme.shape.borderRadius,
+	fontWeight: 500,
+}));
+
+const StatusDot = styled('span')(({theme}) => ({
+	width: 8,
+	height: 8,
+	borderRadius: '50%',
+	marginRight: theme.spacing(1),
+}));
+
+interface PostStatusProps {
+	state: PostStateType;
+}
+
+const getStatusColor = (state: PostStateType) => {
+	switch (state) {
+		case PostStateType.pending:
+			return {
+				bg: 'rgba(255, 193, 7, 0.1)',
+				text: '#F9A825',
+				dot: '#F9A825'
+			};
+		case PostStateType.rejected:
+			return {
+				bg: 'rgba(244, 67, 54, 0.1)',
+				text: '#D32F2F',
+				dot: '#D32F2F'
+			};
+		default:
+			return {
+				bg: 'rgba(76, 175, 80, 0.1)',
+				text: '#388E3C',
+				dot: '#388E3C'
+			};
+	}
+};
+
+const getStatusText = (state: PostStateType) => {
+	switch (state) {
+		case PostStateType.pending:
+			return '검토 중';
+		case PostStateType.rejected:
+			return '반려됨';
+		default:
+			return '승인됨';
+	}
+};
+
+export const PostStatus: React.FC<PostStatusProps> = ({state}) => {
+	const colors = getStatusColor(state);
+
+	return (
+		<StatusContainer style={{backgroundColor: colors.bg}}>
+			<StatusDot style={{backgroundColor: colors.dot}}/>
+			<Typography variant="body2" style={{color: colors.text}}>
+				{getStatusText(state)}
+			</Typography>
+		</StatusContainer>
+	);
+};
+
+const stringToPostStateType = (state: string): PostStateType => {
+	switch (state.toLowerCase()) {
+		case 'pending':
+			return PostStateType.pending;
+		case 'rejected':
+			return PostStateType.rejected;
+		case 'approved':
+			return PostStateType.approve;
+		case 'deleted':
+			return PostStateType.deleted;
+		default:
+			console.warn(`Unknown state: ${state}. Defaulting to pending.`);
+			return PostStateType.pending;
+	}
+};
 
 interface Props {
 	children?: React.ReactNode;
@@ -106,23 +212,21 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					<IconButton onClick={() => navigate(-1)} sx={{ mr: 1 }}>
 						<ArrowBack />
 					</IconButton>
-					<Typography variant="h6">{userById.nickname} 님의 {data.title}</Typography>
+					<Typography variant="h5" fontWeight="bold">{userById?.nickname} 님의 {data?.title}</Typography>
 				</Box>
 
-				<Chip
-					label={data.state === PostStateType.pending ? '요청 대기' : data.state === PostStateType.rejected ? '요청 반려' : '승인'}
-					color={data.state === PostStateType.pending ? 'warning' : data.state === PostStateType.rejected ? 'error' : 'success'}
-					sx={{ mb: 3, fontSize: '1.2rem', padding: '20px 10px' }}
-				/>
-
-				<Button
-					variant="contained"
-					color="primary"
-					onClick={handleSmartAnalysis}
-					sx={{ mb: 3, ml: 2 }}
-				>
-					스마트 코드 분석
-				</Button>
+				<Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+					<PostStatus state={stringToPostStateType(data?.state)} />
+					<StyledButton
+						variant="contained"
+						color="info"
+						startIcon={<CodeIcon />}
+						onClick={handleSmartAnalysis}
+						sx={{ ml: 2 }}
+					>
+						스마트 코드 분석
+					</StyledButton>
+				</Box>
 
 				{data.state === PostStateType.rejected && (
 					<StyledCard>
@@ -204,27 +308,41 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					</StyledCardContent>
 				</StyledCard>
 
-				{data.state === PostStateType.pending && (
-					<Box sx={{ position: 'sticky', bottom: 20, zIndex: 2, mt: 4 }}>
+				{data?.state === PostStateType.pending && (
+					<Paper elevation={3} sx={{ position: 'sticky', bottom: 20, zIndex: 2, mt: 4, borderRadius: 4, overflow: 'hidden', padding: 2 }}>
 						<Grid container spacing={2}>
 							<Grid item xs={6}>
-								<Button fullWidth variant="contained" sx={{height: 80, fontSize: 20}} color="primary" size="large" onClick={onOpenAcceptModal}>
+								<StyledButton
+									fullWidth
+									variant="contained"
+									color="success"
+									startIcon={<CheckCircleIcon />}
+									sx={{ height: 60, fontSize: 18 }}
+									onClick={onOpenAcceptModal}
+								>
 									승인
-								</Button>
+								</StyledButton>
 							</Grid>
 							<Grid item xs={6}>
-								<Button fullWidth variant="contained" sx={{height: 80, fontSize: 20}} color="error" size="large" onClick={onOpenRejectModal}>
+								<StyledButton
+									fullWidth
+									variant="contained"
+									color="error"
+									startIcon={<CancelIcon />}
+									sx={{ height: 60, fontSize: 18 }}
+									onClick={onOpenRejectModal}
+								>
 									반려
-								</Button>
+								</StyledButton>
 							</Grid>
 						</Grid>
-					</Box>
+					</Paper>
 				)}
 				<AcceptModal open={openAcceptModal} onClose={onCloseAcceptModal} />
 				<RejectModal
-					postId={data.id!.toString()}
-					title={data.title}
-					userToken={data.userToken}
+					postId={data?.id!.toString()}
+					title={data?.title}
+					userToken={data?.userToken}
 					open={openRejectModal}
 					onClose={onCloseRejectModal}
 					refetch={() => navigate('/admin')}

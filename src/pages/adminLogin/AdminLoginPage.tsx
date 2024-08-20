@@ -78,7 +78,7 @@ useEffect(() => {
         <Box height={32} />
         <Card style={{ margin: '8px',}} elevation={0} sx={{width: { sm: 300, md: 400 }} }>
         <form onSubmit={onSubmitLoginForm}>
-        <h3 style={{ color: '#000000', fontFamily: 'sans-serif' }}>CodeRoom 관리자 로그인</h3>
+        <h3 style={{ color: '#000000', fontFamily: 'sans-serif' }}>코드룸 관리자 콘솔</h3>
             <div>
                 <TextField
                     inputRef={inputEmailRef}
@@ -101,7 +101,7 @@ useEffect(() => {
                     placeholder='비밀번호 입력' />
             </div>
             <Box height={32} />
-            <ColorButton type={'submit'} sx={{fontSize:'15', width: '100%' }}>로그인</ColorButton>
+            <ColorButton type={'submit'} sx={{fontSize:'20px', width: '100%', backgroundColor:'#000000' }}>로그인</ColorButton>
                 </form>
         
         <Box height={16} />

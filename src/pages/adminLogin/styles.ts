@@ -29,11 +29,11 @@ export const Margin = styled.div<MarginStyle>`
 `
 
 export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  color: '#000000',
-  backgroundColor: '#50C1FF',
+  color: '#ffffff',
+  backgroundColor: '#000000',
   height : '52px',
 '&:hover': {
-  backgroundColor: '#569CD6',
+  backgroundColor: '#000000',
   boxShadow: 'none',
   },
 }));
