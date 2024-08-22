@@ -15,16 +15,18 @@ import {
     TableContainer, TextField
 } from "@mui/material";
 import TableHeader from "../TableHeader";
-import React, {ChangeEvent, Fragment, useCallback, useState} from "react";
+import React, {ChangeEvent, useCallback, useState} from "react";
 import ProfitList from "./ProfitList";
 import {MyPageTabPageBtn, TotalAmountTitleText} from "../../styles";
 import useDialogState from "../../../../hooks/UseDialogState";
 import CloseIcon from "@mui/icons-material/Close";
 import useDialog from "../../../../hooks/useDialog";
+import ListEmptyText from "../ListEmptyText";
+import ListLoadingSkeleton from "../ListLoadingSkeleton";
 
 const ProfitTabPage = () => {
     const {userLogin} = useQueryUserLogin();
-    const {data: purchaseData, isLoading: isPurchaseCodeDataLoading, refetch: refetchPurchaseData} = useQuery({
+    const {data: purchaseData, isLoading: isPurchaseCodeDataLoading} = useQuery({
         queryKey: ['/sales', userLogin?.user_token!],
         queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
     });
@@ -46,6 +48,15 @@ const ProfitTabPage = () => {
         setFile(file[0]);
         setSrc(url);
     }, []);
+
+    if(isPurchaseCodeDataLoading){
+        return <ListLoadingSkeleton/>;
+    }
+
+    if(purchaseData?.length === 0) {
+        return <ListEmptyText/>;
+    }
+
 
     return (
         <TableContainer>

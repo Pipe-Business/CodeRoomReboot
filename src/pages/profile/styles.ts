@@ -67,3 +67,12 @@ export const TotalAmountTitleText = styled.div`
   font-size: 32px;
   margin : 16px 8px;
 `;
+
+export const ListEmptyTextStyle = styled.div`
+    display: flex;
+    margin: 64px;
+    justify-content: center;
+    font-size: 16px;
+    fontweight: bold;
+    color: gray;
+`;

@@ -6,6 +6,7 @@ import TableHeader from "../TableHeader";
 import React from "react";
 import QnAList from "./QnAList";
 import ListLoadingSkeleton from "../ListLoadingSkeleton";
+import ListEmptyText from "../ListEmptyText";
 
 const QnATabPage = () => {
     const {userLogin} = useQueryUserLogin();
@@ -16,6 +17,10 @@ const QnATabPage = () => {
 
     if(isCommentsLoading){
         return <ListLoadingSkeleton/>;
+    }
+
+    if(commentsData?.length === 0) {
+        return <ListEmptyText/>;
     }
 
     return (

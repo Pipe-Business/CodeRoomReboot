@@ -19,7 +19,7 @@ import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
 import {CodeModel} from "../../data/model/CodeModel";
 import MyFavoriteTabPage from "./components/favorite/favoriteTabPage";
-import MyPurchasedTabPageTsx from "./components/purchased/MyPurchasedTabPage";
+import MyPurchasedTabPage from "./components/purchased/MyPurchasedTabPage";
 import SellReviewTabPage from "./components/sale/SellReviewTabPage";
 import CoinHistoryTabPage from "./components/coinHistory/CoinHistoryTabPage";
 import ProfitTabPage from "./components/profit/ProfitTabPage";
@@ -210,12 +210,12 @@ const MyPage: FC<Props> = () => {
                         {tab}
                         <TabContext value={value}>
                             <Box sx={{ width: '100%'}}>
-                                <StyledTabList onChange={handleChange} aria-label="lab API tabs example">
+                                <StyledTabList onChange={handleChange} aria-label="mypage tabs">
                                     <StyledTab label="관심 목록" value="1" />
                                     <StyledTab label="구매 목록" value="2" />
-                                    <StyledTab label="판매 / 심사" value="3" />
+                                    <StyledTab label="판매 목록" value="3" />
                                     <StyledTab label="파이프 코인" value="4" />
-                                    <StyledTab label="수익 / 정산" value="5" />
+                                    <StyledTab label="수익 목록" value="5" />
                                     <StyledTab label="Q&A" value="6" />
                                 </StyledTabList>
                             </Box>
@@ -223,7 +223,7 @@ const MyPage: FC<Props> = () => {
                                 <MyFavoriteTabPage />
                             </TabPanel>
                             <TabPanel value="2" sx={{ flex: 1 }}>
-                                <MyPurchasedTabPageTsx />
+                                <MyPurchasedTabPage />
                             </TabPanel>
                             <TabPanel value="3" sx={{ flex: 1 }}>
                                 <SellReviewTabPage />

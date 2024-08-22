@@ -6,6 +6,7 @@ import {useQuery} from "@tanstack/react-query";
 import TableHeader from "../TableHeader";
 import SaleList from "./SaleList";
 import ListLoadingSkeleton from "../ListLoadingSkeleton";
+import ListEmptyText from "../ListEmptyText";
 
 const MyPurchasedTabPage: FC = () => {
 	const {userLogin} = useQueryUserLogin();
@@ -16,6 +17,10 @@ const MyPurchasedTabPage: FC = () => {
 
 	if(saleCodeDataLoading) {
 		return <ListLoadingSkeleton/>;
+	}
+
+	if(saleData?.length === 0) {
+		return <ListEmptyText/>;
 	}
 	
 	return (

@@ -5,6 +5,7 @@ import {useQuery} from "@tanstack/react-query";
 import {apiClient} from "../../../../api/ApiClient";
 import {useQueryUserLogin} from "../../../../hooks/fetcher/UserFetcher";
 import ListLoadingSkeleton from "../ListLoadingSkeleton";
+import ListEmptyText from "../ListEmptyText";
 
 interface Props {
 	children?: React.ReactNode,
@@ -17,6 +18,10 @@ const MyFavoriteTabPage: FC<Props> = () => {
 		queryKey: ['/liked', userLogin?.user_token!],
 		queryFn: () => apiClient.getAllMyLikeData(userLogin!.user_token!),
 	});
+
+	if(likedData?.length === 0) {
+		return <ListEmptyText/>;
+	}
 
 	if(isLikedDataLoading){
 		return <ListLoadingSkeleton/>;

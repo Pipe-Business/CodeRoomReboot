@@ -30,9 +30,7 @@ import {PostStateType} from "../enums/PostStateType";
 import {GptCodeInfoResponseEntity} from "../data/entity/GptCodeInfoResponseEntity";
 import { Octokit } from "@octokit/rest";
 import {toast} from "react-toastify";
-import {Simulate} from "react-dom/test-utils";
-import select = Simulate.select;
-import {CommentEntity} from "../data/entity/CommentEntity.ts";
+import {CommentEntity} from "../data/entity/CommentEntity";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 export type SortOption = 'latest' | 'oldest' | 'mostPurchased' | 'priceAsc' | 'priceDesc'; // 리스트 정렬 기준

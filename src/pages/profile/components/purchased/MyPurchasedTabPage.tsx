@@ -5,6 +5,8 @@ import {apiClient} from "../../../../api/ApiClient";
 import {useQueryUserLogin} from "../../../../hooks/fetcher/UserFetcher";
 import {useQuery} from "@tanstack/react-query";
 import TableHeader from "../TableHeader";
+import ListEmptyText from "../ListEmptyText";
+import ListLoadingSkeleton from "../ListLoadingSkeleton";
 
 interface Props {
 	children?: React.ReactNode,
@@ -87,6 +89,14 @@ const MyPurchasedTabPage: FC<Props> = () => {
 	// 	// navigate(0);
 	//
 	// };
+
+	if(purchaseCodeDataLoading){
+		return <ListLoadingSkeleton/>;
+	}
+
+	if(purchaseData?.length === 0) {
+		return <ListEmptyText/>;
+	}
 
 	return (
 		<TableContainer>

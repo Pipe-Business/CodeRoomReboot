@@ -8,6 +8,7 @@ import TableHeader from "../TableHeader";
 import CoinHistoryList from "./CoinHistoryList";
 import {TotalAmountTitleText} from "../../styles";
 import ListLoadingSkeleton from "../ListLoadingSkeleton";
+import ListEmptyText from "../ListEmptyText";
 
 const CoinHistoryTabPage: FC = () => {
     const {userLogin} = useQueryUserLogin();
@@ -18,6 +19,10 @@ const CoinHistoryTabPage: FC = () => {
 
     if(isCoinHistoryLoading){
         return <ListLoadingSkeleton/>;
+    }
+
+    if(coinHistoryData?.length === 0) {
+        return <ListEmptyText/>;
     }
 
     return (
