@@ -1,22 +1,54 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { Typography, Box, Button, CircularProgress, List, ListItem, LinearProgress } from '@mui/material';
+import { Typography, Box, Button, CircularProgress, List, ListItem } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import AdminLayout from '../../layout/AdminLayout';
 import useRepoFiles from "./hooks/useRepoFiles";
+import { apiClient } from "../../api/ApiClient";
 
 interface LocationState {
     githubRepoUrl?: string;
     sellerGithubName?: string;
 }
 
-interface FileData {
-    name: string;
-    path: string;
-    content?: string;
-    analysis?: string;
-    [key: string]: any;
-}
+const getLanguageFromFilename = (filename: string): string => {
+    const extension = filename.split('.').pop()?.toLowerCase();
+    const languageMap: { [key: string]: string } = {
+        'js': 'javascript',
+        'ts': 'typescript',
+        'py': 'python',
+        'java': 'java',
+        'c': 'c',
+        'cpp': 'cpp',
+        'cs': 'csharp',
+        'html': 'html',
+        'css': 'css',
+        'json': 'json',
+        'md': 'markdown',
+        'tsx': 'typescript',
+        'jsx': 'javascript',
+        'php': 'php',
+        'rb': 'ruby',
+        'go': 'go',
+        'rs': 'rust',
+        'swift': 'swift',
+        'kt': 'kotlin',
+        'scala': 'scala',
+        'sql': 'sql',
+        'sh': 'bash',
+        'yml': 'yaml',
+        'yaml': 'yaml',
+        'xml': 'xml',
+        'dart': 'dart',
+        'dockerfile': 'dockerfile',
+        // 필요에 따라 더 많은 매핑을 추가할 수 있습니다.
+    };
+    return languageMap[extension || ''] || 'text';
+};
 
 const SmartAnalysis: FC = () => {
     const location = useLocation();
@@ -24,33 +56,33 @@ const SmartAnalysis: FC = () => {
     const navigate = useNavigate();
     const { githubRepoUrl, sellerGithubName } = location.state as LocationState;
 
-    const { files, fileNames, loading, error, totalCodeFiles } = useRepoFiles(
+    const { files, loading, error, totalCodeFiles } = useRepoFiles(
         sellerGithubName || '',
         githubRepoUrl || ''
     );
 
-    const [analyzedFiles, setAnalyzedFiles] = useState<FileData[]>([]);
-    const [currentFile, setCurrentFile] = useState<string>('');
+    const [gptResultData, setGptResultData] = useState<any>(null);
+    const [gptLoading, setGptLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        const newAnalyzedFiles = files.filter(file =>
-            file.analysis !== undefined &&
-            !analyzedFiles.some(af => af.path === file.path)
-        );
+        const fetchGptAnalysis = async () => {
+            if (files && files.length > 0) {
+                const contents = files.map((file) => file.content);
+                const parsedFileContents = JSON.stringify(contents);
+                setGptLoading(true);
+                try {
+                    const response = await apiClient.makeCodeAnalysisAdminByGPT(parsedFileContents);
+                    setGptResultData(response);
+                } catch (error) {
+                    console.error('GPT 분석 답변 생성 오류:', error);
+                } finally {
+                    setGptLoading(false);
+                }
+            }
+        };
 
-        if (newAnalyzedFiles.length > 0) {
-            setAnalyzedFiles(prev => [...prev, ...newAnalyzedFiles]);
-        }
-
-        const remainingFiles = files.filter(file => file.analysis === undefined);
-        if (remainingFiles.length > 0) {
-            setCurrentFile(remainingFiles[0].name);
-        } else {
-            setCurrentFile('');
-        }
-    }, [files, analyzedFiles]);
-
-    const progress = totalCodeFiles > 0 ? (analyzedFiles.length / totalCodeFiles) * 100 : 0;
+        fetchGptAnalysis();
+    }, [files]);
 
     if (!githubRepoUrl || !sellerGithubName) {
         return (
@@ -62,6 +94,65 @@ const SmartAnalysis: FC = () => {
             </AdminLayout>
         );
     }
+
+    const renderGptAnalysis = () => {
+        if (gptLoading) {
+            return (
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mt: 4
+                }}>
+                    <CircularProgress sx={{ mb: 2 }} />
+                    <Typography variant="h6">
+                        코드 파일 가져오기 완료, 분석 결과 생성 중...
+                    </Typography>
+                </Box>
+            );
+        }
+
+        if (!gptResultData) return null;
+
+        return (
+            <Box sx={{ mt: 4 }}>
+                <Typography variant="h5" sx={{ mb: 2 }}>프로젝트 코드 분석 결과</Typography>
+                {Object.entries(gptResultData).map(([key, value]) => (
+                    <Box key={key} sx={{ mb: 3 }}>
+                        <Typography variant="h6" sx={{ mb: 1 }}>{key}</Typography>
+                        <Box sx={{ backgroundColor: '#f5f5f5', p: 2, borderRadius: 1 }}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    code({node, inline, className, children, ...props}) {
+                                        const match = /language-(\w+)/.exec(className || '');
+                                        const language = match ? match[1] : getLanguageFromFilename(key);
+                                        return !inline ? (
+                                            <SyntaxHighlighter
+                                                style={vscDarkPlus}
+                                                language={language}
+                                                PreTag="div"
+                                                {...props}
+                                            >
+                                                {String(children).replace(/\n$/, '')}
+                                            </SyntaxHighlighter>
+                                        ) : (
+                                            <code className={className} {...props}>
+                                                {children}
+                                            </code>
+                                        )
+                                    }
+                                }}
+                            >
+                                {value as string}
+                            </ReactMarkdown>
+                        </Box>
+                    </Box>
+                ))}
+            </Box>
+        );
+    };
 
     return (
         <AdminLayout>
@@ -87,20 +178,12 @@ const SmartAnalysis: FC = () => {
                     <strong>Code ID:</strong> {codeId}
                 </Typography>
 
-                {(loading || analyzedFiles.length < totalCodeFiles) && (
+                {loading && (
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
                         <CircularProgress />
                         <Typography variant="body1" sx={{ mt: 2 }}>
-                            {loading ? `Analyzing code... ${analyzedFiles.length}/${totalCodeFiles} files` : '코드 분석이 모두 완료되었습니다'}
+                            {`${totalCodeFiles} 개의 코드 파일들을 분석 중입니다`}
                         </Typography>
-                        {currentFile && (
-                            <Typography variant="body2" sx={{ mt: 1 }}>
-                                Currently analyzing: {currentFile}
-                            </Typography>
-                        )}
-                        <Box sx={{ width: '100%', mt: 2 }}>
-                            <LinearProgress variant="determinate" value={progress} />
-                        </Box>
                     </Box>
                 )}
 
@@ -110,22 +193,27 @@ const SmartAnalysis: FC = () => {
                     </Typography>
                 )}
 
-                {analyzedFiles.length > 0 && (
+                {renderGptAnalysis()}
+
+                {files.length > 0 && (
                     <List sx={{ mt: 4 }}>
-                        {analyzedFiles.map((file) => (
-                            <ListItem key={file.path} sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                        {files.map((file) => (
+                            <ListItem key={file.path} sx={{ flexDirection: 'column', alignItems: 'flex-start', mb: 4 }}>
                                 <Typography variant="h6">{file.name}</Typography>
                                 {file.content && (
-                                    <Box component="pre" sx={{ mt: 1, p: 2, backgroundColor: '#f5f5f5', borderRadius: 1, overflowX: 'auto', width: '100%' }}>
-                                        <code>{file.content}</code>
-                                    </Box>
-                                )}
-                                {file.analysis && (
-                                    <Box sx={{ mt: 2, width: '100%' }}>
-                                        <Typography variant="h6">Analysis</Typography>
-                                        <Box component="pre" sx={{ mt: 1, p: 2, backgroundColor: '#e3f2fd', borderRadius: 1, overflowX: 'auto', width: '100%' }}>
-                                            <code>{file.analysis}</code>
-                                        </Box>
+                                    <Box sx={{ mt: 1, width: '100%' }}>
+                                        <SyntaxHighlighter
+                                            style={vscDarkPlus}
+                                            language={getLanguageFromFilename(file.name)}
+                                            customStyle={{
+                                                padding: '16px',
+                                                borderRadius: '4px',
+                                                maxHeight: '300px',
+                                                overflowY: 'auto'
+                                            }}
+                                        >
+                                            {file.content}
+                                        </SyntaxHighlighter>
                                     </Box>
                                 )}
                             </ListItem>

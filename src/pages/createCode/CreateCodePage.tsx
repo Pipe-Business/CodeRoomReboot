@@ -88,10 +88,10 @@ const CreateCodePage = () => {
 
                 setFileContentLength(contents?.length ?? 0);
 
-                const parsedFileContens:string = JSON.stringify(contents);
+                const parsedFileContents:string = JSON.stringify(contents);
                 setButtonTitle('코드 분석 중');
 
-                const result: GptCodeInfoResponseEntity = await  apiClient.makeCodeInfoBygpt(parsedFileContens);
+                const result: GptCodeInfoResponseEntity = await apiClient.makeCodeInfoByGPT(parsedFileContents);
                 const splitedResult:string[] = result.defaultInfo.split('|');
                 const splitedHashTag:string[] = result.hashTag.split('|').map(e => e.trim());
                 const parsedResult: GptCodeInfoEntity = {

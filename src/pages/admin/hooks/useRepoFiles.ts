@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchRepoFiles, fetchFileContent } from '../services/githubService';
-import { analyzeCode } from '../services/chatGptService';
 
 interface FileNode {
     name: string;
@@ -8,12 +7,10 @@ interface FileNode {
     path: string;
     type: string;
     content?: string;
-    analysis?: string;
 }
 
-const SUPPORTED_EXTENSIONS = ['.py', '.js', '.ts', '.java', '.cpp', '.cs', '.dart'];
+const SUPPORTED_EXTENSIONS = ['.py', '.js', '.ts', '.java', '.cpp', '.cs', '.dart', 'c', 'tsx', 'kt'];
 const INITIAL_DELAY = 5000; // 5 seconds
-const MAX_RETRIES = 3;
 
 interface UseRepoFilesReturn {
     files: FileNode[];
@@ -23,79 +20,65 @@ interface UseRepoFilesReturn {
     totalCodeFiles: number;
 }
 
-const useRepoFiles = (owner: string, repo: string): UseRepoFilesReturn => {
+const useRepoFiles = (initialOwner: string, initialRepo: string): UseRepoFilesReturn => {
+    const [owner, setOwner] = useState<string>(initialOwner);
+    const [repo, setRepo] = useState<string>(initialRepo);
     const [files, setFiles] = useState<FileNode[]>([]);
     const [fileNames, setFileNames] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [totalCodeFiles, setTotalCodeFiles] = useState<number>(0);
+    const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-    const analyzeWithRetry = async (content: string, retries = 0): Promise<string> => {
+    const getFiles = useCallback(async () => {
+        if (hasLoaded) return;
+
+        setLoading(true);
         try {
-            return await analyzeCode(content);
+            const fileList = await fetchRepoFiles(owner, repo);
+            console.log('Fetched file list:', fileList);
+            const codeFiles = fileList.filter((file: FileNode) =>
+                file.type === 'file' && SUPPORTED_EXTENSIONS.some(ext => file.name.endsWith(ext))
+            );
+
+            setTotalCodeFiles(codeFiles.length);
+            console.log('Code files:', codeFiles.map((file: FileNode) => file.name));
+
+            const fileContents = await Promise.all(codeFiles.map(async (file: FileNode) => {
+                const content = await fetchFileContent(file.download_url);
+                return { ...file, content };
+            }));
+
+            setFiles(fileContents);
+            setFileNames(codeFiles.map((file: FileNode) => file.name));
+            setHasLoaded(true);
         } catch (err) {
-            if (err instanceof Error && err.message.includes('429') && retries < MAX_RETRIES) {
-                console.log(`Rate limit hit, retrying in ${INITIAL_DELAY * (retries + 1)}ms...`);
-                await delay(INITIAL_DELAY * (retries + 1));
-                return analyzeWithRetry(content, retries + 1);
+            if (err instanceof Error) {
+                console.error('Error in useRepoFiles:', err.message);
+                setError(err.message);
+            } else {
+                setError('알 수 없는 오류가 발생했습니다.');
             }
-            throw err;
+        } finally {
+            setLoading(false);
         }
-    };
+    }, [owner, repo, hasLoaded]);
 
     useEffect(() => {
-        const getFiles = async () => {
-            setLoading(true);
-            try {
-                const fileList = await fetchRepoFiles(owner, repo);
-                console.log('Fetched file list:', fileList);
-                const codeFiles = fileList.filter((file: FileNode) =>
-                    file.type === 'file' && SUPPORTED_EXTENSIONS.some(ext => file.name.endsWith(ext))
-                );
-
-                setTotalCodeFiles(codeFiles.length);
-                console.log('Code files:', codeFiles.map((file: FileNode) => file.name));
-
-                const fileContents = await Promise.all(codeFiles.map(async (file: FileNode) => {
-                    const content = await fetchFileContent(file.download_url);
-                    return { ...file, content };
-                }));
-
-                const analyzedFiles: FileNode[] = [];
-                for (const file of fileContents) {
-                    if (file.content) {
-                        try {
-                            const analysis = await analyzeWithRetry(file.content);
-                            analyzedFiles.push({ ...file, analysis });
-                            // Update state after each file is analyzed
-                            setFiles([...analyzedFiles]);
-                        } catch (err) {
-                            console.error(`Failed to analyze ${file.name}:`, err);
-                            analyzedFiles.push({ ...file, analysis: 'Analysis failed' });
-                        }
-                        // Add delay between each analysis
-                        await delay(INITIAL_DELAY);
-                    } else {
-                        analyzedFiles.push(file);
-                    }
-                }
-
-                setFileNames(codeFiles.map((file: FileNode) => file.name));
-            } catch (err) {
-                if (err instanceof Error) {
-                    console.error('Error in useRepoFiles:', err.message);
-                    setError(err.message);
-                } else {
-                    setError('알 수 없는 오류가 발생했습니다.');
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
-
         getFiles();
+    }, [getFiles]);
+
+    useEffect(() => {
+        if (initialOwner !== owner) setOwner(initialOwner);
+        if (initialRepo !== repo) setRepo(initialRepo);
+    }, [initialOwner, initialRepo]);
+
+    useEffect(() => {
+        if (hasLoaded) {
+            setHasLoaded(false);
+        }
     }, [owner, repo]);
 
     return { files, fileNames, loading, error, totalCodeFiles };

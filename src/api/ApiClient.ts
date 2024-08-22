@@ -777,7 +777,7 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async makeCodeInfoBygpt(targetCode:string):Promise<GptCodeInfoResponseEntity> {
+    async makeCodeInfoByGPT(targetCode:string):Promise<GptCodeInfoResponseEntity> {
         try {
             const result = await axios.post<any>(`${serverURL}/gpt/recommand/codeInfo`, {data:targetCode});
 
@@ -792,6 +792,17 @@ class ApiClient implements SupabaseAuthAPI {
             throw new Error('recommand title by gpt error');
         }
     }
+
+    async makeCodeAnalysisAdminByGPT(targetCode: string) {
+        try {
+            const result = await axios.post<any>(`${serverURL}/gpt/analyze-code`, {data:targetCode});
+            return result.data;
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('make code analysis error !');
+        }
+    }
+
     ///gpt/serviceplanning
     async servicePlanningByGpt():Promise<string[]> {
 
