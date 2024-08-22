@@ -6,7 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {Box, Card, TextField} from '@mui/material';
 import {EMAIL_EXP} from '../../constants/define';
 import {toast} from 'react-toastify';
-import {ColorButton} from './styles';
+import {MyPageTabPageBtn} from './styles';
 import {MarginHorizontal} from '../../components/styles';
 import {apiClient} from '../../api/ApiClient';
 
@@ -81,7 +81,7 @@ setInputEmail('');
 							placeholder='이메일 입력' />
 					</div>
 					<Box height={64} />
-					<ColorButton type={'submit'} sx={{fontSize:'18px', width: '100%' }}>비밀번호 초기화</ColorButton>
+					<MyPageTabPageBtn type={'submit'} sx={{fontSize:'18px', width: '100%' }}>비밀번호 초기화</MyPageTabPageBtn>
 						</form>
 			
 				<Box height={16} />

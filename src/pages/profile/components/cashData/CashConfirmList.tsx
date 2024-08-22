@@ -24,7 +24,7 @@ const TableHeader: FC = () => {
 
 const CashConfirmList: FC<Props> = ({ cashConfirmData }) => {
 
-	//console.log("purchase",purchaseData);
+	//console.log("purchase",purchased);
 	return (
 		<>
 			<List>

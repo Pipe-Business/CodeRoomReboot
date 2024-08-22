@@ -5,7 +5,7 @@ import MainLayout from '../../layout/MainLayout';
 import {useNavigate} from 'react-router-dom';
 import {Box, Card, TextField} from '@mui/material';
 import {toast} from 'react-toastify';
-import {ColorButton} from './styles';
+import {MyPageTabPageBtn} from './styles';
 import {MarginHorizontal} from '../../components/styles';
 import {apiClient, supabase} from '../../api/ApiClient';
 
@@ -75,7 +75,7 @@ const ResetPasswdPage: FC<Props> = () => {
                                 placeholder='비밀번호 입력' />
                         </div>
                         <Box height={64} />
-                        <ColorButton type={'submit'} sx={{ fontSize: '15', width: '100%' }}>비밀번호 재설정</ColorButton>
+                        <MyPageTabPageBtn type={'submit'} sx={{ fontSize: '15', width: '100%' }}>비밀번호 재설정</MyPageTabPageBtn>
                     </form>
 
                     <Box height={16} />

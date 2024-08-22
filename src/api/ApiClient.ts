@@ -32,6 +32,7 @@ import { Octokit } from "@octokit/rest";
 import {toast} from "react-toastify";
 import {Simulate} from "react-dom/test-utils";
 import select = Simulate.select;
+import {CommentEntity} from "../data/entity/CommentEntity.ts";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 export type SortOption = 'latest' | 'oldest' | 'mostPurchased' | 'priceAsc' | 'priceDesc'; // 리스트 정렬 기준
@@ -1005,7 +1006,7 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
-    async getAllMyLikeData(myUserToken: string): Promise<LikeResponseEntity[]> {
+    async getAllMyLikeData(myUserToken: string): Promise<MainPageCodeListEntity[]> {
         try {
             const {data, error} = await supabase.from('liked')
                 .select('*')
@@ -1021,20 +1022,61 @@ class ApiClient implements SupabaseAuthAPI {
                 }
                 lstLikeResponseEntity.push(likeData);
             });
+            // TOOD 해당하는 postid의 MainPageCodeListEntity 가져오기
+            const postIds: number[] = lstLikeResponseEntity.map((e)=> e.post_id);
+            let query = supabase.from('post')
+                .select('*, code!inner(*)')
+                .eq('state', PostStateType.approve)
+                .eq('is_deleted', false)
+                .in('id',postIds);
 
-            if (error) {
-                console.log("error" + error.message);
-                console.log("error" + error.code);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
+            const { data: codeData, error: codeError } = await query;
 
-                throw new Error('나의 좋아요 데이터를 가져오는데 실패했습니다.');
+            let lstCodeModel: MainPageCodeListEntity[] = [];
+            if (codeData) {
+                for (const e of codeData) {
+                    const likedCount: number = await this.getTargetPostLikedNumber(e.id);
+                    const reviewCount: number = await this.getPurchaseReviewsCount(e.id);
+
+                    let codeModel: MainPageCodeListEntity = {
+                        id: e.id,
+                        title: e.title,
+                        description: e.description,
+                        images: e.images,
+                        code_price: e.code.code_price,
+                        userToken: e.user_token,
+                        category: e.category,
+                        language: e.code.language,
+                        postType: e.post_type,
+                        createdAt: e.created_at,
+                        aiSummary: e.code.ai_summary,
+                        githubRepoUrl: e.code.github_repo_url,
+                        buyerCount: e.code.buyer_count,
+                        popularity: e.code.popularity,
+                        hashTag: e.hash_tag,
+                        sellerGithubName: e.code.seller_github_name,
+                        state: e.state,
+                        adminGitRepoURL: e.code.admin_git_repo_url,
+                        rejectMessage: e.reject_message,
+                        viewCount: e.view_count,
+                        likeCount: likedCount,
+                        reviewCount: reviewCount,
+                        is_deleted: e.is_deleted,
+                    }
+                    lstCodeModel.push(codeModel);
+                }
             }
 
-            return lstLikeResponseEntity;
+            if (codeError) {
+               console.log("%o",codeError);
+                throw new Error('나의 관심목록을 가져오는데 실패했습니다.');
+            }
+
+            return lstCodeModel;
+
         } catch (e: any) {
             console.log(e);
-            throw new Error('나의 좋아요 데이터를 가져오는데 실패했습니다.');
+            throw new Error('나의 관심목록을 가져오는데 실패했습니다.');
         }
     }
 
@@ -2024,6 +2066,28 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
+
+    async getTargetBootpayPayment(bootPaymentId: number): Promise<BootPayPaymentModel> {
+        try {
+            const {data, error} = await supabase.from('bootpay_payment')
+                .select('*')
+                .eq("id",bootPaymentId);
+
+
+            let lstBootpayPaymentModel: BootPayPaymentModel[] = [];
+
+            data?.map((e) => {
+                lstBootpayPaymentModel.push(e);
+            })
+
+            return lstBootpayPaymentModel[0];
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('프로필 - 부트페이 결제기록을 가져오는데에 실패했습니다.');
+        }
+
+    }
+
     async getTargetUserManageData(userToken: string): Promise<AdminUserManageEntity> {
         try {
             const {data, error} = await supabase.from('users')
@@ -2519,6 +2583,58 @@ class ApiClient implements SupabaseAuthAPI {
             }
             return data!;
         } catch (e) {
+            console.log(e);
+            return e;
+        }
+    };
+
+    async fetchMyComments(userToken: string): Promise<CommentEntity[]> {
+        try {
+            const { data, error } = await supabase
+                .from('comment')
+                .select('*')
+                .eq('user_token', userToken)
+                .is('parent_comment_id', null)
+                .order('created_at', { ascending: true });
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw error;
+            }
+
+            return data ?? [];
+
+        } catch (e: any) {
+            console.log(e);
+            return e;
+        }
+    };
+
+    async checkHasAnswer(commentId: number) {
+        try {
+            const { data, error } = await supabase
+                .from('comment')
+                .select('*')
+                .eq('parent_comment_id', commentId);
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                return error;
+            }
+
+            return data?.length ?? 0;
+
+        } catch (e: any) {
             console.log(e);
             return e;
         }

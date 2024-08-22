@@ -9,9 +9,9 @@ export interface BootPayPaymentModel {
 	purchased_at: Date, // 결제된 시각
 	cancelled_at: Date, // 결제 취소된 시각
 	requested_at: Date, // 결제 요청된 시각
-	receipt_url: String, // 영수증 url
+	receipt_url: string, // 영수증 url
 	order_name: string, // 결제한 상품의 이름
 	method_origin: string, // 결제수단 ex) 토스,카카오페이,카드 등
 	receipt_id?: string // 영수증 번호
-	created_at?:  Date, // db 생성일
+	created_at?:  string, // db 생성일
 }

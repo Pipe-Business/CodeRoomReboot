@@ -6,7 +6,7 @@ import {useQueryUserLogin} from '../../../hooks/fetcher/UserFetcher';
 import CashConfirmList from './cashData/CashConfirmList';
 import {PurchaseSaleRes} from "../../../data/entity/PurchaseSaleRes";
 import {CodeModel} from "../../../data/model/CodeModel";
-import SaleList from "./saleData/SaleList";
+import SaleList from "./sale/SaleList";
 import {PostStateType} from "../../../enums/PostStateType";
 import MyCodeList from "./code/MyCodeList";
 

@@ -1,10 +1,8 @@
 import {TabContext} from '@mui/lab';
-import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import {Box, Button, Card, CardHeader, Skeleton} from '@mui/material';
-import Tab from '@mui/material/Tab';
 import {useQuery} from "@tanstack/react-query";
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Link, useLocation, useNavigate, useSearchParams} from 'react-router-dom';
 import {apiClient} from '../../api/ApiClient';
 import UserProfileImage from '../../components/profile/UserProfileImage';
@@ -13,16 +11,19 @@ import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import FullLayout from '../../layout/FullLayout';
 import MainLayout from '../../layout/MainLayout';
 import {TextButton} from '../main/styles';
-import BuyerContentData from './components/BuyerContentData';
 import {SectionWrapper, StyledTab, StyledTabList} from './styles';
-import SellerContentData from './components/SellerContentData';
 import ReviewDialog from '../codeInfo/components/ReviewDialog';
 import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
 import {CoinHistoryType} from '../../enums/CoinHistoryType';
 import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import {PurchaseReviewEntity} from "../../data/entity/PurchaseReviewEntity";
 import {CodeModel} from "../../data/model/CodeModel";
-import PipeCoinContentData from "./components/PipeCoinContentData";
+import MyFavoriteTabPage from "./components/favorite/favoriteTabPage";
+import MyPurchasedTabPageTsx from "./components/purchased/MyPurchasedTabPage";
+import SellReviewTabPage from "./components/sale/SellReviewTabPage";
+import CoinHistoryTabPage from "./components/coinHistory/CoinHistoryTabPage";
+import ProfitTabPage from "./components/profit/ProfitTabPage";
+import QnATabPage from "./components/qnaTabPage/QnATabPage";
 
 interface Props {
     children?: React.ReactNode;
@@ -47,25 +48,6 @@ const MyPage: FC<Props> = () => {
     });
 
 
-    const {data: purchaseData, isLoading: purchaseCodeDataLoading, refetch: refetchPurchaseData} = useQuery({
-        queryKey: ['/purchase', userLogin?.user_token!],
-        queryFn: () => apiClient.getMyPurchaseSaleHistory(userLogin!.user_token!),
-    });
-
-    const {data: saleData, isLoading: saleCodeDataLoading, refetch: refetchSaleData} = useQuery({
-        queryKey: ['/sale', userLogin?.user_token!],
-        queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
-    });
-
-    const {data: likedData, isLoading: likedDataLoading} = useQuery({
-        queryKey: ['/liked', userLogin?.user_token!],
-        queryFn: () => apiClient.getAllMyLikeData(userLogin!.user_token!),
-    });
-
-    const {data: coinHistoryData, isLoading: isCoinHistoryLoading, refetch: refetchCoinHistory} = useQuery({
-        queryKey: [REACT_QUERY_KEY.coinhistory, userLogin?.user_token!],
-        queryFn: () => apiClient.getUserCoinHistory(userLogin!.user_token!),
-    });
 
     const {data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData} = useQuery({
         queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.user_token!],
@@ -134,9 +116,9 @@ const MyPage: FC<Props> = () => {
         const purchaseData: PurchaseSaleRes | null = await apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, purchasePostId);
         const currentAmount = await apiClient.getUserTotalPoint(userLogin?.user_token!);
         let amountUpdateValue;
-        // if (purchaseData?.pay_type == "point") {
+        // if (purchased?.pay_type == "point") {
         //     // 구매를 코인으로 했었다면 구매가의 5% -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
-        //     amountUpdateValue = Math.round(purchaseData.price! * 0.05);
+        //     amountUpdateValue = Math.round(purchased.price! * 0.05);
         // } else {
             // 구매를 캐시로 했었다면 구매가의 5% * 10 -> 현재 디비 컬럼이 정수타입이라서 절대값으로 반올림
             amountUpdateValue = Math.round((purchaseData?.sell_price! * 0.05) * 10);
@@ -156,15 +138,15 @@ const MyPage: FC<Props> = () => {
 
         setReviewDialogOpen(false);
         navigate(0);
-        await refetchPurchaseData();
+        //await refetchPurchaseData();
         await refetchCashConfirmData();
         await refetchCashConfirmPendingData();
         //await refetchCashHistoryData();
-        await refetchCoinHistory();
+        //await refetchCoinHistory();
     };
 
 
-    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading || isCoinHistoryLoading || saleCodeDataLoading || likedDataLoading) {
+    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading ) {
         return (
             <FullLayout>
                 <Skeleton style={{height: '200px'}}/>
@@ -229,31 +211,31 @@ const MyPage: FC<Props> = () => {
                         <TabContext value={value}>
                             <Box sx={{ width: '100%'}}>
                                 <StyledTabList onChange={handleChange} aria-label="lab API tabs example">
-                                    <StyledTab label="구매자" value="1" />
-                                    <StyledTab label="판매자" value="2" />
-                                    <StyledTab label="나의 파이프 코인" value="3" />
+                                    <StyledTab label="관심 목록" value="1" />
+                                    <StyledTab label="구매 목록" value="2" />
+                                    <StyledTab label="판매 / 심사" value="3" />
+                                    <StyledTab label="파이프 코인" value="4" />
+                                    <StyledTab label="수익 / 정산" value="5" />
+                                    <StyledTab label="Q&A" value="6" />
                                 </StyledTabList>
                             </Box>
                             <TabPanel value="1" sx={{ flex: 1 }}>
-                                <BuyerContentData
-                                    purchaseData={purchaseData!}
-                                    likedData={likedData!}
-                                    onWriteReviewClick={handleWriteReviewClick}
-                                    onReadReviewClick={handleReadReviewClick}
-                                />
+                                <MyFavoriteTabPage />
                             </TabPanel>
                             <TabPanel value="2" sx={{ flex: 1 }}>
-                                <SellerContentData
-                                    saleData={saleData!}
-                                    codeData={codeData!}
-                                    cashConfirmData={cashConfirmData!}
-                                    cashConfirmPendingData={cashConfirmPendingData!}
-                                />
+                                <MyPurchasedTabPageTsx />
                             </TabPanel>
                             <TabPanel value="3" sx={{ flex: 1 }}>
-                                    <PipeCoinContentData
-                                        coinHistoryData={coinHistoryData!}
-                                    />
+                                <SellReviewTabPage />
+                            </TabPanel>
+                            <TabPanel value="4" sx={{ flex: 1 }}>
+                                <CoinHistoryTabPage />
+                            </TabPanel>
+                            <TabPanel value="5" sx={{ flex: 1 }}>
+                                <ProfitTabPage />
+                            </TabPanel>
+                            <TabPanel value="6" sx={{ flex: 1 }}>
+                                <QnATabPage />
                             </TabPanel>
                         </TabContext>
 

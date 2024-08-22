@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {useLocation} from 'react-router-dom';
 import FullLayout from '../../layout/FullLayout';
 import {Box} from '@mui/material';
-import SaleList from './components/saleData/SaleList';
+import SaleList from './components/sale/SaleList';
 
 interface Props {
 	children?: React.ReactNode,

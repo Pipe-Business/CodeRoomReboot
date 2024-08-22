@@ -1,5 +1,5 @@
 import React, {FC} from 'react';
-import {List, ListItem, ListItemText} from '@mui/material';
+import {List, ListItem, ListItemText, TableBody} from '@mui/material';
 import SaleItem from './SaleItem';
 import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
 
@@ -26,17 +26,12 @@ const TableHeader: FC = () => {
 };
 
 const SaleList: FC<Props> = ({ saleData }) => {
-
-	//console.log("purchase",purchaseData);
 	return (
-		<>
-			<List>
-                <TableHeader />
+		<TableBody>
 				{saleData && saleData.map((v,i) => {
-					return <SaleItem key={i} saleData={v}/>;
+					return <SaleItem key={i} saleItem={v}/>;
 				})}
-			</List>
-		</>
+		</TableBody>
 	);
 };
 

@@ -1,9 +1,10 @@
 import styled from "@emotion/styled"
-import Button, { ButtonProps } from '@mui/material/Button';
-import Tab from "@mui/material/Tab";
+import Button, {ButtonProps} from '@mui/material/Button';
 import TabList from "@mui/lab/TabList";
+import Tab from "@mui/material/Tab";
+import {TableCell} from "@mui/material";
 
-export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
+export const MyPageTabPageBtn = styled(Button)<ButtonProps>(({ theme }) => ({
   color: '#ffffff',
   backgroundColor: '#0275c2',
   height : '52px',
@@ -12,17 +13,6 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
     boxShadow: 'none',
   },
 }));
-
-  export const CashColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
-    color: '#000000',
-    backgroundColor: '#50C1FF',
-    height : '52px',
-  '&:hover': {
-    backgroundColor: '#569CD6',
-    boxShadow: 'none',
-    },
-  }));
-
 
 export const StyledTabList = styled(TabList)({
   width: '100%',
@@ -67,9 +57,13 @@ export const FormWrapper = styled.form`
     }
   `;
 
-export  const TextFieldWrapper = styled.div`
-    div {
-      margin-bottom: 8px;
-    }
-  `;
+export const TableHeaderTitle = styled(TableCell)`
+  font-weight: bold;
+  font-size: 19px;
+`;
 
+export const TotalAmountTitleText = styled.div`
+  font-weight: bold;
+  font-size: 32px;
+  margin : 16px 8px;
+`;

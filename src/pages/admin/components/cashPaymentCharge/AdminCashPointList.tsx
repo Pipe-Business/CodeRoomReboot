@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import {apiClient} from "../../../../api/ApiClient";
 import styled from "@emotion/styled"
 import AdminCashItem from './AdminCashItem';
-import CoinHistoryItem from "../../../profile/components/CoinHistoryData/CoinHistoryItem";
 
 
 interface Props {
@@ -79,14 +78,15 @@ const AdminCashPointList: FC<Props> = ({ type }) => {
 		);
 	}else{
 		return (
-			<List>
-				<Header type={type} />
-				{ type ==='coin' &&
-				coinData.map(item => {
-					return <CoinHistoryItem coinHistoryData={item} key={item.id}/>
-				})}
-
-			</List>
+			// <List>
+			// 	<Header type={type} />
+			// 	{ type ==='coin' &&
+			// 	coinData.map(item => {
+			// 		return <CoinHistoryItem coinHistoryData={item} key={item.id}/>
+			// 	})}
+			//
+			// </List>
+			<div></div>
 		);
 	}
 	

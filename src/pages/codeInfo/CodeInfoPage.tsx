@@ -53,24 +53,16 @@ const CodeInfo: FC = () => {
 	const [reviews, setReviews] = useState<PurchaseReviewEntity[]>([]);
 	const [isLike, setLike] = useState<boolean>(false);
 
-	const { isLoading: isCashDataLoading, data: cashData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.cash],
-		queryFn: () => apiClient.getUserTotalCash(userLogin?.user_token!),
-	});
-	const { isLoading: isPointDataLoading, data: pointData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.point],
-		queryFn: () => apiClient.getUserTotalPoint(userLogin?.user_token!),
-	});
 	const { isLoading: isPostDataLoading, data: postData } = useQuery({
 		queryKey: [REACT_QUERY_KEY.code, id],
 		queryFn: () => apiClient.getTargetCode(Number(id!)),
 	});
 	const { isLoading: isUserDataLoading, data: postUserData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.user],
+		queryKey: [REACT_QUERY_KEY.user, postData?.userToken],
 		queryFn: () => apiClient.getTargetUser(postData!.userToken),
 	});
 	const { isLoading: purchaseSaleLoading, data: purchaseSaleData } = useQuery({
-		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory],
+		queryKey: [REACT_QUERY_KEY.purchaseSaleHistory,userLogin?.user_token, postData?.id],
 		queryFn: () => apiClient.getMyPurchaseSaleHistoryByPostID(userLogin?.user_token!, postData!.id),
 	});
 	const { isLoading: isLikeLoading, data: likeData } = useQuery({
@@ -167,7 +159,7 @@ const CodeInfo: FC = () => {
 		navigate(-1);
 	}, [navigate]);
 
-	if (isPostDataLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isPointDataLoading || isLoadingUserLogin || isLikedNumberLoading || isCashDataLoading) {
+	if (isPostDataLoading || !postData || isUserDataLoading || purchaseSaleLoading || isLikeLoading || isLoadingUserLogin || isLikedNumberLoading) {
 		return <MainLayout><CenterBox><CircularProgress /></CenterBox></MainLayout>;
 	}
 
@@ -275,9 +267,11 @@ const CodeInfo: FC = () => {
 							>
 								<Avatar
 									src={postUserData.profile_url ?? gravatar.url(postUserData?.email!,{s:'100',d:'retro'})}
-									alt={postUserData.nickname}
-									sx={{ width: 120, height: 120, mb: 2 }}
-								/>
+									alt={postUserData.nickname + "님의 프로필 이미지"}
+									sx={{ width: 120, height: 120, mb: 2, bgcolor: '#BDBDBD'}}
+								>
+									C
+								</Avatar>
 								<Typography variant="h6" component="div" sx={{ fontWeight: 'bold', mb: 1 }}>
 									판매자 [ {postUserData.nickname} ] 님의 코드 템플릿
 								</Typography>
