@@ -19,7 +19,6 @@ import { styled } from '@mui/material/styles';
 
 import AdminLayout from '../../layout/AdminLayout';
 import useDialogState from '../../hooks/UseDialogState';
-import AcceptModal from '../../components/review/modal/AcceptModal';
 import ReviewResultModal from '../../components/review/modal/ReviewResultModal';
 import { reformatTime } from "../../utils/DayJsHelper";
 import { useQueryUserById } from "../../hooks/fetcher/UserFetcher";
@@ -167,14 +166,14 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 	const { userId, codeId } = useParams();
 	const navigate = useNavigate();
 
-	const { isLoading, data } = useQuery({
+	const { isLoading, data, refetch } = useQuery({
 		queryKey: ['codeRequest', codeId],
 		queryFn: () => apiClient.getTargetCode(Number(codeId)),
 	});
 
 	const { userById } = useQueryUserById(userId!);
-	const [openAcceptModal, onOpenAcceptModal, onCloseAcceptModal] = useDialogState();
-	const [openRejectModal, onOpenRejectModal, onCloseRejectModal] = useDialogState();
+	const [openReviewModal, onOpenReviewModal, onCloseReviewModal] = useDialogState();
+	const [isApproval, setIsApproval] = React.useState(false);
 
 	const handleSmartAnalysis = () => {
 		navigate(`/admin/codeRequest/${userId}/${codeId}/smart-analysis/`, {
@@ -183,6 +182,11 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 				sellerGithubName: data?.sellerGithubName
 			}
 		});
+	};
+
+	const handleOpenReviewModal = (approval: boolean) => {
+		setIsApproval(approval);
+		onOpenReviewModal();
 	};
 
 	if (isLoading) {
@@ -318,7 +322,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 									color="success"
 									startIcon={<CheckCircleIcon />}
 									sx={{ height: 60, fontSize: 18 }}
-									onClick={onOpenAcceptModal}
+									onClick={() => handleOpenReviewModal(true)}
 								>
 									승인
 								</StyledButton>
@@ -330,7 +334,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 									color="error"
 									startIcon={<CancelIcon />}
 									sx={{ height: 60, fontSize: 18 }}
-									onClick={onOpenRejectModal}
+									onClick={() => handleOpenReviewModal(false)}
 								>
 									반려
 								</StyledButton>
@@ -338,14 +342,14 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 						</Grid>
 					</Paper>
 				)}
-				<AcceptModal open={openAcceptModal} onClose={onCloseAcceptModal} />
 				<ReviewResultModal
 					postId={data?.id!.toString()}
 					title={data?.title}
 					userToken={data?.userToken}
-					open={openRejectModal}
-					onClose={onCloseRejectModal}
-					refetch={() => navigate('/admin')}
+					open={openReviewModal}
+					onClose={onCloseReviewModal}
+					refetch={refetch}
+					isApproval={isApproval}
 				/>
 			</Box>
 		</AdminLayout>

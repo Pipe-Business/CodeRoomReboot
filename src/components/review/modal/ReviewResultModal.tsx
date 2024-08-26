@@ -1,11 +1,17 @@
-import React, { FC, useCallback } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import useInput from '../../../hooks/UseInput';
-import {apiClient} from "../../../api/ApiClient";
+import React, { FC, useCallback, useMemo } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import MdEditor from 'react-markdown-editor-lite';
+import MarkdownIt from 'markdown-it';
+import 'react-markdown-editor-lite/lib/index.css';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate, useParams } from 'react-router-dom';
+import { apiClient } from "../../../api/ApiClient";
 import { toast } from 'react-toastify';
-import {NotificationEntity} from "../../../data/entity/NotificationEntity";
-import {NotificationType} from "../../../enums/NotificationType";
-import {PostStateType} from "../../../enums/PostStateType";
+import { NotificationEntity } from "../../../data/entity/NotificationEntity";
+import { NotificationType } from "../../../enums/NotificationType";
+import { PostStateType } from "../../../enums/PostStateType";
+import { Octokit } from "@octokit/rest";
+import { CodeModel } from "../../../data/model/CodeModel";
 
 interface Props {
 	children?: React.ReactNode,
@@ -15,48 +21,116 @@ interface Props {
 	title: string,
 	postId: string,
 	refetch: () => void,
+	isApproval: boolean,
 }
 
-const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken,refetch }) => {
-	const [inputText, onChangeInputText] = useInput('');
+const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken, refetch, isApproval }) => {
+	const [inputText, setInputText] = React.useState('');
+	const mdParser = useMemo(() => new MarkdownIt(), []);
+	const navigate = useNavigate();
+
+	const { data: codeData } = useQuery({
+		queryKey: ['codeRequest', postId],
+		queryFn: () => apiClient.getTargetCode(Number(postId)),
+	});
+
+	const handleEditorChange = ({ text }: { text: string }) => {
+		setInputText(text);
+	};
+
+	const approveMutation = useMutation({
+		mutationFn: async (data: CodeModel) => {
+			const octokit = new Octokit({ auth: process.env.REACT_APP_GITHUB_TOKEN });
+			const forkUrl = await apiClient.forkForSellerGitRepo(octokit, data.sellerGithubName, data.githubRepoUrl);
+
+			await apiClient.updateAdminGithubRepoUrl(data.id.toString(), forkUrl);
+
+			const marketingReadmeByGpt = await apiClient.makeReadMeByGpt(forkUrl);
+			await apiClient.updateAdminMarketingText(data.id.toString(), marketingReadmeByGpt);
+
+			const notificationEntity: NotificationEntity = {
+				title: '심사 승인 알림',
+				content: `업로드 하신 [ ${title} ] 의 심사 결과 승인 되었습니다.`,
+				from_user_token: 'admin',
+				to_user_token: data.userToken,
+				notification_type: NotificationType.granted,
+				argument: inputText,
+			}
+			console.log(`심사 승인 피드백 메시지 : ${inputText}`);
+			await apiClient.insertNotification(notificationEntity);
+			return true;
+		},
+		onSuccess: async (result) => {
+			if (result) {
+				await apiClient.updateCodeRequestState(userToken, postId, PostStateType.approve);
+				await apiClient.insertCodeReviewResultHistory(userToken, postId, inputText, PostStateType.approve);
+			}
+		},
+		onError: (e) => {
+			toast.error('포크도중 오류가 발생했습니다. 관리자가 초대를 안받았거나 url 이 잘못된경우에요');
+			console.log(e);
+		},
+	});
+
+	const rejectMutation = useMutation({
+		mutationFn: async () => {
+			await apiClient.updateCodeRequestState(userToken, postId, PostStateType.rejected);
+			await apiClient.insertCodeReviewResultHistory(userToken, postId, inputText, PostStateType.rejected);
+
+			const notificationEntity: NotificationEntity = {
+				title: '심사 반려 알림',
+				content: `업로드 하신 [ ${title} ] 의 심사 결과 반려 되었습니다.`,
+				from_user_token: 'admin',
+				to_user_token: userToken,
+				notification_type: NotificationType.rejected,
+				argument: inputText,
+			}
+			console.log(`심사 반려 피드백 메시지 : ${inputText}`);
+			await apiClient.insertNotification(notificationEntity);
+		},
+		onSuccess: () => {
+			toast.info('심사결과가 판매자에게 전달 되었습니다. (반려)');
+		},
+		onError: (e) => {
+			toast.error('반려 처리 중 오류가 발생했습니다.');
+			console.log(e);
+		},
+	});
+
 	const onClickConfirm = useCallback(async () => {
-		if(!inputText || inputText.trim()===''){
-			toast.error("반려사유를 입력해주세요")
+		if(!inputText || inputText.trim() === ''){
+			toast.error("심사 결과 내용을 입력해주세요")
 			return
 		}
 
-
-		// 코드 심사 상태 rejected로 변경
-		await apiClient.updateCodeRequestState(userToken, postId, PostStateType.rejected);
-		// 코드 심사 히스토리 insert
-		await apiClient.insertCodeReviewResultHistory(userToken, postId, inputText, PostStateType.rejected);
-
-		const notificationEntity: NotificationEntity ={
-			title : '심사 반려 알림',
-			content: inputText,
-			from_user_token: 'admin',
-			to_user_token: userToken,
-			notification_type: NotificationType.rejected,
+		if (isApproval) {
+			if (codeData) {
+				approveMutation.mutate(codeData);
+			}
+		} else {
+			rejectMutation.mutate();
 		}
-		await apiClient.insertNotification(notificationEntity);
-
-		toast.info('반려처리가 완료되었습니다.');
 
 		refetch();
 		onClose();
+		navigate('/admin');
+	}, [inputText, isApproval, codeData]);
 
-	}, [inputText]);
 	return (
 		<Dialog open={open} onClose={onClose} fullWidth maxWidth={'lg'}>
-			<DialogTitle>반려사유</DialogTitle>
+			<DialogTitle>{isApproval ? '승인' : '반려'} 결과내용</DialogTitle>
 			<DialogContent>
-				<TextField  multiline rows={3} value={inputText} fullWidth placeholder={'반려사유를 작성해주세요'} onChange={onChangeInputText} />
+				<MdEditor
+					style={{ height: '500px' }}
+					renderHTML={text => mdParser.render(text)}
+					onChange={handleEditorChange}
+					placeholder={`${isApproval ? '승인' : '반려'} 결과 내용을 작성해주세요`}
+				/>
 			</DialogContent>
 			<DialogActions>
-				<Button variant={'outlined'} onClick={onClickConfirm}>예</Button>
+				<Button variant={'outlined'} onClick={onClickConfirm}>확인</Button>
 				<Button variant={'outlined'} onClick={onClose}>취소</Button>
 			</DialogActions>
-
 		</Dialog>
 	);
 };

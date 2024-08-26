@@ -1,16 +1,29 @@
 import React, {FC, useEffect, useState} from 'react';
 import styled from '@emotion/styled';
 import MainLayout from '../../layout/MainLayout';
-import {Box, Paper, Typography} from '@mui/material';
+import {Box, Paper, Typography, Badge, Dialog, DialogTitle, DialogContent, IconButton} from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import {NotificationEntity} from '../../data/entity/NotificationEntity';
 import {format} from 'date-fns';
 import {useNavigate} from 'react-router-dom';
 import {apiClient} from '../../api/ApiClient';
 import AlertDialog from './components/AlertDialogProps';
 import {RealtimePostgresInsertPayload} from "@supabase/realtime-js/src/RealtimeChannel";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
+
+const FeedbackDialog = styled(Dialog)({
+  '& .MuiDialogContent-root': {
+    padding: '16px',
+  },
+  '& .MuiDialogActions-root': {
+    padding: '8px',
+  },
+});
 
 const NotificationContainer = styled(Paper)`
-  width: 100%;  
+  width: 100%;
   margin: 0 auto;
   padding: 16px;
   box-sizing: border-box;
@@ -31,9 +44,11 @@ const NotificationItem = styled(Paper) <{ notification_type: string }>`
         return '#4caf50'; // Green
       case 'sale':
         return '#2196f3'; // Blue
-      case 'message_from_user':
+      case 'question_qna':
         return '#ff9800'; // Orange
-      case 'message_from_admin':
+      case 'answer_qna':
+        return '#ea6cef'; // Orange
+      case 'rejected':
         return '#f44336'; // Red
       case 'get_point':
         return '#9c27b0'; // Purple
@@ -43,7 +58,8 @@ const NotificationItem = styled(Paper) <{ notification_type: string }>`
   }};
   width: 100%;
   max-width: 1200px;
-  cursor: pointer; /* Add cursor pointer to indicate clickable */
+  cursor: pointer;
+  position: relative;
 `;
 
 const NotificationTitle = styled(Typography)`
@@ -65,6 +81,12 @@ const NotificationTimestamp = styled(Typography)`
   color: #999999;
 `;
 
+const UnreadBadge = styled(Badge)`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+
 const NotificationPage: FC = () => {
   const [notifications, setNotifications] = useState<NotificationEntity[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -72,6 +94,8 @@ const NotificationPage: FC = () => {
   const [dialogContent, setDialogContent] = useState('');
   const [dialogFromToken, setDialogFromToken] = useState('');
   const [showReply, setShowReply] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackContent, setFeedbackContent] = useState('');
   const navigate = useNavigate();
 
   const handleInserts = async (payload:RealtimePostgresInsertPayload<NotificationEntity>) => {
@@ -82,6 +106,8 @@ const NotificationPage: FC = () => {
       to_user_token: payload.new.to_user_token,
       from_user_token: payload.new.from_user_token,
       notification_type: payload.new.notification_type,
+      is_read: payload.new.is_read,
+      argument: payload.new.argument,
       created_at: payload.new.created_at,
     };
 
@@ -89,7 +115,7 @@ const NotificationPage: FC = () => {
     if (notificationData.from_user_token === user.id) {
       setNotifications((prevNotifications) => {
         const newNotifications = prevNotifications.filter(
-          (notification) => notification.id !== notificationData.id
+            (notification) => notification.id !== notificationData.id
         );
 
         const notiList: NotificationEntity[] = [...newNotifications, notificationData];
@@ -119,22 +145,24 @@ const NotificationPage: FC = () => {
   const handleNotificationClick = (notification: NotificationEntity) => {
     switch (notification.notification_type) {
       case 'granted':
-        navigate('/profile/my') // Replace with actual route
-        break;
       case 'rejected':
-        navigate('/profile/my') // Replace with actual route
+        console.log('rejected');
+        if (notification.argument) {
+          setFeedbackContent(notification.argument);
+          setFeedbackOpen(true);
+        }
+        // navigate('/profile/my');
         break;
       case 'get_point':
       case 'sale':
-        navigate('/profile/my') // Replace with actual route
+        navigate('/profile/my');
         break;
       case 'message_from_admin':
         break;
       case 'message_from_user':
-      
         setDialogTitle(notification.title);
         setDialogContent(notification.content);
-        setDialogFromToken(notification.from_user_token)
+        setDialogFromToken(notification.from_user_token);
         setShowReply(true);
         setDialogOpen(true);
         break;
@@ -143,35 +171,71 @@ const NotificationPage: FC = () => {
     }
   };
 
+  const handleCloseFeedback = () => {
+    setFeedbackOpen(false);
+  };
+
   return (
-    <MainLayout>
-      <h1>알림함</h1>
-      <NotificationContainer elevation={3} sx={{ width: { xs: 400, sm: 600, md: 800, lg: 1200 } }}>
-        {notifications.map((notification) => (
-          <NotificationItem
-            key={notification.id}
-            notification_type={notification.notification_type}
-            elevation={3}
-            sx={{ width: { xs: 300, sm: 500, md: 700, lg: 1100 } }}
-            onClick={() => handleNotificationClick(notification)}
-          >
-            <NotificationTitle variant="h6">{notification.title}</NotificationTitle>
-            <NotificationContent variant="body1">{notification.content}</NotificationContent>
-            {/* <NotificationItemType variant="body2">{notification.notification_type}</NotificationItemType> */}
-            <NotificationTimestamp variant="body2">{notification.created_at ? format(new Date(notification.created_at), 'yyyy-MM-dd HH:mm') : ''}</NotificationTimestamp>
-          </NotificationItem>
-        ))}
-      </NotificationContainer>
-      <Box height={128} />      
-      <AlertDialog
-        open={dialogOpen}
-        title={dialogTitle}
-        content={dialogContent}
-        fromUserToken={dialogFromToken}
-        onClose={() => setDialogOpen(false)}
-        showReply={showReply}
-      />
-    </MainLayout>
+      <MainLayout>
+        <h1>알림함</h1>
+        <NotificationContainer elevation={3} sx={{ width: { xs: 400, sm: 600, md: 800, lg: 1200 } }}>
+          {notifications.map((notification) => (
+              <NotificationItem
+                  key={notification.id}
+                  notification_type={notification.notification_type}
+                  elevation={3}
+                  sx={{ width: { xs: 300, sm: 500, md: 700, lg: 1100 } }}
+                  onClick={() => handleNotificationClick(notification)}
+              >
+                {notification.is_read === false && (
+                    <UnreadBadge color="primary" variant="dot" />
+                )}
+                <NotificationTitle variant="h6">{notification.title}</NotificationTitle>
+                <NotificationContent variant="body1">{notification.content}</NotificationContent>
+                <NotificationTimestamp variant="body2">
+                  {notification.created_at ? format(new Date(notification.created_at), 'yyyy-MM-dd HH:mm') : ''}
+                </NotificationTimestamp>
+              </NotificationItem>
+          ))}
+        </NotificationContainer>
+        <Box height={128} />
+        <AlertDialog
+            open={dialogOpen}
+            title={dialogTitle}
+            content={dialogContent}
+            fromUserToken={dialogFromToken}
+            onClose={() => setDialogOpen(false)}
+            showReply={showReply}
+        />
+        <FeedbackDialog
+            open={feedbackOpen}
+            onClose={handleCloseFeedback}
+            aria-labelledby="feedback-dialog-title"
+            maxWidth="md"
+            fullWidth
+        >
+          <DialogTitle id="feedback-dialog-title">
+            심사 피드백
+            <IconButton
+                aria-label="close"
+                onClick={handleCloseFeedback}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent dividers>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {feedbackContent}
+            </ReactMarkdown>
+          </DialogContent>
+        </FeedbackDialog>
+      </MainLayout>
   );
 };
 

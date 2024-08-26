@@ -303,7 +303,9 @@ class ApiClient implements SupabaseAuthAPI {
                     to_user_token: e.to_user_token,
                     from_user_token: e.from_user_token,
                     notification_type: e.notification_type,
-                    created_at: e.created_at,
+                    is_read: e.read,
+                    argument: e.argument,
+                    created_at: e.created_at
                 }
                 lstNotifications.push(notificationData);
             });

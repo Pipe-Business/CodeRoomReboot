@@ -1,7 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { Typography, Box, Button, CircularProgress, List, ListItem } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
+import {Typography, Box, Button, CircularProgress, List, ListItem, IconButton, Snackbar} from '@mui/material';
+import {ArrowBack, ContentCopy} from '@mui/icons-material';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ReactMarkdown from 'react-markdown';
@@ -64,6 +64,14 @@ const SmartAnalysis: FC = () => {
     const [gptResultData, setGptResultData] = useState<any>(null);
     const [gptLoading, setGptLoading] = useState<boolean>(false);
 
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text).then(() => {
+            setSnackbarOpen(true);
+        });
+    };
+
     useEffect(() => {
         const fetchGptAnalysis = async () => {
             if (files && files.length > 0) {
@@ -95,6 +103,13 @@ const SmartAnalysis: FC = () => {
         );
     }
 
+    const handleSnackbarClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
+
     const renderGptAnalysis = () => {
         if (gptLoading) {
             return (
@@ -121,6 +136,9 @@ const SmartAnalysis: FC = () => {
                 {Object.entries(gptResultData).map(([key, value]) => (
                     <Box key={key} sx={{ mb: 3 }}>
                         <Typography variant="h6" sx={{ mb: 1 }}>{key}</Typography>
+                        <IconButton onClick={() => copyToClipboard(`## ${key}\n\n${value}`)}>
+                            <ContentCopy />
+                        </IconButton>
                         <Box sx={{ backgroundColor: '#f5f5f5', p: 2, borderRadius: 1 }}>
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
@@ -220,6 +238,13 @@ const SmartAnalysis: FC = () => {
                         ))}
                     </List>
                 )}
+
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={3000}
+                    onClose={handleSnackbarClose}
+                    message="텍스트가 클립보드에 복사되었습니다."
+                />
             </Box>
         </AdminLayout>
     );
