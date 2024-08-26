@@ -52,7 +52,7 @@ const EditCodePage: FC<Props> = () => {
 
 
 
-    const [lstImgStorageUrl, setImgStorageUrl] = useState<string[] | null>(postData?.images ?? []);
+    const [lstImgStorageUrl, setImgStorageUrl] = useState<string[] | null>(postData?.img_urls ?? []);
     //const [src, setSrc] = useState<string[] | null>(null);
     //const [files, setFiles] = useState<File[] | null>(null);
 

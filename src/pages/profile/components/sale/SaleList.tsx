@@ -1,35 +1,19 @@
 import React, {FC} from 'react';
-import {List, ListItem, ListItemText, TableBody} from '@mui/material';
+import {TableBody} from '@mui/material';
 import SaleItem from './SaleItem';
-import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
+import {CodeModel} from "../../../../data/model/CodeModel";
 
 
 interface Props {
 	children?: React.ReactNode,
-	saleData?: PurchaseSaleRes[] | null,
+    codeData?: CodeModel[] | null,
 }
 
-const TableHeader: FC = () => {
-    return <ListItem>
-        <ListItemText>
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <div style={{width: '10%', fontWeight: 'bold'}}>판매된 시각</div>
-                <div style={{width: '40%', fontWeight: 'bold'}}>코드제목</div>
-                <div style={{width: '15%', fontWeight: 'bold'}}>구매방식</div>
-                <div style={{width: '15%', fontWeight: 'bold'}}>정산여부</div>
-                <div style={{width: '20%', fontWeight: 'bold'}}>구매가격</div>
-
-            </div>
-        </ListItemText>
-
-    </ListItem>;
-};
-
-const SaleList: FC<Props> = ({ saleData }) => {
+const SaleList: FC<Props> = ({ codeData }) => {
 	return (
 		<TableBody>
-				{saleData && saleData.map((v,i) => {
-					return <SaleItem key={i} saleItem={v}/>;
+				{codeData && codeData.map((v,i) => {
+					return <SaleItem key={i} codeData={v}/>;
 				})}
 		</TableBody>
 	);

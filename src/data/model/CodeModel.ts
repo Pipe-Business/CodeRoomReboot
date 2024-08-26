@@ -2,7 +2,7 @@ export type CodeModel = {
     id: number,
     title: string,
     description: string,  /** 코드 설명 */
-    images: string[],  /** 코드 결과물 이미지 url */
+    img_urls: string[],  /** 코드 결과물 이미지 url */
     price: number /** 코드 가격 */
     userToken: string, // 게시자 usertoken
     popularity:number, // 코드 평점

@@ -7,19 +7,20 @@ import TableHeader from "../TableHeader";
 import SaleList from "./SaleList";
 import ListLoadingSkeleton from "../ListLoadingSkeleton";
 import ListEmptyText from "../ListEmptyText";
+import {REACT_QUERY_KEY} from "../../../../constants/define";
 
-const MyPurchasedTabPage: FC = () => {
+const MySellReviewTabPage: FC = () => {
 	const {userLogin} = useQueryUserLogin();
-	const {data: saleData, isLoading: saleCodeDataLoading, refetch: refetchSaleData} = useQuery({
-		queryKey: ['/sale', userLogin?.user_token!],
-		queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
+	const {data: codeData, isLoading: isCodeDataLoading} = useQuery({
+		queryKey: [REACT_QUERY_KEY.code, userLogin?.user_token!],
+		queryFn: () => apiClient.getAllMyCode(userLogin?.user_token!),
 	});
 
-	if(saleCodeDataLoading) {
+	if(isCodeDataLoading) {
 		return <ListLoadingSkeleton/>;
 	}
 
-	if(saleData?.length === 0) {
+	if(codeData?.length === 0) {
 		return <ListEmptyText/>;
 	}
 	
@@ -27,10 +28,10 @@ const MyPurchasedTabPage: FC = () => {
 		<TableContainer>
 			<Table>
 				<TableHeader  headerList={["요청시간","코드제목","심사상태",""]}/>
-				<SaleList saleData={saleData}/>
+				<SaleList codeData={codeData}/>
 			</Table>
 		</TableContainer>
 	);
 };
 
-export default MyPurchasedTabPage;
+export default MySellReviewTabPage;

@@ -30,11 +30,17 @@ const ProfitTabPage = () => {
         queryKey: ['/sales', userLogin?.user_token!],
         queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
     });
+
+    const {data: userBankAccount, isLoading: isBankAccountLoading} = useQuery({
+        queryKey: ['/bankAccount', userLogin?.user_token!],
+        queryFn: () => apiClient.getUserBankAccountEntity(userLogin!.user_token!),
+    });
     const [term, setTerm] = useState("2024-08-00 00:00:00.136465+00");
     const handleTermChange = (event:SelectChangeEvent) => {
         setTerm(event.target.value as string);
     }
 
+    //TODO : DialogState hook을 배열이 아닌 객체로 리턴하는 방식으로 모두 변경해야 함.
     const [open, handleOpenDialog, handleCloseDialog, setOpen] = useDialogState();
     const { isDialogOpen: isInfoEditDialog, handleOpenDialog:handleInfoEditOpenDialog, handleCloseDialog:handleInfoEditCloseDialog, setIsDialogOpen:setIsInfoEditDialog} = useDialog();
 
@@ -49,14 +55,24 @@ const ProfitTabPage = () => {
         setSrc(url);
     }, []);
 
-    if(isPurchaseCodeDataLoading){
+    const handleUserBankInfoDialogEditBtn = () => {
+        handleCloseDialog();
+        handleInfoEditOpenDialog();
+    }
+
+    const isOpenUserBankInfoDialog = userBankAccount && open;
+    const isOpenEditUserBankInfoDialog = !userBankAccount || isInfoEditDialog;
+    const handleUserBankInfoShowBtn = () => {
+        userBankAccount ? handleOpenDialog() : handleInfoEditOpenDialog();
+    }
+
+    if(isPurchaseCodeDataLoading || isBankAccountLoading){
         return <ListLoadingSkeleton/>;
     }
 
     if(purchaseData?.length === 0) {
         return <ListEmptyText/>;
     }
-
 
     return (
         <TableContainer>
@@ -77,27 +93,27 @@ const ProfitTabPage = () => {
                     </FormControl>
                 </div>
                 <div>
-                    <TotalAmountTitleText>누적 수익 금액 : 215,000원 </TotalAmountTitleText>
+                    {/*<TotalAmountTitleText>누적 수익 금액 : 215,000원 </TotalAmountTitleText>*/}
                     <TotalAmountTitleText>정산 신청 가능 금액 : 15,000원</TotalAmountTitleText>
                 </div>
                 <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems: 'center'}}>
-                    <MyPageTabPageBtn onClick={handleOpenDialog}>내 정산정보</MyPageTabPageBtn>
+                    <MyPageTabPageBtn onClick={handleUserBankInfoShowBtn}>내 정산정보</MyPageTabPageBtn>
                     <Box width="32px"/>
                     <MyPageTabPageBtn>정산 신청</MyPageTabPageBtn>
                 </div>
             </div>
             <div style={{fontSize:'24px', fontWeight:'bold'}}>
-                이번 달 총 판매 수익 : 200원
+                8월 총 판매 수익 : 200원
             </div>
             <Box height={'64px'} />
 
 
             <Table>
-                <TableHeader  headerList={["판매일시","코드제목","구매자","판매금액","실제 수입","정산 상태 (대기/완료)"]}/>
+                <TableHeader  headerList={["판매일시","코드제목","구매자","판매금액","정산 상태 (대기/완료)"]}/>
                 <ProfitList  purchaseData={purchaseData!}/>
             </Table>
 
-            {open &&
+            {isOpenUserBankInfoDialog &&
                 <Dialog
                     open={open}
                     onClose={handleCloseDialog}
@@ -116,7 +132,7 @@ const ProfitTabPage = () => {
                             예금주명
                         </DialogContentText>
                         <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            홍길동
+                            {userBankAccount?.name}
                         </DialogContentText>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -124,7 +140,7 @@ const ProfitTabPage = () => {
                             은행
                         </DialogContentText>
                         <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            국민
+                            {userBankAccount?.bank}
                         </DialogContentText>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -132,7 +148,7 @@ const ProfitTabPage = () => {
                             계좌번호
                         </DialogContentText>
                         <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            1212-1212-1212
+                            {userBankAccount?.account_number}
                         </DialogContentText>
                     </div>
                     <Box height={'32px'} />
@@ -141,62 +157,11 @@ const ProfitTabPage = () => {
                             15일이 영업일이 아닌 경우 다음 영업일에 입금됩니다.`}
                     </DialogContentText>
                     <DialogActions>
-                        <MyPageTabPageBtn onClick={handleCloseDialog}>수정하기</MyPageTabPageBtn>
-                    </DialogActions>
-                </Dialog>}
-
-            {open &&
-                <Dialog
-                    open={open}
-                    onClose={handleCloseDialog}
-                >
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                    }}>
-                        <DialogTitle>내 정산정보</DialogTitle>
-                        <CloseIcon onClick={handleCloseDialog} sx={{color: 'gray', padding: '10px'}}/>
-                    </div>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
-                            예금주명
-                        </DialogContentText>
-                        <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            홍길동
-                        </DialogContentText>
-                    </div>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <DialogContentText sx={{paddingRight: '52px', paddingLeft: '24px'}}>
-                            은행
-                        </DialogContentText>
-                        <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            국민
-                        </DialogContentText>
-                    </div>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
-                            계좌번호
-                        </DialogContentText>
-                        <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            1212-1212-1212
-                        </DialogContentText>
-                    </div>
-                    <Box height={'32px'} />
-                    <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px',whiteSpace:'pre-line'}}>
-                        {`수익금은 '입금 신청'을 한 다음 달 15일에 입금됩니다.
-                            15일이 영업일이 아닌 경우 다음 영업일에 입금됩니다.`}
-                    </DialogContentText>
-                    <DialogActions>
-                        <MyPageTabPageBtn onClick={() => {
-                            handleCloseDialog();
-                            handleInfoEditOpenDialog();
-                        }}>수정하기</MyPageTabPageBtn>
+                        <MyPageTabPageBtn onClick={handleUserBankInfoDialogEditBtn}>수정하기</MyPageTabPageBtn>
                     </DialogActions>
                 </Dialog>}
             {/*TODO: 리팩토링 필요*/}
-            {isInfoEditDialog &&
+            {isOpenEditUserBankInfoDialog &&
                 <Dialog
                     open={isInfoEditDialog}
                     onClose={handleInfoEditCloseDialog}

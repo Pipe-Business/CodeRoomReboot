@@ -31,6 +31,7 @@ import {GptCodeInfoResponseEntity} from "../data/entity/GptCodeInfoResponseEntit
 import { Octokit } from "@octokit/rest";
 import {toast} from "react-toastify";
 import {CommentEntity} from "../data/entity/CommentEntity";
+import {UserBankAccountEntity} from "../data/entity/UserBankAccountEntity";
 
 export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
 export type SortOption = 'latest' | 'oldest' | 'mostPurchased' | 'priceAsc' | 'priceDesc'; // 리스트 정렬 기준
@@ -466,7 +467,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     title: e.title,
                     description: e.description,
-                    images: e.img_urls,
+                    img_urls: e.img_urls,
                     price: e.code.code_price,
                     userToken: e.user_token,
                     aiSummary: e.code.ai_summary,
@@ -984,7 +985,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     title: e.title,
                     description: e.description,
-                    images: e.images,
+                    img_urls: e.img_urls,
                     price: e.code.code_price,
                     userToken: e.user_token,
                     category: e.category,
@@ -1101,7 +1102,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     title: e.title,
                     description: e.description,
-                    images: e.img_urls,
+                    img_urls: e.img_urls,
                     price: e.code.code_price,
                     userToken: e.user_token,
                     category: e.category,
@@ -1327,7 +1328,7 @@ class ApiClient implements SupabaseAuthAPI {
                     id: e.id,
                     title: e.title,
                     description: e.description,
-                    images: e.images,
+                    img_urls: e.images,
                     price: e.code.code_price,
                     userToken: e.user_token,
                     category: e.category,
@@ -2672,6 +2673,19 @@ class ApiClient implements SupabaseAuthAPI {
             return e;
         }
     };
+
+
+    async getUserBankAccountEntity (myToken:string):Promise<UserBankAccountEntity> {
+        const {data, error} = await supabase
+            .from('user_bank_account')
+            .select('*')
+            .eq('user_token',myToken);
+
+        if(error){
+            throw error;
+        }
+        return data[0];
+    }
 }
 
 

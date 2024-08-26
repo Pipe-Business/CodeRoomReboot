@@ -42,10 +42,7 @@ const MyPage: FC<Props> = () => {
     const tab = location.state?.tab;
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const {data: codeData, isLoading: isCodeDataLoading, refetch: refetchCodeData} = useQuery({
-        queryKey: [REACT_QUERY_KEY.code, userLogin?.user_token!],
-        queryFn: () => apiClient.getAllMyCode(userLogin?.user_token!),
-    });
+
 
 
 
@@ -146,7 +143,7 @@ const MyPage: FC<Props> = () => {
     };
 
 
-    if (isCodeDataLoading || cashConfirmLoading || cashConfirmPendingLoading ) {
+    if (cashConfirmLoading || cashConfirmPendingLoading ) {
         return (
             <FullLayout>
                 <Skeleton style={{height: '200px'}}/>

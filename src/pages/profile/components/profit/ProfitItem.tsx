@@ -23,7 +23,7 @@ const ProfitItem: FC<Props> = ({purchaseData}) => {
             <TableCell>{codeData?.title}</TableCell>
             <TableCell>{postedUser?.nickname}</TableCell>
             <TableCell>{purchaseData.sell_price}</TableCell>
-            <TableCell>{purchaseData.sell_price * 0.8}</TableCell> {/*TODO: 수수료 변경 예정*/}
+            {/*<TableCell>{purchaseData.sell_price * 0.8}</TableCell> /!*TODO: 수수료 변경 예정*!/*/}
             <TableCell>{purchaseData.is_confirmed ? "완료" : "대기"}</TableCell>
         </TableRow>
     );
