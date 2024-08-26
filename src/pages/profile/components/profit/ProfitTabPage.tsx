@@ -53,6 +53,13 @@ const ProfitTabPage = () => {
         setIsDialogOpen: setIsInfoEditDialog
     } = useDialog();
 
+    const {
+        isDialogOpen: isApplyForSettlementDialogOpen,
+        handleOpenDialog: handleApplyForSettlementopenDialog,
+        handleCloseDialog: handleApplyForSettlementCloseDialog,
+        setIsDialogOpen: setIsApplyForSettlementDialog
+    } = useDialog();
+
     const [src, setSrc] = useState<string | null>();
     const [file, setFile] = useState<File | null>(null);
 
@@ -156,18 +163,19 @@ const ProfitTabPage = () => {
                         </Select>
                     </FormControl>
                 </div>
-                <div>
-                    {/*<TotalAmountTitleText>누적 수익 금액 : 215,000원 </TotalAmountTitleText>*/}
-                    <TotalAmountTitleText>정산 신청 가능 금액 : 15,000원</TotalAmountTitleText>
-                </div>
+                {/*<div>*/}
+                {/*    /!*<TotalAmountTitleText>누적 수익 금액 : 215,000원 </TotalAmountTitleText>*!/*/}
+                {/*    <TotalAmountTitleText>정산 신청 가능 금액 : 15,000원</TotalAmountTitleText>*/}
+                {/*</div>*/}
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                     <MyPageTabPageBtn onClick={handleUserBankInfoShowBtn}>내 정산정보</MyPageTabPageBtn>
                     <Box width="32px"/>
-                    <MyPageTabPageBtn>정산 신청</MyPageTabPageBtn>
+                    <MyPageTabPageBtn onClick={handleApplyForSettlementopenDialog}>정산 신청</MyPageTabPageBtn>
                 </div>
             </div>
             <div style={{fontSize: '24px', fontWeight: 'bold'}}>
-                8월 총 판매 수익 : 200원
+                {/*TODO 필터링 및 DB 연동*/}
+                8월 총 판매 금액 : 200원
             </div>
             <Box height={'64px'}/>
 
@@ -304,6 +312,49 @@ const ProfitTabPage = () => {
                     </DialogContentText>
                     <DialogActions>
                         <MyPageTabPageBtn onClick={handleSaveUserBankInfoBtn}>저장하기</MyPageTabPageBtn>
+                    </DialogActions>
+                </Dialog>}
+
+
+            {isApplyForSettlementDialogOpen &&
+                <Dialog
+                    open={isApplyForSettlementDialogOpen}
+                    onClose={handleApplyForSettlementCloseDialog}
+                >
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
+                    }}>
+                        <DialogTitle>정산 신청</DialogTitle>
+                        <CloseIcon onClick={handleApplyForSettlementCloseDialog} sx={{color: 'gray', padding: '10px'}}/>
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
+                            정산 기간:
+                        </DialogContentText>
+
+                        <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
+                            {`2024.07 ~ 2024.08`}
+                        </DialogContentText>
+                    </div>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                        <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
+                            정산 신청 가능 금액:
+                        </DialogContentText>
+
+                        <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
+                            {`15,000원`}
+                            {/*    TODO: db 연동 필요*/}
+                        </DialogContentText>
+                    </div>
+                    <Box height={'32px'}/>
+                    <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px', whiteSpace: 'pre-line'}}>
+                        {`정산 신청 가능 금액은 출금 수수료를 제외한 금액입니다.`}
+                    </DialogContentText>
+                    <DialogActions>
+                        <MyPageTabPageBtn onClick={handleApplyForSettlementCloseDialog}>정산 신청</MyPageTabPageBtn>
                     </DialogActions>
                 </Dialog>}
         </TableContainer>
