@@ -2694,8 +2694,6 @@ class ApiClient implements SupabaseAuthAPI {
             .from('user_bank_account')
             .select('*')
             .eq('user_token',myToken);
-        console.log("%o",data);
-
 
         if(error){
             throw error;

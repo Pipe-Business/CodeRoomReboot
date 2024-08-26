@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from "@tanstack/react-query";
+import {useQuery} from "@tanstack/react-query";
 import {apiClient} from "../../../../api/ApiClient";
 import {useQueryUserLogin} from "../../../../hooks/fetcher/UserFetcher";
 import {
@@ -12,25 +12,26 @@ import {
     Select,
     SelectChangeEvent,
     Table,
-    TableContainer, TextField
+    TableContainer,
+    TextField
 } from "@mui/material";
 import TableHeader from "../TableHeader";
-import React, {ChangeEvent, useCallback, useState} from "react";
+import React, {ChangeEvent, useCallback, useEffect, useState} from "react";
 import ProfitList from "./ProfitList";
-import {MyPageTabPageBtn, TotalAmountTitleText} from "../../styles";
+import {MyPageTabPageBtn} from "../../styles";
 import useDialogState from "../../../../hooks/UseDialogState";
 import CloseIcon from "@mui/icons-material/Close";
 import useDialog from "../../../../hooks/useDialog";
 import ListEmptyText from "../ListEmptyText";
 import ListLoadingSkeleton from "../ListLoadingSkeleton";
 import {UserBankAccountEntity} from "../../../../data/entity/UserBankAccountEntity";
-import {useInputValidate} from "../../../../hooks/common/UseInputValidate";
 import {toast} from "react-toastify";
 import {createTodayDate} from "../../../../utils/DayJsHelper";
+import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
 
 const ProfitTabPage = () => {
     const {userLogin} = useQueryUserLogin();
-    const {data: purchaseData, isLoading: isPurchaseCodeDataLoading} = useQuery({
+    const {data: salesData, isLoading: isSalesCodeDataLoading} = useQuery({
         queryKey: ['/sales', userLogin?.user_token!],
         queryFn: () => apiClient.getMySaleHistory(userLogin!.user_token!),
     });
@@ -39,10 +40,56 @@ const ProfitTabPage = () => {
         queryKey: ['/bankAccount', userLogin?.user_token!],
         queryFn: () => apiClient.getUserBankAccountEntity(userLogin!.user_token!),
     });
-    const [term, setTerm] = useState("2024-08-00 00:00:00.136465+00");
+
+    const [monthFilter, setMonthFilter] = useState<string[]>([]);
+    const [selectedPeriod, setSelectedPeriod] = useState('');
     const handleTermChange = (event: SelectChangeEvent) => {
-        setTerm(event.target.value as string);
+        setSelectedPeriod(event.target.value as string);
     }
+
+    const [filteredSalesData, setFilteredSalesData] = useState<PurchaseSaleRes[]>();
+    const [totalSalesAmount, setTotalSalesAmount] = useState<number>(0);
+    useEffect(() => {
+        const filteredList: PurchaseSaleRes[] = [];
+        let totalSalesAmountSum = 0;
+
+        if(selectedPeriod) {
+            salesData?.forEach((sale) => {
+                const parsedDate: Date = new Date(sale.created_at!);
+                const parsedYear = parsedDate.getFullYear().toString();
+                const parsedMonth = (parsedDate.getMonth() + 1).toString().padStart(2, '0');
+
+                const selectedYear = selectedPeriod.split("년 ")[0]; // 2024년 8월
+                const selectedMonth = selectedPeriod.split("년 ")[1].split("월")[0];
+
+                if (parsedYear === selectedYear && parsedMonth === selectedMonth) {
+                    filteredList.push(sale);
+                    totalSalesAmountSum += sale.sell_price;
+                }
+            });
+        }
+
+        setFilteredSalesData(filteredList);
+        setTotalSalesAmount(totalSalesAmountSum);
+    },[salesData, selectedPeriod]);
+
+
+    useEffect(() => {
+        const monthFilterSet = new Set<string>();
+
+        salesData?.forEach((sale) => {
+            const parsedDate:Date = new Date(sale.created_at!);
+            const year=  parsedDate.getFullYear();
+            const month = (parsedDate.getMonth() + 1).toString().padStart(2,'0');
+            monthFilterSet.add(`${year}년 ${month}월`);
+        });
+
+        const monthFilterArray: string[] = Array.from(monthFilterSet);
+        setMonthFilter(monthFilterArray);
+        setSelectedPeriod(monthFilterArray[0]);
+    }, [salesData]);
+
+
 
     //TODO : DialogState hook을 배열이 아닌 객체로 리턴하는 방식으로 모두 변경해야 함.
     const [open, handleOpenDialog, handleCloseDialog, setOpen] = useDialogState();
@@ -75,6 +122,8 @@ const ProfitTabPage = () => {
         handleCloseDialog();
         handleInfoEditOpenDialog();
     }
+
+
 
     //TODO : 객체로 리턴하도록 변경 필요..
 
@@ -137,11 +186,11 @@ const ProfitTabPage = () => {
         toast.success("저장되었습니다");
     }
 
-    if (isPurchaseCodeDataLoading || isBankAccountLoading) {
+    if (isSalesCodeDataLoading || isBankAccountLoading ||  !monthFilter[0] || monthFilter[0].length ===0 ) {
         return <ListLoadingSkeleton/>;
     }
 
-    if (purchaseData?.length === 0) {
+    if (salesData?.length === 0) {
         return <ListEmptyText/>;
     }
 
@@ -152,21 +201,17 @@ const ProfitTabPage = () => {
                     <div>년도/월 선택</div>
                     <FormControl sx={{m: 1, minWidth: 120}} size="small">
                         <Select
-                            value={term}
+                            value={selectedPeriod}
                             displayEmpty
                             onChange={handleTermChange}
                             inputProps={{'aria-label': 'Without label'}}
                         >
-                            <MenuItem value={'2024-08-00 00:00:00.136465+00'}>2024년 8월</MenuItem>
-                            <MenuItem value={'2024-07-00 00:00:00.136465+00'}>2024년 7월</MenuItem>
-                            <MenuItem value={'2024-06-00 00:00:00.136465+00'}>2024년 6월</MenuItem>
+                            {monthFilter.map((m,index) => (
+                                <MenuItem key={index} value={m}>{m}</MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </div>
-                {/*<div>*/}
-                {/*    /!*<TotalAmountTitleText>누적 수익 금액 : 215,000원 </TotalAmountTitleText>*!/*/}
-                {/*    <TotalAmountTitleText>정산 신청 가능 금액 : 15,000원</TotalAmountTitleText>*/}
-                {/*</div>*/}
                 <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
                     <MyPageTabPageBtn onClick={handleUserBankInfoShowBtn}>내 정산정보</MyPageTabPageBtn>
                     <Box width="32px"/>
@@ -174,15 +219,14 @@ const ProfitTabPage = () => {
                 </div>
             </div>
             <div style={{fontSize: '24px', fontWeight: 'bold'}}>
-                {/*TODO 필터링 및 DB 연동*/}
-                8월 총 판매 금액 : 200원
+                {selectedPeriod.split('월')[0]}월 총 판매 금액 : {totalSalesAmount}원
             </div>
             <Box height={'64px'}/>
 
 
             <Table>
                 <TableHeader headerList={["판매일시", "코드제목", "구매자", "판매금액", "정산 상태 (대기/완료)"]}/>
-                <ProfitList purchaseData={purchaseData!}/>
+                <ProfitList purchaseData={filteredSalesData!}/>
             </Table>
 
             {isOpenUserBankInfoDialog &&
@@ -300,7 +344,7 @@ const ProfitTabPage = () => {
                             <>
                                 <img src={src} alt={"통장사본 이미지"} width={'36px'} height={'36px'}/>
                             </>
-                        ) 
+                        )
                         }
                         <input type="file" onChange={handleChangeImage} accept="image/*"
                                style={{marginTop: '8px'}}/>
