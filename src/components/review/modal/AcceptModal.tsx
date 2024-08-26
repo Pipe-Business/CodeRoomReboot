@@ -44,7 +44,7 @@ const AcceptModal: FC<Props> = ({ open, onClose }) => {
 			// 알림보내기
 			const notificationEntity: NotificationEntity ={
 				title : '심사 승인 알림',
-				content: '업로드하신 코드 게시물의 심사를 승인해드렸습니다.',
+				content: '업로드 하신 코드 게시물이 심사 결과 승인 되었습니다.',
 				from_user_token: 'admin',
 				to_user_token: data.userToken,
 				notification_type: NotificationType.granted,
