@@ -1506,6 +1506,24 @@ class ApiClient implements SupabaseAuthAPI {
 
     }
 
+    async deleteAllBankUrlImageInFolder(userToken: string){
+        const path:string = `user_bank_account/${userToken}/`;
+        const { data,error } = await supabase.storage.from('coderoom').list(path); // 내 토큰 밑의 모든 이미지들을 가져옴
+
+        if(error){
+            console.log("error" + error.message);
+            throw new Error('유저 계좌 정보 이미지 삭제에 실패했습니다.');
+        }
+        const lstDeleteImages : string[] = [];
+
+
+        data?.forEach((e) => {
+            lstDeleteImages.push(`user_bank_account/${userToken}/${e.name}`);
+        });
+
+        await supabase.storage.from('coderoom').remove(lstDeleteImages);
+    }
+
     async deleteAllProfileImageInFolder(userToken: string){
         const path:string = `profile/${userToken}/`;
         const { data,error } = await supabase.storage.from('coderoom').list(path); // 내 토큰 밑의 모든 이미지들을 가져옴
@@ -1524,15 +1542,8 @@ class ApiClient implements SupabaseAuthAPI {
         await supabase.storage.from('coderoom').remove(lstDeleteImages);
     }
 
-    async uploadProfileImage(userToken: string, file: File): Promise<string> {
+    async uploadImage(userToken: string, file: File, path:string): Promise<string> {
         try {
-
-           // upload 시 기존 사진 삭제
-
-            await this.deleteAllProfileImageInFolder(userToken);
-
-            const date = createTodayDate();
-            const path: string = `profile/${userToken}/${date}`;
 
             const {data, error} = await supabase
                 .storage
@@ -1557,10 +1568,13 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateProfileImgUrl(userToken: string, profileUrl: string) {
+    async updateImgUrl(userToken: string, tableName:string ,targetColumn: string, url: string) {
         try {
-            const {error} = await supabase.from('users')
-                .update({profile_url: profileUrl}).eq('user_token', userToken);
+            const object = {
+                [targetColumn]: url
+            }
+            const {error} = await supabase.from(tableName)
+                .update(object).eq('user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);
@@ -2680,11 +2694,49 @@ class ApiClient implements SupabaseAuthAPI {
             .from('user_bank_account')
             .select('*')
             .eq('user_token',myToken);
+        console.log("%o",data);
+
 
         if(error){
             throw error;
         }
         return data[0];
+    }
+
+    async insertUserBankInfo (userBankAccount:UserBankAccountEntity) {
+        try {
+            const {data, error} = await supabase.from('user_bank_account')
+                .insert(userBankAccount).select();
+            if (error) {
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('유저 계좌 정보를 저장하는데 실페했습니다.');
+            }
+            //console.log(...data);
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저 계좌 정보를 저장하는데 실페했습니다.');
+        }
+
+    }
+
+    async updateUserBankInfo (id:number,userBankAccount:UserBankAccountEntity) {
+        try {
+            const {data, error} = await supabase.from('user_bank_account')
+                .update(userBankAccount)
+                .eq('id', id);
+            if (error) {
+                console.log("%o",error);
+
+                throw new Error('유저 계좌 정보를 업데이트 하는데에 실페했습니다.');
+            }
+            //console.log(...data);
+        } catch (e: any) {
+            console.log(e);
+            throw new Error('유저 계좌 정보를 업데이트 하는데에 실페했습니다.');
+        }
+
     }
 }
 

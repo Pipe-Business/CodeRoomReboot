@@ -8,7 +8,7 @@ import {toast} from 'react-toastify';
 import {useLocation, useNavigate} from 'react-router-dom';
 import MainLayout from '../../layout/MainLayout';
 import {apiClient} from '../../api/ApiClient';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {useMutation} from '@tanstack/react-query';
 import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import SectionTitle from './components/SectionTitle';
 import UserProfileImage from '../../components/profile/UserProfileImage';
@@ -16,6 +16,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import {CoinHistoryType} from '../../enums/CoinHistoryType';
 import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
 import {UserModel} from "../../data/model/UserModel";
+import {createTodayDate} from "../../utils/DayJsHelper";
 
 interface Props {
     children?: React.ReactNode;
@@ -102,8 +103,13 @@ const EditMyProfilePage: FC<Props> = () => {
     const {mutateAsync: mutate} = useMutation({
         mutationFn: async () => {
             if (file != null) { // 프로필 이미지 처리
-                const profileUrl = await apiClient.uploadProfileImage(userLogin?.user_token!, file); // 이미지 스토리지 업로드
-                await apiClient.updateProfileImgUrl(userLogin?.user_token!, profileUrl);    // db update
+                // upload 시 기존 사진 삭제
+                await apiClient.deleteAllProfileImageInFolder(userLogin?.user_token!);
+
+                const date = createTodayDate();
+                const path: string = `profile/${userLogin?.user_token}/${date}`;
+                const profileUrl = await apiClient.uploadImage(userLogin?.user_token!, file, path); // 이미지 스토리지 업로드
+                await apiClient.updateImgUrl(userLogin?.user_token!,'users','profile_url', profileUrl);    // db update
 
                 if (!userLogin?.is_profile_image_rewarded) {
                     await mutateSetProfilePoint();
