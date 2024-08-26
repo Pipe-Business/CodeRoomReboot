@@ -318,9 +318,9 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
                     width: {sm: 400, md: 800, lg: 1000,},
                 }}>
                     <Box>
-                        <Typography variant="h4" fontWeight="bold" sx={{color: 'red'}}>반려사유</Typography>
+                        <Typography variant="h4" fontWeight="bold" sx={{color: 'red'}}>반려사유 보기</Typography>
                         <Box height={16}></Box>
-                        <div style={{fontSize: 18, fontWeight: 'bold'}}>{editTargetModel.reviewResultMsg}</div>
+                        {/*<div style={{fontSize: 18, fontWeight: 'bold'}}>{editTargetModel.reviewResultMsg}</div>*/}
                     </Box>
                 </Card>}
 

@@ -480,7 +480,6 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     sellerGithubName: e.code.seller_github_name,
                     githubRepoUrl: e.code.github_repo_url,
-                    reviewResultMsg: e.review_result_msg,
                     viewCount: e.view_count,
                     adminGitRepoURL: e.code.admin_git_repo_url,
                     isDeleted: e.is_deleted,
@@ -1000,7 +999,6 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    reviewResultMsg: e.code.review_result_msg,
                     viewCount: e.view_count,
                     isDeleted: e.is_deleted,
                 }
@@ -1118,7 +1116,6 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    reviewResultMsg: e.reject_message,
                     viewCount: e.view_count,
                     isDeleted: e.is_deleted,
                 }
@@ -1240,6 +1237,34 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
+    async insertCodeReviewResultHistory(userToken: string, postId: string, reviewMsg: string, postState: string) {
+        try {
+
+            const reviewHistoryData = {
+                "post_id": postId,
+                "user_token": userToken,
+                "post_state": postState,
+                "review_msg": reviewMsg,
+            }
+
+            const {data, error} = await supabase.from('review_result_history')
+                .insert(reviewHistoryData).select();
+
+            if (error) {
+                console.log("error" + error.code);
+                console.log("error" + error.message);
+                console.log("error" + error.details);
+                console.log("error" + error.hint);
+                console.log("error" + error.details);
+
+                throw new Error('반려사유 저장에 실패했습니다.');
+            }
+        } catch (e) {
+            console.log(e);
+            throw new Error('코드 심사 히스토리 등록에 실패했습니다.');
+        }
+    }
+
     async updateCodeRequestRejectMessage(userToken: string, postId: string, reviewResultMsg: string) {
         try {
             const {error} = await supabase.from('post')
@@ -1317,7 +1342,6 @@ class ApiClient implements SupabaseAuthAPI {
                     state: e.state,
                     githubRepoUrl: e.code.github_repo_url,
                     adminGitRepoURL: e.code.admin_git_repo_url,
-                    reviewResultMsg: e.reject_message,
                     viewCount: e.view_count,
                     isDeleted: e.is_deleted,
                 }

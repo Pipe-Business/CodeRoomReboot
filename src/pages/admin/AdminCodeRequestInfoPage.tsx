@@ -20,7 +20,7 @@ import { styled } from '@mui/material/styles';
 import AdminLayout from '../../layout/AdminLayout';
 import useDialogState from '../../hooks/UseDialogState';
 import AcceptModal from '../../components/review/modal/AcceptModal';
-import RejectModal from '../../components/review/modal/RejectModal';
+import ReviewResultModal from '../../components/review/modal/ReviewResultModal';
 import { reformatTime } from "../../utils/DayJsHelper";
 import { useQueryUserById } from "../../hooks/fetcher/UserFetcher";
 import { CATEGORY_TO_KOR } from "../../constants/define";
@@ -232,7 +232,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					<StyledCard>
 						<StyledCardContent>
 							<TitleTypography variant="h6">반려사유</TitleTypography>
-							<ContentTypography>{data.reviewResultMsg}</ContentTypography>
+							<ContentTypography>{'todo'}</ContentTypography>
 						</StyledCardContent>
 					</StyledCard>
 				)}
@@ -339,7 +339,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					</Paper>
 				)}
 				<AcceptModal open={openAcceptModal} onClose={onCloseAcceptModal} />
-				<RejectModal
+				<ReviewResultModal
 					postId={data?.id!.toString()}
 					title={data?.title}
 					userToken={data?.userToken}

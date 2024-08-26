@@ -18,6 +18,5 @@ export type CodeModel = {
     githubRepoUrl: string, // 깃허브 url
     sellerGithubName: string, // 판매자의 GitHub 사용자명
     viewCount : number, // 조회수
-    reviewResultMsg : string, // 심사 결과 메시지
     isDeleted: boolean; // 삭제된 게시물인지 확인
 }

@@ -17,7 +17,7 @@ interface Props {
 	refetch: () => void,
 }
 
-const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken,refetch }) => {
+const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken,refetch }) => {
 	const [inputText, onChangeInputText] = useInput('');
 	const onClickConfirm = useCallback(async () => {
 		if(!inputText || inputText.trim()===''){
@@ -25,9 +25,11 @@ const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken,refetc
 			return
 		}
 
-	
+
+		// 코드 심사 상태 rejected로 변경
 		await apiClient.updateCodeRequestState(userToken, postId, PostStateType.rejected);
-		await apiClient.updateCodeRequestRejectMessage(userToken, postId, inputText);
+		// 코드 심사 히스토리 insert
+		await apiClient.insertCodeReviewResultHistory(userToken, postId, inputText, PostStateType.rejected);
 
 		const notificationEntity: NotificationEntity ={
 			title : '심사 반려 알림',
@@ -59,4 +61,4 @@ const RejectModal: FC<Props> = ({ postId, title, open, onClose, userToken,refetc
 	);
 };
 
-export default RejectModal;
+export default ReviewResultModal;
