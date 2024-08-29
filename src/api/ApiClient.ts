@@ -2644,8 +2644,9 @@ class ApiClient implements SupabaseAuthAPI {
                 .from('comment')
                 .select('*')
                 .eq('user_token', userToken)
-                .is('parent_comment_id', null)
+                .is('parent_comment_id', null) // 답변인 코멘트는 제외하기 위함
                 .order('created_at', { ascending: true });
+
 
             if (error) {
                 console.log("error" + error.code);
@@ -2657,7 +2658,18 @@ class ApiClient implements SupabaseAuthAPI {
                 throw error;
             }
 
-            return data ?? [];
+            const questionsForMyPost:CommentEntity[] = await this.getAllQuestionsForMyPost(userToken);
+            const allComments:CommentEntity[]  = [...data, ...questionsForMyPost];
+
+            const sortedComments:CommentEntity[]  = allComments.sort((a, b) => {
+                const dateA = new Date(a.created_at || 0).getTime();
+                const dateB = new Date(b.created_at || 0).getTime();
+                return dateB - dateA; // 오름차순 정렬 (과거 -> 최근)
+            });
+
+            console.log("%o",sortedComments);
+
+            return sortedComments ?? [];
 
         } catch (e: any) {
             console.log(e);
@@ -2682,7 +2694,7 @@ class ApiClient implements SupabaseAuthAPI {
                 return error;
             }
 
-            return data?.length ?? 0;
+            return data?.length;
 
         } catch (e: any) {
             console.log(e);
@@ -2700,7 +2712,7 @@ class ApiClient implements SupabaseAuthAPI {
         if(error){
             throw error;
         }
-        return data[0];
+        return data[0] ?? [];
     }
 
     async insertUserBankInfo (userBankAccount:UserBankAccountEntity) {
@@ -2736,6 +2748,26 @@ class ApiClient implements SupabaseAuthAPI {
             console.log(e);
             throw new Error('유저 계좌 정보를 업데이트 하는데에 실페했습니다.');
         }
+
+    }
+
+    async getAllQuestionsForMyPost(userToken:string) {
+        const codeModels:CodeModel[]= await this.getAllMyCode(userToken);
+        const postIds:number[] = codeModels.map((codeModel:CodeModel) => (
+            codeModel.id
+        ));
+
+        const {data , error} = await supabase
+            .from('comment')
+            .select('*')
+            .is('parent_comment_id', null)
+            .in('post_id', postIds);
+
+        if (error) {
+            throw error;
+        }
+
+        return data;
 
     }
 }

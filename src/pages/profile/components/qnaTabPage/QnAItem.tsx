@@ -1,4 +1,4 @@
-import {FC} from "react";
+import {FC, useEffect, useMemo, useState} from "react";
 import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
 import {TableCell, TableRow} from "@mui/material";
 import {reformatTime} from "../../../../utils/DayJsHelper";
@@ -7,6 +7,7 @@ import {apiClient} from "../../../../api/ApiClient";
 import {useQueryUserLogin} from "../../../../hooks/fetcher/UserFetcher";
 import {REACT_QUERY_KEY} from "../../../../constants/define";
 import {CommentEntity} from "../../../../data/entity/CommentEntity";
+import {useNavigate} from "react-router-dom";
 
 interface Props {
     commentsData: CommentEntity;
@@ -24,10 +25,32 @@ const QnAItem: FC<Props> = ({commentsData}) => {
         queryFn: () => apiClient.getTargetUser(codeData?.userToken!),
     });
 
-    const { data: answerNumber } = useQuery({
+    const { data: hasAnswer } = useQuery({
         queryKey: ['answer',commentsData.id],
         queryFn: () => apiClient.checkHasAnswer(commentsData.id!),
     });
+
+    const [answerStatus, setAnswerStatus] = useState<string>();
+    const navigator = useNavigate();
+
+    const makeAnswerStatusComponent = useMemo(() => {
+        if(hasAnswer){
+            return <TableCell>{"답변 완료"}</TableCell>;
+        }else{
+            if(answerUser?.user_token! === userLogin?.user_token!) {
+                return(
+                    <TableCell
+                    sx={{cursor: 'pointer', color:'blue'}}
+                        onClick={() => {
+                    navigator(`/code/${codeData?.id}`);
+                }}>
+                    {"답변 하러가기"}</TableCell>
+                );
+            }else{
+                return <TableCell>{"답변 대기"}</TableCell>;
+            }
+        }
+    }, [hasAnswer,answerUser]);
 
     return (
         <TableRow>
@@ -36,7 +59,7 @@ const QnAItem: FC<Props> = ({commentsData}) => {
             <TableCell>{answerUser?.nickname}</TableCell>
             <TableCell>{codeData?.title}</TableCell>
             <TableCell>{commentsData.content}</TableCell>
-            <TableCell>{answerNumber >0 ? "완료": answerUser?.user_token === userLogin?.user_token ? "답변 하러가기" : "답변 대기"}</TableCell>
+            {makeAnswerStatusComponent}
         </TableRow>
     );
 }

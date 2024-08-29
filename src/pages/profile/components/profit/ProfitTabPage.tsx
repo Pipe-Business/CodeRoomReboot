@@ -85,9 +85,35 @@ const ProfitTabPage = () => {
         });
 
         const monthFilterArray: string[] = Array.from(monthFilterSet);
+        console.log(monthFilterArray);
         setMonthFilter(monthFilterArray);
         setSelectedPeriod(monthFilterArray[0]);
     }, [salesData]);
+
+    //TODO useEffect의 의존성 배열 원소가 같은것 함수로 리팩토링 필요
+
+    const [settlementPeriod, setSettlementPeriod] = useState<string>();
+    const [allowedSettlementApplyAmount, setAllowedSettlementApplyAmount] = useState<number>();
+    useEffect(() => {
+        //TODO: confirm_time이 Null인것 중 처음 ~ 마지막 월을 string으로 set
+        const monthFilterSet = new Set<string>();
+        let allowedSettlementApplyAmountSum: number = 0;
+
+        salesData?.forEach((sale) => {
+            if(sale.confirmed_time === null){
+                const parsedDate:Date = new Date(sale.created_at!);
+                const year=  parsedDate.getFullYear();
+                const month = (parsedDate.getMonth() + 1).toString().padStart(2,'0');
+                monthFilterSet.add(`${year}년 ${month}월`);
+                allowedSettlementApplyAmountSum += sale.sell_price * 0.8; // TODO: 수수료 수정 필요 및 정확한 소숫점 처리 필요
+
+            }
+            const monthFilterArray: string[] = Array.from(monthFilterSet);
+            const period = `${monthFilterArray[monthFilterArray.length-1]} ~ ${monthFilterArray[0]}`;
+            setSettlementPeriod(period);
+            setAllowedSettlementApplyAmount(allowedSettlementApplyAmountSum);
+        });
+    },[salesData]);
 
 
 
@@ -122,8 +148,6 @@ const ProfitTabPage = () => {
         handleCloseDialog();
         handleInfoEditOpenDialog();
     }
-
-
 
     //TODO : 객체로 리턴하도록 변경 필요..
 
@@ -186,13 +210,15 @@ const ProfitTabPage = () => {
         toast.success("저장되었습니다");
     }
 
-    if (isSalesCodeDataLoading || isBankAccountLoading ||  !monthFilter[0] || monthFilter[0].length ===0 ) {
-        return <ListLoadingSkeleton/>;
-    }
-
     if (salesData?.length === 0) {
         return <ListEmptyText/>;
     }
+
+    if (isSalesCodeDataLoading || isBankAccountLoading ||  monthFilter[0] === undefined){
+        return <ListLoadingSkeleton/>;
+    }
+
+
 
     return (
         <TableContainer>
@@ -380,7 +406,7 @@ const ProfitTabPage = () => {
                         </DialogContentText>
 
                         <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            {`2024.07 ~ 2024.08`}
+                            {settlementPeriod}
                         </DialogContentText>
                     </div>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
@@ -389,7 +415,7 @@ const ProfitTabPage = () => {
                         </DialogContentText>
 
                         <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            {`15,000원`}
+                            {Math.round(allowedSettlementApplyAmount!)}원
                             {/*    TODO: db 연동 필요*/}
                         </DialogContentText>
                     </div>
