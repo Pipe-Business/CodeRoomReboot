@@ -45,7 +45,7 @@ export const useInputValidate = (options?: InputValidateOption): [
 	const [success, setSuccess] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
 	const [successMsg, setSuccessMsg] = useState('');
-	const [wordLen,setWordLen] =useState(0)
+	const [wordLen,setWordLen] =useState(initOption.defaultValue?.length ?? 0)
 	const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
 		let errorMessage = '';
