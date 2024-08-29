@@ -83,6 +83,11 @@ export const CommentItem: React.FC<CommentItemProps> = ({
         }
     };
 
+    const handleAddComment = async (content: string) => {
+        await addComment(content, comment.id!);
+        setShowReplyForm(false);  // 답변 추가 후 폼 닫기
+    };
+
     const canEditOrDelete = currentUserToken === comment.user_token;
 
     const { userById } = useQueryUserById(comment.user_token);
@@ -155,7 +160,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
 
             <Collapse in={showReplyForm}>
                 <Box mt={2}>
-                    <CommentForm addComment={(content) => addComment(content, comment.id!)} title="답변 내용 작성" placeholder="답변 내용을 입력하세요"
+                    <CommentForm addComment={handleAddComment} title="답변 내용 작성" placeholder="답변 내용을 입력하세요"
                                  buttonText="답변 완료"/>
                 </Box>
             </Collapse>
