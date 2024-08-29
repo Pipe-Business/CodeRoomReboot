@@ -34,13 +34,9 @@ interface Props {
 
 const CodeSubmissionFinalPage: FC<Props> = () => {
 
-    function splitStringByPipe(input: string) : string[] {
-        console.log(`test ${input.toString()}`);
-        return input.toString().split(',');
-    }
-
     const navigate = useNavigate();
     const location = useLocation();
+    const {isEdit, isReexamination} = location.state || {};
     const editTargetModel: CodeModel = location.state?.item;
     const [gptCodeInfo] = useRecoilState(gptGeneratedCodeInfo);
     const [codeModel] = useRecoilState(codeInfo);
@@ -84,6 +80,11 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
             defaultValue: gptCodeInfo?.aiSummary ?? codeModel?.aiSummary ?? '',
             minLen: 30, maxLen: 100,
         });
+
+    function splitStringByPipe(input: string): string[] {
+        console.log(`test ${input.toString()}`);
+        return input.toString().split(',');
+    }
 
 
     useEffect(() => {
@@ -133,68 +134,68 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
     const onSubmitCodeRequest = useCallback(async () => {
         setLoading(true);
 
-    if (!inputCategory || inputCategory.trim() === "") {
-      toast.error("카테고리를 선택해주세요");
-      setLoading(false);
-      return;
-    }
-    if (!inputLanguage || inputLanguage.trim() === '') {
-      toast.error('개발 언어를 선택해주세요');
-      setLoading(false);
-      return;
-    }
-    if (!inputPoint) {
-      toast.error('판매 금액을 입력해주세요');
-      inputPointRef.current?.focus();
-      setLoading(false);
-      return;
-    }
-    if (inputPoint < 0) {
-      toast.error('판매금액은 음수가 될수 없습니다.');
-      inputPointRef.current?.focus();
-      setLoading(false);
-      return;
-    }
-    // if (!inputGithubUrl) {
-    //   toast.error('깃허브 레포지토리 url 을 입력해주세요');
-    //   inputUrlRef.current?.focus();
-    //   return;
-    // }
-    //const urlParser = inputGithubUrl.split('/');
-    // if (urlParser.length < 5 || !inputGithubUrl.startsWith('https://') || inputGithubUrl.endsWith('.git')) {
-    //   toast.error('url 이 올바르지 않습니다.');
-    //   inputUrlRef.current?.focus();
-    //   return;
-    // }
-    if (!inputTitle || errorTitle) {
-      toast.error('제목 양식에 맞게 입력해주세요');
-      inputTitleRef.current?.focus();
-      return;
-    }
-    // if (!inputDescription || errorDesc || inputDescription.trim() === '') {
-    //   toast.error('설명 양식에 맞게 입력해주세요');
-    //   inputContentRef.current?.focus();
-    //   return;
-    // }
-    // if (!inputGuide || errorGuide || inputGuide.trim() === '') {
-    //   toast.error('구매자 가이드 양식에 맞게 입력해주세요.');
-    //   inputGuideRef.current?.focus();
-    //   return;
-    // }
-    try{
-      const postReqEntity: PostRequestEntity = {
-        title: inputTitle,
-        description: inputDescription,
-        user_token: userLogin?.user_token!,
-        category: inputCategory,
-        state: PostStateType.pending,
-        post_type: 'code',
-        hash_tag: gptCodeInfo?.hashTag ?? codeModel?.hashTag == null ? [] : splitStringByPipe(codeModel?.hashTag!),
-        view_count: 0,
-      };
-      if (!pointError) {
-        mutate(postReqEntity);
-      }
+        if (!inputCategory || inputCategory.trim() === "") {
+            toast.error("카테고리를 선택해주세요");
+            setLoading(false);
+            return;
+        }
+        if (!inputLanguage || inputLanguage.trim() === '') {
+            toast.error('개발 언어를 선택해주세요');
+            setLoading(false);
+            return;
+        }
+        if (!inputPoint) {
+            toast.error('판매 금액을 입력해주세요');
+            inputPointRef.current?.focus();
+            setLoading(false);
+            return;
+        }
+        if (inputPoint < 0) {
+            toast.error('판매금액은 음수가 될수 없습니다.');
+            inputPointRef.current?.focus();
+            setLoading(false);
+            return;
+        }
+        // if (!inputGithubUrl) {
+        //   toast.error('깃허브 레포지토리 url 을 입력해주세요');
+        //   inputUrlRef.current?.focus();
+        //   return;
+        // }
+        //const urlParser = inputGithubUrl.split('/');
+        // if (urlParser.length < 5 || !inputGithubUrl.startsWith('https://') || inputGithubUrl.endsWith('.git')) {
+        //   toast.error('url 이 올바르지 않습니다.');
+        //   inputUrlRef.current?.focus();
+        //   return;
+        // }
+        if (!inputTitle || errorTitle) {
+            toast.error('제목 양식에 맞게 입력해주세요');
+            inputTitleRef.current?.focus();
+            return;
+        }
+        // if (!inputDescription || errorDesc || inputDescription.trim() === '') {
+        //   toast.error('설명 양식에 맞게 입력해주세요');
+        //   inputContentRef.current?.focus();
+        //   return;
+        // }
+        // if (!inputGuide || errorGuide || inputGuide.trim() === '') {
+        //   toast.error('구매자 가이드 양식에 맞게 입력해주세요.');
+        //   inputGuideRef.current?.focus();
+        //   return;
+        // }
+        try {
+            const postReqEntity: PostRequestEntity = {
+                title: inputTitle,
+                description: inputDescription,
+                user_token: userLogin?.user_token!,
+                category: inputCategory,
+                state: PostStateType.pending,
+                post_type: 'code',
+                hash_tag: gptCodeInfo?.hashTag ?? codeModel?.hashTag == null ? [] : splitStringByPipe(codeModel?.hashTag!),
+                view_count: 0,
+            };
+            if (!pointError) {
+                mutate(postReqEntity);
+            }
 
         } catch (error) {
             setLoading(false);
@@ -207,7 +208,10 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
     const {mutate} = useMutation({
         mutationFn: async (postRequest: PostRequestEntity) => {
             //setUpload(true);
+
+            // 최초 게시 신청인지 체크 (코드 올리기를 통해서 들어온 경우)
             if (gptCodeInfo != null) {
+                console.log('최초 게시 신청');
                 postId = await apiClient.insertPostData(postRequest);
                 // if (files) {
                 //   const urls = await apiClient.uploadImages(userLogin?.user_token!, postId, files);
@@ -226,15 +230,24 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
                 };
                 await apiClient.insertCodeData(codeRequest);
             } else {
+                // 단순 게시글 수정 or 반려로 인한 재심사 요청으로 인한 경우
+                console.log('단순 게시글 수정 or 재심사 요청');
+                let state = PostStateType.approve
+                if (isEdit) {
+                    state = PostStateType.approve
+                } else if (isReexamination) {
+                    state = PostStateType.pending
+                }
+
                 const codeEditRequest: CodeEditRequestEntity = {
                     post_id: codeModel!.id,
-                    title: codeModel!.title,
-                    category: codeModel!.category,
+                    title: inputTitle,
+                    category: inputCategory,
                     price: Number(inputPoint),
                     language: inputLanguage,
                     ai_summary: inputGuide,
                     description: inputDescription,
-                    state: PostStateType.pending,
+                    state: state,
                 };
                 await apiClient.updatePostData(codeEditRequest);
             }
@@ -244,12 +257,21 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
             //setFiles(null);
             //setSrc(null);
             //setGithubUrl('');
+            let resultMsg = '';
+            if (isEdit) {
+                resultMsg = '게시글 수정이 완료 되었습니다';
+            } else if (isReexamination) {
+                resultMsg = '재심사 요청이 완료 되었습니다';
+            } else {
+                resultMsg = '코드 심사 요청이 완료 되었습니다';
+            }
+
             setTitle('');
             //setDescription('');
             setLanguage('');
             setPoint('');
             setLoading(false);
-            toast.success('회원님의 코드가 관리자에게 전달되었습니다!');
+            toast.success(resultMsg);
             navigate('/');
         },
         onError: (error) => {
@@ -479,7 +501,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
             <Box sx={{marginTop: 6, display: 'flex', justifyContent: 'end'}}>
                 <Button variant="contained" sx={{backgroundColor: '#333', color: '#fff', fontSize: 15, width: 194}}
                         onClick={onSubmitCodeRequest}>
-                    작성완료 및 검토요청
+                    완료
                 </Button>
             </Box>
         </MainLayout>
