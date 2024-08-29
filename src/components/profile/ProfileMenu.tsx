@@ -8,16 +8,17 @@ import { useQueryClient } from '@tanstack/react-query';
 import { REACT_QUERY_KEY } from "../../constants/define";
 import { apiClient } from "../../api/ApiClient";
 import {useLocation, useNavigate} from 'react-router-dom';
-import { Logout, AccountCircle } from '@mui/icons-material';
+import { Logout } from '@mui/icons-material';
 import {MenuItemStyle} from "../styles";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import gravatar from "gravatar";
 
 interface Props {
     children?: React.ReactNode,
-    profileUrl: string,
+    profileUrl: string | null,
 }
 
 const ProfileMenu: FC<Props> = ({ profileUrl }) => {
@@ -50,7 +51,7 @@ const ProfileMenu: FC<Props> = ({ profileUrl }) => {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar
-                src={profileUrl}
+                src={profileUrl ?? gravatar.url(userLogin?.email!,{s:'100',d:'retro'})}
                 sx={{
                     width: 36,
                     height: 36,

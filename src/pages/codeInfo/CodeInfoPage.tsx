@@ -117,7 +117,7 @@ const CodeInfo: FC = () => {
 		}
 
 		await apiClient.insertUserCoinHistory(pointHistoryRequest);
-		await apiClient.updateTotalPoint(userLogin?.user_token!, (currentAmount + amountUpdateValue));
+		await apiClient.updateTotalCoin(userLogin?.user_token!, (currentAmount + amountUpdateValue));
 
 		setPaymentDialogOpen(false);
 		navigate(0);

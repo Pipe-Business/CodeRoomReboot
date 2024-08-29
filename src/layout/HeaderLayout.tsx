@@ -119,7 +119,7 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
                                 </MarginHorizontal>
 
                                 <MarginHorizontal size={8}>
-                                    <ProfileMenu profileUrl={userLogin.profile_url!}/>
+                                    <ProfileMenu profileUrl={userLogin.profile_url}/>
                                 </MarginHorizontal>
                             </CenterBox>
                         )}
