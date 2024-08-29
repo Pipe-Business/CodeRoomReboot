@@ -10,7 +10,7 @@ interface Props {
 
 
 const SelectCodeLanguage: FC<Props> = ({inputCategory, setCategory}) => {
-    const [labelMsg, setLabelMsg] = useState('사용언어를 선택해주세요.')
+    const [labelMsg, setLabelMsg] = useState('')
     const onChangeSelectCategory = useCallback((e: SelectChangeEvent) => {
         const updateValue = e.target.value as string
         console.log(updateValue);
