@@ -71,7 +71,7 @@ const MyPage: FC<Props> = () => {
 
     useEffect(() => {
         setValue(searchParams.get('tab') ?? '1');
-    }, []);
+    }, [searchParams]);
 
     const handleChange = (_: React.SyntheticEvent, newValue: string) => {
         searchParams.set('tab', newValue);

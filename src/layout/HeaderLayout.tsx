@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {Badge, Box, Skeleton} from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useQuery } from '@tanstack/react-query';
@@ -31,6 +31,8 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
         queryFn: () => apiClient.getMyNotReadNotification(userLogin?.user_token!),
         enabled: !!userLogin?.user_token,
     });
+
+    const navigate = useNavigate();
 
     const [notiCount, setNotiCount] = useState<number>(0);
     const [openLoginModal, onOpenLoginModal, onCloseLoginModal] = useDialogState();
@@ -77,6 +79,7 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
 
                         {userLogin && (
                             <CenterBox>
+                                <div onClick={() => {navigate('/profile/my?tab=4')}} style={{cursor:'pointer'}}>
                                 <MarginHorizontal size={8}>
                                     <span style={{
                                         color: '#000000',
@@ -97,6 +100,7 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
                                         />
                                     </span>
                                 </MarginHorizontal>
+                                </div>
 
                                 <MarginHorizontal size={8}>
                                     <Link to={'/create/code'} style={{textDecoration: "none"}}>

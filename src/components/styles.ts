@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
 import Button, { ButtonProps } from '@mui/material/Button';
+import {MenuItem, MenuItemProps} from "@mui/material";
 
 export const CenterBox = styled.div`
   display: flex;
@@ -41,4 +42,16 @@ export const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
 export const TextButton = styled(Button)<ButtonProps>(({ theme }) => ({
   color: '#000000',
   backgroundColor: '#FFFFFF',
+}));
+
+export const MenuItemStyle = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
+  '&:hover': {
+    backgroundColor: 'transparent', // hover 배경색 제거
+  },
+  '&:focus': {
+    backgroundColor: 'transparent', // focus 배경색 제거
+  },
+  '& .MuiListItemIcon-root': {
+    minWidth: 36,
+  },
 }));

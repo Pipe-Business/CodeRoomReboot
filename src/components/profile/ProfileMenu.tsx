@@ -9,6 +9,11 @@ import { REACT_QUERY_KEY } from "../../constants/define";
 import { apiClient } from "../../api/ApiClient";
 import {useLocation, useNavigate} from 'react-router-dom';
 import { Logout, AccountCircle } from '@mui/icons-material';
+import {MenuItemStyle} from "../styles";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 interface Props {
     children?: React.ReactNode,
@@ -70,20 +75,8 @@ const ProfileMenu: FC<Props> = ({ profileUrl }) => {
                     },
                 }}
             >
-                <MenuItem
-                    onClick={() => { navigate('/profile/my'); handleMenuClose(); }}
-                    sx={{
-                        '&:hover': {
-                            backgroundColor: 'transparent', // hover 배경색 제거
-                        },
-                        '&:focus': {
-                            backgroundColor: 'transparent', // focus 배경색 제거
-                        },
-                        '& .MuiListItemIcon-root': {
-                            minWidth: 36,
-                        },
-                    }}
-                >
+                <MenuItemStyle
+                    onClick={() => { navigate('/profile/my'); handleMenuClose(); }}>
                     <ListItemIcon>
                         <UserProfileImage size={32} userId={userLogin?.user_token!} />
                     </ListItemIcon>
@@ -96,27 +89,43 @@ const ProfileMenu: FC<Props> = ({ profileUrl }) => {
                             {userLogin?.email}
                         </Typography>
                     </Box>
-                </MenuItem>
+                </MenuItemStyle>
                 <Divider />
-                <MenuItem
-                    onClick={signOut}
-                    sx={{
-                        '&:hover': {
-                            backgroundColor: 'transparent', // hover 배경색 제거
-                        },
-                        '&:focus': {
-                            backgroundColor: 'transparent', // focus 배경색 제거
-                        },
-                        '& .MuiListItemIcon-root': {
-                            minWidth: 36,
-                        },
-                    }}
-                >
+                <MenuItemStyle onClick={() => {navigate('/profile/my?tab=1')}}>
+                    <ListItemIcon>
+                        <FavoriteIcon sx={{color: 'red'}}/>
+                    </ListItemIcon>
+                    {`관심목록`}
+                </MenuItemStyle>
+                <Divider />
+                <MenuItemStyle onClick={() => {navigate('/profile/my?tab=2')}}>
+                    <ListItemIcon>
+                        <ShoppingCartIcon/>
+                    </ListItemIcon>
+                    {`구매목록`}
+                </MenuItemStyle>
+                <Divider />
+                <MenuItemStyle onClick={() => {navigate('/profile/my?tab=3')}}>
+                    <ListItemIcon>
+                        <ShoppingBasketIcon/>
+                    </ListItemIcon>
+                    {`판매목록`}
+                </MenuItemStyle>
+                <Divider />
+                <MenuItemStyle onClick={() => {navigate('/profile/my?tab=5')}}>
+                    <ListItemIcon>
+                        <AttachMoneyIcon/>
+                    </ListItemIcon>
+                    {`수익목록`}
+                </MenuItemStyle>
+                <Divider />
+                <MenuItemStyle
+                    onClick={signOut}>
                     <ListItemIcon>
                         <Logout fontSize="small" />
                     </ListItemIcon>
                     <Typography variant="body1">로그아웃</Typography>
-                </MenuItem>
+                </MenuItemStyle>
             </Menu>
         </Box>
     );
