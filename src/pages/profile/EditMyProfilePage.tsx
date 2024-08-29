@@ -56,7 +56,7 @@ const EditMyProfilePage: FC<Props> = () => {
                     coin_history_type: CoinHistoryType.earn_coin,
                 }
                 await apiClient.insertUserCoinHistory(pointHistory);
-                await apiClient.updateTotalPoint(userLogin!.user_token!, totalAmount);
+                await apiClient.updateTotalCoin(userLogin!.user_token!, totalAmount);
 
             } else {
                 return false;
@@ -86,7 +86,7 @@ const EditMyProfilePage: FC<Props> = () => {
                     coin_history_type: CoinHistoryType.earn_coin,
                 }
                 await apiClient.insertUserCoinHistory(pointHistory);
-                await apiClient.updateTotalPoint(userLogin?.user_token!, totalAmount);
+                await apiClient.updateTotalCoin(userLogin?.user_token!, totalAmount);
             } else {
                 return false;
             }

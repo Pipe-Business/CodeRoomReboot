@@ -2421,11 +2421,11 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateTotalPoint(userToken: string, point: number) {
+    async updateTotalCoin(userToken: string, coin: number) {
         try {
 
             const {error} = await supabase.from('users_amount')
-                .update({point_amount: point}).eq('user_token', userToken);
+                .update({coin_amount: coin}).eq('user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);

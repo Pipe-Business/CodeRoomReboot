@@ -21,7 +21,7 @@ export const useMutateSendPoint = () => {
                 }
         
                 await apiClient.insertUserCoinHistory(coinHistory);
-                await apiClient.updateTotalPoint(data.userToken,coinAmount);
+                await apiClient.updateTotalCoin(data.userToken,coinAmount);
 
         },
 		onSuccess: () => {

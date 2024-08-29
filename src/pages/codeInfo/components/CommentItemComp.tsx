@@ -23,6 +23,7 @@ import {apiClient} from "../../../api/ApiClient";
 import {useQueryUserById, useQueryUserLogin} from "../../../hooks/fetcher/UserFetcher";
 import CloseIcon from "@mui/icons-material/Close";
 import {REACT_QUERY_KEY} from "../../../constants/define";
+import gravatar from "gravatar";
 
 interface CommentItemProps {
     comment: CommentEntity;
@@ -97,7 +98,7 @@ export const CommentItem: React.FC<CommentItemProps> = ({
     return (
         <Paper elevation={depth === 0 ? 3 : 0} sx={{p: 2, mb: 2, ml: depth * 2}}>
             <Box display="flex" alignItems="flex-start">
-                {userById?.profile_url == null ? (<Avatar sx={{bgcolor: avatarColor, mr: 2}}>
+                {userById?.profile_url == null ? (<Avatar src={gravatar.url(userLogin?.email!,{s:'100',d:'retro'})} >
                 {userById?.email ? userById?.email[0].toUpperCase() : 'U'} </Avatar>) : (<Avatar src={userById?.profile_url} sx={{mr: 2}}></Avatar>)}
                 <Box flexGrow={1}>
                     <Typography variant="subtitle2" fontWeight="bold">

@@ -26,7 +26,7 @@ export const useMutateSettleCoinBySeller = () => {
 		mutationFn: async (data:{coinHistoryRequestEntity : UsersCoinHistoryReq, coinAmount: number}) => {
 			const {coinHistoryRequestEntity,coinAmount } = data;
 			await apiClient.insertUserCoinHistory(coinHistoryRequestEntity); // 판매자에게 캐시 정산 insert
-			await apiClient.updateTotalPoint(coinHistoryRequestEntity.user_token,coinAmount);
+			await apiClient.updateTotalCoin(coinHistoryRequestEntity.user_token,coinAmount);
 		},
 	});
 	return {

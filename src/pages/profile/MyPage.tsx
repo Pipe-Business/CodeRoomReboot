@@ -130,7 +130,7 @@ const MyPage: FC<Props> = () => {
         }
 
         await apiClient.insertUserCoinHistory(pointHistoryRequest);
-        await apiClient.updateTotalPoint(userLogin?.user_token!, (currentAmount + amountUpdateValue));  // total point update
+        await apiClient.updateTotalCoin(userLogin?.user_token!, (currentAmount + amountUpdateValue));  // total point update
 
 
         setReviewDialogOpen(false);

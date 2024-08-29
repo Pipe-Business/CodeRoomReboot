@@ -10,6 +10,8 @@ import {PurchaseSaleReq} from "../../../data/entity/PurchaseSaleReq";
 import {Bootpay} from "@bootpay/client-js";
 import {BootPayPaymentModel} from "../../../data/entity/BootPayPaymentModel";
 import {PayType} from "../../../enums/PayType";
+import {UsersCoinHistoryReq} from "../../../data/entity/UsersCoinHistoryReq";
+import {CoinHistoryType} from "../../../enums/CoinHistoryType";
 
 export const useMutateCodePayment = () => {
     const [paymentDialogOpen, setPaymentDialogOpen] = useRecoilState(paymentDialogState);
@@ -23,13 +25,20 @@ export const useMutateCodePayment = () => {
             const {userLogin, postData} = data;
 
             // bootpay 결제
-            await chargePaymentRequired( userLogin, postData); // 충전
+            await chargePaymentRequired(userLogin, postData); // 결제
 
-            // TODO 코인 지급
-            // const currentCoin = await apiClient.getUserTotalPoint(userLogin!.user_token!);
+            // 판매자 코인 지급 2%
+            const coinForSaler: number = postData.price * 0.02
+            await grantPipeCoins("코드 판매 보상", postData.userToken!,coinForSaler);
+            console.log("판매자id:",postData.userToken);
+
+            // 구매자 코인 지급 1%
+            const coinForPurchaser: number = postData.price * 0.01
+            await grantPipeCoins("코드 구매 보상", userLogin.user_token!,coinForPurchaser);
+            console.log("구매자id:",userLogin.user_token);
+
 
             // TODO update amount
-            //await apiClient.updateTotalPoint(userLogin!.user_token!,coinAmount);
         return postData;
         },
         onSuccess: async (postData: CodeModel) => {
@@ -48,6 +57,21 @@ export const useMutateCodePayment = () => {
             toast.error('결제실패 - 결제 중단하신게 아니라면 관리자에게 연락바랍니다.');
         }
     });
+
+    const grantPipeCoins = async (description: string,userToken: string, amountUpdateValue:number) => {
+        const currentAmount = await apiClient.getUserTotalPoint(userToken);
+        const coinAmount =  currentAmount + amountUpdateValue;
+        const coinHistoryRequest: UsersCoinHistoryReq = {
+            description: description,
+            amount: coinAmount,
+            user_token: userToken,
+            coin: amountUpdateValue,
+            coin_history_type: CoinHistoryType.earn_coin,
+        }
+
+        await apiClient.insertUserCoinHistory(coinHistoryRequest);
+        await apiClient.updateTotalCoin(userToken,coinAmount);
+    }
 
     const chargePaymentRequired = async (
                                           userLogin: UserModel,

@@ -1,5 +1,5 @@
 export type CodeModel = {
-    id: number,
+    id: number, // TODO postID인지, code table의 시퀀스 ID인지 헷갈림. 변경 필요
     title: string,
     description: string,  /** 코드 설명 */
     img_urls: string[],  /** 코드 결과물 이미지 url */
