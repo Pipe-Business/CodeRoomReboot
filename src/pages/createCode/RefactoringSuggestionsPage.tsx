@@ -23,52 +23,47 @@ interface FileData {
     [key: string]: any;
 }
 
+
 const RefactoringSuggestionPage: FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const {githubRepoName, sellerGithubName} = location.state as LocationState;
+    //const {githubRepoName, sellerGithubName} = location.state as LocationState;
+    const { refactoredResult } = location.state;
 
-    const {files, fileNames, isLoading, error, totalCodeFileLength, refactoredReuslt} = useRefactor(
-        sellerGithubName || '',
-        githubRepoName || ''
-    );
+    // const {files, fileNames, isLoading, error, totalCodeFileLength, refactoredReuslt} = useRefactor(
+    //     sellerGithubName || '',
+    //     githubRepoName || ''
+    // );
 
     const [analyzedFiles, setAnalyzedFiles] = useState<FileData[]>([]);
-    const [currentFile, setCurrentFile] = useState<string>('');
 
     const goToCreateCode = () => {
         navigate('/create/code/codesubmission');
     }
-    useEffect(() => {
-        const newAnalyzedFiles = files.filter(file =>
-            file.analysis !== undefined &&
-            !analyzedFiles.some(af => af.path === file.path)
-        );
 
-        if (newAnalyzedFiles.length > 0) {
-            setAnalyzedFiles(prev => [...prev, ...newAnalyzedFiles]);
-        }
+    // useEffect(() => {
+    //     const newAnalyzedFiles = files.filter(file =>
+    //         file.analysis !== undefined &&
+    //         !analyzedFiles.some(af => af.path === file.path)
+    //     );
+    //
+    //     if (newAnalyzedFiles.length > 0) {
+    //         setAnalyzedFiles(prev => [...prev, ...newAnalyzedFiles]);
+    //     }
+    // }, [files, analyzedFiles]);
 
-        const remainingFiles = files.filter(file => file.analysis === undefined);
-        if (remainingFiles.length > 0) {
-            setCurrentFile(remainingFiles[0].name);
-        } else {
-            setCurrentFile('');
-        }
-    }, [files, analyzedFiles]);
+    //const progress = totalCodeFileLength > 0 ? (analyzedFiles.length / totalCodeFileLength) * 100 : 0;
 
-    const progress = totalCodeFileLength > 0 ? (analyzedFiles.length / totalCodeFileLength) * 100 : 0;
-
-    if (!githubRepoName || !sellerGithubName) {
-        return (
-            <AdminLayout>
-                <Box sx={{padding: 3}}>
-                    <Typography variant="h6">Error: Missing required data</Typography>
-                    <Button onClick={() => navigate(-1)}>Go Back</Button>
-                </Box>
-            </AdminLayout>
-        );
-    }
+    // if (!githubRepoName || !sellerGithubName) {
+    //     return (
+    //         <AdminLayout>
+    //             <Box sx={{padding: 3}}>
+    //                 <Typography variant="h6">Error: Missing required data</Typography>
+    //                 <Button onClick={() => navigate(-1)}>Go Back</Button>
+    //             </Box>
+    //         </AdminLayout>
+    //     );
+    // }
 
     return (
         <MainLayout>
@@ -103,18 +98,18 @@ const RefactoringSuggestionPage: FC = () => {
                 {/*    </Box>*/}
                 {/*)}*/}
 
-                {
-                    isLoading &&
-                    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4}}>
-                        <CircularProgress/>
-                    </Box>
-                }
+                {/*{*/}
+                {/*    isLoading &&*/}
+                {/*    <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4}}>*/}
+                {/*        <CircularProgress/>*/}
+                {/*    </Box>*/}
+                {/*}*/}
 
-                {error && (
-                    <Typography color="error" sx={{mt: 2}}>
-                        Error: {error}
-                    </Typography>
-                )}
+                {/*{error && (*/}
+                {/*    <Typography color="error" sx={{mt: 2}}>*/}
+                {/*        Error: {error}*/}
+                {/*    </Typography>*/}
+                {/*)}*/}
 
                 {/*{analyzedFiles.length > 0 && (*/}
                 {/*    <List sx={{mt: 4}}>*/}
@@ -158,7 +153,7 @@ const RefactoringSuggestionPage: FC = () => {
                 {/*    </List>*/}
                 {/*)}*/}
 
-                {refactoredReuslt && (
+                {refactoredResult && (
                     <Box sx={{mt: 2, width: '100%'}}>
                         <Typography variant="h6">Analysis</Typography>
                         <Box component="pre" sx={{
@@ -171,7 +166,7 @@ const RefactoringSuggestionPage: FC = () => {
                         }}>
                             <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
                                 {/*{file.analysis}*/}
-                                { refactoredReuslt }
+                                { refactoredResult }
                             </ReactMarkdown>
                             {/*<code>{file.analysis}</code>*/}
                         </Box>
@@ -180,7 +175,7 @@ const RefactoringSuggestionPage: FC = () => {
             </Box>
 
             {
-                !isLoading &&
+                // !isLoading &&
                 <button style={{display: 'flex', justifyContent: 'end'}} onClick={goToCreateCode}>추가 정보 작성하고 코드
                     올리기</button>
             }
