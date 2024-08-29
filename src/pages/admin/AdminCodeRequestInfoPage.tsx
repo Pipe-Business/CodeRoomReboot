@@ -26,6 +26,8 @@ import { CATEGORY_TO_KOR } from "../../constants/define";
 import { apiClient } from "../../api/ApiClient";
 import { PostStateType } from "../../enums/PostStateType";
 import ReadMeHtml from "../codeInfo/components/ReadMeHtml";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 
 const StyledCard = styled(Card)(({ theme }) => ({
 	marginBottom: theme.spacing(3),
@@ -82,6 +84,25 @@ const StatusDot = styled('span')(({theme}) => ({
 	height: 8,
 	borderRadius: '50%',
 	marginRight: theme.spacing(1),
+}));
+
+const StyledMarkdown = styled(ReactMarkdown)(({ theme }) => ({
+	'& pre': {
+		backgroundColor: theme.palette.grey[100],
+		padding: theme.spacing(2),
+		borderRadius: theme.shape.borderRadius,
+		overflow: 'auto',
+	},
+	'& code': {
+		fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+	},
+	'& p': {
+		marginBottom: theme.spacing(2),
+	},
+	'& h1, & h2, & h3, & h4, & h5, & h6': {
+		marginTop: theme.spacing(2),
+		marginBottom: theme.spacing(1),
+	},
 }));
 
 interface PostStatusProps {
@@ -165,6 +186,7 @@ function extractRepoName(url: string): string {
 const AdminCodeRequestInfo: FC<Props> = () => {
 	const { userId, codeId } = useParams();
 	const navigate = useNavigate();
+	const [shouldRefetch, setShouldRefetch] = React.useState(false);
 
 	const { isLoading, data, refetch } = useQuery({
 		queryKey: ['codeRequest', codeId],
@@ -174,6 +196,20 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 	const { userById } = useQueryUserById(userId!);
 	const [openReviewModal, onOpenReviewModal, onCloseReviewModal] = useDialogState();
 	const [isApproval, setIsApproval] = React.useState(false);
+
+
+	const handleReviewComplete = React.useCallback(() => {
+		setShouldRefetch(true);
+	}, []);
+
+	React.useEffect(() => {
+		if (shouldRefetch) {
+			refetch();
+			setShouldRefetch(false);
+		}
+	}, [shouldRefetch, refetch]);
+
+
 
 	const handleSmartAnalysis = () => {
 		navigate(`/admin/codeRequest/${userId}/${codeId}/smart-analysis/`, {
@@ -262,7 +298,11 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					<StyledCard>
 						<StyledCardContent>
 							<TitleTypography variant="h6">코드 설명</TitleTypography>
-							<ReadMeHtml htmlText={data.description} />
+							<StyledMarkdown
+								rehypePlugins={[rehypeHighlight]}
+							>
+								{data.description}
+							</StyledMarkdown>
 						</StyledCardContent>
 					</StyledCard>
 				)}
@@ -296,7 +336,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 				<StyledCard>
 					<StyledCardContent>
 						<TitleTypography variant="h6">판매가격</TitleTypography>
-						<ContentTypography>{data.price} 💵</ContentTypography>
+						<ContentTypography>{data.price.toLocaleString()} 원</ContentTypography>
 					</StyledCardContent>
 				</StyledCard>
 
@@ -350,6 +390,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 					onClose={onCloseReviewModal}
 					refetch={refetch}
 					isApproval={isApproval}
+					onReviewComplete={handleReviewComplete}
 				/>
 			</Box>
 		</AdminLayout>

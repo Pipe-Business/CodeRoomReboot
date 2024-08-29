@@ -22,9 +22,10 @@ interface Props {
 	postId: string,
 	refetch: () => void,
 	isApproval: boolean,
+	onReviewComplete: () => void,
 }
 
-const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken, refetch, isApproval }) => {
+const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken, refetch, isApproval, onReviewComplete }) => {
 	const [inputText, setInputText] = React.useState('');
 	const mdParser = useMemo(() => new MarkdownIt(), []);
 	const navigate = useNavigate();
@@ -45,9 +46,6 @@ const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken,
 
 			await apiClient.updateAdminGithubRepoUrl(data.id.toString(), forkUrl);
 
-			const marketingReadmeByGpt = await apiClient.makeReadMeByGpt(forkUrl);
-			await apiClient.updateAdminMarketingText(data.id.toString(), marketingReadmeByGpt);
-
 			const notificationEntity: NotificationEntity = {
 				title: '심사 승인 알림',
 				content: `업로드 하신 [ ${title} ] 의 심사 결과 승인 되었습니다.`,
@@ -64,6 +62,8 @@ const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken,
 			if (result) {
 				await apiClient.updateCodeRequestState(userToken, postId, PostStateType.approve);
 				await apiClient.insertCodeReviewResultHistory(userToken, postId, inputText, PostStateType.approve);
+				toast.info('심사결과가 판매자에게 전달 되었습니다. (승인)');
+				onReviewComplete(); // Call the callback function
 			}
 		},
 		onError: (e) => {
@@ -90,6 +90,7 @@ const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken,
 		},
 		onSuccess: () => {
 			toast.info('심사결과가 판매자에게 전달 되었습니다. (반려)');
+			onReviewComplete(); // Call the callback function
 		},
 		onError: (e) => {
 			toast.error('반려 처리 중 오류가 발생했습니다.');
@@ -111,10 +112,9 @@ const ReviewResultModal: FC<Props> = ({ postId, title, open, onClose, userToken,
 			rejectMutation.mutate();
 		}
 
-		refetch();
 		onClose();
-		navigate('/admin');
-	}, [inputText, isApproval, codeData]);
+		// navigate('/admin');
+	}, [inputText, isApproval, codeData, onClose, navigate, approveMutation, rejectMutation]);
 
 	return (
 		<Dialog open={open} onClose={onClose} fullWidth maxWidth={'lg'}>

@@ -1144,9 +1144,10 @@ class ApiClient implements SupabaseAuthAPI {
             // 1. admin의 모든 레포지토리 가져오기
             const repos = await this.fetchAllRepositories(String(process.env.REACT_APP_GITHUB_TOKEN));
 
-            var existingFork = false;
+            let existingFork = false;
             repos.forEach((repository:any) => {
-                if (repository.name === repoName) {
+                if (repository.name === repoName && repository.owner === adminOwner) {
+                    console.log(`admin repo => ${repository.name}`);
                     existingFork = true;
                 }
             });
