@@ -3,7 +3,7 @@ import Button, { ButtonProps } from '@mui/material/Button';
 
 export const SearchBar = styled.div`
     margin-top: 16px;
-    width: 1000px;    
+    width: 90%;    
 `
 
 export const CenterBox = styled.div`
