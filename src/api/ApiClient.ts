@@ -665,7 +665,7 @@ class ApiClient implements SupabaseAuthAPI {
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    is_application_submitted: e.is_application_submitted,
+                    request_money_date: e.is_application_submitted,
                     purchase_user_token: e.purchase_user_token,
                     bootpay_payment_id: e.bootpay_payemnt_id,
                     sales_user_token: e.sales_user_token,
@@ -1373,7 +1373,7 @@ class ApiClient implements SupabaseAuthAPI {
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    is_application_submitted: e.is_application_submitted,
+                    request_money_date: e.is_application_submitted,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
                     bootpay_payment_id: e.bootpay_payment_id,
@@ -1933,13 +1933,14 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
-                .eq('is_application_submitted', true)
+                .not('request_money_date','is',null)
                 .is('confirmed_time',null)
                 .order('created_at', {ascending: false});
 
             let lstPurchaseSaleData: PurchaseSaleRes[] = [];
 
-            // id를 가져와야됨
+            console.log("%o", data);
+
             data?.forEach((e) => {
                 lstPurchaseSaleData.push(e);
             });

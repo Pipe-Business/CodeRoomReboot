@@ -117,7 +117,6 @@ export const useMutateCodePayment = () => {
                 const purchaseSaleHistory: PurchaseSaleReq = {
                     post_id: postData!.id,
                     sell_price: postData!.price,
-                    is_application_submitted: false,
                     purchase_user_token: userLogin!.user_token!,
                     sales_user_token: postData!.userToken,
                     bootpay_payment_id: bootpayId,

@@ -1,25 +1,20 @@
-import React, {FC, useCallback, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {Button, IconButton, ListItem, ListItemText, TextField} from '@mui/material';
 import dayjs from 'dayjs';
 import {compareDates, createTodayDate, DATE_FORMAT} from "../../utils/DayJsHelper";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {apiClient} from "../../api/ApiClient";
-import {
-	// useMutateSettleCashBySeller,
-	useMutateSettleCoinBySeller,
-	useMutateUpdateConfirmedStatus
-} from "../../hooks/mutate/PaymentMutate";
-import PaymentPending from './components/paymentPending/PaymentPending';
+import {useMutateSettleCoinBySeller, useMutateUpdateConfirmedStatus} from "../../hooks/mutate/PaymentMutate";
 import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
-import {UsersCoinHistoryReq} from "../../data/entity/UsersCoinHistoryReq";
-import {CoinHistoryType} from "../../enums/CoinHistoryType";
+import PaymentPendingItem from "./components/paymentPending/PaymentPendingItem";
 
 interface Props {
 	children?: React.ReactNode;
 	isSettlement: boolean;
 }
-// TODO : users_cash_history table이 제거됨에 따라 바뀐 기획대로 정산 로직 변경 필요.
+
+interface RequestMoenyGroupByUserToken {
+	[key: string]: PurchaseSaleRes[];
+}
 
 const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 
@@ -27,6 +22,26 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 		queryKey: ['/purchaseSalehistory'],
 		queryFn: () => apiClient.getAdminPurchaseSaleHistory()
 	});
+
+	const [pendingDataGroupByUserToken,setPendingDataGroupByUserToken ] = useState<RequestMoenyGroupByUserToken>();
+	useEffect(() => {
+		if(paymentPendingData)
+		{
+			const pendingData  = paymentPendingData!.reduce((acc, item) => {
+				// 해당 sales_user_token을 키로 사용하여 그룹핑
+				if (!acc[item.sales_user_token]) {
+					acc[item.sales_user_token] = [];
+				}
+				acc[item.sales_user_token].push(item);
+				return acc;
+			}, {} as { [key: string]: PurchaseSaleRes[] });
+			console.log("pendingData: + %o", pendingData)
+			setPendingDataGroupByUserToken(pendingData);
+
+		}
+		//setPendingDataGroupByUserToken();
+	}, [paymentPendingData]);
+
 	const [date, setDate] = useState<string>();
 	const onChangeDate = useCallback((e: any) => {
 		setDate(e.target.value);
@@ -119,51 +134,41 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 	
 	return (
 		<>
-        {/* 정산되지 않음 */}
+			<div>
+				{ pendingDataGroupByUserToken &&
+					Object.keys(pendingDataGroupByUserToken).map((key) => (
+						<PaymentPendingItem salesUserToken={key} item={pendingDataGroupByUserToken[key]} />
+					// <Accordion key={key}>
+					// 	<AccordionSummary
+					// 		expandIcon={<ExpandMoreIcon/>}
+					// 		aria-controls={`${key}-content`}
+					// 		id={`${key}-header`}
+					// 	>
+					// 		<Typography>{key}</Typography>
+					// 	</AccordionSummary>
+					// 	<AccordionDetails>
+					// 		<List>
+					// 			{pendingDataGroupByUserToken[key].map((item) => (
+					// 				<ListItem key={item.id}>
+					// 					<ListItemText
+					// 						primary={`Post ID: ${item.post_id} - Sell Price: ${item.sell_price}`}
+					// 						secondary={`Purchase User: ${item.purchase_user_token}`}
+					// 					/>
+					// 				</ListItem>
+					// 			))}
+					// 		</List>
+					// 	</AccordionDetails>
+					// </Accordion>
+				))}
+			</div>
 
-			{/*{!isSettlement &&*/}
-			{/*	<>*/}
-			{/*		<div style={{ display: 'flex' }}>*/}
-			{/*			{isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>}*/}
-			{/*			<TextField fullWidth type={'number'} value={date} onChange={onChangeDate}*/}
-			{/*					   placeholder={'YYYYMMDD'} />*/}
-			{/*			<Button onClick={onClickFilterData}>조회</Button>*/}
-			{/*			<Button onClick={onClickAllSettlement}>전체정산</Button>*/}
-			{/*		</div>*/}
-			{/*	</>*/}
-			{/*}*/}
-			<ListItem>
-				<ListItemText>
-					<div style={{display: 'flex', width: '100%'}}>
-						{isSettlement &&
-							<div style={{width: '15%'}}>
-								정산시간
-							</div>}
-						<div style={{display: 'flex', width: '15%'}}>
-							구매한 상품
-						</div>
-						<div style={{width: '25%'}}>
-							판매한 유저
-						</div>
-						<div style={{width: '25%'}}>
-							구매한 유저
-						</div>
-						<div style={{width: '10%'}}>
-							결제 금액
-						</div>
-						<div style={{width: '10%'}}>
-							정산
-						</div>
-					</div>
-				</ListItemText>
-			</ListItem>
-			{!isFilter ? paymentPendingData!.map((item) => {
-				if (item.is_application_submitted === isSettlement) {
-					 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
-				}
-			}) : filterData?.map(item => {
-				 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
-			})}
+			{/*{!isFilter ? paymentPendingData!.map((item) => {*/}
+			{/*	// if (item.is_application_submitted === isSettlement) {*/}
+			{/*		 return <PaymentPending key={item.id} item={item} refetch={refetch} />;*/}
+			{/*	//}*/}
+			{/*}) : filterData?.map(item => {*/}
+			{/*	 return <PaymentPending key={item.id} item={item} refetch={refetch} />;*/}
+			{/*})}*/}
 		</>
 	);
 };
