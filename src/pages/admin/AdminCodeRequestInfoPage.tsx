@@ -287,8 +287,7 @@ const AdminCodeRequestInfo: FC<Props> = () => {
 				<StyledCard>
 					<StyledCardContent>
 						<Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-							<img src='/robot.png' alt='robot' width="32" style={{marginRight: '10px'}}/>
-							<TitleTypography variant="h6">AI ROOMY의 KeyPoint ✨</TitleTypography>
+							<TitleTypography variant="h6">코드 템플릿 상품 설명</TitleTypography>
 						</Box>
 						<ContentTypography>{data.aiSummary}</ContentTypography>
 					</StyledCardContent>
