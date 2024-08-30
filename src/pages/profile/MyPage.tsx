@@ -33,20 +33,6 @@ const MyPage: FC = () => {
     const [value, setValue] = React.useState('1');
     const [searchParams, setSearchParams] = useSearchParams();
 
-    const { data: cashConfirmData, isLoading: cashConfirmLoading, refetch: refetchCashConfirmData } = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashConfirm, userLogin?.user_token!],
-        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.user_token!, true),
-    });
-
-    const {
-        data: cashConfirmPendingData,
-        isLoading: cashConfirmPendingLoading,
-        refetch: refetchCashConfirmPendingData
-    } = useQuery({
-        queryKey: [REACT_QUERY_KEY.cashConfirmPending, userLogin?.user_token!],
-        queryFn: () => apiClient.getMySaleConfirmedHistory(userLogin!.user_token!, false),
-    });
-
     useEffect(() => {
         setValue(searchParams.get('tab') ?? '1');
     }, [searchParams]);
@@ -102,19 +88,7 @@ const MyPage: FC = () => {
 
         setReviewDialogOpen(false);
         navigate(0);
-        await refetchCashConfirmData();
-        await refetchCashConfirmPendingData();
     };
-
-    if (cashConfirmLoading || cashConfirmPendingLoading) {
-        return (
-            <FullLayout>
-                <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-                    <Typography variant="h5">로딩 중...</Typography>
-                </Box>
-            </FullLayout>
-        );
-    }
 
     if (!userLogin) {
         return (

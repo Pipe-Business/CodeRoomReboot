@@ -665,7 +665,7 @@ class ApiClient implements SupabaseAuthAPI {
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    is_confirmed: e.is_confirmed,
+                    is_application_submitted: e.is_application_submitted,
                     purchase_user_token: e.purchase_user_token,
                     bootpay_payment_id: e.bootpay_payemnt_id,
                     sales_user_token: e.sales_user_token,
@@ -1373,7 +1373,7 @@ class ApiClient implements SupabaseAuthAPI {
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    is_confirmed: e.is_confirmed,
+                    is_application_submitted: e.is_application_submitted,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
                     bootpay_payment_id: e.bootpay_payment_id,
@@ -1729,12 +1729,12 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async getMySaleConfirmedHistory(myUserToken: string, isConfirmed: boolean): Promise<PurchaseSaleRes[] | null> {
+    async getMySaleConfirmedHistory(myUserToken: string, is_application_submitted: boolean): Promise<PurchaseSaleRes[] | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
                 .eq('sales_user_token', myUserToken,)
-                .eq('is_confirmed', isConfirmed)
+                .eq('is_application_submitted', is_application_submitted)
                 //.eq('pay_type', 'cash')
                 .contains('pay_type',['cash'])
                 .order('created_at', {ascending: false});
@@ -1929,12 +1929,12 @@ class ApiClient implements SupabaseAuthAPI {
         return data;
     };
 
-    async getAdminPurchaseSaleHistory(isConfirmed: boolean): Promise<PurchaseSaleRes[] | null> {
+    async getAdminPurchaseSaleHistory(): Promise<PurchaseSaleRes[] | null> {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
-                .eq('is_confirmed', isConfirmed)
-                .contains('pay_type', ['coin'])
+                .eq('is_application_submitted', true)
+                .is('confirmed_time',null)
                 .order('created_at', {ascending: false});
 
             let lstPurchaseSaleData: PurchaseSaleRes[] = [];
@@ -1963,7 +1963,7 @@ class ApiClient implements SupabaseAuthAPI {
     async updatePurchaseSaleIsConfirmed(purchase_user_token: string, sales_user_token: string, postId: number,date:string) {
         try {
             const {error} = await supabase.from('purchase_sale_history')
-                .update({is_confirmed: true,confirmed_time:date})
+                .update({is_application_submitted: true,confirmed_time:date})
                 .eq('post_id', postId)
                 .eq('purchase_user_token', purchase_user_token)
                 .eq('sales_user_token', sales_user_token);

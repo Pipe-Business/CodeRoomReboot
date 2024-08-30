@@ -25,7 +25,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 
 	const { isLoading:paymentPendingLoading, data: paymentPendingData, refetch } = useQuery({
 		queryKey: ['/purchaseSalehistory'],
-		queryFn: () => apiClient.getAdminPurchaseSaleHistory(isSettlement)
+		queryFn: () => apiClient.getAdminPurchaseSaleHistory()
 	});
 	const [date, setDate] = useState<string>();
 	const onChangeDate = useCallback((e: any) => {
@@ -42,10 +42,13 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 			console.log(startDay, endDay);
 			const myList: PurchaseSaleRes[] = [];
 			paymentPendingData.map(item => {
-				if (item.is_confirmed === isSettlement) {
-					if (compareDates(item.created_at!, endDay) <= 0 && compareDates(startDay, item.created_at!) <= 0) {
-						myList.push(item);
-					}
+				// if (item.is_confirmed === isSettlement) {
+				// 	if (compareDates(item.created_at!, endDay) <= 0 && compareDates(startDay, item.created_at!) <= 0) {
+				// 		myList.push(item);
+				// 	}
+				// }
+				if (compareDates(item.created_at!, endDay) <= 0 && compareDates(startDay, item.created_at!) <= 0) {
+					myList.push(item);
 				}
 			});
 			console.log(myList);
@@ -118,17 +121,17 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 		<>
         {/* 정산되지 않음 */}
 
-			{!isSettlement &&
-				<>
-					<div style={{ display: 'flex' }}>
-						{isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>}
-						<TextField fullWidth type={'number'} value={date} onChange={onChangeDate}
-								   placeholder={'YYYYMMDD'} />
-						<Button onClick={onClickFilterData}>조회</Button>
-						<Button onClick={onClickAllSettlement}>전체정산</Button>
-					</div>
-				</>
-			}
+			{/*{!isSettlement &&*/}
+			{/*	<>*/}
+			{/*		<div style={{ display: 'flex' }}>*/}
+			{/*			{isFilter && <IconButton onClick={onClickFilterInit}><ArrowBackIcon /></IconButton>}*/}
+			{/*			<TextField fullWidth type={'number'} value={date} onChange={onChangeDate}*/}
+			{/*					   placeholder={'YYYYMMDD'} />*/}
+			{/*			<Button onClick={onClickFilterData}>조회</Button>*/}
+			{/*			<Button onClick={onClickAllSettlement}>전체정산</Button>*/}
+			{/*		</div>*/}
+			{/*	</>*/}
+			{/*}*/}
 			<ListItem>
 				<ListItemText>
 					<div style={{display: 'flex', width: '100%'}}>
@@ -155,7 +158,7 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 				</ListItemText>
 			</ListItem>
 			{!isFilter ? paymentPendingData!.map((item) => {
-				if (item.is_confirmed === isSettlement) {
+				if (item.is_application_submitted === isSettlement) {
 					 return <PaymentPending key={item.id} item={item} refetch={refetch} />;
 				}
 			}) : filterData?.map(item => {
