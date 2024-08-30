@@ -18,7 +18,7 @@ export type RequestColumn = {
 const Header: FC = () => {
 	return <ListItem>
 		<ListItemText>
-			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+			<div style={{ display: 'flex', justifyContent: 'space-between'}}>
 				<div style={{ width: '25%' ,fontWeight:'bold'}}>요청시간</div>
 				<div style={{ width: '40%' ,fontWeight:'bold'}}>코드제목</div>
 				<div style={{ width: '10%' ,fontWeight:'bold'}}>상태</div>
