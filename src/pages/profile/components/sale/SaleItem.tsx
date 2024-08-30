@@ -120,6 +120,7 @@ const SaleItem: FC<Props> = ({codeData}) => {
             <TableRow
                 hover
                 onClick={onClickListItem}
+
             >
                 <TableCell>{reformatTime(codeData?.createdAt!)}</TableCell>
                 <TableCell>{codeData?.title!}</TableCell>
