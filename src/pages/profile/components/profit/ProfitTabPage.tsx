@@ -28,6 +28,7 @@ import {UserBankAccountEntity} from "../../../../data/entity/UserBankAccountEnti
 import {toast} from "react-toastify";
 import {createTodayDate} from "../../../../utils/DayJsHelper";
 import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
+import {useNavigate} from "react-router-dom";
 
 const ProfitTabPage = () => {
     const {userLogin} = useQueryUserLogin();
@@ -46,6 +47,8 @@ const ProfitTabPage = () => {
     const handleTermChange = (event: SelectChangeEvent) => {
         setSelectedPeriod(event.target.value as string);
     }
+
+    const navigate = useNavigate();
 
     const [filteredSalesData, setFilteredSalesData] = useState<PurchaseSaleRes[]>();
     const [totalSalesAmount, setTotalSalesAmount] = useState<number>(0);
@@ -94,13 +97,14 @@ const ProfitTabPage = () => {
 
     const [settlementPeriod, setSettlementPeriod] = useState<string>();
     const [allowedSettlementApplyAmount, setAllowedSettlementApplyAmount] = useState<number>();
+    const [showModalContent,setShowSettlementModalContent]=useState(true);
     useEffect(() => {
         //TODO: confirm_time이 Null인것 중 처음 ~ 마지막 월을 string으로 set
         const monthFilterSet = new Set<string>();
         let allowedSettlementApplyAmountSum: number = 0;
 
         salesData?.forEach((sale) => {
-            if(sale.confirmed_time === null){
+            if(sale.confirmed_time === null && sale.request_money_date === null){
                 const parsedDate:Date = new Date(sale.created_at!);
                 const year=  parsedDate.getFullYear();
                 const month = (parsedDate.getMonth() + 1).toString().padStart(2,'0');
@@ -110,6 +114,9 @@ const ProfitTabPage = () => {
             }
             const monthFilterArray: string[] = Array.from(monthFilterSet);
             const period = `${monthFilterArray[monthFilterArray.length-1]} ~ ${monthFilterArray[0]}`;
+            if(!monthFilterArray[monthFilterArray.length-1]){
+                setShowSettlementModalContent(false);
+            }
             setSettlementPeriod(period);
             setAllowedSettlementApplyAmount(allowedSettlementApplyAmountSum);
         });
@@ -251,7 +258,7 @@ const ProfitTabPage = () => {
 
 
             <Table>
-                <TableHeader headerList={["판매일시", "코드제목", "구매자", "판매금액", "정산 상태 (대기/완료)"]}/>
+                <TableHeader headerList={["판매일시", "코드제목", "구매자", "판매금액", "정산 상태 (미신청/대기/완료)"]}/>
                 <ProfitList purchaseData={filteredSalesData!}/>
             </Table>
 
@@ -400,32 +407,51 @@ const ProfitTabPage = () => {
                         <DialogTitle>정산 신청</DialogTitle>
                         <CloseIcon onClick={handleApplyForSettlementCloseDialog} sx={{color: 'gray', padding: '10px'}}/>
                     </div>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
-                            정산 기간:
-                        </DialogContentText>
+                    {
+                        showModalContent &&
+                        <div>
+                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                            <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
+                                정산 기간:
+                            </DialogContentText>
 
-                        <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            {settlementPeriod}
-                        </DialogContentText>
-                    </div>
-                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                        <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
-                            정산 신청 가능 금액:
-                        </DialogContentText>
+                            <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
+                                {settlementPeriod}
+                            </DialogContentText>
+                        </div>
+                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                            <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px'}}>
+                                정산 신청 가능 금액:
+                            </DialogContentText>
 
-                        <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
-                            {Math.round(allowedSettlementApplyAmount!)}원
-                            {/*    TODO: db 연동 필요*/}
-                        </DialogContentText>
-                    </div>
+                            <DialogContentText sx={{color: 'black', fontWeight: 'bold', fontSize: '19px'}}>
+                                {Math.round(allowedSettlementApplyAmount!)}원
+                            </DialogContentText>
+                        </div>
+                    </div>}
+                    {
+                        !showModalContent &&
+                            <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px', whiteSpace: 'pre-line'}}>
+                                {`신청 가능한 내역이 없습니다.`}
+                            </DialogContentText>
+                    }
+
                     <Box height={'32px'}/>
-                    <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px', whiteSpace: 'pre-line'}}>
+                    <DialogContentText sx={{paddingRight: '24px', paddingLeft: '24px', paddingBottom:'24px', whiteSpace: 'pre-line'}}>
                         {`정산 신청 가능 금액은 출금 수수료를 제외한 금액입니다.`}
                     </DialogContentText>
-                    <DialogActions>
-                        <MyPageTabPageBtn onClick={handleApplyForSettlementCloseDialog}>정산 신청</MyPageTabPageBtn>
+                    {
+                        showModalContent &&
+                        <DialogActions>
+                        <MyPageTabPageBtn onClick={async () => {
+                            await apiClient.requestMoney(userLogin?.user_token!);
+                            toast.success('정산 신청이 완료되었습니다.');
+                            //TODO 로딩 필요
+                            handleApplyForSettlementCloseDialog();
+                            navigate(0);
+                        }}>정산 신청</MyPageTabPageBtn>
                     </DialogActions>
+                    }
                 </Dialog>}
         </TableContainer>
     );

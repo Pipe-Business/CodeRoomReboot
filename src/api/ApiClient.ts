@@ -2446,11 +2446,14 @@ class ApiClient implements SupabaseAuthAPI {
         }
     }
 
-    async updateTotalCash(userToken: string, cash: number) {
+    async requestMoney(userToken: string) {
         try {
-
-            const {error} = await supabase.from('users_amount')
-                .update({cash_amount: cash}).eq('user_token', userToken);
+        //TODO 아직 정산신청 안된 컬럼들모두 Set
+            const now = new Date().toISOString();
+            const {error} = await supabase.from('purchase_sale_history')
+                .update({request_money_date: now})
+                .is('request_money_date',null)
+                .eq('sales_user_token', userToken);
 
             if (error) {
                 console.log("error" + error.code);
@@ -2459,12 +2462,12 @@ class ApiClient implements SupabaseAuthAPI {
                 console.log("error" + error.hint);
                 console.log("error" + error.details);
 
-                throw new Error('total cash 업데이트에 실패했습니다.');
+                throw new Error('정산 신청 실패.');
             }
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('total cash 업데이트에 실패했습니다.');
+            throw new Error('정산 신청 실패.');
         }
     }
 

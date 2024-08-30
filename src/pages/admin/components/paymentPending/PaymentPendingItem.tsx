@@ -18,6 +18,7 @@ interface Props {
 }
 
 const PaymentPendingItem: FC<Props> = ({ salesUserToken ,item}) => {
+    //TODO 정산 구현 필요
 ////const { settleCashMutate } = useMutateSettleCashBySeller();
 // 	const { settleCoinMutate } = useMutateSettleCoinBySeller();
 //     const { updatePayConfirmedMutate } = useMutateUpdateConfirmedStatus();
@@ -35,8 +36,6 @@ const PaymentPendingItem: FC<Props> = ({ salesUserToken ,item}) => {
     if(isBankAccountLoading) {
         return (<>로딩</>);
     }
-    //TODO : 은행정보
-
     return (
         <div>
         <Accordion key={salesUserToken}>
@@ -53,11 +52,12 @@ const PaymentPendingItem: FC<Props> = ({ salesUserToken ,item}) => {
                 <Box width={"24px"}/>
                 <div>
                     {
-                        `${userBankAccount?.bank}
-                    ${userBankAccount?.account_number}
+                        `${userBankAccount?.bank}은행 / 
+                    ${userBankAccount?.account_number} / 
                     ${userBankAccount?.name}`
                     }
                 </div>
+                <Box width={"24px"}/>
                 <Button variant={'outlined'}>정산 완료</Button>
             </AccordionSummary>
             <AccordionDetails>
