@@ -24,10 +24,6 @@ const AdminCodeRequestItem: FC<Props> = ({ item }) => {
 				<ListItemText>
 					<div style={{ display: 'flex' }}>
 						<div style={{ width: '15%' }}>{reformatTime(item.createdAt)}</div>
-						<div style={{ width: '5%' }}>
-							{/* {item.formType === 'article' ? '글' : '코드'} */}
-							코드
-							</div>
 						<div style={{ width: '30%' }}>
 							<div style={{ display: 'flex', alignItems: 'center' }}>
 								{/* 이미지 추가 예정 */}
@@ -38,7 +34,7 @@ const AdminCodeRequestItem: FC<Props> = ({ item }) => {
 								</div>
 							</div>
 						</div>
-						 <div style={{ width: '30%' }}>
+						 <div style={{ width: '35%' }}>
 							<div style={{ display: 'flex', alignItems: 'center' }}>
 								{/* <PictogramImage size={35} formType={item.formType} category={item.category} /> */}
 								<div style={{ marginLeft: '4px' }}>
