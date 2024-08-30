@@ -1,10 +1,11 @@
 import {Box, ListItem, ListItemButton, ListItemText, Paper, Typography} from '@mui/material';
-import React, {FC, useCallback} from 'react';
+import React, {FC, useCallback, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {MainPageCodeListEntity} from '../../../data/entity/MainPageCodeListEntity';
 import styles from '../../../global.module.css';
 import {calcTimeDiff} from '../../../utils/DayJsHelper';
 import ReadMeHtml from "../../codeInfo/components/ReadMeHtml";
+import {apiClient} from "../../../api/ApiClient";
 
 interface Props {
   children?: React.ReactNode;
@@ -13,11 +14,31 @@ interface Props {
 
 const CodeItem: FC<Props> = ({ item }) => {
   const navigate = useNavigate();
+    const [commentCount, setCommentCount] = useState<number | null>(null);
+
   const onClickCode = useCallback(() => {
     navigate(`/code/${item.id}`);
   }, [item.id]);
 
-  return (
+    useEffect(() => {
+        const fetchCommentCount = async () => {
+            try {
+                const { count, error } = await apiClient.fetchCommentCount(item.id);
+                if (error) {
+                    console.error("Failed to fetch comment count:", error);
+                } else {
+                    setCommentCount(count || 0);
+                }
+            } catch (error) {
+                console.error("Error fetching comment count:", error);
+            }
+        };
+
+        fetchCommentCount();
+    }, [item.id]);
+
+
+    return (
     <ListItemButton
       sx={{
         transition: 'background-color 0.3s, transform 0.3s, box-shadow 0.3s',
@@ -143,7 +164,7 @@ const CodeItem: FC<Props> = ({ item }) => {
 
               <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
                 <Typography variant="body2" sx={{ color: '#0275c2', fontSize: { xs: '18px', sm: '20px', md: '24px' } }}>
-                  {item.reviewCount}
+                  {commentCount ?? 0}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'grey', fontSize: { xs: '10px', sm: '12px', md: '14px' } }}>
                   상품평

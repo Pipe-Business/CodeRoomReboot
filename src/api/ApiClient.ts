@@ -1364,7 +1364,8 @@ class ApiClient implements SupabaseAuthAPI {
         try {
             const {data, error} = await supabase.from('purchase_sale_history')
                 .select('*')
-                .eq('purchase_user_token', myUserToken);
+                .eq('purchase_user_token', myUserToken)
+                .order('created_at', {ascending: false});
 
             let lstPurchaseSale: PurchaseSaleRes[] = [];
             data?.forEach((e) => {
@@ -2563,6 +2564,31 @@ class ApiClient implements SupabaseAuthAPI {
             return e;
         }
     };
+
+
+    async fetchCommentCount(postId: number) {
+        try {
+            const { data, error, count } = await supabase
+                .from('comment')
+                .select('*', { count: 'exact' })
+                .eq('post_id', postId);
+
+            if (error) {
+                console.log("error code: " + error.code);
+                console.log("error message: " + error.message);
+                console.log("error details: " + error.details);
+                console.log("error hint: " + error.hint);
+
+                return { error };
+            }
+
+            return { count };
+
+        } catch (e: any) {
+            console.log("Unexpected error: ", e);
+            return { error: e };
+        }
+    }
 
     async addComment (content?: string, parentCommentId?: number, userToken?: string, postId?: string) {
         try {

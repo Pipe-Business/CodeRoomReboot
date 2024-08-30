@@ -76,7 +76,7 @@ const PurchaseItem: FC<Props> = ({ purchaseData }) => {
                     <TableCell>{reformatTime(bootPayPaymentData?.created_at!)}</TableCell>
                     <TableCell> {codeData?.title}</TableCell>
                     <TableCell>{postedUser?.nickname}</TableCell>
-                    <TableCell>{codeData.price}</TableCell>
+                    <TableCell>{codeData.price.toLocaleString()}</TableCell>
                     <TableCell>{!userId && codeData.postType === 'code' && <CodeDownloadButton repoURL={codeData.adminGitRepoURL} />}</TableCell>
                     {/*{!reviewData ? <Button variant="outlined" onClick={handleWriteReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 작성</Button> : <Button variant="outlined" onClick={handleReadReviewClick} style={{ height: '53px', width: '140px' }}>리뷰 확인</Button>}*/}
                     <TableCell><ReceiptButton  receiptUrl={bootPayPaymentData?.receipt_url!}/></TableCell>

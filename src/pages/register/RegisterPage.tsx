@@ -61,7 +61,7 @@ const RegisterPage: FC<Props> = () => {
 		onSuccess: async (userToken:string) => {
 			const notificationEntity: NotificationEntity ={
 				title : '코인 지급 알림',
-				content: `가입 축하 코인으로 ${REWARD_COIN.SIGNUP_BONUS_COIN}이 지급 되었습니다`,
+				content: `가입 축하 코인으로 ${REWARD_COIN.SIGNUP_BONUS_COIN.toLocaleString()}이 지급 되었습니다`,
 				from_user_token: 'admin',
 				to_user_token: userToken,
 				notification_type: NotificationType.get_point,
@@ -69,7 +69,7 @@ const RegisterPage: FC<Props> = () => {
 			await apiClient.insertNotification(notificationEntity);
 
 			toast.success('회원가입에 성공하였습니다. 로그인 해주세요.');
-			toast.success(`가입 축하 코인 ${REWARD_COIN.SIGNUP_BONUS_COIN}코인이 지급되었습니다.`);
+			toast.success(`가입 축하 코인 ${REWARD_COIN.SIGNUP_BONUS_COIN.toLocaleString()}코인이 지급되었습니다.`);
 		},
 		onError: (error) => {
 			if (error.message === API_ERROR.USER_ALREADY_REGISTERED) {

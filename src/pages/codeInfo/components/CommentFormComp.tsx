@@ -64,7 +64,7 @@ export const CommentForm: React.FC<CommentFormProps> = ({
                         endIcon={isSubmitting ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
                         disabled={!content.trim() || isSubmitting}
                     >
-                        {isSubmitting ? 'Submitting...' : buttonText}
+                        {isSubmitting ? '작성 중..' : buttonText}
                     </Button>
                 </Box>
             </Box>

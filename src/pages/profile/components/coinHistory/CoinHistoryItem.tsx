@@ -15,8 +15,8 @@ const CoinHistoryItem: FC<Props> = ({coinHistoryItem}) => {
           <TableCell>{reformatTime(coinHistoryItem.created_at)}</TableCell>
           <TableCell>{coinHistoryItem.coin_history_type === CoinHistoryType.earn_coin ? "적립" : "사용"}</TableCell>
           <TableCell>{coinHistoryItem.description}</TableCell>
-          <TableCell>{coinHistoryItem.coin}</TableCell>
-          <TableCell>{coinHistoryItem.amount}</TableCell>
+          <TableCell>{coinHistoryItem.coin.toLocaleString()}</TableCell>
+          <TableCell>{coinHistoryItem.amount.toLocaleString()}</TableCell>
 
       </TableRow>
     );
