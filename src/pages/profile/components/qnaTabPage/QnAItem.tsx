@@ -44,7 +44,7 @@ const QnAItem: FC<Props> = ({commentsData}) => {
                         onClick={() => {
                     navigator(`/code/${codeData?.id}`);
                 }}>
-                    {"답변 하러가기"}</TableCell>
+                    {"답변 작성"}</TableCell>
                 );
             }else{
                 return <TableCell>{"답변 대기"}</TableCell>;

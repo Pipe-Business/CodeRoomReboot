@@ -59,7 +59,7 @@ export const FormWrapper = styled.form`
 
 export const TableHeaderTitle = styled(TableCell)`
   font-weight: bold;
-  font-size: 19px;
+  font-size: 16px;
 `;
 
 export const TotalAmountTitleText = styled.div`

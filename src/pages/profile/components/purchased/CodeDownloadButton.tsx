@@ -50,7 +50,7 @@ const CodeDownloadButton: FC<Props> = ({ repoURL }) => {
 			onClick={onClickDownload}
 			startIcon={<DownloadIcon />}
 			variant='contained'>
-			코드 다운로드
+			코드 다운
 		</MyPageTabPageBtn>
 
 	);

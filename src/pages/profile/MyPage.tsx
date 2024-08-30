@@ -132,27 +132,27 @@ const MyPage: FC = () => {
     return (
         <FullLayout>
             <Container maxWidth="lg" sx={{ py: 4 }}>
-                <Grid container spacing={4} sx={{ minHeight: 'calc(100vh - 128px)' }}>
-                    <Grid item xs={12} md={4}>
+                <Grid container spacing={2} sx={{ minHeight: 'calc(100vh - 128px)' }}>
+                    <Grid item xs={12} md={3}> {/* 좌측 탭 너비 축소 */}
                         <Card elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%', alignItems: 'center' }}>
                                 <Box mb={3} display="flex" flexDirection="column" alignItems="center" width="100%">
                                     <UserProfileImage
-                                        size={120}
+                                        size={100} // 크기를 약간 줄임
                                         userId={userLogin.user_token ?? ''}
                                     />
-                                    <Typography variant="h5" align="center" sx={{ width: '100%', mt: 2 }}>
+                                    <Typography variant="h6" align="center" sx={{ width: '100%', mt: 2 }}> {/* h5 -> h6 */}
                                         {userLogin.nickname}
                                     </Typography>
                                     <Typography variant="body2" color="textSecondary" align="center" sx={{ width: '100%', mb: 2 }}>
                                         {userLogin.email}
                                     </Typography>
                                 </Box>
-                                <Typography variant="h6" gutterBottom align="center" sx={{ width: '100%' }}>
+                                <Typography variant="subtitle1" gutterBottom align="center" sx={{ width: '100%' }}> {/* h6 -> subtitle1 */}
                                     자기소개
                                 </Typography>
                                 {userLogin.about_me && userLogin.about_me.trim() !== '' ? (
-                                    <Typography variant="body1" paragraph sx={{ mb: 3, textAlign: 'center', width: '100%' }}>
+                                    <Typography variant="body2" paragraph sx={{ mb: 3, textAlign: 'center', width: '100%' }}> {/* body1 -> body2 */}
                                         {userLogin.about_me}
                                     </Typography>
                                 ) : (
@@ -165,6 +165,7 @@ const MyPage: FC = () => {
                                         variant="outlined"
                                         color="primary"
                                         fullWidth
+                                        size="small" // 버튼 크기 축소
                                         onClick={() => navigate('/profile/my/edit', { state: { userData: userLogin } })}
                                     >
                                         프로필 수정
@@ -173,7 +174,7 @@ const MyPage: FC = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={9}> {/* 우측 탭 너비 확장 */}
                         <Card elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                                 <Tabs
@@ -181,15 +182,22 @@ const MyPage: FC = () => {
                                     onChange={handleChange}
                                     indicatorColor="primary"
                                     textColor="primary"
-                                    variant="fullWidth"
-                                    sx={{ mb: 2 }}
+                                    variant="scrollable" // fullWidth에서 scrollable로 변경
+                                    scrollButtons="auto"
+                                    sx={{
+                                        mb: 2,
+                                        '& .MuiTabs-flexContainer': {
+                                            display: 'flex',
+                                            width: '100%',
+                                        },
+                                    }}
                                 >
-                                    <Tab label="관심 목록" value="1" sx={{ flex: 1 }} />
-                                    <Tab label="구매 목록" value="2" sx={{ flex: 1 }} />
-                                    <Tab label="판매 목록" value="3" sx={{ flex: 1 }} />
-                                    <Tab label="파이프 코인" value="4" sx={{ flex: 1 }} />
-                                    <Tab label="수익 목록" value="5" sx={{ flex: 1 }} />
-                                    <Tab label="Q&A" value="6" sx={{ flex: 1 }} />
+                                    <Tab label="관심 목록" value="1" sx={{ flex: 1, minWidth: 0 }} />
+                                    <Tab label="구매 목록" value="2" sx={{ flex: 1, minWidth: 0 }} />
+                                    <Tab label="판매 목록" value="3" sx={{ flex: 1, minWidth: 0 }} />
+                                    <Tab label="파이프 코인" value="4" sx={{ flex: 1, minWidth: 0 }} />
+                                    <Tab label="수익 목록" value="5" sx={{ flex: 1, minWidth: 0 }} />
+                                    <Tab label="Q&A" value="6" sx={{ flex: 1, minWidth: 0 }} />
                                 </Tabs>
                                 <Box sx={{ flexGrow: 1, overflowY: 'auto', minHeight: '500px' }}>
                                     {value === '1' && <MyFavoriteTabPage />}
