@@ -110,7 +110,7 @@ const MyPage: FC = () => {
         return (
             <FullLayout>
                 <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-                    <Typography variant="h5">로딩 중...</Typography>
+                    <Typography variant="h5">내 정보를 로딩하는 중 입니다...</Typography>
                 </Box>
             </FullLayout>
         );
