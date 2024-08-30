@@ -1,8 +1,7 @@
-import LinkIcon from '@mui/icons-material/Link';
 import {Box, Button, Card, CircularProgress, Grid, TextField, Typography} from '@mui/material';
 import {useMutation} from '@tanstack/react-query';
 import React, {ChangeEvent, FC, useCallback, useEffect, useRef, useState} from 'react';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {apiClient} from '../../api/ApiClient';
 import {useInputValidate} from '../../hooks/common/UseInputValidate';
@@ -46,7 +45,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
     const inputPointRef = useRef<HTMLInputElement | null>(null);
     const inputContentRef = useRef<HTMLInputElement | null>(null);
     //const inputUrlRef = useRef<HTMLInputElement | null>(null);
-    const inputGuideRef = useRef<HTMLInputElement | null>(null);
+    const inputAiSummaryRef = useRef<HTMLInputElement | null>(null);
 
 
     const [inputCategory, setCategory] = useState(gptCodeInfo?.category ?? codeModel?.category ?? '');
@@ -74,8 +73,9 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
             minLen: 30, maxLen: 3000
         });
 
-    const [inputGuide, onChangeGuide, errorGuide, errGuideMessage, setGuideMessage, , , ,
-        , , , inputGuideCount] =
+    const [inputAiSummary, onChangeAiSummary, errorAiSummary
+        , errAiSummaryMessage, setAiSummaryMessage, , , ,
+        , , , inputAiSummaryCount] =
         useInputValidate({
             defaultValue: gptCodeInfo?.aiSummary ?? codeModel?.aiSummary ?? '',
             minLen: 30, maxLen: 100,
@@ -225,7 +225,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
                     language: inputLanguage,
                     seller_github_name: urlParser[urlParser.length - 2],
                     popularity: 0,
-                    ai_summary: inputGuide,
+                    ai_summary: inputAiSummary,
                     buyer_count: 0,
                 };
                 await apiClient.insertCodeData(codeRequest);
@@ -245,7 +245,7 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
                     category: inputCategory,
                     price: Number(inputPoint),
                     language: inputLanguage,
-                    ai_summary: inputGuide,
+                    ai_summary: inputAiSummary,
                     description: inputDescription,
                     state: state,
                 };
@@ -299,18 +299,6 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
                 <Typography variant="h4" fontWeight="bold" sx={{color: '#333'}}>코드 올리기</Typography>
             </Box>
 
-            <Link to={'/help'} target={"_blank"} style={{
-                display: 'flex',
-                alignItems: 'center',
-                color: '#555',
-                textDecoration: 'none',
-                marginBottom: 3
-            }}>
-                <LinkIcon sx={{marginRight: 1, color: '#555'}}/>
-                <Typography variant="body1">코드룸 판매가 처음이신가요?</Typography>
-            </Link>
-
-            <Box height={'16px'}/>
 
             {/*todo 제거예정*/}
             {/*<Button*/}
@@ -450,22 +438,22 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
             }}>
                 <SectionTitle title='이 코드의 key point' helpText='코드가 더 잘 팔릴 수 있도록 코드의 강점을 소개해주세요'/>
                 <TextField
-                    value={inputGuide}
+                    value={inputAiSummary}
                     sx={{width: '100%', maxWidth: 800, marginTop: 2, backgroundColor: '#fff', borderRadius: '4px'}}
-                    onChange={onChangeGuide}
+                    onChange={onChangeAiSummary}
                     type='text'
-                    inputRef={inputGuideRef}
-                    color={inputGuide ? errorGuide ? 'error' : 'success' : 'info'}
+                    inputRef={inputAiSummaryRef}
+                    color={inputAiSummary ? errorAiSummary ? 'error' : 'success' : 'info'}
                     placeholder='최소 30자 이상 작성'
-                    error={errorGuide}
+                    error={errorAiSummary}
                     autoComplete='off'
-                    helperText={errGuideMessage}
+                    helperText={errAiSummaryMessage}
                     fullWidth
                     multiline
                     rows={2}
                 />
                 <Typography variant="body2" color="textSecondary" sx={{textAlign: 'right', marginTop: 1}}>
-                    ({inputGuideCount}/100)
+                    ({inputAiSummaryCount}/100)
                 </Typography>
             </Card>
 
