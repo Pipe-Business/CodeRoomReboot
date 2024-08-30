@@ -4,15 +4,13 @@ import React, {useEffect, useState} from 'react';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import axios from 'axios';
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import useFileExtensionFilter from "./hooks/useFileExtensionFilter";
 import {apiClient} from "../../api/ApiClient";
-import {GptCodeInfoResponseEntity} from "../../data/entity/GptCodeInfoResponseEntity";
 import {GptCodeInfoEntity} from "../../data/entity/GptCodeInfoEntity";
 import {useRecoilState} from "recoil";
 import {gptGeneratedCodeInfo} from "./createCodeAtom";
-import {ColorButton, NavigateButtonContainer} from "./styles";
-import useRefactor from "./hooks/useRefactor";
+import LinkIcon from "@mui/icons-material/Link";
 
 interface FileNode {
     name: string;
@@ -159,6 +157,21 @@ const CreateCodePage = () => {
             <Typography variant="h4" fontWeight="bold" sx={{color: '#333'}}>코드 올리기</Typography>
         </Box>
 
+        <Link to={'/help'} target={"_blank"} style={{
+            display: 'flex',
+            alignItems: 'center',
+            color: '#555',
+            textDecoration: 'none',
+            marginBottom: 3
+        }}>
+            <LinkIcon sx={{marginRight: 1, color: '#555'}}/>
+            <Typography variant="body1">필독❗️코드룸 판매가 처음이신 분 🖐️</Typography>
+        </Link>
+
+
+        <Box height={'110px'}/>
+
+
         {/*<Box sx={{marginTop: 4, marginBottom: 4}}>*/}
         {/*    <Typography variant="h5" fontWeight="bold" sx={{color: '#333'}}>필수! </Typography>*/}
         {/*    <Typography variant="h6" sx={{color: '#333'}}>1. 레포지토리 private 설정</Typography>*/}
@@ -167,6 +180,7 @@ const CreateCodePage = () => {
         {/*</Box>*/}
 
         <div style={{display: 'flex', justifyContent: 'center'}}>
+            <div style={{display:'flex', flexDirection: 'column', alignItems:'end'}}>
             <TextField
                 value={repoUrl}
                 onChange={handleInputChange}
@@ -174,8 +188,10 @@ const CreateCodePage = () => {
                 variant="outlined"
                 error={!isValid && repoUrl !== ''}
                 helperText={!isValid && repoUrl !== '' ? errorMessage : ""}
-                sx={{minWidth: '326px', width: '50%'}}
+                sx={{minWidth: '500px', width: '50%'}}
             />
+            <div style={{fontSize:'12px',color:'gray'}}>코드를 분석하는데에 최대 1분 정도 걸릴 수 있어요.</div>
+            </div>
             <Box width={'24px'}/>
             <Button
                 variant="outlined"
