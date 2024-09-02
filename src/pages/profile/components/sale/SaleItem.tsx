@@ -5,10 +5,12 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle,
+    DialogTitle, IconButton, Menu,
+    MenuItem,
     TableCell,
     TableRow
 } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {useNavigate} from 'react-router-dom';
 import {reformatTime} from '../../../../utils/DayJsHelper';
 import {PostStateType} from "../../../../enums/PostStateType";
@@ -24,6 +26,19 @@ interface Props {
 
 const SaleItem: FC<Props> = ({codeData}) => {
 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = (event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        setAnchorEl(null);
+    };
+
+
     const getStatusColor = (state: string) => {
         switch (state) {
             case 'approve':
@@ -31,7 +46,9 @@ const SaleItem: FC<Props> = ({codeData}) => {
             case 'rejected':
                 return 'red';
             case 'pending':
-                return 'orange';
+                return 'darkslategray';
+            case 'deleted':
+                return 'grey';
             default:
                 return 'inherit';
         }
@@ -45,6 +62,8 @@ const SaleItem: FC<Props> = ({codeData}) => {
                 return '반려됨';
             case 'pending':
                 return '심사중';
+            case 'deleted':
+                return '삭제됨';
             default:
                 return '';
         }
@@ -117,30 +136,37 @@ const SaleItem: FC<Props> = ({codeData}) => {
     }
     return (
         <>
-            <TableRow
-                hover
-                onClick={onClickListItem}
-
-            >
+            <TableRow hover onClick={onClickListItem}>
                 <TableCell>{reformatTime(codeData?.createdAt!)}</TableCell>
                 <TableCell>{codeData?.title!}</TableCell>
-                <TableCell style={{color: getStatusColor(codeData?.state)}}>
+                <TableCell style={{ color: getStatusColor(codeData?.state) }}>
                     {getStatusText(codeData?.state)}
                 </TableCell>
-                <TableCell>{(codeData?.state === 'approve') &&
-                    <Button onClick={onClickNavigateModifyForm}>
-                        게시글 수정
-                    </Button>}
-
-                    {(codeData?.state === 'rejected') &&
-                        <Button onClick={onClickRequestReexamination}>
-                            재심사 요청
-                        </Button>}
-                </TableCell>
-                <TableCell>{(codeData?.state === 'approve') &&
-                    <Button onClick={handleOpenDialog}>
-                        코드 갱신 요청
-                    </Button>}
+                <TableCell>
+                    {(codeData?.state === 'approve' || codeData?.state === 'rejected') && <IconButton onClick={handleMenuOpen}>
+                        <MoreVertIcon />
+                    </IconButton>}
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        {codeData?.state === 'approve' && (
+                            <>
+                                <MenuItem onClick={(e) => { handleMenuClose(e); onClickNavigateModifyForm(e); }}>
+                                    게시글 수정
+                                </MenuItem>
+                                <MenuItem onClick={(e) => { handleMenuClose(e); handleOpenDialog(e); }}>
+                                    코드 갱신 요청
+                                </MenuItem>
+                            </>
+                        )}
+                        {codeData?.state === 'rejected' && (
+                            <MenuItem onClick={(e) => { handleMenuClose(e); onClickRequestReexamination(e); }}>
+                                재심사 요청
+                            </MenuItem>
+                        )}
+                    </Menu>
                 </TableCell>
             </TableRow>
             <Dialog

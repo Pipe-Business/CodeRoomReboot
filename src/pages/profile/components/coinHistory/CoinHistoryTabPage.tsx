@@ -27,7 +27,7 @@ const CoinHistoryTabPage: FC = () => {
 
     return (
         <TableContainer>
-            <TotalAmountTitleText>총 코인 : {coinHistoryData![0].amount.toLocaleString()} 코인</TotalAmountTitleText>
+            <TotalAmountTitleText>현재 보유 코인 : {coinHistoryData![0].amount.toLocaleString()} 코인</TotalAmountTitleText>
             <Table>
                 <TableHeader headerList={["일시", "구분","항목","코인","보유 코인"]}/>
                 <CoinHistoryList coinHistoryData={coinHistoryData!}/>

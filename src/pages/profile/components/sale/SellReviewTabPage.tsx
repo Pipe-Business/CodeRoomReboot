@@ -9,6 +9,7 @@ import ListLoadingSkeleton from "../ListLoadingSkeleton";
 import ListEmptyText from "../ListEmptyText";
 import {REACT_QUERY_KEY} from "../../../../constants/define";
 
+// 마이페이지 -> 판매 목록 탭
 const MySellReviewTabPage: FC = () => {
 	const {userLogin} = useQueryUserLogin();
 	const {data: codeData, isLoading: isCodeDataLoading} = useQuery({

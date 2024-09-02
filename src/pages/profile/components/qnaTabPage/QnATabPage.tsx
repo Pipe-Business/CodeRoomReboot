@@ -26,7 +26,7 @@ const QnATabPage = () => {
     return (
         <TableContainer>
             <Table>
-                <TableHeader  headerList={["문의 일시", "문의 작성자","문의 답변자","코드 제목","문의 내용","상태"]}/>
+                <TableHeader  headerList={["일시", "작성자","답변자","코드 제목","문의 내용","상태"]}/>
                 <QnAList  commentsData={commentsData!}/>
             </Table>
         </TableContainer>

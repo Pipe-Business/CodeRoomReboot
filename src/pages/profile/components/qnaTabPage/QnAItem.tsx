@@ -1,6 +1,6 @@
-import {FC, useEffect, useMemo, useState} from "react";
+import React, {FC, useEffect, useMemo, useState} from "react";
 import {PurchaseSaleRes} from "../../../../data/entity/PurchaseSaleRes";
-import {TableCell, TableRow} from "@mui/material";
+import {TableCell, TableRow, Tooltip} from "@mui/material";
 import {reformatTime} from "../../../../utils/DayJsHelper";
 import {useQuery} from "@tanstack/react-query";
 import {apiClient} from "../../../../api/ApiClient";
@@ -14,6 +14,18 @@ interface Props {
 }
 
 const QnAItem: FC<Props> = ({commentsData}) => {
+    const truncateText = (text: string, maxLength: number) => {
+        if (text.length <= maxLength) return text;
+        return text.slice(0, maxLength) + '...';
+    };
+
+    const cellStyle = {
+        maxWidth: '200px',
+        whiteSpace: 'nowrap' as const,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    };
+
     const {userLogin} = useQueryUserLogin();
     const { data: codeData } = useQuery({ queryKey: ['codeStore', commentsData.post_id], queryFn: () => apiClient.getTargetCode(commentsData.post_id) });
     const { data: questionUser } = useQuery({
@@ -35,7 +47,7 @@ const QnAItem: FC<Props> = ({commentsData}) => {
 
     const makeAnswerStatusComponent = useMemo(() => {
         if(hasAnswer){
-            return <TableCell>{"답변 완료"}</TableCell>;
+            return <TableCell style={{color: 'green'}}>{"답변 완료"}</TableCell>;
         }else{
             if(answerUser?.user_token! === userLogin?.user_token!) {
                 return(
@@ -47,7 +59,7 @@ const QnAItem: FC<Props> = ({commentsData}) => {
                     {"답변 작성"}</TableCell>
                 );
             }else{
-                return <TableCell>{"답변 대기"}</TableCell>;
+                return <TableCell style={{color: 'darkslategray'}}>{"답변 대기"}</TableCell>;
             }
         }
     }, [hasAnswer,answerUser]);
@@ -57,8 +69,16 @@ const QnAItem: FC<Props> = ({commentsData}) => {
             <TableCell>{reformatTime(commentsData.created_at!)}</TableCell>
             <TableCell>{questionUser?.nickname}</TableCell>
             <TableCell>{answerUser?.nickname}</TableCell>
-            <TableCell>{codeData?.title}</TableCell>
-            <TableCell>{commentsData.content}</TableCell>
+            <Tooltip title={codeData?.title || ''}>
+                <TableCell style={cellStyle}>
+                    {truncateText(codeData?.title || '', 10)}
+                </TableCell>
+            </Tooltip>
+            <Tooltip title={commentsData.content}>
+                <TableCell style={cellStyle}>
+                    {truncateText(commentsData.content, 10)}
+                </TableCell>
+            </Tooltip>
             {makeAnswerStatusComponent}
         </TableRow>
     );
