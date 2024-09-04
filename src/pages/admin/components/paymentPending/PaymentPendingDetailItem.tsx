@@ -1,147 +1,99 @@
-import React, {FC, useCallback} from 'react';
-
-import {Button, Divider, ListItem, ListItemText} from '@mui/material';
-
-
-import {toast} from 'react-toastify';
-import {useMutateSettleCoinBySeller, useMutateUpdateConfirmedStatus} from '../../../../hooks/mutate/PaymentMutate';
-import {createTodayDate, reformatTime} from '../../../../utils/DayJsHelper';
-import {useQuery} from '@tanstack/react-query';
-import {apiClient} from '../../../../api/ApiClient';
-import UserProfileImage from '../../../../components/profile/UserProfileImage';
-import {PurchaseSaleRes} from '../../../../data/entity/PurchaseSaleRes';
-import {REACT_QUERY_KEY} from '../../../../constants/define';
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Accordion from "@mui/material/Accordion";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AccordionDetails from "@mui/material/AccordionDetails";
+import React, { FC } from 'react';
+import { Typography, Box, Chip, Avatar } from '@mui/material';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PersonIcon from '@mui/icons-material/Person';
+import TitleIcon from '@mui/icons-material/Title';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { reformatTime } from '../../../../utils/DayJsHelper';
+import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '../../../../api/ApiClient';
+import { PurchaseSaleRes } from '../../../../data/entity/PurchaseSaleRes';
+import { REACT_QUERY_KEY } from '../../../../constants/define';
 
 interface Props {
-	children?: React.ReactNode;
 	item: PurchaseSaleRes;
 }
 
 const PaymentPendingDetailItem: FC<Props> = ({ item }) => {
-	const { data: codeData, isLoading: codeDataLoading} = useQuery({
-         queryKey: ['codeStore', item.post_id], 
-         queryFn: () => apiClient.getTargetCode(item.post_id) 
-        });
+	const { data: codeData, isLoading: codeDataLoading } = useQuery({
+		queryKey: ['codeStore', item.post_id],
+		queryFn: () => apiClient.getTargetCode(item.post_id)
+	});
 
-    const { data: purchaseUserData, isLoading: purchaseUserLoading } = useQuery({ 
-        queryKey: [REACT_QUERY_KEY.user, item.purchase_user_token!], 
-        queryFn: async() => await apiClient.getTargetUser(item?.purchase_user_token!) 
-    })
-   
+	const { data: purchaseUserData, isLoading: purchaseUserLoading } = useQuery({
+		queryKey: [REACT_QUERY_KEY.user, item.purchase_user_token!],
+		queryFn: async () => await apiClient.getTargetUser(item?.purchase_user_token!)
+	});
 
-	const onClickSettleButton = useCallback(async () => {
-		const result = window.confirm(` 정산 하시겠습니까?`);
-		if(!result) return
-
-        const sellerPrevTotalCash = await apiClient.getUserTotalCash(item.sales_user_token); // 판매자 정산 전 캐시
-		const sellerPrevTotalPoint = await apiClient.getUserTotalPoint(item.sales_user_token); // 판매자 정산 전 코인
-
-        const codeData = await apiClient.getTargetCode(item.post_id); // 코드 정보
-        console.log(codeData, purchaseUserData, item);
-
-
-		if (codeData?.price !== undefined && sellerPrevTotalCash !== undefined && sellerPrevTotalPoint !== undefined && item.id) {
-
-			if (item.use_cash != null && item.use_cash > 0) {
-				// TODO : users_cash_history table이 제거됨에 따라 바뀐 기획대로 정산 로직 변경 필요.
-				// let cashHistoryRequestEntity : CashHistoryResponseEntity = {
-				// 	user_token : item.sales_user_token,
-				// 	cash : Math.floor(item.use_cash! - (item.use_cash! * 0.2)),
-				// 	amount: Math.floor(item.use_cash! - (item.use_cash! * 0.2) + sellerPrevTotalCash),
-				// 	description : `[${codeData.title}] 코드 캐시 정산`,
-				// 	cash_history_type : CashHistoryType.earn_cash,
-				// }
-				// const cashAmount = Math.floor(item.use_cash! + sellerPrevTotalCash);
-				// await settleCashMutate({cashHistoryRequestEntity, cashAmount}); // 판매자 캐시 증액
-			}
-
-			// if (item.use_coin != null && item.use_coin > 0) {
-			// 	let coinHistoryRequestEntity : UsersCoinHistoryReq = {
-			// 		user_token : item.sales_user_token,
-			// 		coin : Math.floor(item.use_coin! - (item.use_coin! * 0.1)),
-			// 		amount: Math.floor(item.use_coin! - (item.use_coin! * 0.1) + sellerPrevTotalPoint),
-			// 		description : `[${codeData.title}] 코드 코인 정산`,
-			// 		point_history_type : CoinHistoryType.use_coin,
-			// 	}
-			// 	const coinAmount = Math.floor((item.use_coin! * 0.1) + sellerPrevTotalPoint);
-			// 	await settleCoinMutate({coinHistoryRequestEntity, coinAmount}); // 판매자 코인 증액
-			// }
-
-			// 정산시각
-			const date = createTodayDate();
-            //await updatePayConfirmedMutate({purchase_user_token: item.purchase_user_token!,sales_user_token: item.sales_user_token,postId: item.post_id,date:date});  // 정산 status 처리
-		} else {
-			toast.error('정산오류 : 개발팀에 문의해주세요');
-		}
-	}, [item, codeData]);
-	if (codeDataLoading || purchaseUserLoading) return <>로딩중</>;
+	if (codeDataLoading || purchaseUserLoading) {
+		return <Box p={2}>로딩 중...</Box>;
+	}
 
 	return (
-		<>
-			<ListItem key={item.id} style={{flexDirection:'column', justifyContent:'start', alignItems: 'start'}}>
-				<ListItemText
-					primary={`판매시각: ${reformatTime(item.created_at!)}`}
+		<Box
+			display="flex"
+			flexDirection="column"
+			p={2}
+			borderRadius={1}
+			bgcolor="background.paper"
+			boxShadow={1}
+			width="97%"
+			maxWidth="100%"
+			overflow="hidden"
+		>
+			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+				<Box display="flex" alignItems="center" overflow="hidden">
+					<Avatar src={purchaseUserData?.profile_url} alt={purchaseUserData?.nickname}>
+						{purchaseUserData?.nickname.charAt(0)}
+					</Avatar>
+					<Box ml={2} overflow="hidden">
+						<Typography variant="subtitle1" noWrap>{codeData?.title}</Typography>
+						<Typography variant="body2" color="text.secondary" noWrap>{purchaseUserData?.nickname}</Typography>
+					</Box>
+				</Box>
+				<Chip
+					label={item.confirmed_time ? "정산 완료" : "정산 대기중"}
+					color={item.confirmed_time ? "success" : "warning"}
+					size="small"
 				/>
-				<ListItemText
-					primary={`구매자: ${purchaseUserData?.nickname} / ${purchaseUserData?.email}`}
-				/>
-				<ListItemText
-					primary={`게시글 제목: ${codeData?.title} / 가격:  ${codeData?.price}`}
-				/>
-			</ListItem>
-			<Divider />
-		</>
+			</Box>
+
+			<Box display="grid" gridTemplateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={2}>
+				<Box display="flex" alignItems="center">
+					<AccessTimeIcon fontSize="small" color="action" sx={{ mr: 1, flexShrink: 0 }} />
+					<Typography variant="body2" noWrap>
+						판매 시각: {reformatTime(item.created_at!)}
+					</Typography>
+				</Box>
+				<Box display="flex" alignItems="center">
+					<PersonIcon fontSize="small" color="action" sx={{ mr: 1, flexShrink: 0 }} />
+					<Typography variant="body2" noWrap>
+						구매자: {purchaseUserData?.nickname}
+					</Typography>
+				</Box>
+				<Box display="flex" alignItems="center">
+					<TitleIcon fontSize="small" color="action" sx={{ mr: 1, flexShrink: 0 }} />
+					<Typography variant="body2" noWrap>
+						게시글 제목: {codeData?.title}
+					</Typography>
+				</Box>
+				<Box display="flex" alignItems="center">
+					<AttachMoneyIcon fontSize="small" color="action" sx={{ mr: 1, flexShrink: 0 }} />
+					<Typography variant="body2" noWrap>
+						가격: {codeData?.price?.toLocaleString()} 원
+					</Typography>
+				</Box>
+			</Box>
+
+			{item.confirmed_time && (
+				<Box mt={2}>
+					<Typography variant="body2" color="text.secondary">
+						정산 완료 시각: {reformatTime(item.confirmed_time)}
+					</Typography>
+				</Box>
+			)}
+		</Box>
 	);
 };
 
 export default PaymentPendingDetailItem;
-//	<ListItem>
-// 				<ListItemText>
-// 					<div style={{display: 'flex', width: '100%'}}>
-//
-// 						<div style={{display: 'flex', alignItems: 'center', width: '15%'}}>
-// 							<div>
-// 								<div style={{fontSize: 15, fontWeight: 'bold'}}>{codeData?.title!}</div>
-// 								<div style={{fontSize: 12}}>{purchaseUserData!.nickname}</div>
-// 							</div>
-// 						</div>
-// 						<div style={{width: '25%'}}>
-// 							<div style={{display: 'flex'}}>
-// 								<UserProfileImage userId={item.sales_user_token!}/>
-// 								<div>
-// 									<div>{salesUserData?.nickname}</div>
-// 									<div>{salesUserData?.email}</div>
-// 								</div>
-// 							</div>
-// 						</div>
-// 						<div style={{width: '25%'}}>
-// 							<div style={{display: 'flex'}}>
-// 								<UserProfileImage userId={item.purchase_user_token!}/>
-// 								<div>
-// 									<div>{purchaseUserData?.nickname}</div>
-// 									<div>{purchaseUserData?.email}</div>
-// 								</div>
-// 							</div>
-// 						</div>
-// 						{/*<div style={{width: '10%'}}>*/}
-// 						{/*	{item.sell_price! != null ? item.sell_price!.toLocaleString() : 0} 캐시*/}
-// 						{/*</div>*/}
-// 						<div style={{width: '10%'}}>
-// 							{item.use_cash! != null ? item.use_cash!.toLocaleString() : 0}
-// 						</div>
-// 						{/*<div style={{width: '10%'}}>*/}
-// 						{/*	{item.use_coin! != null ? item.use_coin!.toLocaleString() : 0} 코인*/}
-// 						{/*</div>*/}
-// 						<div style={{width: '10%'}}>
-// 							{item.is_confirmed ?
-// 								<Button variant={'text'}>정산됨 </Button> :
-// 								<Button onClick={onClickSettleButton}>정산하기</Button>
-// 							}
-// 						</div>
-// 					</div>
-// 				</ListItemText>
-// 			</ListItem>

@@ -665,7 +665,6 @@ class ApiClient implements SupabaseAuthAPI {
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    request_money_date: e.is_application_submitted,
                     purchase_user_token: e.purchase_user_token,
                     bootpay_payment_id: e.bootpay_payemnt_id,
                     sales_user_token: e.sales_user_token,
@@ -1374,7 +1373,6 @@ class ApiClient implements SupabaseAuthAPI {
                     post_id: e.post_id,
                     sell_price: e.sell_price,
                     use_cash: e.use_cash,
-                    request_money_date: e.is_application_submitted,
                     purchase_user_token: e.purchase_user_token,
                     sales_user_token: e.sales_user_token,
                     bootpay_payment_id: e.bootpay_payment_id,
@@ -1930,35 +1928,49 @@ class ApiClient implements SupabaseAuthAPI {
         return data;
     };
 
-    async getAdminPurchaseSaleHistory(): Promise<PurchaseSaleRes[] | null> {
+    async getAdminPurchaseSaleHistory(startDate?: string, endDate?: string): Promise<PurchaseSaleRes[] | null> {
         try {
-            const {data, error} = await supabase.from('purchase_sale_history')
+            let query = supabase.from('purchase_sale_history')
                 .select('*')
-                .not('request_money_date','is',null)
-                .is('confirmed_time',null)
-                .order('created_at', {ascending: false});
+                .order('created_at', { ascending: false });
 
-            let lstPurchaseSaleData: PurchaseSaleRes[] = [];
+            if (startDate && endDate) {
+                query = query.gte('created_at', startDate).lte('created_at', endDate);
+            }
 
-            console.log("%o", data);
-
-            data?.forEach((e) => {
-                lstPurchaseSaleData.push(e);
-            });
+            const { data, error } = await query;
 
             if (error) {
                 console.log("error" + error.message);
                 console.log("error" + error.code);
                 console.log("error" + error.details);
                 console.log("error" + error.hint);
-
                 throw new Error('판매 기록을 가져오는 데 실패했습니다.');
             }
 
-            return lstPurchaseSaleData;
+            return data || null;
         } catch (e: any) {
             console.log(e);
             throw new Error('판매 기록을 가져오는 데 실패했습니다.');
+        }
+    }
+
+    async updateBulkSettlementStatus(salesUserToken: string, postIds: number[], isCompleted: boolean): Promise<void> {
+        try {
+            const confirmedTime = isCompleted ? new Date().toISOString() : null;
+            const { error } = await supabase
+                .from('purchase_sale_history')
+                .update({ confirmed_time: confirmedTime })
+                .in('post_id', postIds)
+                .eq('sales_user_token', salesUserToken);
+
+            if (error) {
+                console.error("정산 상태 일괄 업데이트 중 오류 발생:", error);
+                throw new Error('정산 상태를 일괄 업데이트하는 데 실패했습니다.');
+            }
+        } catch (e) {
+            console.error(e);
+            throw new Error('정산 상태를 일괄 업데이트하는 데 실패했습니다.');
         }
     }
 
@@ -2443,31 +2455,6 @@ class ApiClient implements SupabaseAuthAPI {
         } catch (e: any) {
             console.log(e);
             throw new Error('total point 업데이트에 실패했습니다.');
-        }
-    }
-
-    async requestMoney(userToken: string) {
-        try {
-        //TODO 아직 정산신청 안된 컬럼들모두 Set
-            const now = new Date().toISOString();
-            const {error} = await supabase.from('purchase_sale_history')
-                .update({request_money_date: now})
-                .is('request_money_date',null)
-                .eq('sales_user_token', userToken);
-
-            if (error) {
-                console.log("error" + error.code);
-                console.log("error" + error.message);
-                console.log("error" + error.details);
-                console.log("error" + error.hint);
-                console.log("error" + error.details);
-
-                throw new Error('정산 신청 실패.');
-            }
-
-        } catch (e: any) {
-            console.log(e);
-            throw new Error('정산 신청 실패.');
         }
     }
 

@@ -29,7 +29,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "axios": "^1.6.8",
     "date-fns": "^3.6.0",
-    "dayjs": "^1.11.11",
+    "dayjs": "^1.11.13",
     "gravatar": "^1.8.2",
     "lottie-react": "^2.4.0",
     "markdown-it": "^14.1.0",
