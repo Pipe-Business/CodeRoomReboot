@@ -20,6 +20,8 @@ import CoinHistoryTabPage from "./components/coinHistory/CoinHistoryTabPage";
 import ProfitTabPage from "./components/profit/ProfitTabPage";
 import QnATabPage from "./components/qnaTabPage/QnATabPage";
 import UserProfileImage from "../../components/profile/UserProfileImage";
+import firebase from "firebase/compat";
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 const MyPage: FC = () => {
     const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
@@ -32,6 +34,7 @@ const MyPage: FC = () => {
     const location = useLocation();
     const [value, setValue] = React.useState('1');
     const [searchParams, setSearchParams] = useSearchParams();
+    const analytics = getAnalytics();
 
     useEffect(() => {
         setValue(searchParams.get('tab') ?? '1');
@@ -140,7 +143,15 @@ const MyPage: FC = () => {
                                         color="primary"
                                         fullWidth
                                         size="small" // 버튼 크기 축소
-                                        onClick={() => navigate('/profile/my/edit', { state: { userData: userLogin } })}
+                                        onClick={event => {
+
+                                            logEvent(analytics, 'firebaseTestClickButton', {
+                                                content_type: 'routeButton',
+                                                content_id: 'centerClickInHome',
+                                            });
+
+                                            navigate('/profile/my/edit', { state: { userData: userLogin } });
+                                        }}
                                     >
                                         프로필 수정
                                     </Button>

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, {Suspense, useEffect} from 'react';
 import ReactDOM from 'react-dom/client';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,7 +9,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { QueryClient } from '@tanstack/react-query';
 import { Octokit } from '@octokit/core';
 import {RecoilRoot} from "recoil";
-
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
 const MainPage = React.lazy(() => import('./pages/main/MainPage'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage'));
@@ -46,9 +50,28 @@ const RefactoringSuggestionsPage = React.lazy(() => import('./pages/createCode/R
 const InputCodeInfoPage = React.lazy(() => import('./pages/createCode/InputCodeInfoPage'));
 const queryClient = new QueryClient();
 
+
 export const useOctokit = new Octokit({
 	auth: `bearer ${process.env.REACT_APP_GITHUB_TOKEN}`,
 });
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: "AIzaSyA7RoH_J4V0Ar7jiNKC4pteJSQUsSpAcN4",
+    authDomain: "coderoom-c8e3f.firebaseapp.com",
+    databaseURL: "https://coderoom-c8e3f-default-rtdb.firebaseio.com",
+    projectId: "coderoom-c8e3f",
+    storageBucket: "coderoom-c8e3f.appspot.com",
+    messagingSenderId: "439126849745",
+    appId: "1:439126849745:web:9fc02029a85556968eedf0",
+    measurementId: "G-3GQ4VJHZ7R"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
