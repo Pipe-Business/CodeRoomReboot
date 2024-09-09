@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
+import styled from '@emotion/styled';
 import {Link, useNavigate} from 'react-router-dom';
 import {Badge, Box, Skeleton} from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -16,6 +17,35 @@ import coinImage from '../assets/coin.png';
 interface Props {
     isScrolled: boolean;
 }
+
+const CoinContainer = styled.div`
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+        background-color: #e0e0e0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+`;
+
+const CoinAmount = styled.span`
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    margin-right: 6px;
+    font-family: 'Arial', sans-serif;
+`;
+
+const CoinIcon = styled.img`
+    width: 18px;
+    height: 18px;
+`;
 
 const HeaderLayout: FC<Props> = ({ isScrolled }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
@@ -79,32 +109,18 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
 
                         {userLogin && (
                             <CenterBox>
-                                <div onClick={() => {navigate('/profile/my?tab=4')}} style={{cursor:'pointer'}}>
                                 <MarginHorizontal size={8}>
-                                    <span style={{
-                                        color: '#000000',
-                                        fontSize: '17px',
-                                        fontWeight: 'bold',
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}>
-                                        {totalCashPointData?.coin_amount.toLocaleString()}
-                                        <img
-                                            src={coinImage}
-                                            alt="Coin"
-                                            style={{
-                                                width: '20px',
-                                                height: '20px',
-                                                marginLeft: '4px'
-                                            }}
-                                        />
-                                    </span>
+                                    <CoinContainer onClick={() => {navigate('/profile/my?tab=4')}}>
+                                        <CoinAmount>
+                                            {totalCashPointData?.coin_amount.toLocaleString()}
+                                        </CoinAmount>
+                                        <CoinIcon src={coinImage} alt="Coin" />
+                                    </CoinContainer>
                                 </MarginHorizontal>
-                                </div>
 
                                 <MarginHorizontal size={8}>
                                     <Link to={'/create/code'} style={{textDecoration: "none"}}>
-                                        <span style={{color: '#000000', fontSize: '17px'}}>코드 올리기</span>
+                                        <span style={{color: '#000000', fontSize: '16px'}}>코드 올리기</span>
                                     </Link>
                                 </MarginHorizontal>
 

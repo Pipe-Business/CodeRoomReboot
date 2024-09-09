@@ -9,12 +9,12 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    FormControl,
-    MenuItem,
+    FormControl, Grid,
+    MenuItem, Paper,
     Select,
     SelectChangeEvent,
     Table,
-    TableContainer,
+    TableContainer, Typography,
 } from "@mui/material";
 import TableHeader from "../TableHeader";
 import ProfitList from "./ProfitList";
@@ -174,46 +174,57 @@ const ProfitTabPage = () => {
     }
 
     return (
-        <TableContainer>
-            <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                <div>
-                    <div>년도/월 선택</div>
-                    <FormControl sx={{m: 1, minWidth: 120}} size="small">
+        <Box sx={{ p: 3 }}>
+            <Grid container spacing={3} alignItems="center" sx={{ mb: 4 }}>
+                <Grid item xs={12} md={6}>
+                    <Typography variant="subtitle1" sx={{ mb: 1 }}>판매 년도,월 선택</Typography>
+                    <FormControl fullWidth size="small">
                         <Select
                             value={selectedPeriod}
-                            displayEmpty
                             onChange={handleTermChange}
-                            inputProps={{'aria-label': 'Without label'}}
+                            displayEmpty
+                            inputProps={{ 'aria-label': 'Without label' }}
                         >
                             {monthFilter.map((m, index) => (
                                 <MenuItem key={index} value={m}>{m}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
-                </div>
-                <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <MyPageTabPageBtn onClick={handleOpenSettlementInfoDialog}>정산 정보</MyPageTabPageBtn>
-                    <Box width="32px"/>
+                    <Box width="16px"/>
                     {/*<MyPageTabPageBtn onClick={handleOpenApplyForSettlementDialog}>정산 신청</MyPageTabPageBtn>*/}
-                </div>
-            </div>
+                </Grid>
+            </Grid>
 
-            <Box height={'16px'}/>
-            <div style={{fontSize: '24px', fontWeight: 'bold'}}>
-                {/*{selectedPeriod.split('월')[0]}월 총 판매 금액 : {totalSalesAmount}원*/}
-                총 판매 금액 : {totalSalesAmount}원
-            </div>
-            <Box height={'16px'}/>
-            <div style={{fontSize: '24px', fontWeight: 'bold'}}>
-                {/*{selectedPeriod.split('월')[0]}월 총 정산 금액 : {(totalSalesAmount * 0.8)}원*/}
-                총 정산 금액 : {(totalSalesAmount * 0.8)}원
-            </div>
-            <Box height={'64px'}/>
+            <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <Typography variant="h6" gutterBottom>
+                            총 판매 금액
+                        </Typography>
+                        <Typography variant="h4" color="primary">
+                            {totalSalesAmount.toLocaleString()}원
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography variant="h6" gutterBottom>
+                            총 정산 금액
+                        </Typography>
+                        <Typography variant="h4" color="secondary">
+                            {(totalSalesAmount * 0.8).toLocaleString()}원
+                        </Typography>
+                    </Grid>
+                </Grid>
+            </Paper>
 
-            <Table>
-                <TableHeader headerList={["판매일시", "코드제목", "구매자", "판매금액", "정산금액"]}/>
-                <ProfitList purchaseData={filteredSalesData!}/>
-            </Table>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHeader headerList={["판매일시", "코드제목", "구매자", "판매금액", "정산금액"]}/>
+                    <ProfitList purchaseData={filteredSalesData!}/>
+                </Table>
+            </TableContainer>
 
             <SettlementInfoDialog
                 open={isSettlementInfoDialogOpen}
@@ -221,43 +232,7 @@ const ProfitTabPage = () => {
                 userBankAccount={userBankAccount!}
                 onSave={handleSaveSettlementInfo}
             />
-
-            {/*<Dialog*/}
-            {/*    open={isApplyForSettlementDialogOpen}*/}
-            {/*    onClose={handleCloseApplyForSettlementDialog}*/}
-            {/*>*/}
-            {/*    <DialogTitle>정산 신청</DialogTitle>*/}
-            {/*    <DialogContent>*/}
-            {/*        {showModalContent ? (*/}
-            {/*            <>*/}
-            {/*                <DialogContentText>*/}
-            {/*                    정산 기간: {settlementPeriod}*/}
-            {/*                </DialogContentText>*/}
-            {/*                <DialogContentText>*/}
-            {/*                    정산 신청 가능 금액: {Math.round(allowedSettlementApplyAmount!)}원*/}
-            {/*                </DialogContentText>*/}
-            {/*            </>*/}
-            {/*        ) : (*/}
-            {/*            <DialogContentText>*/}
-            {/*                신청 가능한 내역이 없습니다.*/}
-            {/*            </DialogContentText>*/}
-            {/*        )}*/}
-            {/*        <DialogContentText sx={{mt: 2}}>*/}
-            {/*            정산 신청 가능 금액은 출금 수수료를 제외한 금액입니다.*/}
-            {/*        </DialogContentText>*/}
-            {/*    </DialogContent>*/}
-            {/*    {showModalContent && (*/}
-            {/*        <DialogActions>*/}
-            {/*            <MyPageTabPageBtn onClick={async () => {*/}
-            {/*                await apiClient.requestMoney(userLogin?.user_token!);*/}
-            {/*                toast.success('정산 신청이 완료되었습니다.');*/}
-            {/*                handleCloseApplyForSettlementDialog();*/}
-            {/*                navigate(0);*/}
-            {/*            }}>정산 신청</MyPageTabPageBtn>*/}
-            {/*        </DialogActions>*/}
-            {/*    )}*/}
-            {/*</Dialog>*/}
-        </TableContainer>
+        </Box>
     );
 }
 

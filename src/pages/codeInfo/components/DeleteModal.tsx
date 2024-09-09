@@ -15,7 +15,7 @@ interface Props {
 	onClose: () => void
 }
 
-const DeleteModal: FC<Props> = ({ open, onClose, codePost}) => {
+export const DeleteModal: FC<Props> = ({ open, onClose, codePost}) => {
 	const { userId, codeId } = useParams();
 	const navigate = useNavigate();
 

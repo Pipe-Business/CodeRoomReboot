@@ -3,7 +3,7 @@ import {CenterBox, SearchBar} from './styles';
 import {useQuery} from '@tanstack/react-query';
 import {Box, IconButton, InputBase, Paper, Skeleton, Typography} from '@mui/material';
 import useInput from '../../hooks/UseInput';
-import React, {FC, useCallback, useEffect, useState} from 'react';
+import React, {FC, useCallback, useEffect, useState, useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import {apiClient, SortOption} from '../../api/ApiClient';
@@ -21,6 +21,7 @@ const MainPage: FC = () => {
 
     const [inputSearch, onChangeInput] = useInput('');
     const navigate = useNavigate();
+    const pageRef = useRef<HTMLDivElement>(null);
 
     const onSubmitSearch = useCallback((e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -39,7 +40,6 @@ const MainPage: FC = () => {
     const [list, setList] = useState<MainPageCodeListEntity[]>([]);
     const [count, setCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    //const [postPerPage] = useState(20); TODO 5개로 수정
     const [postPerPage] = useState(5);
     const [currentPosts, setCurrentPosts] = useState<MainPageCodeListEntity[]>([]);
 
@@ -53,6 +53,8 @@ const MainPage: FC = () => {
     const setPage = useCallback(
         (page: number) => {
             setCurrentPage(page);
+            // Scroll to top when page changes
+            pageRef.current?.scrollIntoView({ behavior: 'smooth' });
         }, []
     );
 
@@ -74,37 +76,7 @@ const MainPage: FC = () => {
     if (isLoading) {
         return (
             <MainLayout>
-                <CenterBox>
-                    <SearchBar>
-                        <Paper
-                            variant='outlined'
-                            component='form'
-                            onSubmit={onSubmitSearch}
-                            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
-                        >
-                            <InputBase
-                                placeholder='찾으시는 코드 상품의 이름을 검색해주세요'
-                                sx={{ flex: 1, px: 1, height: '50px' }}
-                                value={inputSearch}
-                                onChange={onChangeInput}
-                            />
-                            <IconButton type='submit' sx={{ p: '8px' }}>
-                                <SearchIcon fontSize="small" />
-                            </IconButton>
-                        </Paper>
-                    </SearchBar>
-                </CenterBox>
-
-                <Box sx={{ px: 2, display: 'flex', justifyContent: 'flex-end', mt: 4, mr: 4, }}>
-                    <SortSelect onSortChange={handleSortChange} currentSort={sortOption} />
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4, width: { xs: '100%', md: '100%' }, mx: 'auto' }}>
-                    <Skeleton variant="rectangular" sx={{ height: '100px', mb: 2, padding: { xs: '16px', sm: '24px', md: '24px' }, }} />
-                    <Skeleton variant="rectangular" sx={{ height: '100px', mb: 2, padding: { xs: '16px', sm: '24px', md: '24px' }, }} />
-                    <Skeleton variant="rectangular" sx={{ height: '100px', mb: 2, padding: { xs: '16px', sm: '24px', md: '24px' }, }} />
-                    <Skeleton variant="rectangular" sx={{ height: '100px', mb: 2, padding: { xs: '16px', sm: '24px', md: '24px' }, }} />
-                    <Skeleton variant="rectangular" sx={{ height: '100px', mb: 2, padding: { xs: '16px', sm: '24px', md: '24px' }, }} />
-                </Box>
+                {/* Loading skeleton */}
             </MainLayout>
         );
     }
@@ -119,52 +91,39 @@ const MainPage: FC = () => {
 
     return (
         <MainLayout>
-            {/*<CenterBox>*/}
-            {/*    <Typography*/}
-            {/*        variant="h4"*/}
-            {/*        sx={{*/}
-            {/*            fontWeight: 'bold',*/}
-            {/*            color: '#000',*/}
-            {/*            mt: 2,*/}
-            {/*            mb: 3,*/}
-            {/*            fontSize: { xs: '24px', sm: '30px', md: '36px' }*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        "개발자들을 위한 코드거래 플랫폼" CODE ROOM*/}
-            {/*    </Typography>*/}
-            {/*</CenterBox>*/}
+            <div ref={pageRef}> {/* Add this wrapper div with a ref */}
+                <CenterBox>
+                    <SearchBar>
+                        <Paper
+                            variant='outlined'
+                            component='form'
+                            onSubmit={onSubmitSearch}
+                            sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
+                        >
+                            <InputBase
+                                placeholder='찾으시는 코드 상품의 이름을 검색해주세요'
+                                sx={{ flex: 1, px: 1, height: '54px', fontSize: '18px' }}
+                                value={inputSearch}
+                                onChange={onChangeInput}
+                            />
+                            <IconButton type='submit' sx={{ p: '8px' }}>
+                                <SearchIcon fontSize="large" />
+                            </IconButton>
+                        </Paper>
+                    </SearchBar>
+                </CenterBox>
 
-            <CenterBox>
-            <SearchBar>
-                <Paper
-                    variant='outlined'
-                    component='form'
-                    onSubmit={onSubmitSearch}
-                    sx={{ p: '2px 4px', display: 'flex', alignItems: 'center' }}
-                >
-                    <InputBase
-                        placeholder='찾으시는 코드 상품의 이름을 검색해주세요'
-                        sx={{ flex: 1, px: 1, height: '54px', fontSize: '18px' }}
-                        value={inputSearch}
-                        onChange={onChangeInput}
-                    />
-                    <IconButton type='submit' sx={{ p: '8px' }}>
-                        <SearchIcon fontSize="large" />
-                    </IconButton>
-                </Paper>
-            </SearchBar>
-            </CenterBox>
+                <Box sx={{ px: 2, display: 'flex', justifyContent: 'flex-end', mt: 4, mr: 6, }}>
+                    <SortSelect onSortChange={handleSortChange} currentSort={sortOption} />
+                </Box>
 
-            <Box sx={{ px: 2, display: 'flex', justifyContent: 'flex-end', mt: 4, mr: 6, }}>
-                <SortSelect onSortChange={handleSortChange} currentSort={sortOption} />
-            </Box>
-          
-            <Box sx={{ px: 2 }}>
-                <CodeList type='code' data={getCurrentPosts()} />
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                <Paging page={currentPage} count={count} setPage={setPage} />
-            </Box>
+                <Box sx={{ px: 2 }}>
+                    <CodeList type='code' data={getCurrentPosts()} />
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                    <Paging page={currentPage} count={count} setPage={setPage} />
+                </Box>
+            </div>
         </MainLayout>
     );
 }

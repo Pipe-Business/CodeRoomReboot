@@ -31,6 +31,7 @@ interface SettlementInfoDialogProps {
     onSave: (updatedInfo: UserBankAccountEntity & { file?: File }) => void;
 }
 
+// 정산 정보 화면
 const SettlementInfoDialog: React.FC<SettlementInfoDialogProps> = ({ open, onClose, userBankAccount, onSave }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [name, setName] = useState(userBankAccount?.name || '');
@@ -175,14 +176,18 @@ const SettlementInfoDialog: React.FC<SettlementInfoDialogProps> = ({ open, onClo
                         </Button>
                     </>
                 ) : (
-                    <Button
-                        onClick={() => setIsEditing(true)}
-                        color="primary"
-                        variant="contained"
-                        startIcon={<EditIcon />}
-                    >
-                        수정
-                    </Button>
+                    <Box width={'100%'} height={'70px'}>
+                        <Button
+                            fullWidth={true}
+                            sx={{height:'70px', fontSize: '20px'}}
+                            onClick={() => setIsEditing(true)}
+                            color="primary"
+                            variant="contained"
+                            startIcon={<EditIcon />}
+                        >
+                            정산정보 수정
+                        </Button>
+                    </Box>
                 )}
             </DialogActions>
         </Dialog>

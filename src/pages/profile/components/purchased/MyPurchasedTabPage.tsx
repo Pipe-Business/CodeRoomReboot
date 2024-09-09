@@ -1,9 +1,9 @@
-import React, {FC} from 'react';
+import React, { FC } from 'react';
 import PurchaseList from './PurchaseList';
-import {Table, TableContainer} from '@mui/material';
-import {apiClient} from "../../../../api/ApiClient";
-import {useQueryUserLogin} from "../../../../hooks/fetcher/UserFetcher";
-import {useQuery} from "@tanstack/react-query";
+import { Box, Paper, Table, TableContainer, Typography } from '@mui/material';
+import { apiClient } from "../../../../api/ApiClient";
+import { useQueryUserLogin } from "../../../../hooks/fetcher/UserFetcher";
+import { useQuery } from "@tanstack/react-query";
 import TableHeader from "../TableHeader";
 import ListEmptyText from "../ListEmptyText";
 import ListLoadingSkeleton from "../ListLoadingSkeleton";
@@ -90,33 +90,40 @@ const MyPurchasedTabPage: FC<Props> = () => {
 	//
 	// };
 
-	if(purchaseCodeDataLoading){
-		return <ListLoadingSkeleton/>;
+	if (purchaseCodeDataLoading) {
+		return <ListLoadingSkeleton />;
 	}
 
-	if(purchaseData?.length === 0) {
-		return <ListEmptyText/>;
+	if (purchaseData?.length === 0) {
+		return <ListEmptyText />;
 	}
 
 	return (
-		<TableContainer>
-			<Table>
-			{/*<ReviewDialog*/}
-			{/*	postId={purchasePostId}*/}
-			{/*	open={reviewDialogOpen}*/}
-			{/*	onClose={() => setReviewDialogOpen(false)}*/}
-			{/*	onReviewSubmit={handleReviewSubmit}*/}
-			{/*	readonly={readonly}*/}
-			{/*	reviewData={reviewData} // reviewData prop 전달*/}
-			{/*/>*/}
-			<TableHeader  headerList={["구매일시","코드제목","판매자","구매금액","",""]}/>
-			<PurchaseList
-				purchaseData={purchaseData}
-				//onWriteReviewClick={handleWriteReviewClick}
-				//onReadReviewClick={handleReadReviewClick}
-			/>
-			</Table>
-		</TableContainer>
+		<Box sx={{ p: 3 }}>
+			<Typography variant="h6" gutterBottom>
+				구매 내역
+			</Typography>
+			<Paper elevation={3}>
+				<TableContainer>
+					<Table>
+						{/*<ReviewDialog*/}
+						{/*    postId={purchasePostId}*/}
+						{/*    open={reviewDialogOpen}*/}
+						{/*    onClose={() => setReviewDialogOpen(false)}*/}
+						{/*    onReviewSubmit={handleReviewSubmit}*/}
+						{/*    readonly={readonly}*/}
+						{/*    reviewData={reviewData} // reviewData prop 전달*/}
+						{/*/>*/}
+						<TableHeader headerList={["구매일시", "코드제목", "판매자", "구매금액", "", ""]} />
+						<PurchaseList
+							purchaseData={purchaseData}
+							//onWriteReviewClick={handleWriteReviewClick}
+							//onReadReviewClick={handleReadReviewClick}
+						/>
+					</Table>
+				</TableContainer>
+			</Paper>
+		</Box>
 	);
 };
 

@@ -7,7 +7,6 @@ import { PurchaseSaleRes } from "../../data/entity/PurchaseSaleRes";
 import PaymentPendingItem from "./components/paymentPending/PaymentPendingItem";
 
 interface Props {
-	children?: React.ReactNode;
 	isSettlement: boolean;
 }
 
@@ -16,17 +15,16 @@ interface RequestMoneyGroupByUserToken {
 }
 
 const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
-	const [selectedMonth, setSelectedMonth] = useState<string>('all');
+	const currentYearMonth = dayjs().format('YYYY-MM');
+	const [selectedMonth, setSelectedMonth] = useState<string>(currentYearMonth);
 
 	const { isLoading: paymentPendingLoading, data: paymentPendingData, refetch } = useQuery({
 		queryKey: ['/purchaseSalehistory', selectedMonth],
 		queryFn: async () => {
-			if (selectedMonth) {
-				const [year, month] = selectedMonth.split('-');
-				const startDate = dayjs(`${year}-${month}-01`).startOf('month').format('YYYY-MM-DD HH:mm:ss');
-				const endDate = dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD HH:mm:ss');
-				return await apiClient.getAdminPurchaseSaleHistory(startDate, endDate);
-			}
+			const [year, month] = selectedMonth.split('-');
+			const startDate = dayjs(`${year}-${month}-01`).startOf('month').format('YYYY-MM-DD HH:mm:ss');
+			const endDate = dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD HH:mm:ss');
+			return await apiClient.getAdminPurchaseSaleHistory(startDate, endDate);
 		}
 	});
 
@@ -68,8 +66,8 @@ const AdminPaymentPendingPage: FC<Props> = ({ isSettlement }) => {
 					onChange={handleMonthChange}
 				>
 					{Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-						<MenuItem key={month} value={`2024-${month.toString().padStart(2, '0')}`}>
-							2024년 {month}월
+						<MenuItem key={month} value={`${dayjs().year()}-${month.toString().padStart(2, '0')}`}>
+							{dayjs().year()}년 {month}월
 						</MenuItem>
 					))}
 				</Select>
