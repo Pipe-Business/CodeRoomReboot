@@ -1,55 +1,67 @@
 import React, { FC, useCallback } from 'react';
-import { ListItem, ListItemButton, ListItemText } from '@mui/material';
+import {Avatar, Box, Chip, ListItem, ListItemButton, ListItemText, Typography, useTheme} from '@mui/material';
 import {reformatTime} from "../../../../utils/DayJsHelper";
 import { useNavigate } from 'react-router-dom';
 import {CodeModel} from "../../../../data/model/CodeModel";
 import {useQueryUserById} from "../../../../hooks/fetcher/UserFetcher";
 import {PostStateType} from "../../../../enums/PostStateType";
 
-interface Props {
-	children?: React.ReactNode;
+interface AdminCodeRequestItemProps {
 	item: CodeModel;
 }
 
-const AdminCodeRequestItem: FC<Props> = ({ item }) => {
+const AdminCodeRequestItem: FC<AdminCodeRequestItemProps> = ({ item }) => {
 	const { userById } = useQueryUserById(item.userToken);
-	const navigator = useNavigate()
-	const onClickNavigator = useCallback(()=>{
-		navigator(`/admin/codeRequest/${item.userToken}/${item.id}`)
+	const navigate = useNavigate();
+	const theme = useTheme();
 
-	},[])
+	const handleClick = () => {
+		navigate(`/admin/codeRequest/${item.userToken}/${item.id}`);
+	};
+
+	const getStatusColor = (state: string) => {
+		switch (state) {
+			case 'pending':
+				return theme.palette.warning.main;
+			case 'rejected':
+				return theme.palette.error.main;
+			case 'approve':
+				return theme.palette.success.main;
+			default:
+				return theme.palette.info.main;
+		}
+	};
+
 	return (
-		<ListItemButton onClick={onClickNavigator}>
+		<ListItemButton onClick={handleClick}>
 			<ListItem>
 				<ListItemText>
-					<div style={{ display: 'flex' }}>
-						<div style={{ width: '15%' }}>{reformatTime(item.createdAt)}</div>
-						<div style={{ width: '30%' }}>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
-								{/* 이미지 추가 예정 */}
-								{/* <UserProfileImage size={35} userId={item.userId} /> */}
-								<div style={{ marginLeft: '4px' }}>
-									<div>{userById?.nickname}</div>
-									<div>{userById?.email}</div>
-								</div>
-							</div>
-						</div>
-						 <div style={{ width: '35%' }}>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
-								{/* <PictogramImage size={35} formType={item.formType} category={item.category} /> */}
-								<div style={{ marginLeft: '4px' }}>
-									<div>{item.title}</div>
-									<div>{userById?.nickname}</div>
-								</div>
-							</div>
-						</div> 
-						<div style={{ width: '15%' }}>{item.price.toLocaleString()}p</div>
-						<div
-							style={{ width: '5%' }}>{item.state === PostStateType.pending ? '요청' : item.state === PostStateType.rejected ? '반려' : '승인'}</div>
-					</div>
+					<Box display="flex" justifyContent="space-between" alignItems="center">
+						<Typography variant="body2" sx={{ width: '15%' }}>{reformatTime(item.createdAt)}</Typography>
+						<Box sx={{ width: '30%', display: 'flex', alignItems: 'center' }}>
+							<Avatar src={userById?.profile_url} alt={userById?.nickname} sx={{ width: 40, height: 40, mr: 1 }} />
+							<Box>
+								<Typography variant="body2">{userById?.nickname}</Typography>
+								<Typography variant="caption" color="textSecondary">{userById?.email}</Typography>
+							</Box>
+						</Box>
+						<Box sx={{ width: '35%' }}>
+							<Typography variant="body2">{item.title}</Typography>
+							<Typography variant="caption" color="textSecondary">{userById?.nickname}</Typography>
+						</Box>
+						<Typography variant="body2" sx={{ width: '15%' }}>{item.price.toLocaleString()}p</Typography>
+						<Chip
+							label={item.state === PostStateType.pending ? '요청' : item.state === PostStateType.rejected ? '반려' : '승인'}
+							size="small"
+							sx={{
+								width: '5%',
+								backgroundColor: getStatusColor(item.state),
+								color: theme.palette.getContrastText(getStatusColor(item.state))
+							}}
+						/>
+					</Box>
 				</ListItemText>
 			</ListItem>
-
 		</ListItemButton>
 	);
 };

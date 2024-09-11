@@ -33,7 +33,7 @@ const MySellReviewTabPage: FC = () => {
 			<Paper elevation={3}>
 				<TableContainer>
 					<Table>
-						<TableHeader headerList={["요청시간", "코드제목", "심사상태", ""]} />
+						<TableHeader headerList={["요청일시", "코드제목", "심사상태", ""]} />
 						<SaleList codeData={codeData} />
 					</Table>
 				</TableContainer>

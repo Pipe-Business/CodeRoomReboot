@@ -1,53 +1,65 @@
-import React, { FC } from 'react';
-import { Divider, List, ListItem, ListItemText } from '@mui/material';
-import AdminCodeRequestItem from './AdminCodeRequestItem';
-import { useQuery } from '@tanstack/react-query';
+import React, {FC} from 'react';
+import {Box, CircularProgress, Divider, List, ListItem, ListItemText, Paper, Typography, useTheme} from '@mui/material';
+import {useQuery} from '@tanstack/react-query';
 import {apiClient} from "../../../../api/ApiClient";
 import {PostStateType} from "../../../../enums/PostStateType";
+import AdminCodeRequestItem from "./AdminCodeRequestItem";
 
-interface Props {
-	children?: React.ReactNode;
+// AdminCodeRequestList Component
+interface AdminCodeRequestListProps {
 	type: PostStateType.pending | PostStateType.rejected | PostStateType.approve;
 }
 
-const CodeRequestHeader: FC<{ type: PostStateType.pending | PostStateType.rejected | PostStateType.approve }> = ({ type }) => {
-	return <ListItem>
-		<ListItemText>
-			<div style={{ display: 'flex' }}>
-				<div style={{ width: '15%' }}>{type === PostStateType.pending ? '요청' : type === PostStateType.rejected ? '반려' : '승인'}시간</div>
-				<div style={{ width: '30%' }}>게시자</div>
-				<div style={{ width: '35%' }}>코드제목</div>
-				<div style={{ width: '15%' }}>캐시</div>
-				<div style={{ width: '5%' }}>요청상태</div>
-			</div>
-		</ListItemText>
-	</ListItem>;
-};
+const AdminCodeRequestList: FC<AdminCodeRequestListProps> = ({ type }) => {
+	const theme = useTheme();
+	const { isLoading, data } = useQuery({
+		queryKey: ['codeRequest', 'admin', type],
+		queryFn: () => apiClient.getAllPendingCode(type)
+	});
 
-const AdminCodeRequestList: FC<Props> = ({ type }) => {
-	const {isLoading,data} = useQuery({
-		queryKey:['codeRequest','admin',type],
-		queryFn:()=> apiClient.getAllPendingCode(type)
-	})
-	if(isLoading){
-		return <></>
+	if (isLoading) {
+		return (
+			<Box display="flex" justifyContent="center" alignItems="center" height="200px">
+				<CircularProgress />
+			</Box>
+		);
 	}
-	if(!data){
-		return <></>
+
+	if (!data || data.length === 0) {
+		return (
+			<Paper elevation={3} sx={{ p: 3, textAlign: 'center' }}>
+				<Typography variant="h6">No requests found</Typography>
+			</Paper>
+		);
 	}
+
 	return (
-		<List>
-			<CodeRequestHeader type={type}/>
-			<Divider/>
-			{data.map(item=>{
-				if(item.state===type){
-					return <div key={item.id} >
-					<AdminCodeRequestItem item={item}/>
-						<Divider/>
-					</div>
-				}
-			})}
-		</List>
+		<Paper elevation={3}>
+			<List>
+				<ListItem sx={{ backgroundColor: theme.palette.grey[100] }}>
+					<ListItemText>
+						<Box display="flex" justifyContent="space-between" fontWeight="bold">
+							<Typography variant="subtitle1" sx={{ width: '15%' }}>
+								{type === PostStateType.pending ? '요청' : type === PostStateType.rejected ? '반려' : '승인'}일시
+							</Typography>
+							<Typography variant="subtitle1" sx={{ width: '30%' }}>게시자</Typography>
+							<Typography variant="subtitle1" sx={{ width: '35%' }}>코드제목</Typography>
+							<Typography variant="subtitle1" sx={{ width: '15%' }}>캐시</Typography>
+							<Typography variant="subtitle1" sx={{ width: '5%' }}>상태</Typography>
+						</Box>
+					</ListItemText>
+				</ListItem>
+				<Divider />
+				{data.map((item) => (
+					item.state === type && (
+						<React.Fragment key={item.id}>
+							<AdminCodeRequestItem item={item} />
+							<Divider />
+						</React.Fragment>
+					)
+				))}
+			</List>
+		</Paper>
 	);
 };
 

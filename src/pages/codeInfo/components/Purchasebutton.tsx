@@ -1,32 +1,53 @@
-import React, {FC, useState} from "react";
-import {ColorButton} from "../styles";
-import {useNavigate} from "react-router-dom";
-import {CodeModel} from "../../../data/model/CodeModel";
-import {useQueryUserLogin} from "../../../hooks/fetcher/UserFetcher";
-import {PurchaseSaleRes} from "../../../data/entity/PurchaseSaleRes";
+import React, { FC } from "react";
+import { Button, Typography, useTheme } from "@mui/material";
+import { LocalAtm as PaymentIcon } from "@mui/icons-material";
+import { useQueryUserLogin } from "../../../hooks/fetcher/UserFetcher";
+import { CodeModel } from "../../../data/model/CodeModel";
+import { PurchaseSaleRes } from "../../../data/entity/PurchaseSaleRes";
 
 interface Props {
-    children? : React.ReactNode;
     postData: CodeModel;
-    purchasedSaleData?: PurchaseSaleRes | null,
-    handlePurchase: () => void,
+    purchasedSaleData?: PurchaseSaleRes | null;
+    handlePurchase: () => void;
 }
 
-const PurchaseButton: FC<Props> = ({purchasedSaleData,postData, handlePurchase}) => {
+const PurchaseButton: FC<Props> = ({ purchasedSaleData, postData, handlePurchase }) => {
     const { userLogin } = useQueryUserLogin();
+    const theme = useTheme();
 
-    // 게사자일경우
-    if (userLogin?.user_token === postData.userToken) {
-        return null;
-    }
-
-    // 구매한 내역이 있으면
-    if (purchasedSaleData != null) {
+    // 게시자이거나 이미 구매한 경우 버튼을 렌더링하지 않음
+    if (userLogin?.user_token === postData.userToken || purchasedSaleData != null) {
         return null;
     }
 
     return (
-        <ColorButton sx={{ fontSize: '20px', width: '50%', height:'60px', fontWeight: 'bold' }} onClick={handlePurchase} variant='contained'>코드 구매</ColorButton>
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={handlePurchase}
+            startIcon={<PaymentIcon />}
+            sx={{
+                width: '100%',
+                maxWidth: '300px',
+                height: '50px',
+                borderRadius: '25px',
+                fontWeight: 'bold',
+                textTransform: 'none',
+                fontSize: '16px',
+                boxShadow: theme.shadows[3],
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: theme.shadows[5],
+                    backgroundColor: theme.palette.primary.dark,
+                },
+            }}
+        >
+            <Typography variant="button">
+                코드 구매하기
+            </Typography>
+        </Button>
     );
 }
+
 export default PurchaseButton;

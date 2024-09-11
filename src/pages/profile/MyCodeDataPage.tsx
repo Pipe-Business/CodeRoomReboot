@@ -3,6 +3,7 @@ import {useLocation} from 'react-router-dom';
 import FullLayout from '../../layout/FullLayout';
 import {Box} from '@mui/material';
 import CodePendingOrPendingList from './components/code/MyCodeList';
+import MainLayout from "../../layout/MainLayout";
 
 interface Props {
 	children?: React.ReactNode,
@@ -16,11 +17,11 @@ const MyCodeDataPage: FC<Props> = () => {
 	} } = useLocation();
 
 	return (
-		<FullLayout>
+		<MainLayout>
 			<Box height={32} />
 			<h2></h2>
 			<CodePendingOrPendingList  maxCount={false} data={codeData}/>
-		</FullLayout>
+		</MainLayout>
 	);
 };
 

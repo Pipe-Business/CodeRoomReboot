@@ -9,7 +9,7 @@ interface FileNode {
     content?: string;
 }
 
-const SUPPORTED_EXTENSIONS = ['.py', '.js', '.ts', '.java', '.cpp', '.cs', '.dart', 'c', 'tsx', 'kt'];
+const SUPPORTED_EXTENSIONS = ['.py', '.js', '.ts', '.java', '.cpp', '.cs', '.dart', '.c', '.tsx', '.kt'];
 const INITIAL_DELAY = 5000; // 5 seconds
 
 interface UseRepoFilesReturn {

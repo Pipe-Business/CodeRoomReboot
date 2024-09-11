@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Button } from '@mui/material';
+import {Button, Typography} from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 import CodeItem from './CodeItem';
 import { MainPageCodeListEntity } from '../../../data/entity/MainPageCodeListEntity';
@@ -19,13 +19,13 @@ const CodeList: FC<Props> = ({ type, data }) => { // 인자 타입 선언을 올
 	if (data.length === 0) {
 		return <>
 			<h1>{searchParams.get('type') === 'article' ? '게시글이' : '코드가'} 없어요 </h1>
-			<h3>여러분이 만든 {searchParams.get('type') === 'article' ? '게시글을' : '소스코드를'} 게시해보아요 🚚🚚</h3>
+			<Typography>여러분이 만든 {searchParams.get('type') === 'article' ? '게시글을' : '소스코드를'} 직접 등록 해보세요 💻💻</Typography>
 			{searchParams.get('type') === 'code' ?
 				<Link to={'/create/code'}>
 					<Button>코드 게시하러가기</Button>
 				</Link> :
-				<Link to={'/create/article'}>
-					<Button>게시글 작성하러가기</Button>
+				<Link to={'/create/code'}>
+					<Button>코드 게시하러가기</Button>
 				</Link>
 			}
 		</>;

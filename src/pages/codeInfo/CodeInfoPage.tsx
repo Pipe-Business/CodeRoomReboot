@@ -13,12 +13,17 @@ import {
     CardHeader,
     Chip,
     CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Divider,
     IconButton,
-    Typography,
-    Paper
+    Paper,
+    Typography, useTheme
 } from '@mui/material';
-import {ArrowBack, Delete, ShoppingBag, LocalOffer as PriceIcon} from '@mui/icons-material';
+import {ArrowBack, LocalOffer as PriceIcon, ShoppingBag, Edit as EditIcon, Refresh as RefreshIcon} from '@mui/icons-material';
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github.css";
@@ -44,16 +49,61 @@ import {LikeRequestEntity} from "../../data/entity/LikeRequestEntity";
 import {PurchaseSaleRes} from "../../data/entity/PurchaseSaleRes";
 import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
 import {CoinHistoryType} from '../../enums/CoinHistoryType';
-import DeleteModal from './components/DeleteModal';
+import {CodeEditRequestEntity} from "../../data/entity/CodeEditRequestEntity";
+import {PostStateType} from "../../enums/PostStateType";
+import {codeInfo} from "../createCode/createCodeAtom";
 
 dayjs.locale('ko');
 
 const CodeInfo: FC = () => {
+    const theme = useTheme();
     const {id} = useParams();
     const navigate = useNavigate();
     const {isLoadingUserLogin, userLogin} = useQueryUserLogin();
     const [reviews, setReviews] = useState<PurchaseReviewEntity[]>([]);
     const [isLike, setLike] = useState<boolean>(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [codeModel, setCodeInfo] = useRecoilState(codeInfo);
+
+
+    const onClickNavigateModifyForm = useCallback(() => {
+        setCodeInfo(postData!);
+        navigate('/create/code/codesubmission', {state: {isEdit: true}});
+    }, [navigate, setCodeInfo]);
+
+    const handleOpenDialog = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setOpenDialog(true);
+    }, []);
+
+    const handleCloseDialog = useCallback(() => {
+        setOpenDialog(false);
+    }, []);
+
+    const handleConfirmCodeUpdate = useCallback(async () => {
+        console.log("코드 갱신 요청 처리");
+
+        try {
+            const codeEditRequest: CodeEditRequestEntity = {
+                post_id: postData!.id,
+                title: postData?.title!,
+                category: postData?.category!,
+                price: postData?.price!,
+                language: postData?.language!,
+                ai_summary: postData?.aiSummary!,
+                description: postData?.description!,
+                state: PostStateType.pending,
+            };
+            await apiClient.updatePostData(codeEditRequest);
+
+            // API 호출이 성공적으로 완료된 후 페이지를 새로고침합니다.
+            window.location.reload();
+        } catch (error) {
+            console.log(error);
+            // 에러가 발생한 경우에도 다이얼로그를 닫습니다.
+            handleCloseDialog();
+        }
+    }, [handleCloseDialog]);
 
     const {isLoading: isPostDataLoading, data: postData} = useQuery({
         queryKey: [REACT_QUERY_KEY.code, id],
@@ -76,16 +126,6 @@ const CodeInfo: FC = () => {
         queryFn: () => apiClient.getTargetPostLikedNumber(postData!.id),
     });
 
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
-    const handleOpenDeleteModal = () => {
-        setOpenDeleteModal(true);
-    };
-
-    const handleCloseDeleteModal = () => {
-        setOpenDeleteModal(false);
-    };
-
     useEffect(() => {
         if (likeData != null) {
             setLike(true);
@@ -104,7 +144,7 @@ const CodeInfo: FC = () => {
     const [paymentRequiredAmount, setPaymentRequiredAmount] = useState<number>(postData?.price ?? 0);
     const onPaymentConfirm: () => void = PaymentDialog(userLogin!, postData!);
     const onClickPurchase = () => {
-        const result = window.confirm(`결제하시겠습니까?: ${postData!.price}원`);
+        const result = window.confirm(`결제하시겠습니까?: ${postData!.price.toLocaleString()}원`);
         if (result) {
             onPaymentConfirm();
         }
@@ -297,51 +337,59 @@ const CodeInfo: FC = () => {
                                 </Typography>
                                 <Divider sx={{width: '100%', my: 2}}/>
                                 <Paper
-                                    elevation={3}
+                                    elevation={0}
                                     sx={{
                                         width: '100%',
-                                        backgroundColor: '#f5f5f5',
+                                        backgroundColor: 'transparent',
                                         borderRadius: 2,
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                     }}
                                 >
-                                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, p: 2 }}>
-                                        <PriceIcon sx={{ fontSize: 24, color: '#1976d2', mr: 1 }} />
-                                        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', fontSize: '24px' }}>
-                                            코드 판매가격
+                                    <Box sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                        mb: 3
+                                    }}>
+                                        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+                                            코드 판매 가격
+                                        </Typography>
+                                        <Typography
+                                            variant="h4"
+                                            sx={{
+                                                fontWeight: 'bold',
+                                                color: theme.palette.primary.main
+                                            }}
+                                        >
+                                            {postData.price.toLocaleString()}원
                                         </Typography>
                                     </Box>
-                                    <Chip
-                                        label={`${postData.price.toLocaleString()}원`}
-                                        sx={{
-                                            backgroundColor: 'black',
-                                            color:'white',
-                                            fontSize: '28px',
-                                            py: 3,
-                                            px: 2,
-                                            fontWeight: 'bold',
-                                            mb: 2,
-                                        }}
-                                    />
 
                                     {userLogin?.user_token === postData.userToken && (
-                                        <Button
-                                            onClick={handleOpenDeleteModal}
-                                            startIcon={<Delete />}
-                                            color="error"
-                                            sx={{ mt: 3, fontSize: '14px' }}
-                                        >
-                                            코드 템플릿 삭제
-                                        </Button>
+                                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 3, width: '100%' }}>
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                onClick={onClickNavigateModifyForm}
+                                                startIcon={<EditIcon />}
+                                                sx={{ borderRadius: '20px', flex: 1 }}
+                                            >
+                                                수정
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                color="secondary"
+                                                onClick={handleOpenDialog}
+                                                startIcon={<RefreshIcon />}
+                                                sx={{ borderRadius: '20px', flex: 1 }}
+                                            >
+                                                갱신
+                                            </Button>
+                                        </Box>
                                     )}
-
-                                    <DeleteModal
-                                        open={openDeleteModal}
-                                        onClose={handleCloseDeleteModal}
-                                        codePost={postData}
-                                    />
 
                                     <PurchaseButton
                                         postData={postData}
@@ -350,10 +398,13 @@ const CodeInfo: FC = () => {
                                     />
 
                                     {purchaseSaleData && (
-                                        <CodeDownloadButton repoURL={postData.githubRepoUrl} />
+                                        <Box mt={2} width="100%">
+                                            <CodeDownloadButton repoURL={postData.githubRepoUrl} />
+                                        </Box>
                                     )}
+
                                     {postData.userToken !== userLogin?.user_token && (
-                                        <Box mt={2}>
+                                        <Box mt={2} width="100%">
                                             <MessageModal targetUserToken={postData.userToken} />
                                         </Box>
                                     )}
@@ -363,6 +414,32 @@ const CodeInfo: FC = () => {
                     </BlurContainer>
                 </Box>
             </Box>
+
+
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"코드 갱신 요청"}
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        코드 갱신 요청을 진행하시겠습니까?
+                    </DialogContentText>
+                    <DialogContentText id="alert-dialog-description">
+                        (요청 시 심사중 상태로 변경됩니다)
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog}>아니오</Button>
+                    <Button onClick={handleConfirmCodeUpdate} autoFocus>
+                        예
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </MainLayout>
     );
 };

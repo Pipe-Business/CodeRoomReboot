@@ -65,7 +65,7 @@ const AdminPage: FC<Props> = () => {
 						<Tab label='반려내역' value='2' />
 						<Tab label='승인내역' value='3' />
 						<Tab label='결제내역' value='4' />
-						<Tab label='코인' value='5' />
+						<Tab label='코인내역' value='5' />
 						{/*<Tab label='정산대기' value='6' />*/}
 						<Tab label='정산내역' value='6' />
 						<Tab label='유저관리' value='7' />

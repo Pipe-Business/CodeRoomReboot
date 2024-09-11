@@ -86,14 +86,12 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
                 alignItems: 'center',
                 padding: '0 16px' // 좌우 패딩 추가
             }}>
-                <HeaderTitle>
-                    <Link to='/' style={{textDecoration: "none"}}>
-                        <h2 style={{fontSize: '36px', marginTop: '20px', marginBottom: '20px', fontWeight: 'bold'}}>
-                            <span style={{color: '#000000', fontFamily: 'sans-serif'}}>&lt;</span>
-                            <span style={{color: '#000000', fontFamily: 'sans-serif'}}>CODE ROOM</span>
-                            <span style={{color: '#000000', fontFamily: 'sans-serif'}}>/&gt;</span>
-                        </h2>
-                    </Link>
+                <HeaderTitle to='/'>
+                    <h2>
+                        <span>&lt;</span>
+                        <span>CODE ROOM</span>
+                        <span>/&gt;</span>
+                    </h2>
                 </HeaderTitle>
 
                 <Box> {/* 오른쪽 요소들을 위한 컨테이너 */}

@@ -30,7 +30,7 @@ const UserManageHeader: React.FC = () => {
 					<Box display="flex" justifyContent="space-between" alignItems="center" py={1}>
 						{!isMobile && (
 							<Typography variant="subtitle1" fontWeight="bold" width="15%" textAlign="center">
-								가입날짜
+								가입일시
 							</Typography>
 						)}
 						<Typography variant="subtitle1" fontWeight="bold" width={isMobile ? "40%" : "25%"} textAlign="center">
