@@ -1,21 +1,13 @@
-import React, { FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import {
-    Box,
-    Button,
-    Typography,
-    Paper,
-    Container,
-    Divider,
-    Chip,
-    ThemeProvider,
-    createTheme,
-} from '@mui/material';
-import { ArrowBack, Code } from '@mui/icons-material';
+import React, {FC} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {Box, Button, Chip, Container, createTheme, Divider, Paper, ThemeProvider, Typography,} from '@mui/material';
+import {ArrowBack, Code} from '@mui/icons-material';
 import MainLayout from "../../layout/MainLayout";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
+import { useRecoilState } from 'recoil';
+import { gptGeneratedCodeInfo } from './createCodeAtom';
 
 const theme = createTheme({
     palette: {
@@ -44,12 +36,15 @@ const CodeReviewFeedback: FC<{ feedback: string }> = ({ feedback }) => (
 );
 
 const RefactoringSuggestionPage: FC = () => {
+    const [gptCodeInfo, setGptCodeInfo] = useRecoilState(gptGeneratedCodeInfo);
     const location = useLocation();
     const navigate = useNavigate();
     const { refactoredResult } = location.state;
 
     const goToCreateCode = () => {
-        navigate('/create/code/codesubmission');
+        navigate('/create/code/codesubmission', {
+            state: { gptCodeInfo, refactoredResult }
+        });
     };
 
     return (

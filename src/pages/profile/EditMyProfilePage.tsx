@@ -1,7 +1,17 @@
 import React, {ChangeEvent, FC, useCallback, useRef, useState} from 'react';
 import InfoLayout from '../../layout/InfoLayout';
 import {FormWrapper} from './styles';
-import {Avatar, Box, Button, Card, Divider, Stack, TextField, Typography} from '@mui/material';
+import {
+    Avatar,
+    Box,
+    Button,
+    Card,
+    Divider,
+    Stack,
+    TextField,
+    Typography,
+    styled
+} from '@mui/material';
 import {useInputValidate} from '../../hooks/common/UseInputValidate';
 import {REWARD_COIN} from '../../constants/define';
 import {toast} from 'react-toastify';
@@ -13,6 +23,7 @@ import {useQueryUserLogin} from '../../hooks/fetcher/UserFetcher';
 import SectionTitle from './components/SectionTitle';
 import UserProfileImage from '../../components/profile/UserProfileImage';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {CoinHistoryType} from '../../enums/CoinHistoryType';
 import {UsersCoinHistoryReq} from '../../data/entity/UsersCoinHistoryReq';
 import {UserModel} from "../../data/model/UserModel";
@@ -27,6 +38,18 @@ interface RouteState {
         userData: UserModel;
     }
 }
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 const EditMyProfilePage: FC<Props> = () => {
     const {state} = useLocation() as RouteState;
@@ -74,7 +97,6 @@ const EditMyProfilePage: FC<Props> = () => {
     const {mutateAsync: mutateSetIntroducePoint} = useMutation({
         mutationFn: async () => {
             // 자기소개 보상 코인 지급
-
             const totalPoint = await apiClient.getUserTotalPoint(userLogin?.user_token!);
             if (totalPoint) {
                 const totalAmount = totalPoint + REWARD_COIN.INTRODUCTION_BONUS_COIN;
@@ -129,30 +151,36 @@ const EditMyProfilePage: FC<Props> = () => {
         },
         onError: (error) => {
             // Error handling
+            console.error('Error updating profile:', error);
+            toast.error('프로필 업데이트 중 오류가 발생했습니다.');
         },
     });
 
     const [src, setSrc] = useState<string | null>(null);
     const [file, setFile] = useState<File | null>(null);
+    const [fileName, setFileName] = useState<string | null>(null);
 
     const handleChangeImage = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-        let url: string = '';
-        const file = Array.from(e.target.files ?? []);
-        url = URL.createObjectURL(file[0]);
-        setFile(file[0]);
-        setSrc(url);
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const file = files[0];
+            const url = URL.createObjectURL(file);
+            setFile(file);
+            setSrc(url);
+            setFileName(file.name);
+        }
     }, []);
 
-    const onSubmitRegisterForm = useCallback(async (e: any) => {
+    const onSubmitRegisterForm = useCallback(async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
-            e.preventDefault();
             await mutate();
             navigate('/profile/my');
         } catch (e) {
-            console.log('supabase error', e);
-            console.log(e);
+            console.error('Error submitting form:', e);
+            toast.error('프로필 업데이트 중 오류가 발생했습니다.');
         }
-    }, [inputIntroduce]);
+    }, [inputIntroduce, mutate, navigate]);
 
     return (
         <MainLayout>
@@ -165,8 +193,20 @@ const EditMyProfilePage: FC<Props> = () => {
                                 <Box display="flex" alignItems="center" mt={2}>
                                     <Box>
                                         {userLogin && <UserProfileImage size={60} userId={userLogin.user_token!}/>}
-                                        <input type="file" onChange={handleChangeImage} accept="image/*"
-                                               style={{marginTop: '8px'}}/>
+                                        <Button
+                                            component="label"
+                                            variant="contained"
+                                            startIcon={<CloudUploadIcon />}
+                                            sx={{ mt: 2 }}
+                                        >
+                                            이미지 업로드
+                                            <VisuallyHiddenInput type="file" onChange={handleChangeImage} accept="image/*" />
+                                        </Button>
+                                        {fileName && (
+                                            <Typography variant="body2" sx={{ mt: 1 }}>
+                                                선택된 파일: {fileName}
+                                            </Typography>
+                                        )}
                                     </Box>
                                     {src && (
                                         <>

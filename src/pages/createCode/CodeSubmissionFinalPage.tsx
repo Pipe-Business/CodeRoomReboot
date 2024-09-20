@@ -37,8 +37,14 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
     const location = useLocation();
     const {isEdit, isReexamination} = location.state || {};
     const editTargetModel: CodeModel = location.state?.item;
-    const [gptCodeInfo] = useRecoilState(gptGeneratedCodeInfo);
+    const [gptCodeInfo, setGptCodeInfo] = useRecoilState(gptGeneratedCodeInfo);
     const [codeModel] = useRecoilState(codeInfo);
+
+    useEffect(() => {
+        if (location.state?.gptCodeInfo) {
+            setGptCodeInfo(location.state.gptCodeInfo);
+        }
+    }, [location.state, setGptCodeInfo]);
 
     const {userLogin} = useQueryUserLogin();
     const inputTitleRef = useRef<HTMLInputElement | null>(null);
@@ -182,6 +188,9 @@ const CodeSubmissionFinalPage: FC<Props> = () => {
         //   inputGuideRef.current?.focus();
         //   return;
         // }
+
+        console.log(`from final hash tags : ${gptCodeInfo?.hashTag}`);
+
         try {
             const postReqEntity: PostRequestEntity = {
                 title: inputTitle,

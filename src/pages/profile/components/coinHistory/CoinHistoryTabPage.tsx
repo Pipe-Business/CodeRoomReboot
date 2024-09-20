@@ -84,7 +84,7 @@ const CoinHistoryItem: FC<CoinHistoryItemProps> = ({ coinHistoryItem }) => {
         <TableRow>
             <TableCell>{reformatTime(coinHistoryItem.created_at)}</TableCell>
             <TableCell>
-                <Typography sx={{
+                <Typography variant={"body2"} sx={{
                     color: coinHistoryItem.coin_history_type === CoinHistoryType.earn_coin
                         ? theme.palette.success.main
                         : theme.palette.error.main
@@ -94,7 +94,7 @@ const CoinHistoryItem: FC<CoinHistoryItemProps> = ({ coinHistoryItem }) => {
             </TableCell>
             <TableCell>
                 <Tooltip title={coinHistoryItem.description} arrow>
-                    <Typography sx={{
+                    <Typography variant={"body2"} sx={{
                         maxWidth: 200,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',

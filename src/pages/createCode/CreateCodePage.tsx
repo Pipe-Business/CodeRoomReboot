@@ -98,18 +98,20 @@ const CreateCodePage: React.FC = () => {
                     hashTag: splitedHashTag,
                 };
 
+                console.log(`hash tags : ${parsedResult.hashTag?.toString()}`);
+
                 setGptCodeInfo(parsedResult);
                 setRefactoredResult(refactoringResult);
 
                 setActiveStep(3);
             } else {
                 setIsValid(false);
-                setErrorMessage('존재하지 않는 레포지토리입니다.');
+                setErrorMessage('존재하지 않거나 관리자 초대가 되지않은 레포지토리입니다.');
             }
         } catch (error) {
             setIsValid(false);
             if (axios.isAxiosError(error) && error.response?.status === 404) {
-                setErrorMessage('존재하지 않는 레포지토리입니다.');
+                setErrorMessage('존재하지 않거나 관리자 초대가 되지않은 레포지토리입니다.');
             } else {
                 setErrorMessage('레포지토리 확인 중 오류가 발생했습니다.');
             }
