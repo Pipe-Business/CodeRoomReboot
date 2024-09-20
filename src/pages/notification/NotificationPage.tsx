@@ -11,6 +11,7 @@ import AlertDialog from './components/AlertDialogProps';
 import {RealtimePostgresInsertPayload} from "@supabase/realtime-js/src/RealtimeChannel";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import {useQueryUserLogin} from "../../hooks/fetcher/UserFetcher";
 
 const EmptyStateContainer = styled(Box)`
     display: flex;
@@ -101,6 +102,7 @@ const UnreadBadge = styled(Badge)`
 `;
 
 const NotificationPage: FC = () => {
+    const {userLogin, isLoadingUserLogin} = useQueryUserLogin();
     const [notifications, setNotifications] = useState<NotificationEntity[]>([]);
     const [dialogOpen, setDialogOpen] = useState(false);
     const [dialogTitle, setDialogTitle] = useState('');
@@ -145,11 +147,11 @@ const NotificationPage: FC = () => {
 
     useEffect(() => {
         const initialize = async () => {
-            const user = await apiClient.getCurrentLoginUser();
-            const lastNotifications: NotificationEntity[] = await apiClient.getLastMyNotifications(user.id);
+            // const user = await apiClient.getCurrentLoginUser();
+            const lastNotifications: NotificationEntity[] = await apiClient.getLastMyNotifications(userLogin!.user_token!);
             setNotifications(lastNotifications);
             await apiClient.subscribeInsertNotification(handleInserts);
-            await apiClient.updateNotificationIsRead(user.id);
+            await apiClient.updateNotificationIsRead(userLogin!.user_token!);
         };
 
         initialize();
