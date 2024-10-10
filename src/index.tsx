@@ -15,6 +15,8 @@ import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 const MainPage = React.lazy(() => import('./pages/main/MainPage'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage'));
 const MyPage = React.lazy(() => import('./pages/profile/MyPage'));
