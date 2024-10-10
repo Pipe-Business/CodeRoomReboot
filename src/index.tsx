@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { QueryClient } from '@tanstack/react-query';
