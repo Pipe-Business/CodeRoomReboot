@@ -1,21 +1,19 @@
-import React, {Suspense, useEffect} from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { QueryClient } from '@tanstack/react-query';
 import { Octokit } from '@octokit/core';
-import {RecoilRoot} from "recoil";
-// Import the functions you need from the SDKs you need
+import { RecoilRoot } from "recoil";
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// 사용하지 않는 import 제거
+// import { getAnalytics } from "firebase/analytics";
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const MainPage = React.lazy(() => import('./pages/main/MainPage'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage'));

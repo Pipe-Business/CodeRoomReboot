@@ -46,7 +46,7 @@ const AdminPage: FC<Props> = () => {
 
 
 		setValue(searchParams.get('tab') ?? '1');
-	}, []);
+	}, [navigate, searchParams]); // 의존성 배열에 navigate와 searchParams 추가
 
 
 	const handleChange = (_: React.SyntheticEvent, newValue: string) => {
