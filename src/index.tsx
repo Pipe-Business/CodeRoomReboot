@@ -1,19 +1,16 @@
-import React, { Suspense } from 'react';
+import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom/client';
-import { ToastContainer } from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { QueryClient } from '@tanstack/react-query';
-import { Octokit } from '@octokit/core';
-import { RecoilRoot } from "recoil";
-import { initializeApp } from "firebase/app";
 // 사용하지 않는 import 제거
 // import { getAnalytics } from "firebase/analytics";
-
-import { BrowserRouter as Router } from 'react-router-dom';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {CircularProgress} from '@mui/material';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {Octokit} from '@octokit/core';
+import {RecoilRoot} from "recoil";
+import {initializeApp} from "firebase/app";
 
 const MainPage = React.lazy(() => import('./pages/main/MainPage'));
 const CodePage = React.lazy(() => import('./pages/codeList/CodePage'));
@@ -70,8 +67,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
+// const analytics = getAnalytics(app); // 이 줄을 주석 처리하거나 제거하세요
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
