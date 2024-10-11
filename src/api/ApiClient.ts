@@ -32,16 +32,14 @@ import {toast} from "react-toastify";
 import {CommentEntity} from "../data/entity/CommentEntity";
 import {UserBankAccountEntity} from "../data/entity/UserBankAccountEntity";
 
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || '';
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY || '';
 
-console.log('Supabase URL:', process.env.REACT_APP_SUPABASE_URL);
-console.log('Supabase Key:', process.env.REACT_APP_SUPABASE_KEY ? 'Set' : 'Not set');
+console.log('Supabase URL:', supabaseUrl);
+console.log('Supabase Key:', supabaseKey ? 'Set' : 'Not set');
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('Supabase URL or Key is not defined');
-  console.error('REACT_APP_SUPABASE_URL:', supabaseUrl);
-  console.error('REACT_APP_SUPABASE_KEY:', supabaseKey);
   throw new Error('Supabase configuration is missing');
 }
 
@@ -172,7 +170,7 @@ class ApiClient implements SupabaseAuthAPI {
                 .resetPasswordForEmail(email, {redirectTo: 'https://main--coderoom-io.netlify.app/reset-password'});
         } catch (e: any) {
             console.log(e);
-            throw new Error('비밀번호 재설정에 ���패했습니다.');
+            throw new Error('비밀번호 재설정에 패했습니다.');
         }
     }
 
