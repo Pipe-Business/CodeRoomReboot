@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "echo REACT_APP_SUPABASE_URL=$REACT_APP_SUPABASE_URL && echo REACT_APP_SUPABASE_KEY=$REACT_APP_SUPABASE_KEY && npm run build"
   publish = "build"
 
 [build.environment]
@@ -12,3 +12,6 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

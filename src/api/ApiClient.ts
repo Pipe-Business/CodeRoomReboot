@@ -33,8 +33,17 @@ import {toast} from "react-toastify";
 import {CommentEntity} from "../data/entity/CommentEntity";
 import {UserBankAccountEntity} from "../data/entity/UserBankAccountEntity";
 
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
 
-export const supabase = createClient(process.env.REACT_APP_SUPABASE_URL!, process.env.REACT_APP_SUPABASE_KEY! );
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Supabase URL or Key is not defined');
+  console.error('REACT_APP_SUPABASE_URL:', supabaseUrl);
+  console.error('REACT_APP_SUPABASE_KEY:', supabaseKey);
+  throw new Error('Supabase configuration is missing');
+}
+
+export const supabase = createClient(supabaseUrl, supabaseKey);
 export type SortOption = 'latest' | 'oldest' | 'mostPurchased' | 'priceAsc' | 'priceDesc'; // 리스트 정렬 기준
 const updateImageUrls = (readmeContent: string, owner: string, repo: string, token: string) => {
     const imageUrlPattern = /!\[.*?\]\((.*?)\)/g;
