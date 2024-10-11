@@ -15,6 +15,7 @@ import {
     StepLabel,
     Alert,
     Tooltip,
+    IconButton,
 } from "@mui/material";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -155,19 +156,21 @@ const CreateCodePage: React.FC = () => {
                         ))}
                     </Stepper>
 
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                         <TextField
                             value={repoUrl}
                             onChange={handleInputChange}
-                            label="Gihub Repository의 Url 주소를 입력해주세요"
+                            label="레포지토리 URL 입력 https://github.com/{owner}/{repository}"
                             variant="outlined"
                             error={!!errorMessage}
                             helperText={errorMessage}
                             fullWidth
-                            sx={{ mr: 2 }}
+                            sx={{ mr: 1 }}
                         />
                         <Tooltip title="코드를 분석하는데에 최대 1분 정도 걸릴 수 있어요.">
-                            <HelpOutlineIcon color="action" />
+                            <IconButton color="primary" sx={{ mt: errorMessage ? '-24px' : '0' }}>
+                                <HelpOutlineIcon />
+                            </IconButton>
                         </Tooltip>
                     </Box>
 
@@ -184,7 +187,7 @@ const CreateCodePage: React.FC = () => {
                         fullWidth
                         sx={{height: '80px', fontSize: '24px'}}
                     >
-                        {isLoading ? '분석 중...' : '입력하기'}
+                        {isLoading ? '분석 중...' : '코드 제출'}
                     </Button>
 
                     {isValid && !isLoading && (

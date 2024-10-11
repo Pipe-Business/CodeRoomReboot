@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import {Link, useNavigate} from 'react-router-dom';
-import {Badge, Box, Skeleton} from '@mui/material';
+import {Badge, Box, Skeleton, Typography, Chip} from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useQuery } from '@tanstack/react-query';
 import { apiClient } from '../api/ApiClient';
@@ -12,40 +12,21 @@ import { useQueryUserLogin } from '../hooks/fetcher/UserFetcher';
 import useDialogState from '../hooks/UseDialogState';
 import { ColorButton, HeaderIconButton, HeaderTitle, HeaderWrapper } from './styles';
 import ProfileMenu from '../components/profile/ProfileMenu';
-import coinImage from '../assets/coin.png';
+
+const CoinChip = styled(Chip)(({ theme }) => ({
+  backgroundColor: '#1976d2', // 파란색 계열의 모던한 색상
+  color: '#ffffff',
+  fontWeight: 'bold',
+  padding: '0 12px',
+  '&:hover': {
+    backgroundColor: '#1565c0', // 호버 시 약간 더 진한 색상
+  },
+  transition: 'background-color 0.3s',
+}));
 
 interface Props {
     isScrolled: boolean;
 }
-
-const CoinContainer = styled.div`
-    display: flex;
-    align-items: center;
-    background-color: #f0f0f0;
-    border-radius: 20px;
-    padding: 6px 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    &:hover {
-        background-color: #e0e0e0;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-`;
-
-const CoinAmount = styled.span`
-    color: #333;
-    font-size: 16px;
-    font-weight: 600;
-    margin-right: 6px;
-    font-family: 'Arial', sans-serif;
-`;
-
-const CoinIcon = styled.img`
-    width: 18px;
-    height: 18px;
-`;
 
 const HeaderLayout: FC<Props> = ({ isScrolled }) => {
     const { userLogin, isLoadingUserLogin } = useQueryUserLogin();
@@ -84,7 +65,7 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                padding: '0 16px' // 좌우 패딩 추가
+                padding: '0 16px'
             }}>
                 <HeaderTitle to='/'>
                     <h2>
@@ -94,7 +75,7 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
                     </h2>
                 </HeaderTitle>
 
-                <Box> {/* 오른쪽 요소들을 위한 컨테이너 */}
+                <Box>
                     <CenterBox>
                         {!userLogin && (
                             <CenterBox>
@@ -108,12 +89,10 @@ const HeaderLayout: FC<Props> = ({ isScrolled }) => {
                         {userLogin && (
                             <CenterBox>
                                 <MarginHorizontal size={8}>
-                                    <CoinContainer onClick={() => {navigate('/profile/my?tab=4')}}>
-                                        <CoinAmount>
-                                            {totalCashPointData?.coin_amount.toLocaleString()}
-                                        </CoinAmount>
-                                        <CoinIcon src={coinImage} alt="Coin" />
-                                    </CoinContainer>
+                                    <CoinChip
+                                        label={`${totalCashPointData?.coin_amount.toLocaleString() ?? '0'} P`}
+                                        onClick={() => navigate('/profile/my?tab=4')}
+                                    />
                                 </MarginHorizontal>
 
                                 <MarginHorizontal size={8}>

@@ -12,7 +12,7 @@ const FooterLayout: FC<Props> = () => {
             <footer style={{ display: 'flex', alignItems: 'center', flexDirection : 'column'}}>
                 <FooterBox style={{flexDirection :'row'}}>
                     <MarginHorizontal size={8}>
-                        <span style={{ color: '#000000', fontSize: '12px', }}>상호명 : 파이프빌더 | 대표자 : 김상훈</span>
+                        <span style={{ color: '#000000', fontSize: '12px', }}>상호명 : 파이프빌더 | 대표자 : 김상훈, 이홍철</span>
                     </MarginHorizontal>
                     <MarginHorizontal size={8}>
                         <span style={{ color: '#000000', fontSize: '12px', }}>이메일 : pipebuilders@gmail.com</span>
