@@ -24,17 +24,19 @@ import {LikeRequestEntity} from "../data/entity/LikeRequestEntity";
 import {LikeResponseEntity} from "../data/entity/LikeResponseEntity";
 import {UsersCoinHistoryRes} from "../data/entity/UsersCoinHistoryRes";
 import {CodeEditRequestEntity} from "../data/entity/CodeEditRequestEntity";
-import {createTodayDate} from "../utils/DayJsHelper";
 import {UsersAmountModel} from "../data/entity/UsersAmountModel";
 import {PostStateType} from "../enums/PostStateType";
 import {GptCodeInfoResponseEntity} from "../data/entity/GptCodeInfoResponseEntity";
-import { Octokit } from "@octokit/rest";
+import {Octokit} from "@octokit/rest";
 import {toast} from "react-toastify";
 import {CommentEntity} from "../data/entity/CommentEntity";
 import {UserBankAccountEntity} from "../data/entity/UserBankAccountEntity";
 
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseKey = process.env.REACT_APP_SUPABASE_KEY;
+
+console.log('Supabase URL:', process.env.REACT_APP_SUPABASE_URL);
+console.log('Supabase Key:', process.env.REACT_APP_SUPABASE_KEY ? 'Set' : 'Not set');
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('Supabase URL or Key is not defined');
