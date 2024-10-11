@@ -172,7 +172,7 @@ class ApiClient implements SupabaseAuthAPI {
                 .resetPasswordForEmail(email, {redirectTo: 'https://main--coderoom-io.netlify.app/reset-password'});
         } catch (e: any) {
             console.log(e);
-            throw new Error('비밀번호 재설정에 실패했습니다.');
+            throw new Error('비밀번호 재설정에 ���패했습니다.');
         }
     }
 
@@ -1515,7 +1515,7 @@ class ApiClient implements SupabaseAuthAPI {
 
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니다.');
+            throw new Error('유저의 코인 히스토리를 insert 하는데 실패했습니���.');
         }
 
     }
@@ -2753,12 +2753,12 @@ class ApiClient implements SupabaseAuthAPI {
                 console.log("error" + error.hint);
                 console.log("error" + error.details);
 
-                throw new Error('유저 계좌 정보를 저장하는데 실페했습니다.');
+                throw new Error('유저 계좌 정보를 저장하는데 실패했습니다.');
             }
             //console.log(...data);
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저 계좌 정보를 저장하는데 실페했습니다.');
+            throw new Error('유저 계좌 정보를 저장하는데 실패했습니다.');
         }
 
     }
@@ -2771,12 +2771,12 @@ class ApiClient implements SupabaseAuthAPI {
             if (error) {
                 console.log("%o",error);
 
-                throw new Error('유저 계좌 정보를 업데이트 하는데에 실페했습니다.');
+                throw new Error('유저 계좌 정보를 업데이트 하는데에 실패했습니다.');
             }
             //console.log(...data);
         } catch (e: any) {
             console.log(e);
-            throw new Error('유저 계좌 정보를 업데이트 하는데에 실페했습니다.');
+            throw new Error('유저 계좌 정보를 업데이트 하는데에 실패했습니다.');
         }
 
     }

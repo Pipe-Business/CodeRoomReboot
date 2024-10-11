@@ -1,5 +1,5 @@
 [build]
-  command = "echo REACT_APP_SUPABASE_URL=$REACT_APP_SUPABASE_URL && echo REACT_APP_SUPABASE_KEY=$REACT_APP_SUPABASE_KEY && npm run build"
+  command = "npm run build"
   publish = "build"
 
 [build.environment]
